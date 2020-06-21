@@ -1,0 +1,64 @@
+@media only screen and (max-width: 991px) {
+    .mobile-hidden {
+        display: none;
+    }
+    .main-content {
+        width: 100%!important;
+    }
+    .ck-editor__editable_inline {
+        min-height: 200px;
+    }
+}
+
+@media only screen and (min-width: 922px) {
+    .desktop-hidden {
+        display: none;
+    }
+    .ck-editor__editable_inline {
+        min-height: 300px;
+    }
+}
+
+@font-face {
+    src: url(GothamLight.otf);
+    font-family: GothamLight;
+}
+
+* {
+    font-family: GothamLight;
+}
+
+.nav-link {
+    color: white!important;
+}
+
+.mobile-hidden .panel-link, .mobile-hidden .panel-link:hover {
+    color: black!important;
+    text-decoration: none;
+}
+
+.mobile-hidden .panel-link-dark, .mobile-hidden .panel-link-dark:hover {
+    color: #f8f9fa!important;
+    text-decoration: none;
+}
+
+.bg-virgin {
+    background-color: #E4181E !important;
+    color: #f8f9fa !important;
+}
+
+.modal-dark {
+    background-color: #343a40 !important;
+}
+
+.divider {
+    border-top: 1px solid #000!important;
+}
+
+.divider-dark {
+    border-top: 1px solid #fff!important;
+}
+
+.toggledark {
+    cursor: pointer;
+}
