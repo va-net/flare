@@ -4,10 +4,12 @@ class Aircraft
 {
 
     private static $_list;
+    private static $_db;
 
     private static function init()
     {
 
+        self::$_db = DB::getInstance();
         self::$_list = file_get_contents('aircraft.txt');
         self::$_list = json_decode(self::$_list, true);
 
@@ -27,12 +29,9 @@ class Aircraft
 
         self::init();
 
-        foreach (self::$_list as $item) {
-            if ($item["LiveryId"] == $id) {
-                return $item;
-                break;
-              }
-        }
+        $result = self::$_db->get('aircraft', array('id', '=', $id));
+        
+        return $result->first()->name;
 
     }
 

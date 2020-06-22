@@ -80,11 +80,13 @@ class DB
 
             if (in_array($operator, $operators)) {
                 $sql = "{$action} FROM {$table} WHERE {$field} {$operator} ?";
+
                 if ($order) {
                     $orderby = $order[0];
                     $direction = $order[1];
-                    $sql = "{$action} FROM {$table} WHERE {$field} {$operator} ? ORDER BY {$orderby} {$direction}";
+                    $sql .= " ORDER BY {$orderby} {$direction}";
                 }
+
                 if (!$this->query($sql, array($value))->error()) {
                     return $this;
                 }

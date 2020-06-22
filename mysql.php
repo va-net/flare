@@ -13,8 +13,8 @@ session_start();
     // IMPORTANT: PUT YOUR CREDS HERE IN BETWEEN THE QUOTES ON EACH ITEM
     $server = 'localhost';
     $username = 'root';
-    $password = '';
-    $dbname = 'vgva_crew';
+    $password = 'Rebal155';
+    $dbname = 'flare';
     // Don't change anything after here unless you know what you're doing AND have a backup of this file!!!
 
     $conn = new mysqli($server, $username, $password, $dbname, 3308);

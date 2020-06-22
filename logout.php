@@ -1,6 +1,9 @@
 <?php
-session_start();
-session_unset();
-session_destroy();
-header("Location: https://ifvirginvirtual.vip");
-http_response_code(302);
+
+require_once 'core/init.php';
+
+$user = new User();
+$user->logout();
+
+Session::flash('login', 'You have logged out successfully!');
+Redirect::to('index.php');
