@@ -1,4 +1,4 @@
-<?php require 'header.php'; ?>
+<?php require './includes/header.php'; ?>
 
 <h1 class="text-center pb-0 mb-0">Virgin Virtual Group</h1>
 <h3 class="text-center py-0 my-0">Pilot Application<br /><br /></h3>
@@ -24,7 +24,7 @@
                 echo '<div class="alert text-center alert-warning">Passwords do not match</div>';
             } else {
                 $stmt = $conn->prepare("INSERT INTO pilots (callsign, name, ifc, email, password, violand, grade, notes) VALUES (?, ?, ?, ?, ?, ?, ?, ?);");
-                $encpass = password_hash($_POST["pass"], PASSWORD_ARGON2ID);
+                $encpass = password_hash($_POST["pass"], PASSWORD_BCRYPT);
                 $stmt->bind_param("sssssdis", $_POST["callsign"], $_POST["name"], $_POST["ifc"], $_POST["email"], $encpass, $_POST["violand"], $_POST["ifgrade"], $_POST["comments"]);
                 $ret = $stmt->execute();
                 if ($ret !== TRUE) {
@@ -113,4 +113,4 @@
 </form>
 </div>
 
-<?php require 'footer.php'; ?>
+<?php require './includes/footer.php'; ?>

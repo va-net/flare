@@ -1,7 +1,3 @@
-<?php
-  require 'mysql.php';
-  require 'aircraft.php';
-?>
 <!DOCTYPE html>
 <html>
 <head>

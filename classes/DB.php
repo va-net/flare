@@ -57,7 +57,18 @@ class DB
 
     }
 
-    private function action($action, $table, $where = array()) 
+    public function getTable($table)
+    {
+
+        $sql = "SELECT * FROM {$table}";
+        if (!$this->query($sql)->error()) {
+            return $this;
+        }
+        return $this;
+
+    }
+
+    private function action($action, $table, $where = array(), $order = false) 
     {
     
         if (count($where) === 3) {
@@ -69,6 +80,13 @@ class DB
 
             if (in_array($operator, $operators)) {
                 $sql = "{$action} FROM {$table} WHERE {$field} {$operator} ?";
+
+                if ($order) {
+                    $orderby = $order[0];
+                    $direction = $order[1];
+                    $sql .= " ORDER BY {$orderby} {$direction}";
+                }
+
                 if (!$this->query($sql, array($value))->error()) {
                     return $this;
                 }
@@ -86,10 +104,10 @@ class DB
         
     }
 
-    public function get($table, $where)
+    public function get($table, $where, $order = false)
     {
 
-        return $this->action('SELECT *', $table, $where);
+        return $this->action('SELECT *', $table, $where, $order);
 
     }
 

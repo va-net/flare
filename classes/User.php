@@ -37,11 +37,11 @@ class User
     public function create($fields) 
     {
 
-        if (!$this->_db->insert('accounts', $fields)) {
+        if (!$this->_db->insert('pilots', $fields)) {
             throw new Exception('There was a problem creating an account.');
         }
 
-        $result = $this->_db->get('accounts', array('email', '=', $fields['email']));
+        $result = $this->_db->get('pilots', array('email', '=', $fields['email']));
         $userId = $result->first()->id;
 
         $this->_db->insert('profile_pics', array(
@@ -56,7 +56,7 @@ class User
 
         if ($user) {
             $field = (is_numeric($user)) ? 'id' : 'email';
-            $data = $this->_db->get('accounts', array($field, '=', $user));
+            $data = $this->_db->get('pilots', array($field, '=', $user));
             if ($data->count()) {
                 $this->_data = $data->first();
                 return true;
@@ -140,7 +140,7 @@ class User
             $id = $this->data()->id;
         }
 
-        if (!$this->_db->update('accounts', $id, $fields)) {
+        if (!$this->_db->update('pilots', $id, 'id', $fields)) {
             throw new Exception('There was a problem updating the user.');
         }
 
@@ -205,6 +205,31 @@ class User
             return false;
         }
         return true;
+
+    }
+
+    public function rank($id = null) 
+    {
+
+        if (!$id && $this->isLoggedIn()) {
+            $id = $this->data()->id;
+        }
+
+        $result = $this->_db->get('pilots', array('id', '=', $id));
+        $hrs = $result->first()->transhours;
+
+        return Rank::calc($hrs);
+
+    }
+
+    public function pireps($id = null)
+    {
+
+        if (!$id && $this->isLoggedIn()) {
+            $id = $this->data()->id;
+        }
+
+        return Pirep::totalFiled($id);
 
     }
 
