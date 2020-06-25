@@ -31,6 +31,13 @@ class DB
 
     }
 
+    public static function newInstance() 
+    {
+
+        return new DB();
+
+    }
+
     public function query($sql, $params = array())
     {
 
