@@ -47,23 +47,21 @@ class Pirep
             }
         }
 
-        $result = self::$_db->get('pireps', array('pilotid', '=', $id), array('datetime', 'DESC'));
+        $results = self::$_db->get('pireps', array('pilotid', '=', $id), array('datetime', 'DESC'));
 
         $x = 0;
         $pireps = array();
         $statuses = array('Pending', 'Approved', 'Denied');
 
-        while ($x < $result->count()) {
-            $aircraft = self::$_db->get('aircraft', array('id', '=', $result->results()[$x]->aircraftid));
-            $aircraft = $aircraft->first()->name;
+        while ($x < $results->count()) {
             $newdata = array(
-                'type' => $result->results()[$x]->type,
-                'number' => $result->results()[$x]->flightnum,
-                'departure' => $result->results()[$x]->departure,
-                'arrival' => $result->results()[$x]->arrival,
-                'aircraft' => $aircraft,
-                'date' => $result->results()[$x]->date,
-                'status' => $statuses[$result->results()[$x]->status],
+                'type' => $results->results()[$x]->type,
+                'number' => $results->results()[$x]->flightnum,
+                'departure' => $results->results()[$x]->departure,
+                'arrival' => $results->results()[$x]->arrival,
+                'date' => $results->results()[$x]->datetime,
+                'status' => $statuses[$results->results()[$x]->status],
+                'aircraft' => Aircraft::getAircraftName($results->results()[$x]->aircraftid),
             );
             $pireps[$x] = $newdata;
             $x++;

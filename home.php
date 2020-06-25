@@ -246,7 +246,7 @@ $(document).ready(function() {
 
                         foreach ($pireps as $pirep) {
                             echo '<tr><td class="mobile-hidden align-middle">';
-                            echo $pirep["type"].$pirep["number"];
+                            echo $pirep['type'].' - '.$pirep["number"];
                             echo '</td><td class="align-middle">';
                             echo $pirep["departure"].'-'.$pirep["arrival"];
                             echo '</td><td class="mobile-hidden align-middle">';
