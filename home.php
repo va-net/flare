@@ -7,6 +7,8 @@ require './includes/header.php';
 require_once './core/init.php';
 
 $user = new User();
+
+$user->updateRank();
 ?>
 
 <style>
@@ -64,20 +66,54 @@ $(document).ready(function() {
         <a href="#filepirep" id="filepireplink" data-toggle="tab" onclick="clearActive()" class="panel-link"><i class="fa fa-plane"></i>&nbsp;File PIREP</a><br />
         <a href="#mypireps" id="mypirepslink" data-toggle="tab" onclick="clearActive()" class="panel-link"><i class="fa fa-folder"></i>&nbsp;My PIREPs</a><br />
         <a href="#routedb" id="routeslink" data-toggle="tab" onclick="clearActive()" class="panel-link"><i class="fa fa-database"></i>&nbsp;Route Database</a><br />
-        <a href="#featured" id="featuredlink" data-toggle="tab" onclick="clearActive()" class="panel-link"><i class="fa fa-map-marked-alt"></i>&nbsp;Featured Routes</a><br />
         <a href="#events" id="eventslink" data-toggle="tab" onclick="clearActive()" class="panel-link"><i class="fa fa-calendar"></i>&nbsp;Events</a><br />
         <a href="#acars" id="acarslink" data-toggle="tab" onclick="clearActive()" class="panel-link"><i class="fa fa-sync"></i>&nbsp;ACARS</a><br />
         <a href="assets/StandardOperatingProcedures.pdf" id="soplink" class="panel-link" target="_blank"><i class="fa fa-file-download"></i>&nbsp;Handbook</a><br /><br />
-            <a href="#usermanage" id="userslink" data-toggle="tab" onclick="clearActive()" class="panel-link"><i class="fa fa-users"></i>&nbsp;User Management</a><br />
-            <a href="#recruitment" id="recruitlink" data-toggle="tab" onclick="clearActive()" class="panel-link"><i class="fa fa-id-card"></i>&nbsp;Recruitment</a><br />
-            <a href="#pirepmanage" id="pirepmodlink" data-toggle="tab" onclick="clearActive()" class="panel-link"><i class="fa fa-user-shield"></i>&nbsp;PIREP Management</a><br />
-            <a href="#newsmanage" id="newslink" data-toggle="tab" onclick="clearActive()" class="panel-link"><i class="fa fa-newspaper"></i>&nbsp;News Management</a><br />
-            <a href="#emailpilots" id="emaillink" data-toggle="tab" onclick="clearActive()" class="panel-link"><i class="fa fa-envelope"></i>&nbsp;Email Pilots</a><br />
-            <a href="#wfrmanage" id="wfrlink" data-toggle="tab" onclick="clearActive()" class="panel-link"><i class="fa fa-shield-alt"></i>&nbsp;WFR Management</a><br />
-            <a href="#eventmanage" id="eventmodlink" data-toggle="tab" onclick="clearActive()" class="panel-link"><i class="fa fa-plane-departure"></i>&nbsp;Event Management</a><br />
-            <a href="#opsmanage" id="opslink" data-toggle="tab" onclick="clearActive()" class="panel-link"><i class="fa fa-file-alt"></i>&nbsp;Operations Management</a><br />
-            <a href="#stats" id="statslink" data-toggle="tab" onclick="clearActive()" class="panel-link"><i class="fa fa-chart-pie"></i>&nbsp;VA Statistics</a><br />
-            <a href="assets/StaffOperationalGuide.pdf" id="staffguidelink" class="panel-link" target="_blank"><i class="fa fa-file-download"></i>&nbsp;Staff Guide</a><br /><br />
+        
+        <?php
+
+        $permissions = array(
+            'usermanage' => array(
+                'name' => 'User Management',
+                'icon' =>'fa-users'
+            ), 
+            'staffmanage' => array(
+                'name' => 'Staff Management',
+                'icon' => 'fa-user-shield'
+            ),
+            'recruitment' => array(
+                'name' => 'Recruitment',
+                'icon' => 'fa-id-card'
+            ), 
+            'pirepmanage' => array(
+                'name' => 'PIREP Management',
+                'icon' => 'fa-plane'
+            ), 
+            'newsmanage' => array(
+                'name' => 'News Management',
+                'icon' => 'fa-newspaper'
+            ), 
+            'emailpilots' => array(
+                'name' => 'Email Pilots',
+                'icon' => 'fa-envelope'
+            ), 
+            'opsmanage' => array(
+                'name' => 'Operations Management',
+                'icon' => 'fa-file-alt'
+            ), 
+            'statsviewing' => array(
+                'name' => 'VA Statistics',
+                'icon' => 'fa-chart-pie'
+            )
+        );
+
+        foreach ($permissions as $permission => $data) {
+            if ($user->hasPermission($permission)) {
+                echo '<a href="admin.php#'.$permission.'" id="userslink" data-toggle="tab" onclick="clearActive()" class="panel-link"><i class="fa '.$data['icon'].'"></i>&nbsp;'.$data['name'].'</a><br>';
+            }
+        }
+
+        ?>
         <a href="logout.php" class="panel-link"><i class="fa fa-sign-out-alt"></i>&nbsp;Log Out</a>
     </div>
     <div class="col-lg-9 p-3 main-content">

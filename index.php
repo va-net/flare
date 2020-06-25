@@ -41,6 +41,16 @@ if (Input::exists()) {
 <h3 class="text-center py-0 my-0">Pilot Login<br /><br /></h3>
 
 <div class="container w-50 justify-content-center">
+    <?php
+
+    if (Session::exists('error')) {
+        echo '<div class="alert alert-danger text-center">Error: '.Session::flash('error').'</div>';
+    }
+    if (Session::exists('success')) {
+        echo '<div class="alert alert-success text-center">'.Session::flash('success').'</div>';
+    }
+
+    ?>
     <form method="post">
         <input hidden name="action" value="authenticate">
         <div class="form-group text-center">
