@@ -198,4 +198,11 @@ class DB
 
     }
 
+    public function getAll($table) 
+    {
+
+        return $this->query("SELECT * FROM {$table}");
+
+    }
+
 }
