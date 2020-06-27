@@ -22,8 +22,10 @@ if (Input::exists()) {
 
             $login = $user->login(Input::get('email'), Input::get('password'), $remember);
 
-            if ($login) {
+            if ($login && $user->data()->recruitstage > 0) {
                 Redirect::to('home.php');
+            } elseif ($user->data()->recruitstage == 0) {
+                Session::flash('error', 'Hold up! You need to wait until your application is approved before you can login!');
             } else {
                 Session::flash('login', 'Login failed.');
             }
