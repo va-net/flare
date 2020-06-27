@@ -8,7 +8,7 @@ class Rank
     private static function init()
     {
 
-        self::$_db = DB::getInstance();
+        self::$_db = DB::newInstance();
 
     }
 
@@ -17,14 +17,14 @@ class Rank
 
         self::init();
 
-        if ($hours == 0) {
-            $result = self::$_db->get('ranks', array('hoursreq', '=', 0));
-            return $result->first()->name;
+        $finalRank = self::$_db->get('ranks', array('id', '>', '0'), array('timereq', 'desc'));
+
+        if ($hours >= $finalRank->first()->timereq) {
+            return $finalRank->first()->name;
         }
 
-        if ($result = self::$_db->get('ranks', array('hoursreq', '<', $hours), array('hoursreq', 'desc'))) {
-            return $result->first()->name;
-        }
+        $rank = self::$_db->get('ranks', array('timereq', '>=', $hours), array('timereq', 'asc'));
+        return $rank->first()->name;
 
     }
 
