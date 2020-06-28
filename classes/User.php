@@ -146,21 +146,23 @@ class User
 
     }
 
-    public function hasPermission($key) 
+    public function hasPermission($key, $id = null) 
     {
 
-        $group = $this->_db->get('groups', array('id', '=', $this->data()->group));
-        
-        if ($group->count()) {
-            $permissions = json_decode($group->first()->permissions, true);
-            
-            if (array_key_exists($key, $permissions)) {
-                if ($permissions[$key] == true) {
-                    return true;
-                }
-            }
-            return false;
+        if (!$id && $this->isLoggedIn()) {
+            $id = $this->data()->id;
         }
+        
+        $user = $this->_db->get('pilots', array('id', '=', $id));
+
+        $permissions = json_decode($user->first()->permissions, true);
+        
+        if (array_key_exists($key, $permissions)) {
+            if ($permissions[$key] == true) {
+                return true;
+            }
+        }
+        return false;
 
     }
 

@@ -35,7 +35,7 @@ if (Input::get('action') === 'editprofile') {
         Session::flash('success', 'Password changed successfully!');
         Redirect::to('home.php');
     } else {
-        Session::flash('error', $e->getMessage());
+        Session::flash('error', 'Your current password was incorrect!');
         Redirect::to('home.php');
     }
 }

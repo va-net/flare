@@ -19,12 +19,13 @@ class Pirep
 
         if ($id) {
             $result = self::$_db->get('pireps', array('pilotid', '=', $id));
-            $trans = self::$_db->get('pilots', array('id', '=', $id));
-            
-            $x = 0;
-            $total = 0;
+            $count = $result->count();
+            $user = self::$_db->get('pilots', array('id', '=', $id));
+            $total = $user->first()->transflights;
 
-            while ($x < $result->count()) {
+            $x = 0;
+
+            while ($x < $count) {
                 $total++;
                 $x++;
             }
@@ -50,12 +51,12 @@ class Pirep
         $results = self::$_db->get('pireps', array('pilotid', '=', $id), array('datetime', 'DESC'));
 
         $x = 0;
+        $counter = 0;
         $pireps = array();
         $statuses = array('Pending', 'Approved', 'Denied');
 
         while ($x < $results->count()) {
             $newdata = array(
-                'type' => $results->results()[$x]->type,
                 'number' => $results->results()[$x]->flightnum,
                 'departure' => $results->results()[$x]->departure,
                 'arrival' => $results->results()[$x]->arrival,
@@ -64,6 +65,10 @@ class Pirep
                 'aircraft' => Aircraft::getAircraftName($results->results()[$x]->aircraftid),
             );
             $pireps[$x] = $newdata;
+            $counter++;
+            if ($counter >= 10) {
+                break;
+            }
             $x++;
         }
         return $pireps;
