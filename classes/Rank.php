@@ -28,4 +28,21 @@ class Rank
 
     }
 
+    public static function newRank($name, $timereq) 
+    {
+
+        self::$_db->insert('ranks', array(
+            'name' => $name,
+            'timereq' => $timereq
+        ));
+
+    }
+
+    public static function removeRank($name) 
+    {
+
+        self::$_db->delete('ranks', array('name', '=', $name));
+
+    }
+
 }
