@@ -8,7 +8,7 @@ class Pirep
     private static function init()
     {
 
-        self::$_db = DB::getInstance();
+        self::$_db = DB::newInstance();
 
     }
 
@@ -67,6 +67,18 @@ class Pirep
             $x++;
         }
         return $pireps;
+
+    }
+
+    public static function fetchPireps($id = null)
+    {
+
+        self::init();
+        if (!$id) {
+            return self::$_db->getAll('pireps');
+        }
+
+        return self::$_db->get('pireps', array('pilotid', '=', $id));
 
     }
 

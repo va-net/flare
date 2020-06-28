@@ -7,8 +7,6 @@ require './includes/header.php';
 require_once './core/init.php';
 
 $user = new User();
-
-$user->updateRank();
 ?>
 
 <style>
@@ -68,7 +66,6 @@ $(document).ready(function() {
         <a href="#routedb" id="routeslink" data-toggle="tab" onclick="clearActive()" class="panel-link"><i class="fa fa-database"></i>&nbsp;Route Database</a><br />
         <a href="#events" id="eventslink" data-toggle="tab" onclick="clearActive()" class="panel-link"><i class="fa fa-calendar"></i>&nbsp;Events</a><br />
         <a href="#acars" id="acarslink" data-toggle="tab" onclick="clearActive()" class="panel-link"><i class="fa fa-sync"></i>&nbsp;ACARS</a><br />
-        <a href="assets/StandardOperatingProcedures.pdf" id="soplink" class="panel-link" target="_blank"><i class="fa fa-file-download"></i>&nbsp;Handbook</a><br /><br />
         
         <?php
 
