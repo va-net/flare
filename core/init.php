@@ -9,10 +9,10 @@ session_start();
 
 $GLOBALS['config'] = array(
     'mysql' => array(
-        'host' => '',
-        'username' => '',
+        'host' => 'localhost',
+        'username' => 'root',
         'password' => '',
-        'db' => ''
+        'db' => 'flare'
         ),
     'remember' => array(
         'cookie_name' => 'remember',
