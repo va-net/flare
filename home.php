@@ -23,7 +23,7 @@ $(document).ready(function() {
 });
 </script>
 
-<?php if (isset($_SESSION["darkmode"]) && $_SESSION["darkmode"] == true) { ?>
+<?php if (Session::get('darkmode') === true) { ?>
 <script>
     $(document).ready(function() {
         $("body").addClass("bg-dark");
@@ -49,51 +49,17 @@ $(document).ready(function() {
 <div class="container-fluid mt-4 text-center" style="overflow: auto;">
 <div class="row m-0 p-0">
     <div class="col-lg-3 p-3 bg-light text-left mobile-hidden" id="desktopMenu" style="height: 100%;">
-        <h3>Pilot Panel</h3>
+        <h3>Pilot Panel - <?= $user->data()->callsign ?></h3>
         <hr class="mt-0 divider" />
-        <a href="#home" id="homelink" data-toggle="tab" onclick="clearActive()" class="panel-link"><i class="fa fa-home"></i>&nbsp;Pilot Home</a><br />
-        <a href="#filepirep" id="filepireplink" data-toggle="tab" onclick="clearActive()" class="panel-link"><i class="fa fa-plane"></i>&nbsp;File PIREP</a><br />
-        <a href="#mypireps" id="mypirepslink" data-toggle="tab" onclick="clearActive()" class="panel-link"><i class="fa fa-folder"></i>&nbsp;My PIREPs</a><br />
-        <a href="#routedb" id="routeslink" data-toggle="tab" onclick="clearActive()" class="panel-link"><i class="fa fa-database"></i>&nbsp;Route Database</a><br />
-        <a href="#events" id="eventslink" data-toggle="tab" onclick="clearActive()" class="panel-link"><i class="fa fa-calendar"></i>&nbsp;Events</a><br />
-        <a href="#acars" id="acarslink" data-toggle="tab" onclick="clearActive()" class="panel-link"><i class="fa fa-sync"></i>&nbsp;ACARS</a><br />
+        <a href="home.php" id="homelink" class="panel-link"><i class="fa fa-home"></i>&nbsp;Pilot Home</a><br />
+        <a href="pireps.php#filepirep" id="filepireplink" class="panel-link"><i class="fa fa-plane"></i>&nbsp;File PIREP</a><br />
+        <a href="pireps.php#mypireps" id="mypirepslink" class="panel-link"><i class="fa fa-folder"></i>&nbsp;My PIREPs</a><br />
+        <a href="routes.php" id="routeslink" class="panel-link"><i class="fa fa-database"></i>&nbsp;Route Database</a><br />
+        <a href="acars.php" id="acarslink" class="panel-link"><i class="fa fa-sync"></i>&nbsp;ACARS</a><br />
         
         <?php
 
-        $permissions = array(
-            'usermanage' => array(
-                'name' => 'User Management',
-                'icon' =>'fa-users'
-            ), 
-            'staffmanage' => array(
-                'name' => 'Staff Management',
-                'icon' => 'fa-user-shield'
-            ),
-            'recruitment' => array(
-                'name' => 'Recruitment',
-                'icon' => 'fa-id-card'
-            ), 
-            'pirepmanage' => array(
-                'name' => 'PIREP Management',
-                'icon' => 'fa-plane'
-            ), 
-            'newsmanage' => array(
-                'name' => 'News Management',
-                'icon' => 'fa-newspaper'
-            ), 
-            'emailpilots' => array(
-                'name' => 'Email Pilots',
-                'icon' => 'fa-envelope'
-            ), 
-            'opsmanage' => array(
-                'name' => 'Operations Management',
-                'icon' => 'fa-file-alt'
-            ), 
-            'statsviewing' => array(
-                'name' => 'VA Statistics',
-                'icon' => 'fa-chart-pie'
-            )
-        );
+        $permissions = Permission::getAll();
 
         if ($user->hasPermission('admin')) {
             echo '<br>';
@@ -101,7 +67,7 @@ $(document).ready(function() {
             echo '<hr class="mt-0 divider">';
             foreach ($permissions as $permission => $data) {
                 if ($user->hasPermission($permission)) {
-                    echo '<a href="admin.php#'.$permission.'" id="userslink" data-toggle="tab" onclick="clearActive()" class="panel-link"><i class="fa '.$data['icon'].'"></i>&nbsp;'.$data['name'].'</a><br>';
+                    echo '<a href="admin.php#'.$permission.'" id="userslink" class="panel-link"><i class="fa '.$data['icon'].'"></i>&nbsp;'.$data['name'].'</a><br>';
                 }
             }
         }
