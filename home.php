@@ -1,12 +1,5 @@
-
 <?php 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
 require './includes/header.php'; 
-require_once './core/init.php';
-
-$user = new User();
 ?>
 
 <style>
@@ -235,7 +228,7 @@ $(document).ready(function() {
                 <thead class="bg-virgin"><tr><th class="mobile-hidden">Flight Number</th><th>Route</th><th class="mobile-hidden">Date</th><th class="mobile-hidden">Aircraft</th><th>Status</th></tr></thead>
                 <tbody>
                     <?php
-                        $pireps = Pirep::recents();
+                        $pireps = Pirep::recents($user->data()->id);
 
                         foreach ($pireps as $pirep) {
                             echo '<tr><td class="mobile-hidden align-middle">';

@@ -220,10 +220,14 @@ class User
         $result = $this->_db->get('pilots', array('id', '=', $id));
         $time = $result->first()->transhours;
 
-        $pireps = Pirep::fetchPireps($id);
+        $pireps = Pirep::fetchApprovedPireps($id);
 
-        foreach (range(0, $pireps->count() - 1) as $i) {
-            $time = $time + $pireps->results()[$i]->flighttime;
+        if ($pireps->count() != 0) {
+            foreach (range(0, $pireps->count() - 1) as $i) {
+                $time = $time + $pireps->results()[$i]->flighttime;
+            }
+        } else {
+            $time = 0;
         }
 
         return Rank::calc($time);
@@ -239,10 +243,14 @@ class User
 
         $result = $this->_db->get('pilots', array('id', '=', $id));
         $time = $result->first()->transhours;
-        $pireps = Pirep::fetchPireps($id);
+        $pireps = Pirep::fetchApprovedPireps($id);
 
-        foreach (range(0, $pireps->count() - 1) as $i) {
-            $time = $time + $pireps->results()[$i]->flighttime;
+        if ($pireps->count() != 0) {
+            foreach (range(0, $pireps->count() - 1) as $i) {
+                $time = $time + $pireps->results()[$i]->flighttime;
+            }
+        } else {
+            $time = 0;
         }
 
         return $time;

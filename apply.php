@@ -63,7 +63,6 @@ if (Input::exists()) {
                     'grade' => Input::get('grade'),
                     'violand' => Input::get('violand'),
                     'notes' => Input::get('notes'),
-                    'rank' => Rank::getFirstRank()
                 ));
             } catch(Exception $e) {
                 die($e->getMessage());

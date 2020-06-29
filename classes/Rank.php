@@ -23,7 +23,8 @@ class Rank
             return $finalRank->first()->name;
         }
 
-        $rank = self::$_db->get('ranks', array('timereq', '>=', $hours), array('timereq', 'asc'));
+        $rank = self::$_db->get('ranks', array('timereq', '<=', $hours), array('timereq', 'desc'));
+        
         return $rank->first()->name;
 
     }

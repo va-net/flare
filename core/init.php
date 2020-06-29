@@ -21,6 +21,9 @@ $GLOBALS['config'] = array(
     'session' => array(
         'session_name' => 'user',
         'token_name' => 'token'
+    ),
+    'va' => array(
+        'name' => 'Virgin Virtual Group'
     )
 );
 
