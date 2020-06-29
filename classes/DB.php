@@ -31,6 +31,13 @@ class DB
 
     }
 
+    public static function newInstance() 
+    {
+
+        return new DB();
+
+    }
+
     public function query($sql, $params = array())
     {
 
@@ -188,6 +195,13 @@ class DB
     {
 
         return $this->results()[0];
+
+    }
+
+    public function getAll($table) 
+    {
+
+        return $this->query("SELECT * FROM {$table}");
 
     }
 

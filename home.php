@@ -7,8 +7,6 @@ require './includes/header.php';
 require_once './core/init.php';
 
 $user = new User();
-
-$user->updateRank();
 ?>
 
 <style>
@@ -26,11 +24,9 @@ $user->updateRank();
 </style>
 <script>
 $(document).ready(function() {
-    window.setTimeout(function() {
-        $("#loader").fadeOut(500, function() {
-            $("#home").fadeIn(400);
-        });
-    }, 500);
+    $("#loader").fadeOut(500, function() {
+        $("#home").fadeIn(400);
+    });
 });
 </script>
 
@@ -68,7 +64,6 @@ $(document).ready(function() {
         <a href="#routedb" id="routeslink" data-toggle="tab" onclick="clearActive()" class="panel-link"><i class="fa fa-database"></i>&nbsp;Route Database</a><br />
         <a href="#events" id="eventslink" data-toggle="tab" onclick="clearActive()" class="panel-link"><i class="fa fa-calendar"></i>&nbsp;Events</a><br />
         <a href="#acars" id="acarslink" data-toggle="tab" onclick="clearActive()" class="panel-link"><i class="fa fa-sync"></i>&nbsp;ACARS</a><br />
-        <a href="assets/StandardOperatingProcedures.pdf" id="soplink" class="panel-link" target="_blank"><i class="fa fa-file-download"></i>&nbsp;Handbook</a><br /><br />
         
         <?php
 
@@ -107,13 +102,18 @@ $(document).ready(function() {
             )
         );
 
-        foreach ($permissions as $permission => $data) {
-            if ($user->hasPermission($permission)) {
-                echo '<a href="admin.php#'.$permission.'" id="userslink" data-toggle="tab" onclick="clearActive()" class="panel-link"><i class="fa '.$data['icon'].'"></i>&nbsp;'.$data['name'].'</a><br>';
+        if ($user->hasPermission('admin')) {
+            echo '<br>';
+            echo '<h3>Admin Panel</h3>';
+            echo '<hr class="mt-0 divider">';
+            foreach ($permissions as $permission => $data) {
+                if ($user->hasPermission($permission)) {
+                    echo '<a href="admin.php#'.$permission.'" id="userslink" data-toggle="tab" onclick="clearActive()" class="panel-link"><i class="fa '.$data['icon'].'"></i>&nbsp;'.$data['name'].'</a><br>';
+                }
             }
         }
-
         ?>
+        <br>
         <a href="logout.php" class="panel-link"><i class="fa fa-sign-out-alt"></i>&nbsp;Log Out</a>
     </div>
     <div class="col-lg-9 p-3 main-content">
@@ -179,19 +179,6 @@ $(document).ready(function() {
                 </div>
                 <div class="modal-body">
                     <form action="update.php" method="post">
-                        <script>
-                            $(document).ready(function() {
-                                $("#confpass").change(function() {
-                                    if ($("#confpass").val() != $("#newpass").val()) {
-                                        $("#cpError").html("Passwords Do Not Match");
-                                        $("#cpSubmit").attr("disabled", true);
-                                    } else {
-                                        $("#cpError").html("");
-                                        $("#cpSubmit").attr("disabled", false);
-                                    }
-                                });
-                            });
-                        </script>
                         <input type="hidden" name="action" value="changepass">
                         <div class="form-group">
                             <label for="oldpass">Old Password</label>
@@ -206,7 +193,7 @@ $(document).ready(function() {
                             <input type="password" name="confpass" id="confpass" class="form-control" required>
                         </div>
                         <p id="cpError" class="text-danger"></p>
-                        <input type="submit" class="btn bg-virgin" id="cpSubmit" value="Change Password" disabled>
+                        <input type="submit" class="btn bg-virgin" id="cpSubmit" value="Change Password">
                     </form>
                 </div>
                 </div>
@@ -215,15 +202,20 @@ $(document).ready(function() {
             <table class="table mb-0 border-bottom">
             <tr><td class="align-middle"><b>Name</b></td><td class="align-middle"><?= $user->data()->name ?></td></tr>
                 <tr><td class="align-middle"><b>Callsign</b></td><td class="align-middle"><?= $user->data()->callsign ?></td></tr>
-                <tr><td class="align-middle"><b>Flight Time</b></td><td class="align-middle"><?= $user->data()->transhours ?></td></tr>
+                <tr><td class="align-middle"><b>Flight Time</b></td><td class="align-middle"><?= Time::secsToString($user->getFlightTime()) ?></td></tr>
                 <tr><td class="align-middle"><b>Rank</b></td><td class="align-middle"><?= $user->rank() ?></td></tr>
                 <tr><td class="align-middle"><b>PIREPs</b></td><td class="align-middle"><?= $user->pireps() ?></td></tr>
             </table>
             <br />
 
             <h3>News Feed</h3>
+            <br>
             <?php
             $news = News::get();
+
+            if ($news === array()) {
+                echo 'No news';
+            }
 
             foreach ($news as $article) {
                 echo '<div class="card mb-3">';
@@ -238,6 +230,7 @@ $(document).ready(function() {
             <br>
 
             <h3>Your Recent PIREPs</h3>
+            <br>
             <table class="table table-striped">
                 <thead class="bg-virgin"><tr><th class="mobile-hidden">Flight Number</th><th>Route</th><th class="mobile-hidden">Date</th><th class="mobile-hidden">Aircraft</th><th>Status</th></tr></thead>
                 <tbody>
@@ -246,7 +239,7 @@ $(document).ready(function() {
 
                         foreach ($pireps as $pirep) {
                             echo '<tr><td class="mobile-hidden align-middle">';
-                            echo $pirep["type"].$pirep["number"];
+                            echo $pirep["number"];
                             echo '</td><td class="align-middle">';
                             echo $pirep["departure"].'-'.$pirep["arrival"];
                             echo '</td><td class="mobile-hidden align-middle">';

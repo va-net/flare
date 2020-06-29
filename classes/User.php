@@ -146,21 +146,23 @@ class User
 
     }
 
-    public function hasPermission($key) 
+    public function hasPermission($key, $id = null) 
     {
 
-        $group = $this->_db->get('groups', array('id', '=', $this->data()->group));
-        
-        if ($group->count()) {
-            $permissions = json_decode($group->first()->permissions, true);
-            
-            if (array_key_exists($key, $permissions)) {
-                if ($permissions[$key] == true) {
-                    return true;
-                }
-            }
-            return false;
+        if (!$id && $this->isLoggedIn()) {
+            $id = $this->data()->id;
         }
+        
+        $user = $this->_db->get('pilots', array('id', '=', $id));
+
+        $permissions = json_decode($user->first()->permissions, true);
+        
+        if (array_key_exists($key, $permissions)) {
+            if ($permissions[$key] == true) {
+                return true;
+            }
+        }
+        return false;
 
     }
 
@@ -216,9 +218,34 @@ class User
         }
 
         $result = $this->_db->get('pilots', array('id', '=', $id));
-        $hrs = $result->first()->transhours;
+        $time = $result->first()->transhours;
 
-        return Rank::calc($hrs);
+        $pireps = Pirep::fetchPireps($id);
+
+        foreach (range(0, $pireps->count() - 1) as $i) {
+            $time = $time + $pireps->results()[$i]->flighttime;
+        }
+
+        return Rank::calc($time);
+
+    }
+
+    public function getFlightTime($id = null)
+    {
+
+        if (!$id && $this->isLoggedIn()) {
+            $id = $this->data()->id;
+        }
+
+        $result = $this->_db->get('pilots', array('id', '=', $id));
+        $time = $result->first()->transhours;
+        $pireps = Pirep::fetchPireps($id);
+
+        foreach (range(0, $pireps->count() - 1) as $i) {
+            $time = $time + $pireps->results()[$i]->flighttime;
+        }
+
+        return $time;
 
     }
 
@@ -230,6 +257,18 @@ class User
         }
 
         return Pirep::totalFiled($id);
+
+    }
+
+
+    public function fetchPireps($id)
+    {
+
+        if (!$id) {
+            return $this->_db->getAll('pireps');
+        }
+
+        return $this->_db->get('pireps', array('id', '=', $id));
 
     }
 

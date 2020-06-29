@@ -8,7 +8,7 @@ class Pirep
     private static function init()
     {
 
-        self::$_db = DB::getInstance();
+        self::$_db = DB::newInstance();
 
     }
 
@@ -19,12 +19,13 @@ class Pirep
 
         if ($id) {
             $result = self::$_db->get('pireps', array('pilotid', '=', $id));
-            $trans = self::$_db->get('pilots', array('id', '=', $id));
-            
-            $x = 0;
-            $total = 0;
+            $count = $result->count();
+            $user = self::$_db->get('pilots', array('id', '=', $id));
+            $total = $user->first()->transflights;
 
-            while ($x < $result->count()) {
+            $x = 0;
+
+            while ($x < $count) {
                 $total++;
                 $x++;
             }
@@ -47,28 +48,42 @@ class Pirep
             }
         }
 
-        $result = self::$_db->get('pireps', array('pilotid', '=', $id), array('datetime', 'DESC'));
+        $results = self::$_db->get('pireps', array('pilotid', '=', $id), array('datetime', 'DESC'));
 
         $x = 0;
+        $counter = 0;
         $pireps = array();
         $statuses = array('Pending', 'Approved', 'Denied');
 
-        while ($x < $result->count()) {
-            $aircraft = self::$_db->get('aircraft', array('id', '=', $result->results()[$x]->aircraftid));
-            $aircraft = $aircraft->first()->name;
+        while ($x < $results->count()) {
             $newdata = array(
-                'type' => $result->results()[$x]->type,
-                'number' => $result->results()[$x]->flightnum,
-                'departure' => $result->results()[$x]->departure,
-                'arrival' => $result->results()[$x]->arrival,
-                'aircraft' => $aircraft,
-                'date' => $result->results()[$x]->date,
-                'status' => $statuses[$result->results()[$x]->status],
+                'number' => $results->results()[$x]->flightnum,
+                'departure' => $results->results()[$x]->departure,
+                'arrival' => $results->results()[$x]->arrival,
+                'date' => $results->results()[$x]->datetime,
+                'status' => $statuses[$results->results()[$x]->status],
+                'aircraft' => Aircraft::getAircraftName($results->results()[$x]->aircraftid),
             );
             $pireps[$x] = $newdata;
+            $counter++;
+            if ($counter >= 10) {
+                break;
+            }
             $x++;
         }
         return $pireps;
+
+    }
+
+    public static function fetchPireps($id = null)
+    {
+
+        self::init();
+        if (!$id) {
+            return self::$_db->getAll('pireps');
+        }
+
+        return self::$_db->get('pireps', array('pilotid', '=', $id));
 
     }
 

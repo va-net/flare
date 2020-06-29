@@ -22,11 +22,16 @@ if (Input::exists()) {
 
             $login = $user->login(Input::get('email'), Input::get('password'), $remember);
 
-            if ($login) {
-                Redirect::to('home.php');
+            if ($user->data()->status > 0) {
+                if ($login) {
+                    Redirect::to('home.php');
+                } else {
+                    Session::flash('login', 'Login failed.');
+                }
             } else {
-                Session::flash('login', 'Login failed.');
+                Session::flash('error', 'Hold up! You need to wait until your application is approved before you can login!');
             }
+
         } else {
             foreach ($validation->errors() as $error) {
                 echo $error, '<br>';

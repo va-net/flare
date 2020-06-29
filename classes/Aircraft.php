@@ -9,7 +9,7 @@ class Aircraft
     private static function init()
     {
 
-        self::$_db = DB::getInstance();
+        self::$_db = DB::newInstance();
         self::$_list = file_get_contents('aircraft.txt');
         self::$_list = json_decode(self::$_list, true);
 

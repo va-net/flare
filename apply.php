@@ -62,15 +62,13 @@ if (Input::exists()) {
                     'callsign' => Input::get('callsign'),
                     'grade' => Input::get('grade'),
                     'violand' => Input::get('violand'),
-                    'group' => 1,
                     'notes' => Input::get('notes'),
-                    'joined' => date('Y-m-d H:m:s')
                 ));
-                Session::flash('success', 'Your application has been submitted, you can now login!');
-                Redirect::to('index.php');
             } catch(Exception $e) {
                 die($e->getMessage());
             }
+            Session::flash('success', 'Your application has been submitted, you can now login!');
+            Redirect::to('index.php');
         } else {
             foreach ($validate->errors() as $error) {
                 echo '<div class="alert alert-danger text-center">Error: '.$error.'</div>';
@@ -124,11 +122,9 @@ if (Session::exists('success')) {
     <label for="violand">Infinite Flight Grade</label>
     <select required class="form-control" name="grade">
         <option value>Select</option>
-        <option value="3" <?php if (Input::get('grade') && Input::get('grade') == '1') {echo 'selected';} ?>>Grade 1</option>
-        <option value="3" <?php if (Input::get('grade') && Input::get('grade') == '2') {echo 'selected';} ?>>Grade 2</option>
-        <option value="3" <?php if (Input::get('grade') && Input::get('grade') == '3') {echo 'selected';} ?>>Grade 3</option>
-        <option value="4" <?php if (Input::get('grade') && Input::get('grade') == '4') {echo 'selected';} ?>>Grade 4</option>
-        <option value="5" <?php if (Input::get('grade') && Input::get('grade') == '5') {echo 'selected';} ?>>Grade 5</option>
+        <?php foreach (range(1, 5) as $i) { ?>
+            <option value="<?= $i ?>" <?= (Input::get('grade') == $i) ? 'selected' : '' ?>>Grade <?= $i ?></option>
+        <?php } ?>
     </select>
     </div>
 
