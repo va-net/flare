@@ -1,6 +1,6 @@
 <?php
 
-class Permission
+class Permissions
 {
 
     private static $_permissions = array(

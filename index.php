@@ -1,8 +1,12 @@
 <?php
-
 require_once './core/init.php';
 
-include './includes/header.php';
+$user = new User();
+if ($user->isLoggedIn()) {
+    Redirect::to('index.php');
+    unset($user);
+    die();
+}
 
 if (Input::exists()) {
     if (Token::check(Input::get('token'))) {
@@ -18,18 +22,13 @@ if (Input::exists()) {
 
         if ($validation->passed()) {
             $user = new User();
+
             $remember = (Input::get('remember') === 'on') ? true : false;
 
-            $login = $user->login(Input::get('email'), Input::get('password'), $remember);
-
-            if ($user->data()->status > 0) {
-                if ($login) {
-                    Redirect::to('home.php');
-                } else {
-                    Session::flash('login', 'Login failed.');
-                }
+            if ($user->login(Input::get('email'), Input::get('password'), $remember)) {
+                Redirect::to('home.php');
             } else {
-                Session::flash('error', 'Hold up! You need to wait until your application is approved before you can login!');
+                Session::flash('login', 'Login failed.');
             }
 
         } else {
@@ -39,41 +38,66 @@ if (Input::exists()) {
         }
     }
 }
-
 ?>
+<!DOCTYPE html>
+<html>
+<head>
+    <?php include './includes/header.php'; ?>
+</head>
+<body>
+    <style>
+        #loader {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        z-index: 1;
+        width: 150px;
+        height: 150px;
+        margin: -75px 0 0 -75px;
+        width: 120px;
+        height: 120px;
+        }
+    </style>
 
-<h1 class="text-center pb-0 mb-0">Virgin Virtual Group</h1>
-<h3 class="text-center py-0 my-0">Pilot Login<br /><br /></h3>
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #E4181E;">
+        <?php include './includes/navbar.php'; ?>
+    </nav>
+    <div class="container-fluid">
+        <div class="container-fluid mt-4 text-center" style="overflow: auto;">
+            <h1 class="text-center pb-0 mb-0"><?= Config::get('va/name') ?></h1>
+            <h3 class="text-center py-0 my-0">Pilot Login<br><br></h3>
+            <div class="container w-50 justify-content-center">
+                <?php
+                if (Session::exists('error')) {
+                    echo '<div class="alert alert-danger text-center">Error: '.Session::flash('error').'</div>';
+                }
+                if (Session::exists('success')) {
+                    echo '<div class="alert alert-success text-center">'.Session::flash('success').'</div>';
+                }
+                ?>
+                <form method="post" action="">
+                    <input hidden name="action" value="authenticate">
+                    <div class="form-group text-center">
+                        <label for="email">Email Address</label>
+                        <input class="form-control" type="email" id="email" name="email">
+                    </div>
 
-<div class="container w-50 justify-content-center">
-    <?php
-
-    if (Session::exists('error')) {
-        echo '<div class="alert alert-danger text-center">Error: '.Session::flash('error').'</div>';
-    }
-    if (Session::exists('success')) {
-        echo '<div class="alert alert-success text-center">'.Session::flash('success').'</div>';
-    }
-
-    ?>
-    <form method="post">
-        <input hidden name="action" value="authenticate">
-        <div class="form-group text-center">
-            <label for="email">Email Address</label>
-            <input class="form-control" type="email" id="email" name="email">
-        </div>
-
-        <div class="form-group text-center">
-            <label for="pass">Password</label>
-            <input class="form-control" type="password" id="pass" name="password">
-        </div>
-        <input class="form-control" type="hidden" name="token" value="<?= Token::generate(); ?>">
-        <div class="row">
-            <div class="col text-center">
-                <input type="submit" style="background-color: #E4181E; color: white;" class="btn ml-auto mr-auto display-block" value="Log In">
+                    <div class="form-group text-center">
+                        <label for="pass">Password</label>
+                        <input class="form-control" type="password" id="pass" name="password">
+                    </div>
+                    <input class="form-control" type="hidden" name="token" value="<?= Token::generate(); ?>">
+                    <div class="row">
+                        <div class="col text-center">
+                            <input type="submit" style="background-color: #E4181E; color: white;" class="btn ml-auto mr-auto display-block" value="Log In">
+                        </div>
+                    </div>
+                </form>
             </div>
+            <footer class="container-fluid text-center">
+                <?php include './includes/footer.php'; ?>
+            </footer>
         </div>
-    </form>
-</div>
-
-<?php require './includes/footer.php'; ?>
+    </div>
+</body>
+</html>

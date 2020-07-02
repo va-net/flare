@@ -36,38 +36,6 @@ class Pirep
 
     }
 
-    public static function recents($id = null) 
-    {
-
-        self::init();
-
-        $results = self::$_db->get('pireps', array('pilotid', '=', $id), array('date', 'DESC'));
-
-        $x = 0;
-        $counter = 0;
-        $pireps = array();
-        $statuses = array('Pending', 'Approved', 'Denied');
-
-        while ($x < $results->count()) {
-            $newdata = array(
-                'number' => $results->results()[$x]->flightnum,
-                'departure' => $results->results()[$x]->departure,
-                'arrival' => $results->results()[$x]->arrival,
-                'date' => $results->results()[$x]->date,
-                'status' => $statuses[$results->results()[$x]->status],
-                'aircraft' => Aircraft::getAircraftName($results->results()[$x]->aircraftid),
-            );
-            $pireps[$x] = $newdata;
-            $counter++;
-            if ($counter >= 10) {
-                break;
-            }
-            $x++;
-        }
-        return $pireps;
-
-    }
-
     public static function fetchApprovedPireps($id = null)
     {
 

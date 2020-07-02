@@ -257,7 +257,7 @@ class User
 
     }
 
-    public function pireps($id = null)
+    public function numPirepsFiled($id = null)
     {
 
         if (!$id && $this->isLoggedIn()) {
@@ -276,7 +276,41 @@ class User
             return $this->_db->getAll('pireps');
         }
 
-        return $this->_db->get('pireps', array('id', '=', $id));
+        return $this->_db->get('pireps', array('pilotid', '=', $id), array('date', 'DESC'));
+
+    }
+    
+    public function recentPireps($id = null, $num = 10) 
+    {
+
+        if (!$id && $this->isLoggedIn()) {
+            $id = $this->data()->id;
+        }
+
+        $results = $this->fetchPireps($id);
+
+        $x = 0;
+        $counter = 0;
+        $pireps = array();
+        $statuses = array('Pending', 'Approved', 'Denied');
+
+        while ($x < $results->count()) {
+            $newdata = array(
+                'number' => $results->results()[$x]->flightnum,
+                'departure' => $results->results()[$x]->departure,
+                'arrival' => $results->results()[$x]->arrival,
+                'date' => $results->results()[$x]->date,
+                'status' => $statuses[$results->results()[$x]->status],
+                'aircraft' => Aircraft::getAircraftName($results->results()[$x]->aircraftid),
+            );
+            $pireps[$x] = $newdata;
+            $counter++;
+            if ($counter >= $num) {
+                break;
+            }
+            $x++;
+        }
+        return $pireps;
 
     }
 
