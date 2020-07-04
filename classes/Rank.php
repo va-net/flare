@@ -12,7 +12,7 @@ class Rank
 
     }
 
-    public static function calc($hours)
+    public static function calc($hours, $returnid = false)
     {
 
         self::init();
@@ -24,8 +24,21 @@ class Rank
         }
 
         $rank = self::$_db->get('ranks', array('timereq', '<=', $hours), array('timereq', 'desc'));
+
+        if ($returnid) {
+            return $rank->first()->id;
+        }
         
         return $rank->first()->name;
+
+    }
+
+    public static function getId($hours)
+    {
+
+        self::init();
+
+        return self::calc($hours, true);
 
     }
 

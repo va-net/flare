@@ -210,7 +210,7 @@ class User
 
     }
 
-    public function rank($id = null) 
+    public function rank($id = null, $returnid = false) 
     {
 
         if (!$id && $this->isLoggedIn()) {
@@ -230,7 +230,37 @@ class User
             $time = 0;
         }
 
+        if ($returnid) {
+            return Rank::getId($time);
+        }
+
         return Rank::calc($time);
+
+    }
+
+    public function getAvailableAircraft($id = null)
+    {
+
+        if (!$id && $this->isLoggedIn()) {
+            $id = $this->data()->id;
+        }
+
+        $result = Aircraft::getAvailableAircraft($this->rank($id, true));
+
+        $aircraft = array();
+        $x = 0;
+
+        while ($x < $result->count()) {
+            $newdata = array(
+                'name' => $result->results()[$x]->name,
+                'code' => $result->results()[$x]->code,
+                'size' => $result->results()[$x]->size,
+                'liveryid' => $result->results()[$x]->ifliveryid
+            );
+            $aircraft[$x] = $newdata;
+            $x++;
+        }
+        return $aircraft;
 
     }
 
@@ -301,6 +331,7 @@ class User
                 'arrival' => $results->results()[$x]->arrival,
                 'date' => $results->results()[$x]->date,
                 'status' => $statuses[$results->results()[$x]->status],
+                'flighttime' => $results->results()[$x]->flighttime,
                 'aircraft' => Aircraft::getAircraftName($results->results()[$x]->aircraftid),
             );
             $pireps[$x] = $newdata;
