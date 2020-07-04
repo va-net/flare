@@ -23,7 +23,8 @@ class Rank
             return $finalRank->first()->name;
         }
 
-        $rank = self::$_db->get('ranks', array('timereq', '>=', $hours), array('timereq', 'asc'));
+        $rank = self::$_db->get('ranks', array('timereq', '<=', $hours), array('timereq', 'desc'));
+        
         return $rank->first()->name;
 
     }
@@ -42,6 +43,15 @@ class Rank
     {
 
         self::$_db->delete('ranks', array('name', '=', $name));
+
+    }
+
+    public static function getFirstRank()
+    {
+
+        self::init();
+        $rank = self::$_db->get('ranks', array('id', '>', '0'), array('timereq', 'asc'));
+        return $rank->first()->name;
 
     }
 

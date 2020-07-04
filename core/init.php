@@ -9,10 +9,10 @@ session_start();
 
 $GLOBALS['config'] = array(
     'mysql' => array(
-        'host' => '',
-        'username' => '',
+        'host' => 'localhost',
+        'username' => 'root',
         'password' => '',
-        'db' => ''
+        'db' => 'flare'
         ),
     'remember' => array(
         'cookie_name' => 'remember',
@@ -21,6 +21,9 @@ $GLOBALS['config'] = array(
     'session' => array(
         'session_name' => 'user',
         'token_name' => 'token'
+    ),
+    'va' => array(
+        'name' => 'Virgin Virtual Group'
     )
 );
 

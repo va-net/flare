@@ -18,7 +18,7 @@ class Pirep
         self::init();
 
         if ($id) {
-            $result = self::$_db->get('pireps', array('pilotid', '=', $id));
+            $result = self::$_db->query('SELECT * FROM pireps WHERE pilotid = ? AND status = ?', array($id, 1));
             $count = $result->count();
             $user = self::$_db->get('pilots', array('id', '=', $id));
             $total = $user->first()->transflights;
@@ -36,46 +36,7 @@ class Pirep
 
     }
 
-    public static function recents($id = null) 
-    {
-
-        self::init();
-
-        if (!$id) {
-            $user = new User();
-            if ($user->isLoggedIn()) {
-                $id = $user->data()->id;
-            }
-        }
-
-        $results = self::$_db->get('pireps', array('pilotid', '=', $id), array('datetime', 'DESC'));
-
-        $x = 0;
-        $counter = 0;
-        $pireps = array();
-        $statuses = array('Pending', 'Approved', 'Denied');
-
-        while ($x < $results->count()) {
-            $newdata = array(
-                'number' => $results->results()[$x]->flightnum,
-                'departure' => $results->results()[$x]->departure,
-                'arrival' => $results->results()[$x]->arrival,
-                'date' => $results->results()[$x]->datetime,
-                'status' => $statuses[$results->results()[$x]->status],
-                'aircraft' => Aircraft::getAircraftName($results->results()[$x]->aircraftid),
-            );
-            $pireps[$x] = $newdata;
-            $counter++;
-            if ($counter >= 10) {
-                break;
-            }
-            $x++;
-        }
-        return $pireps;
-
-    }
-
-    public static function fetchPireps($id = null)
+    public static function fetchApprovedPireps($id = null)
     {
 
         self::init();
@@ -83,7 +44,7 @@ class Pirep
             return self::$_db->getAll('pireps');
         }
 
-        return self::$_db->get('pireps', array('pilotid', '=', $id));
+        return self::$_db->query('SELECT * FROM pireps WHERE pilotid = ? AND status = ?', array($id, 1));
 
     }
 
