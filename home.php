@@ -1,6 +1,9 @@
 <?php
 require_once './core/init.php';
+
 $user = new User();
+
+Page::setTitle('Home - '.$user->data()->callsign);
 
 if (!$user->isLoggedIn()) {
     Redirect::to('index.php');

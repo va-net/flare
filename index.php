@@ -1,11 +1,11 @@
 <?php
 require_once './core/init.php';
 
+Session::create('darkmode', false);
+
 $user = new User();
 if ($user->isLoggedIn()) {
-    Redirect::to('index.php');
-    unset($user);
-    die();
+    Redirect::to('home.php');
 }
 
 if (Input::exists()) {
@@ -21,7 +21,6 @@ if (Input::exists()) {
         ));
 
         if ($validation->passed()) {
-            $user = new User();
 
             $remember = (Input::get('remember') === 'on') ? true : false;
 
