@@ -94,7 +94,7 @@ if (!$user->isLoggedIn()) {
                                             echo '</td><td class="align-middle">';
                                             echo $pirep["status"];
                                             echo '</td><td class="align-middle">';
-                                            echo '&nbsp;<button class="btn text-light" style="background-color: #E4181E;" data-toggle="modal" data-target="#pirep'.$x.'"><i class="fa fa-edit"></i></button>';
+                                            echo '<button class="btn text-light" style="background-color: #E4181E;" data-toggle="modal" data-target="#pirep'.$x.'"><i class="fa fa-edit"></i></button>';
                                             echo '</td></tr>';
                                             $x++;
                                         }
@@ -166,11 +166,19 @@ if (!$user->isLoggedIn()) {
                             <section id="filepirep">
                                 <h4>File PIREP</h4>
                                 <br>
+                                <?php
+                                if (Session::exists('error')) {
+                                    echo '<div class="alert alert-danger text-center">Error: '.Session::flash('error').'</div>';
+                                }
+                                if (Session::exists('success')) {
+                                    echo '<div class="alert alert-success text-center">'.Session::flash('success').'</div>';
+                                }
+                                ?>
                                 <form action="update.php" method="post">
                                     <input hidden name="action" value="filepirep">
                                     <div class="form-group">
                                         <label for="flightdate">Date of Flight</label>
-                                        <input required type="date" value="<?php echo Date("Y-m-d") ?>" class="form-control" name="date">
+                                        <input required type="date" value="<?php echo date("Y-m-d") ?>" class="form-control" name="date">
                                     </div>
                                     <div class="form-group">
                                         <label for="fnum">Flight Number</label>
@@ -202,8 +210,8 @@ if (!$user->isLoggedIn()) {
                                         </select>
                                     </div>
                                     <div class="form-group">
-                                        <label for="multicode">Multiplier Code (if applicable)</label>
-                                        <input type="number" class="form-control" maxlength="6" minlength="6" id="multicode" name="multicode">
+                                        <label for="multicode">Multiplier number (if applicable)</label>
+                                        <input type="number" class="form-control" maxlength="6" minlength="6" id="multi" name="multi" value="0">
                                     </div>
                                     <input type="submit" class="btn text-light" style="background-color: #E4181E;" value="Submit">
                                 </form>

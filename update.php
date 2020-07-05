@@ -2,6 +2,8 @@
 
 require_once './core/init.php';
 
+$db = DB::getInstance();
+
 $user = new User();
 
 if (Input::get('action') === 'editprofile') {
@@ -37,6 +39,29 @@ if (Input::get('action') === 'editprofile') {
     } else {
         Session::flash('error', 'Your current password was incorrect!');
         Redirect::to('home.php');
+    }
+} elseif (Input::get('action') === 'filepirep') {
+    $multi = 0;
+
+    if (Input::get('multi') != 0) {
+        $multi = Input::get('multi');
+    }
+    
+    if (!$db->insert('pireps', array(
+        'flightnum' => Input::get('fnum'),
+        'departure' => Input::get('dep'),
+        'arrival' => Input::get('arr'),
+        'flighttime' => Time::strToSecs(Input::get('ftime')),
+        'pilotid' => $user->data()->id,
+        'date' => Input::get('date'),
+        'aircraftid' => Aircraft::getId(Input::get('aircraft')),
+        'multi' => $multi
+    ))) {
+        Session::flash('error', 'There was an error filing the PIREP.');
+        Redirect::to('pireps.php');
+    } else {
+        Session::flash('success', 'PIREP filed successfully!');
+        Redirect::to('pireps.php');
     }
 }
 

@@ -52,4 +52,15 @@ class Aircraft
         return self::$_db->get('aircraft', array('rankreq', '<=', $rankid));
 
     }
+
+    public static function getId($name)
+    {
+
+        self::init();
+
+        $result = self::$_db->get('aircraft', array('name', '=', $name));
+
+        return $result->first()->id;
+
+    }
 }
