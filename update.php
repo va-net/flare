@@ -56,10 +56,10 @@ if (Input::get('action') === 'editprofile') {
         'multi' => $multi
     ))) {
         Session::flash('error', 'There was an error filing the PIREP.');
-        Redirect::to('pireps.php');
+        Redirect::to('pireps.php#filepirep');
     } else {
         Session::flash('success', 'PIREP filed successfully!');
-        Redirect::to('pireps.php');
+        Redirect::to('pireps.php#filepirep');
     }
 } elseif (Input::get('action') === 'editpirep') {
     if (!Pirep::update(Input::get('id'), array(
