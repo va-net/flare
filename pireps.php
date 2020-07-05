@@ -66,6 +66,14 @@ if (!$user->isLoggedIn()) {
                             <section id="recents">
                                 <h4>My Recent PIREPs</h4>
                                 <p>Showing your 30 most recent PIREPs</p>
+                                <?php
+                                if (Session::exists('errorrecent')) {
+                                    echo '<div class="alert alert-danger text-center">Error: '.Session::flash('errorrecent').'</div>';
+                                }
+                                if (Session::exists('successrecent')) {
+                                    echo '<div class="alert alert-success text-center">'.Session::flash('successrecent').'</div>';
+                                }
+                                ?>
                                 <br>
                                 <table class="table table-striped">
                                     <thead class="bg-virgin">
@@ -119,10 +127,15 @@ if (!$user->isLoggedIn()) {
                                                 <div class="modal-body">
                                                     <form action="update.php" method="post">
                                                         <input hidden name="action" value="editpirep">
+                                                        <input hidden name="id" value="'.$pirep['id'].'">
                                                         <div class="form-group">
                                                             <label for="date">Date of Flight</label>
                                                             <input required type="date" value="'.date_format(date_create($pirep['date']), 'Y-m-d').'" class="form-control" name="date">
-                                                        </div>  
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="fnum">Flight Number</label>
+                                                            <input type="number" min="1" class="form-control" name="fnum" value="'.$pirep['number'].'">
+                                                        </div>
                                                         <div class="form-group">
                                                             <label for="dep">Departure</label>
                                                             <input required maxlength="4" minlength="4" type="text" value="'.$pirep['departure'].'" class="form-control" name="dep">
@@ -150,6 +163,10 @@ if (!$user->isLoggedIn()) {
                                                                 }
                                                                 echo '
                                                             </select>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="multi">Multiplier number (if applicable)</label>
+                                                            <input type="number" class="form-control" maxlength="6" minlength="6" id="multi" name="multi" value="'.$pirep['multi'].'">
                                                         </div>
                                                         <input type="submit" class="btn bg-virgin" value="Save">    
                                                     </form>                                      
@@ -210,7 +227,7 @@ if (!$user->isLoggedIn()) {
                                         </select>
                                     </div>
                                     <div class="form-group">
-                                        <label for="multicode">Multiplier number (if applicable)</label>
+                                        <label for="multi">Multiplier number (if applicable)</label>
                                         <input type="number" class="form-control" maxlength="6" minlength="6" id="multi" name="multi" value="0">
                                     </div>
                                     <input type="submit" class="btn text-light" style="background-color: #E4181E;" value="Submit">

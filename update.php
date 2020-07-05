@@ -2,8 +2,6 @@
 
 require_once './core/init.php';
 
-$db = DB::getInstance();
-
 $user = new User();
 
 if (Input::get('action') === 'editprofile') {
@@ -46,8 +44,8 @@ if (Input::get('action') === 'editprofile') {
     if (Input::get('multi') != 0) {
         $multi = Input::get('multi');
     }
-    
-    if (!$db->insert('pireps', array(
+
+    if (!Pirep::file(array(
         'flightnum' => Input::get('fnum'),
         'departure' => Input::get('dep'),
         'arrival' => Input::get('arr'),
@@ -63,7 +61,23 @@ if (Input::get('action') === 'editprofile') {
         Session::flash('success', 'PIREP filed successfully!');
         Redirect::to('pireps.php');
     }
+} elseif (Input::get('action') === 'editpirep') {
+    if (!Pirep::update(Input::get('id'), array(
+        'flightnum' => Input::get('fnum'),
+        'departure' => Input::get('dep'),
+        'arrival' => Input::get('arr'),
+        'flighttime' => Time::strToSecs(Input::get('ftime')),
+        'pilotid' => $user->data()->id,
+        'date' => Input::get('date'),
+        'aircraftid' => Aircraft::getId(Input::get('aircraft')),
+        'multi' => Input::get('multi')
+    ))) {
+        Session::flash('errorrecent', 'There was an error editing the PIREP.');
+        Redirect::to('pireps.php');
+    } else {
+        Session::flash('successrecent', 'PIREP edited successfully!');
+        Redirect::to('pireps.php');
+    }
 }
-
 
 

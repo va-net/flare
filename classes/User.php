@@ -220,7 +220,7 @@ class User
         $result = $this->_db->get('pilots', array('id', '=', $id));
         $time = $result->first()->transhours;
 
-        $pireps = Pirep::fetchApprovedPireps($id);
+        $pireps = $this->fetchApprovedPireps();
 
         if ($pireps->count() != 0) {
             foreach (range(0, $pireps->count() - 1) as $i) {
@@ -273,7 +273,7 @@ class User
 
         $result = $this->_db->get('pilots', array('id', '=', $id));
         $time = $result->first()->transhours;
-        $pireps = Pirep::fetchApprovedPireps($id);
+        $pireps = $this->fetchApprovedPireps();
 
         if ($pireps->count() != 0) {
             foreach (range(0, $pireps->count() - 1) as $i) {
@@ -294,7 +294,7 @@ class User
             $id = $this->data()->id;
         }
 
-        return Pirep::totalFiled($id);
+        return $this->totalPirepsFiled();
 
     }
 
@@ -326,6 +326,7 @@ class User
 
         while ($x < $results->count()) {
             $newdata = array(
+                'id' => $results->results()[$x]->id,
                 'number' => $results->results()[$x]->flightnum,
                 'departure' => $results->results()[$x]->departure,
                 'arrival' => $results->results()[$x]->arrival,
@@ -333,6 +334,7 @@ class User
                 'status' => $statuses[$results->results()[$x]->status],
                 'flighttime' => $results->results()[$x]->flighttime,
                 'aircraft' => Aircraft::getAircraftName($results->results()[$x]->aircraftid),
+                'multi' => $results->results()[$x]->multi
             );
             $pireps[$x] = $newdata;
             $counter++;
@@ -342,6 +344,39 @@ class User
             $x++;
         }
         return $pireps;
+
+    }
+
+    public function fetchApprovedPireps($id = null)
+    {
+
+        if (!$id && $this->isLoggedIn()) {
+            $id = $this->data()->id;
+        }
+
+        return $this->_db->query('SELECT * FROM pireps WHERE pilotid = ? AND status = ?', array($id, 1));
+
+    }
+
+    public function totalPirepsFiled($id = null)
+    {
+
+        if (!$id && $this->isLoggedIn()) {
+            $id = $this->data()->id;
+        }
+
+        $result = $this->_db->get('pireps', array('status', '=', 1));
+        $count = $result->count();
+        $user = $this->_db->get('pilots', array('id', '=', $id));
+        $total = $user->first()->transflights;
+
+        $x = 0;
+
+        while ($x < $count) {
+            $total++;
+            $x++;
+        }
+        return $total;
 
     }
 
