@@ -23,7 +23,8 @@ $GLOBALS['config'] = array(
         'token_name' => 'token'
     ),
     'va' => array(
-        'name' => 'Virgin Virtual Group'
+        'name' => 'Virgin Virtual Group',
+        'identifier' => 'VGVA'
     )
 );
 

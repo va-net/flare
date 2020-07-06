@@ -67,6 +67,14 @@ if (!$user->isLoggedIn()) {
                         <div class="tab-pane container active" id="home" style="display: none;">
                             <h3>Pilot Home</h3>
                             <p>Welcome to the <?= Config::get('va/name') ?> crew center, <?= $user->data()->name ?>!</p>
+                            <?php
+                            if (Session::exists('errormain')) {
+                                echo '<div class="alert alert-danger text-center">Error: '.Session::flash('errormain').'</div>';
+                            }
+                            if (Session::exists('successmain')) {
+                                echo '<div class="alert alert-success text-center">'.Session::flash('successmain').'</div>';
+                            }
+                            ?>
                             <!-- profile -->
                             <section id="profile">
                                 <h3>Your Profile</h3>

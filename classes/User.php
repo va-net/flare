@@ -294,7 +294,18 @@ class User
             $id = $this->data()->id;
         }
 
-        return $this->totalPirepsFiled();
+        $result = $this->_db->query('SELECT id FROM pireps WHERE status = 1 AND pilotid = ?', array($id));
+        $count = $result->count();
+        $user = $this->_db->get('pilots', array('id', '=', $id));
+        $total = $user->first()->transflights;
+
+        $x = 0;
+
+        while ($x < $count) {
+            $total++;
+            $x++;
+        }
+        return $total;
 
     }
 
@@ -377,6 +388,36 @@ class User
             $x++;
         }
         return $total;
+
+    }
+
+    public function getAllUsers()
+    {
+
+        $db = DB::newInstance();
+
+        $results = $db->getAll('pilots');
+
+        $usersarray = array();
+        $statuses = array('Pending', 'Active', 'Inactive');
+        $x = 0;
+
+        while ($x < $results->count()) {
+            $newdata = array(
+                'id' => $results->results()[$x]->id,
+                'callsign' => $results->results()[$x]->callsign,
+                'name' => $results->results()[$x]->name,
+                'email' => $results->results()[$x]->email,
+                'ifc' => $results->results()[$x]->ifc,
+                'rank' => $this->rank($results->results()[$x]->id),
+                'status' => $statuses[$results->results()[$x]->status],
+                'joined' => $results->results()[$x]->joined
+            );
+            $usersarray[$x] = $newdata;
+            $x++;
+        }
+
+        return $usersarray;
 
     }
 
