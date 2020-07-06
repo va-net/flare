@@ -70,6 +70,14 @@ if (!$user->isLoggedIn()) {
                         <div class="tab-pane container active" id="home" style="display: none;">
                             <h3>Admin Panel</h3>
                             <p>Welcome to the Admin Panel. Here you can find the administration tools required to manage <?= Config::get('va/name') ?></p>
+                            <?php
+                            if (Session::exists('error')) {
+                                echo '<div class="alert alert-danger text-center">Error: '.Session::flash('error').'</div>';
+                            }
+                            if (Session::exists('success')) {
+                                echo '<div class="alert alert-success text-center">'.Session::flash('success').'</div>';
+                            }
+                            ?>
                             <?php if (Input::get('page') === 'usermanage'): ?>
                                 <h3>Manage Users</h3>
                                 <?php if (!$user->hasPermission('usermanage')): ?>
@@ -119,8 +127,9 @@ if (!$user->isLoggedIn()) {
                                             </div>
                                             <div class="modal-body">
                                                 <p id="delconfirmmessage"></p>
-                                                <form>
-                                                    <input type="hidden" value="" name="user" id="delconfirmuserid">
+                                                <form action="update.php" method="post">
+                                                    <input hidden name="action" value="deluser">
+                                                    <input type="hidden" value="" name="id" id="delconfirmuserid">
                                                     <input type="submit" class="btn bg-virgin" value="Mark as inactive">
                                                 </form>
                                             </div>
@@ -150,20 +159,21 @@ if (!$user->isLoggedIn()) {
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="usermodal-email">Email</label>
-                                                        <input required type="text" value="" class="form-control" name="name" id="usermodal-email">
+                                                        <input required type="text" value="" class="form-control" name="email" id="usermodal-email">
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="usermodal-ifc">IFC Username</label>
-                                                        <input required type="text" value="" class="form-control" name="name" id="usermodal-ifc">
+                                                        <input required type="text" value="" class="form-control" name="ifc" id="usermodal-ifc">
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="usermodal-joined">Join date</label>
-                                                        <input readonly type="date" value="" class="form-control" name="name" id="usermodal-joined">
+                                                        <input readonly type="date" value="" class="form-control" name="joined" id="usermodal-joined">
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="usermodal-status">Status</label>
-                                                        <input type="text" value="" class="form-control" name="name" id="usermodal-status">
+                                                        <input readonly type="text" value="" class="form-control" name="status" id="usermodal-status">
                                                     </div>
+                                                    <input type="submit" class="btn bg-virgin" value="Save">
                                                 </form>
                                             </div>
                                         </div>
@@ -251,6 +261,7 @@ if (!$user->isLoggedIn()) {
                 var userJoined = $(e.relatedTarget).data('joined')
                 var userStatus = $(e.relatedTarget).data('status')
                 var userId = $(e.relatedTarget).data('id')
+                $('#usermodaltitle').text('Edit User - ' + userCallsign)
                 $('#usermodal-callsign').val(userCallsign);
                 $('#usermodal-name').val(userName);
                 $('#usermodal-email').val(userEmail);

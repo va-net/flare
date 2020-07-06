@@ -78,6 +78,33 @@ if (Input::get('action') === 'editprofile') {
         Session::flash('successrecent', 'PIREP edited successfully!');
         Redirect::to('pireps.php');
     }
+} elseif (Input::get('action') === 'edituser') {
+
+    try {
+        $user->update(array(
+            'callsign' => Input::get('callsign'),
+            'name' => Input::get('name'),
+            'email' => Input::get('email'),
+            'ifc' => Input::get('ifc')
+        ), Input::get('id'));
+    } catch (Exception $e) {
+        Session::flash('error', 'There was an error editing the user.');
+        Redirect::to('admin.php?page=usermanage');
+    }
+    Session::flash('success', 'User edited successfully!');
+    Redirect::to('admin.php?page=usermanage');
+} elseif (Input::get('action') === 'deluser') {
+
+    try {
+        $user->update(array(
+            'status' => 0
+        ), Input::get('id'));
+    } catch (Exception $e) {
+        Session::flash('error', 'There was an error deleting the user.');
+        Redirect::to('admin.php?page=usermanage');
+    }
+    Session::flash('success', 'User deleted successfully!');
+    Redirect::to('admin.php?page=usermanage');
 }
 
 
