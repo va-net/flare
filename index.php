@@ -25,10 +25,16 @@ if (Input::exists()) {
             $remember = (Input::get('remember') === 'on') ? true : false;
 
             if ($user->login(Input::get('email'), Input::get('password'), $remember)) {
-                Redirect::to('home.php');
+                if ($user->data()->status == 1) {
+                    Redirect::to('home.php');
+                } elseif ($user->data()->status == 0) {
+                    Session::flash('error', 'Whoops! You need to wait until your application has been approved before logging in!');
+                } elseif ($user->data()->status == 2) {
+                    Session::flash('error', 'Looks like your account has been marked as inactive - contact a member of staff to have this rectified!');
+                }
             } else {
-                Session::flash('login', 'Login failed.');
-            }
+                Session::flash('error', 'Login failed.');
+            } 
 
         } else {
             foreach ($validation->errors() as $error) {

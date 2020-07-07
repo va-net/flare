@@ -78,6 +78,9 @@ if (!$user->isLoggedIn()) {
                                 echo '<div class="alert alert-success text-center">'.Session::flash('success').'</div>';
                             }
                             ?>
+                            <?php if (Input::get('page') == ''): ?>
+                            <p>Looks like no page was specified. Make sure you use the buttons in the navbar/sidebar!</p>
+                            <?php endif; ?>
                             <?php if (Input::get('page') === 'usermanage'): ?>
                                 <h3>Manage Users</h3>
                                 <?php if (!$user->hasPermission('usermanage')): ?>

@@ -53,7 +53,7 @@ if (!$user->isLoggedIn()) {
                     echo '<hr class="mt-0 divider">';
                     foreach ($permissions as $permission => $data) {
                         if ($user->hasPermission($permission)) {
-                            echo '<a href="admin.php#'.$permission.'" id="userslink" class="panel-link"><i class="fa '.$data['icon'].'"></i>&nbsp;'.$data['name'].'</a><br>';
+                            echo '<a href="admin.php?page='.$permission.'" id="userslink" class="panel-link"><i class="fa '.$data['icon'].'"></i>&nbsp;'.$data['name'].'</a><br>';
                         }
                     }
                 }
