@@ -68,8 +68,6 @@ if (!$user->isLoggedIn()) {
                 <div id="loader" class="spinner-border spinner-border-sm text-danger"></div>
                     <div class="tab-content" id="tc">
                         <div class="tab-pane container active" id="home" style="display: none;">
-                            <h3>Admin Panel</h3>
-                            <p>Welcome to the Admin Panel. Here you can find the administration tools required to manage <?= Config::get('va/name') ?></p>
                             <?php
                             if (Session::exists('error')) {
                                 echo '<div class="alert alert-danger text-center">Error: '.Session::flash('error').'</div>';
@@ -79,7 +77,9 @@ if (!$user->isLoggedIn()) {
                             }
                             ?>
                             <?php if (Input::get('page') == ''): ?>
-                            <p>Looks like no page was specified. Make sure you use the buttons in the navbar/sidebar!</p>
+                                <h3>Admin Panel</h3>
+                                <p>Welcome to the Admin Panel. Here you can find the administration tools required to manage <?= Config::get('va/name') ?></p>
+                                <p>Looks like no page was specified. Make sure you use the buttons in the navbar/sidebar!</p>
                             <?php endif; ?>
                             <?php if (Input::get('page') === 'usermanage'): ?>
                                 <h3>Manage Users</h3>
@@ -188,7 +188,122 @@ if (!$user->isLoggedIn()) {
                                 <?php if (!$user->hasPermission('usermanage')): ?>
                                     <div class="alert alert-danger text-center">Whoops! You don't have the necessary permissions to access this.</div>
                                 <?php else: ?>
-                                    
+                                    <p>Here you can manage staff members, and their permissions. Be sure to select the correct permissions, as setting the wrong permissions can give them access to sensitive information!</p>
+                                    <table class="table table-striped">
+                                    <thead class="bg-virgin">
+                                        <tr>
+                                            <th>Callsign</th>
+                                            <th class="mobile-hidden">Name</th>
+                                            <th class="mobile-hidden">Email</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                        $stafflist = $user->getAllStaff();
+                                        $x = 0;
+                                        foreach ($stafflist as $staff) {
+                                            echo '<tr><td class="align-middle">';
+                                            echo $staff["callsign"];
+                                            echo '</td><td class="mobile-hidden align-middle">';
+                                            echo $staff["name"];
+                                            echo '</td><td class="mobile-hidden align-middle">';
+                                            echo $staff["email"];
+                                            echo '</td><td class="align-middle">';
+                                            echo $staff["status"];
+                                            echo '</td><td class="align-middle">';
+                                            echo '<button class="btn text-light" style="background-color: #E4181E;" data-toggle="modal" data-target="#staff'.$x.'modal" data-callsign="'.$staff['callsign'].'" data-name="'.$staff['name'].'" data-email="'.$staff['email'].'" data-ifc="'.$staff['ifc'].'" data-joined="'.date_format(date_create($staff['joined']), 'Y-m-d').'" data-status="'.$staff['status'].'" data-id="'.$staff['id'].'"><i class="fa fa-edit"></i></button>';
+                                            echo '&nbsp;<button id="delconfirmbtn" class="btn text-light" style="background-color: #E4181E;" data-toggle="modal" data-target="#delconfirmmodal" data-callsign="'.$staff['callsign'].'"><i class="fa fa-trash"></i></button>';
+                                            echo '</td>';
+                                            $x++;
+                                        }
+                                        ?>
+                                    </tbody>
+                                </table>
+                                <?php
+                                $x = 0;
+                                foreach ($stafflist as $staff) {
+                                    echo 
+                                    '
+                                    <div class="modal fade" id="staff'.$x.'modal" tabindex="-1" role="dialog" aria-labelledby="staff'.$x.'label" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="staffmodaltitle"></h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form action="update.php" method="post">
+                                                        <input hidden name="action" value="editstaff">
+                                                        <div class="form-group">
+                                                            <label for="usermodal-callsign">Callsign</label>
+                                                            <input required type="text" value="'.$staff['callsign'].'" class="form-control" name="callsign" id="usermodal-callsign">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="usermodal-name">Name</label>
+                                                            <input required type="text" value="'.$staff['name'].'" class="form-control" name="name" id="usermodal-name">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="usermodal-email">Email</label>
+                                                            <input required type="text" value="'.$staff['email'].'" class="form-control" name="email" id="usermodal-email">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="usermodal-ifc">IFC Username</label>
+                                                            <input required type="text" value="'.$staff['ifc'].'" class="form-control" name="ifc" id="usermodal-ifc">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="usermodal-joined">Join date</label>
+                                                            <input readonly type="date" value="'.$staff['joined'].'" class="form-control" name="joined" id="usermodal-joined">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="usermodal-status">Status</label>
+                                                            <input readonly type="text" value="'.$staff['status'].'" class="form-control" name="status" id="usermodal-status">
+                                                        </div>
+                                                        <br>
+                                                        <h5>Permissions</h5>
+                                                        ';
+                                                        $permissions = Permissions::getAll();
+
+                                                        foreach ($permissions as $permission => $data) {
+                                                            if ($user->hasPermission($permission, $staff['id'])) {
+                                                                echo
+                                                                '
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input" type="checkbox" value="" id="permission'.$permission.'" name="'.$permission.'" checked>
+                                                                    <label class="form-check-label" for="defaultCheck1">
+                                                                        '.$data['name'].'
+                                                                    </label>
+                                                                </div>
+                                                                ';
+                                                            } else {
+                                                                echo
+                                                                '
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input" type="checkbox" value="" id="permission'.$permission.'" name="'.$permission.'">
+                                                                    <label class="form-check-label" for="defaultCheck1">
+                                                                        '.$data['name'].'
+                                                                    </label>
+                                                                </div>
+                                                                ';
+                                                            }
+                                                        }
+                                                        echo 
+                                                        '
+                                                        <br>
+                                                        <input type="submit" class="btn bg-virgin" value="Save">
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    ';
+                                    $x++;
+                                }
+
+                                ?>
                                 <?php endif; ?>
                             <?php elseif (Input::get('page') === 'recruitment'): ?>
                                 <h3>Recruitment</h3>
