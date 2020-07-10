@@ -15,7 +15,7 @@ class Aircraft
 
     }
 
-    public static function getAllAircraft()
+    public static function getAllAircraftIF()
     {
 
         self::init();
@@ -35,4 +35,32 @@ class Aircraft
 
     }
 
+    public static function getAllAircraft()
+    {
+
+        self::init();
+
+        return self::$_db->get('aircraft', array('id', '>', '0'));
+
+    }
+
+    public static function getAvailableAircraft($rankid)
+    {
+
+        self::init();
+
+        return self::$_db->get('aircraft', array('rankreq', '<=', $rankid));
+
+    }
+
+    public static function getId($name)
+    {
+
+        self::init();
+
+        $result = self::$_db->get('aircraft', array('name', '=', $name));
+
+        return $result->first()->id;
+
+    }
 }

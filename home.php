@@ -53,7 +53,7 @@ if (!$user->isLoggedIn()) {
                     echo '<hr class="mt-0 divider">';
                     foreach ($permissions as $permission => $data) {
                         if ($user->hasPermission($permission)) {
-                            echo '<a href="admin.php#'.$permission.'" id="userslink" class="panel-link"><i class="fa '.$data['icon'].'"></i>&nbsp;'.$data['name'].'</a><br>';
+                            echo '<a href="admin.php?page='.$permission.'" id="userslink" class="panel-link"><i class="fa '.$data['icon'].'"></i>&nbsp;'.$data['name'].'</a><br>';
                         }
                     }
                 }
@@ -67,6 +67,14 @@ if (!$user->isLoggedIn()) {
                         <div class="tab-pane container active" id="home" style="display: none;">
                             <h3>Pilot Home</h3>
                             <p>Welcome to the <?= Config::get('va/name') ?> crew center, <?= $user->data()->name ?>!</p>
+                            <?php
+                            if (Session::exists('errormain')) {
+                                echo '<div class="alert alert-danger text-center">Error: '.Session::flash('errormain').'</div>';
+                            }
+                            if (Session::exists('successmain')) {
+                                echo '<div class="alert alert-success text-center">'.Session::flash('successmain').'</div>';
+                            }
+                            ?>
                             <!-- profile -->
                             <section id="profile">
                                 <h3>Your Profile</h3>

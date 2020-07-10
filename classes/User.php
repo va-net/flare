@@ -210,7 +210,7 @@ class User
 
     }
 
-    public function rank($id = null) 
+    public function rank($id = null, $returnid = false) 
     {
 
         if (!$id && $this->isLoggedIn()) {
@@ -220,7 +220,7 @@ class User
         $result = $this->_db->get('pilots', array('id', '=', $id));
         $time = $result->first()->transhours;
 
-        $pireps = Pirep::fetchApprovedPireps($id);
+        $pireps = $this->fetchApprovedPireps();
 
         if ($pireps->count() != 0) {
             foreach (range(0, $pireps->count() - 1) as $i) {
@@ -230,7 +230,37 @@ class User
             $time = 0;
         }
 
+        if ($returnid) {
+            return Rank::getId($time);
+        }
+
         return Rank::calc($time);
+
+    }
+
+    public function getAvailableAircraft($id = null)
+    {
+
+        if (!$id && $this->isLoggedIn()) {
+            $id = $this->data()->id;
+        }
+
+        $result = Aircraft::getAvailableAircraft($this->rank($id, true));
+
+        $aircraft = array();
+        $x = 0;
+
+        while ($x < $result->count()) {
+            $newdata = array(
+                'name' => $result->results()[$x]->name,
+                'code' => $result->results()[$x]->code,
+                'size' => $result->results()[$x]->size,
+                'liveryid' => $result->results()[$x]->ifliveryid
+            );
+            $aircraft[$x] = $newdata;
+            $x++;
+        }
+        return $aircraft;
 
     }
 
@@ -243,7 +273,7 @@ class User
 
         $result = $this->_db->get('pilots', array('id', '=', $id));
         $time = $result->first()->transhours;
-        $pireps = Pirep::fetchApprovedPireps($id);
+        $pireps = $this->fetchApprovedPireps();
 
         if ($pireps->count() != 0) {
             foreach (range(0, $pireps->count() - 1) as $i) {
@@ -264,7 +294,18 @@ class User
             $id = $this->data()->id;
         }
 
-        return Pirep::totalFiled($id);
+        $result = $this->_db->query('SELECT id FROM pireps WHERE status = 1 AND pilotid = ?', array($id));
+        $count = $result->count();
+        $user = $this->_db->get('pilots', array('id', '=', $id));
+        $total = $user->first()->transflights;
+
+        $x = 0;
+
+        while ($x < $count) {
+            $total++;
+            $x++;
+        }
+        return $total;
 
     }
 
@@ -296,12 +337,15 @@ class User
 
         while ($x < $results->count()) {
             $newdata = array(
+                'id' => $results->results()[$x]->id,
                 'number' => $results->results()[$x]->flightnum,
                 'departure' => $results->results()[$x]->departure,
                 'arrival' => $results->results()[$x]->arrival,
                 'date' => $results->results()[$x]->date,
                 'status' => $statuses[$results->results()[$x]->status],
+                'flighttime' => $results->results()[$x]->flighttime,
                 'aircraft' => Aircraft::getAircraftName($results->results()[$x]->aircraftid),
+                'multi' => $results->results()[$x]->multi
             );
             $pireps[$x] = $newdata;
             $counter++;
@@ -311,6 +355,102 @@ class User
             $x++;
         }
         return $pireps;
+
+    }
+
+    public function fetchApprovedPireps($id = null)
+    {
+
+        if (!$id && $this->isLoggedIn()) {
+            $id = $this->data()->id;
+        }
+
+        return $this->_db->query('SELECT * FROM pireps WHERE pilotid = ? AND status = ?', array($id, 1));
+
+    }
+
+    public function totalPirepsFiled($id = null)
+    {
+
+        if (!$id && $this->isLoggedIn()) {
+            $id = $this->data()->id;
+        }
+
+        $result = $this->_db->get('pireps', array('status', '=', 1));
+        $count = $result->count();
+        $user = $this->_db->get('pilots', array('id', '=', $id));
+        $total = $user->first()->transflights;
+
+        $x = 0;
+
+        while ($x < $count) {
+            $total++;
+            $x++;
+        }
+        return $total;
+
+    }
+
+    public function getAllUsers()
+    {
+
+        $db = DB::newInstance();
+
+        $results = $db->getAll('pilots');
+
+        $usersarray = array();
+        $statuses = array('Pending', 'Active', 'Inactive');
+        $x = 0;
+
+        while ($x < $results->count()) {
+            $newdata = array(
+                'id' => $results->results()[$x]->id,
+                'callsign' => $results->results()[$x]->callsign,
+                'name' => $results->results()[$x]->name,
+                'email' => $results->results()[$x]->email,
+                'ifc' => $results->results()[$x]->ifc,
+                'rank' => $this->rank($results->results()[$x]->id),
+                'status' => $statuses[$results->results()[$x]->status],
+                'joined' => $results->results()[$x]->joined,
+                'permissions' => $results->results()[$x]->permissions
+            );
+            $usersarray[$x] = $newdata;
+            $x++;
+        }
+
+        return $usersarray;
+
+    }
+
+    public function getAllStaff()
+    {
+
+        $users = $this->getAllUsers();
+        $staff = array();
+        $x = 0;
+
+        foreach ($users as $user) {
+            $permissions = Json::decode($user['permissions']);
+            
+            if (array_key_exists('admin', $permissions)) {
+                if ($permissions['admin'] == 1) {
+                    $newdata = array(
+                        'id' => $user['id'],
+                        'callsign' => $user['callsign'],
+                        'name' => $user['name'],
+                        'email' => $user['email'],
+                        'ifc' => $user['ifc'],
+                        'rank' => $user['rank'],
+                        'status' => $user['status'],
+                        'joined' => $user['joined'],
+                        'permissions' => $permissions
+                    );
+                    $staff[$x] = $newdata;
+                }
+            }
+            $x++;
+        }
+        return $staff;
 
     }
 
