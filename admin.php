@@ -230,14 +230,14 @@ if (!$user->isLoggedIn()) {
                                         <div class="modal-dialog" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title" id="staffmodaltitle"></h5>
+                                                    <h5 class="modal-title" id="staffmodaltitle">Edit staff member - '.$staff['callsign'].'</h5>
                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                     <span aria-hidden="true">&times;</span>
                                                     </button>
                                                 </div>
                                                 <div class="modal-body">
                                                     <form action="update.php" method="post">
-                                                        <input hidden name="action" value="editstaff">
+                                                        <input hidden name="action" value="editstaffmember">
                                                         <div class="form-group">
                                                             <label for="usermodal-callsign">Callsign</label>
                                                             <input required type="text" value="'.$staff['callsign'].'" class="form-control" name="callsign" id="usermodal-callsign">
@@ -272,7 +272,7 @@ if (!$user->isLoggedIn()) {
                                                                 echo
                                                                 '
                                                                 <div class="form-check">
-                                                                    <input class="form-check-input" type="checkbox" value="" id="permission'.$permission.'" name="'.$permission.'" checked>
+                                                                    <input class="form-check-input" type="checkbox" value="on" id="permission'.$permission.'" name="'.$permission.'" checked>
                                                                     <label class="form-check-label" for="defaultCheck1">
                                                                         '.$data['name'].'
                                                                     </label>
@@ -282,7 +282,7 @@ if (!$user->isLoggedIn()) {
                                                                 echo
                                                                 '
                                                                 <div class="form-check">
-                                                                    <input class="form-check-input" type="checkbox" value="" id="permission'.$permission.'" name="'.$permission.'">
+                                                                    <input class="form-check-input" type="checkbox" value="on" id="permission'.$permission.'" name="'.$permission.'">
                                                                     <label class="form-check-label" for="defaultCheck1">
                                                                         '.$data['name'].'
                                                                     </label>

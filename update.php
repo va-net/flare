@@ -105,6 +105,18 @@ if (Input::get('action') === 'editprofile') {
     }
     Session::flash('success', 'User deleted successfully!');
     Redirect::to('admin.php?page=usermanage');
+} elseif (Input::get('action') === 'editstaffmember') {
+    $permissions = Permissions::getAll();
+    $finalpermissions = array('admin' => 1);
+    foreach ($permissions as $permission => $data) {
+        if (Input::get($permission) == 'on') {
+            array_push($finalpermissions, array($permission => 1));
+        } else {
+            array_push($finalpermissions, array($permission => 0));
+        }
+    }
+    $finalpermissions = Json::encode($finalpermissions);
+    print_r($finalpermissions);
 }
 
 
