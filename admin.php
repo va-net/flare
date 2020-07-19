@@ -230,14 +230,15 @@ if (!$user->isLoggedIn()) {
                                         <div class="modal-dialog" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title" id="staffmodaltitle"></h5>
+                                                    <h5 class="modal-title" id="staffmodaltitle">Edit staff member - '.$staff['callsign'].'</h5>
                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                     <span aria-hidden="true">&times;</span>
                                                     </button>
                                                 </div>
                                                 <div class="modal-body">
                                                     <form action="update.php" method="post">
-                                                        <input hidden name="action" value="editstaff">
+                                                        <input hidden name="action" value="editstaffmember">
+                                                        <input hidden name="id" value="'.$staff['id'].'">
                                                         <div class="form-group">
                                                             <label for="usermodal-callsign">Callsign</label>
                                                             <input required type="text" value="'.$staff['callsign'].'" class="form-control" name="callsign" id="usermodal-callsign">
@@ -272,7 +273,7 @@ if (!$user->isLoggedIn()) {
                                                                 echo
                                                                 '
                                                                 <div class="form-check">
-                                                                    <input class="form-check-input" type="checkbox" value="" id="permission'.$permission.'" name="'.$permission.'" checked>
+                                                                    <input class="form-check-input" type="checkbox" value="on" id="permission'.$permission.'" name="'.$permission.'" checked>
                                                                     <label class="form-check-label" for="defaultCheck1">
                                                                         '.$data['name'].'
                                                                     </label>
@@ -282,7 +283,7 @@ if (!$user->isLoggedIn()) {
                                                                 echo
                                                                 '
                                                                 <div class="form-check">
-                                                                    <input class="form-check-input" type="checkbox" value="" id="permission'.$permission.'" name="'.$permission.'">
+                                                                    <input class="form-check-input" type="checkbox" value="on" id="permission'.$permission.'" name="'.$permission.'">
                                                                     <label class="form-check-label" for="defaultCheck1">
                                                                         '.$data['name'].'
                                                                     </label>
@@ -310,7 +311,126 @@ if (!$user->isLoggedIn()) {
                                 <?php if (!$user->hasPermission('usermanage')): ?>
                                     <div class="alert alert-danger text-center">Whoops! You don't have the necessary permissions to access this.</div>
                                 <?php else: ?>
-                                    
+                                    <p>Here you can manage any pending applications</p>
+                                    <form id="accept" action="update.php" method="post">
+                                        <input hidden name="action" value="acceptapplication">
+                                    </form>
+                                    <table class="table table-striped">
+                                    <thead class="bg-virgin">
+                                        <tr>
+                                            <th>Callsign</th>
+                                            <th class="mobile-hidden">Name</th>
+                                            <th class="mobile-hidden">Email</th>
+                                            <th>Grade</th>
+                                            <th>IFC Username</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                        $users = $user->getAllPendingUsers();
+                                        $x = 0;
+                                        foreach ($users as $user) {
+                                            echo '<tr><td class="align-middle">';
+                                            echo $user["callsign"];
+                                            echo '</td><td class="mobile-hidden align-middle">';
+                                            echo $user["name"];
+                                            echo '</td><td class="mobile-hidden align-middle">';
+                                            echo $user["email"];
+                                            echo '</td><td class="align-middle">';
+                                            echo $user["grade"];
+                                            echo '</td><td class="align-middle">';
+                                            $username = explode('/', $user['ifc']);
+                                            echo '<a href="'.$user['ifc'].'" target="_blank">'.$username[4].'</a>';
+                                            echo '</td><td class="align-middle">';
+                                            echo '<button class="btn btn-success text-light" value="'.$user['id'].'" form="accept" type="submit" name="accept"><i class="fa fa-check"></i></button>';
+                                            echo '&nbsp;<button value="'.$user['id'].'" id="delconfirmbtn" data-toggle="modal" data-target="#user'.$x.'declinemodal" class="btn btn-danger text-light" name="decline"><i class="fa fa-times"></i></button>';
+                                            echo '&nbsp;<button id="delconfirmbtn" class="btn btn-primary text-light" data-toggle="modal" data-target="#user'.$x.'modal"><i class="fa fa-plus"></i></button>';
+                                            echo '</td>';
+                                            $x++;
+                                        }
+                                        ?>
+                                    </tbody>
+                                </table>
+                                <?php
+                                $x = 0;
+                                foreach ($users as $user) {
+                                    echo 
+                                    '
+                                    <div class="modal fade" id="user'.$x.'modal" tabindex="-1" role="dialog" aria-labelledby="user'.$x.'label" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="usermodaltitle"></h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form action="update.php" method="post">
+                                                        <div class="form-group">
+                                                            <label for="usermodal-callsign">Callsign</label>
+                                                            <input readonly type="text" value="'.$user["callsign"].'" class="form-control" name="callsign">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="usermodal-name">Name</label>
+                                                            <input readonly type="text" value="'.$user["name"].'" class="form-control" name="name">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="usermodal-email">Email</label>
+                                                            <input readonly type="text" value="'.$user["email"].'" class="form-control" name="email">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="usermodal-ifc">IFC Username</label>
+                                                            <a href="'.$user['ifc'].'" target="_blank"><input readonly type="text" style="cursor:pointer" value="'.$username[4].'" class="form-control" name="ifc"></a>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="usermodal-joined">Grade</label>
+                                                            <input readonly type="text" value="'.$user["grade"].'" class="form-control" name="grade">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="usermodal-status">Violations to landings</label>
+                                                            <input readonly type="text" value="'.$user["viol"].'" class="form-control" name="viol">
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn bg-virgin" data-dismiss="modal">Close</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal fade" id="user'.$x.'declinemodal" tabindex="-1" role="dialog" aria-labelledby="user'.$x.'label" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="usermodaltitle"></h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form action="update.php" method="post" id="declinemodal">
+                                                        <input hidden class="form-control" name="action" value="declineapplication">
+                                                        <input hidden class="form-control" name="id" value="'.$user['id'].'">
+                                                        <div class="form-group">
+                                                            <label for="usermodal-status">Reason for decline of application</label>
+                                                            <input required type="text" class="form-control" name="declinereason">
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button class="btn bg-virgin" form="declinemodal" type="submit">Decline</button>
+                                                    <button type="button" class="btn bg-secondary" data-dismiss="modal">Close</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    ';
+                                    $x++;
+                                }
+
+                                ?>
                                 <?php endif; ?>
                             <?php elseif (Input::get('page') === 'pirepmanage'): ?>
                                 <h3>Manage PIREPS</h3>

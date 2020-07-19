@@ -31,6 +31,8 @@ if (Input::exists()) {
                     Session::flash('error', 'Whoops! You need to wait until your application has been approved before logging in!');
                 } elseif ($user->data()->status == 2) {
                     Session::flash('error', 'Looks like your account has been marked as inactive - contact a member of staff to have this rectified!');
+                } elseif ($user->data()->status == 3) {
+                    Session::flash('error', 'Unfortunately, your application has been declined for the following reason: '.$user->data()->declinereason);
                 }
             } else {
                 Session::flash('error', 'Login failed.');
@@ -73,12 +75,12 @@ if (Input::exists()) {
             <h3 class="text-center py-0 my-0">Pilot Login<br><br></h3>
             <div class="container w-50 justify-content-center">
                 <?php
-                if (Session::exists('error')) {
-                    echo '<div class="alert alert-danger text-center">Error: '.Session::flash('error').'</div>';
-                }
-                if (Session::exists('success')) {
-                    echo '<div class="alert alert-success text-center">'.Session::flash('success').'</div>';
-                }
+                    if (Session::exists('error')) {
+                        echo '<div class="alert alert-danger text-center">Error: '.Session::flash('error').'</div>';
+                    }
+                    if (Session::exists('success')) {
+                        echo '<div class="alert alert-success text-center">'.Session::flash('success').'</div>';
+                    }
                 ?>
                 <form method="post" action="">
                     <input hidden name="action" value="authenticate">

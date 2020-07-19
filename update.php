@@ -97,7 +97,7 @@ if (Input::get('action') === 'editprofile') {
 
     try {
         $user->update(array(
-            'status' => 0
+            'status' => 2
         ), Input::get('id'));
     } catch (Exception $e) {
         Session::flash('error', 'There was an error deleting the user.');
@@ -105,6 +105,55 @@ if (Input::get('action') === 'editprofile') {
     }
     Session::flash('success', 'User deleted successfully!');
     Redirect::to('admin.php?page=usermanage');
+} elseif (Input::get('action') === 'editstaffmember') {
+    $permissions = Permissions::getAll();
+    $finalpermissions = array('admin' => 1);
+    foreach ($permissions as $permission => $data) {
+        if (Input::get($permission) == 'on') {
+            $finalpermissions[$permission] = 1;
+        } else {
+            $finalpermissions[$permission] = 0;
+        }
+    }
+
+    try {
+        $user->update(array(
+            'callsign' => Input::get('callsign'),
+            'name' => Input::get('name'),
+            'email' => Input::get('email'),
+            'ifc' => Input::get('ifc'),
+            'permissions' => Json::encode($finalpermissions)
+        ), Input::get('id'));
+    } catch (Exception $e) {
+        Session::flash('error', 'There was an error editing the staff member.');
+        Redirect::to('admin.php?page=staffmanage');
+    }
+    Session::flash('success', 'Staff member edited successfully!');
+    Redirect::to('admin.php?page=staffmanage');
+} elseif (Input::get('action') === 'declineapplication') {
+    try {
+        $user->update(array(
+            'status' => 3,
+            'declinereason' => Input::get('declinereason')
+        ), Input::get('id'));
+    } catch (Exception $e) {
+        Session::flash('error', 'There was an error declining the application.');
+        Redirect::to('admin.php?page=recruitment');
+    }
+    Session::flash('success', 'Application declined successfully!');
+    Redirect::to('admin.php?page=recruitment');
+} elseif (Input::get('action') === 'acceptapplication') {
+    try {
+        $user->update(array(
+            'status' => 1
+        ), Input::get('accept'));
+    } catch (Exception $e) {
+        Session::flash('error', 'There was an error accepting the application.');
+        Redirect::to('admin.php?page=recruitment');
+    }
+    Session::flash('success', 'Application accepted successfully!');
+    Redirect::to('admin.php?page=recruitment');
 }
+
 
 
