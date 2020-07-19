@@ -41,14 +41,6 @@ class User
             throw new Exception('There was a problem creating an account.');
         }
 
-        $result = $this->_db->get('pilots', array('email', '=', $fields['email']));
-        $userId = $result->first()->id;
-
-        $this->_db->insert('profile_pics', array(
-            'user_id' => $userId,
-            'status' => 0
-        ));
-
     }
 
     public function find($user = null) 
@@ -451,6 +443,38 @@ class User
             $x++;
         }
         return $staff;
+
+    }
+
+    public function getAllPendingUsers()
+    {
+
+        $db = DB::newInstance();
+
+        $results = $db->get('pilots', array('status', '=', 0));
+
+        $usersarray = array();
+        $statuses = array('Pending', 'Active', 'Inactive');
+        $x = 0;
+
+        while ($x < $results->count()) {
+            $newdata = array(
+                'id' => $results->results()[$x]->id,
+                'callsign' => $results->results()[$x]->callsign,
+                'name' => $results->results()[$x]->name,
+                'email' => $results->results()[$x]->email,
+                'ifc' => $results->results()[$x]->ifc,
+                'rank' => $this->rank($results->results()[$x]->id),
+                'status' => $statuses[$results->results()[$x]->status],
+                'joined' => $results->results()[$x]->joined,
+                'grade' => $results->results()[$x]->grade,
+                'viol' => $results->results()[$x]->violand
+            );
+            $usersarray[$x] = $newdata;
+            $x++;
+        }
+
+        return $usersarray;
 
     }
 
