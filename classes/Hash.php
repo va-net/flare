@@ -3,7 +3,7 @@
 class Hash {
 
     public static function make($string) {
-        return password_hash($string, PASSWORD_DEFAULT);
+        return password_hash($string, PASSWORD_ARGON2ID);
     }
 
     public static function check($noHash, $hashed) {
