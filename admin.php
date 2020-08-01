@@ -437,14 +437,54 @@ if (!$user->isLoggedIn()) {
                                 <?php if (!$user->hasPermission('usermanage')): ?>
                                     <div class="alert alert-danger text-center">Whoops! You don't have the necessary permissions to access this.</div>
                                 <?php else: ?>
-                                    
+                                    <form id="acceptpirep" action="update.php" method="post">
+                                        <input hidden name="action" value="acceptpirep">
+                                    </form>
+                                    <form id="declinepirep" action="update.php" method="post">
+                                        <input hidden name="action" value="declinepirep">
+                                    </form>
+                                    <table class="table table-striped">
+                                        <thead class="bg-virgin">
+                                            <tr>
+                                                <th>Callsign</th>
+                                                <th>Flight Number</th>
+                                                <th class="mobile-hidden">Departure</th>
+                                                <th class="mobile-hidden">Arrival</th>
+                                                <th class="mobile-hidden">IFC Username</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php 
+                                            $pireps = Pirep::fetchPending();
+                                            foreach ($pireps as $pirep) {
+                                                echo '<tr><td class="align-middle">';
+                                                $callsign = $user->idToCallsign($id);
+                                                echo $callsign;
+                                                echo '<tr><td class="align-middle">';
+                                                echo $pirep['flightnum'];
+                                                echo '<tr><td class="align-middle mobile-hidden">';
+                                                echo $pirep['departure'];
+                                                echo '<tr><td class="align-middle mobile-hidden">';
+                                                echo $pirep['arrival'];
+                                                echo '<tr><td class="align-middle mobile-hidden">';
+                                                echo $pirep['ifc'];
+                                                echo '<tr><td class="align-middle">';
+                                                echo '<button class="btn btn-success text-light" value="'.$pirep['id'].'" form="acceptpirep" type="submit" name="accept"><i class="fa fa-check"></i></button>';
+                                                echo '&nbsp;<button value="'.$pirep['id'].'" form="declinepirep" type="submit" class="btn btn-danger text-light" name="decline"><i class="fa fa-times"></i></button>';
+                                                echo '</td>';
+                                                $x++;
+                                            }
+                                            ?>
+                                        </tbody>
+                                    </table>
                                 <?php endif; ?>
                             <?php elseif (Input::get('page') === 'newsmanage'): ?>
                                 <h3>Manage News</h3>
                                 <?php if (!$user->hasPermission('usermanage')): ?>
                                     <div class="alert alert-danger text-center">Whoops! You don't have the necessary permissions to access this.</div>
                                 <?php else: ?>
-                                    
+
                                 <?php endif; ?>
                             <?php elseif (Input::get('page') === 'staffmanage'): ?>
                                 <h3>Email Pilots</h3>
