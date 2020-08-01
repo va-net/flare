@@ -306,7 +306,7 @@ class User
     {
 
         if (!$id) {
-            return $this->_db->getAll('pireps');
+            $id = $this->data()->id;
         }
 
         return $this->_db->get('pireps', array('pilotid', '=', $id), array('date', 'DESC'));
@@ -475,6 +475,14 @@ class User
         }
 
         return $usersarray;
+
+    }
+
+    public function idToCallsign($id)
+    {
+
+        $result = $this->_db->get('pilots', array('id', '=', $id));
+        return $result->first();
 
     }
 

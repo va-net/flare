@@ -153,6 +153,10 @@ if (Input::get('action') === 'editprofile') {
     }
     Session::flash('success', 'Application accepted successfully!');
     Redirect::to('admin.php?page=recruitment');
+} elseif (Input::get('action') === 'acceptpirep') {
+    Pirep::accept(Input::get('accept'));
+} elseif (Input::get('action') === 'declinepirep') {
+    Pirep::decline(Input::get('decline'));
 }
 
 
