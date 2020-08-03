@@ -53,10 +53,16 @@ class News
 
         self::init();
 
-        if (self::$_db->update('news', $id, 'id', $fields)) {
-            return true;
-        }
-        return false;
+        self::$_db->update('news', $id, 'id', $fields);
+
+    }
+
+    public static function new($fields) 
+    {
+
+        self::init();
+
+        self::$_db->insert('news', $fields);
 
     }
 

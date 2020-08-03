@@ -570,6 +570,24 @@ if (!$user->isLoggedIn()) {
                                 }
 
                                 ?>
+                                <br>
+                                <h4>New article</h4>
+                                <form action="update.php" method="post">
+                                    <input hidden name="action" value="newarticle">
+                                    <div class="form-group">
+                                        <label>Title</label>
+                                        <input type="text" class="form-control" name="title">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Content</label>
+                                        <textarea class="form-control" name="content"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Author</label>
+                                        <input readonly type="text" value="<?= $user->data()->name ?>" class="form-control" name="author">
+                                    </div>
+                                    <input type="submit" class="btn bg-virgin" value="Save">
+                                </form>
                                 <?php endif; ?>
                             <?php elseif (Input::get('page') === 'staffmanage'): ?>
                                 <h3>Email Pilots</h3>
