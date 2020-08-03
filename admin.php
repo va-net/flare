@@ -486,7 +486,90 @@ if (!$user->isLoggedIn()) {
                                 <?php if (!$user->hasPermission('usermanage')): ?>
                                     <div class="alert alert-danger text-center">Whoops! You don't have the necessary permissions to access this.</div>
                                 <?php else: ?>
-                                    
+                                    <h4>Active News Articles</h4>
+                                    <form id="deletearticle" action="update.php" method="post">
+                                        <input hidden name="action" value="deletearticle">
+                                    </form>
+                                    <table class="table table-striped">
+                                        <thead class="bg-virgin">
+                                            <tr>
+                                                <th>Title</th>
+                                                <th class="mobile-hidden">Date Posted</th>
+                                                <th class="mobile-hidden">Author</th>
+                                                <th>Content</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php 
+                                            $x = 0; 
+                                            $news = News::get();
+                                            foreach ($news as $article) {
+                                                echo '<tr><td class="align-middle">';
+                                                echo $article['title'];
+                                                echo '</td><td class="align-middle">';
+                                                echo $article['dateposted'];
+                                                echo '</td><td class="align-middle mobile-hidden">';
+                                                echo $article['author'];
+                                                echo '</td><td class="align-middle mobile-hidden">';
+                                                echo trim(substr($article['content'], 0, 25)).'...';
+                                                echo '</td><td class="align-middle">';
+                                                echo '&nbsp;<button value="'.$article['id'].'" id="articleedit" data-toggle="modal" data-target="#article'.$x.'editmodal" class="btn btn-success text-light" name="edit"><i class="fa fa-edit"></i></button>';
+                                                echo '&nbsp;<button value="'.$article['id'].'" form="deletearticle" type="submit" class="btn btn-danger text-light" name="delete"><i class="fa fa-trash"></i></button>';
+                                                echo '</td>';
+                                                $x++;
+                                            }
+                                            ?>
+                                        </tbody>
+                                    </table>
+                                    <?php
+                                $x = 0;
+                                foreach ($news as $article) {
+                                    echo 
+                                    '
+                                    <div class="modal fade" id="article'.$x.'editmodal" tabindex="-1" role="dialog" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Edit News Article</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form action="update.php" method="post">
+                                                        <input hidden name="action" value="editarticle">
+                                                        <input hidden name="id" value="'.$article['id'].'">
+                                                        <div class="form-group">
+                                                            <label>Title</label>
+                                                            <input type="text" value="'.$article["title"].'" class="form-control" name="title">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label>Content</label>
+                                                            <textarea class="form-control" name="content">'.$article["content"].'</textarea>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label>Author</label>
+                                                            <input readonly type="text" value="'.$article["author"].'" class="form-control" name="author">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="usermodal-ifc">Date Posted</label>
+                                                            <input readonly type="text" value="'.$article["dateposted"].'" class="form-control" name="dateposted">
+                                                        </div>
+                                                        <input type="submit" class="btn bg-success" value="Save">
+                                                    </form>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn bg-danger" data-dismiss="modal">Close</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    ';
+                                    $x++;
+                                }
+
+                                ?>
                                 <?php endif; ?>
                             <?php elseif (Input::get('page') === 'staffmanage'): ?>
                                 <h3>Email Pilots</h3>
