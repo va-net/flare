@@ -38,6 +38,8 @@ class Pirep
     public static function fetchAll()
     {
 
+        self::init();
+
         $result = self::$_db->getAll('pireps');
 
         $x = 0;
@@ -65,6 +67,8 @@ class Pirep
 
     public static function fetchPending()
     {
+
+        self::init();
 
         $result = self::$_db->get('pireps', array('status', '=', 0));
 
@@ -94,6 +98,8 @@ class Pirep
     public static function accept($id) 
     {
 
+        self::init();
+
         self::$_db->update('pireps', $id, 'id', array(
             'status' => 1
         ));
@@ -102,6 +108,8 @@ class Pirep
 
     public static function decline($id) 
     {
+
+        self::init();
 
         self::$_db->update('pireps', $id, 'id', array(
             'status' => 2

@@ -155,9 +155,14 @@ if (Input::get('action') === 'editprofile') {
     Redirect::to('admin.php?page=recruitment');
 } elseif (Input::get('action') === 'acceptpirep') {
     Pirep::accept(Input::get('accept'));
+    Session::flash('success', 'PIREP accepted successfully!');
+    Redirect::to('admin.php?page=pirepmanage');
 } elseif (Input::get('action') === 'declinepirep') {
     Pirep::decline(Input::get('decline'));
-}
+    Session::flash('success', 'PIREP declined successfully! ');
+    Redirect::to('admin.php?page=pirepmanage');
+} 
+
 
 
 
