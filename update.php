@@ -161,7 +161,26 @@ if (Input::get('action') === 'editprofile') {
     Pirep::decline(Input::get('decline'));
     Session::flash('success', 'PIREP declined successfully! ');
     Redirect::to('admin.php?page=pirepmanage');
-} 
+} elseif (Input::get('action') === 'deletearticle') {
+    News::archive(Input::get('delete'));
+    Session::flash('success', 'News archived successfully! ');
+    Redirect::to('admin.php?page=newsmanage');
+} elseif (Input::get('action') === 'editarticle') {
+    News::edit(Input::get('id'), array(
+        'subject' => Input::get('title'),
+        'content' => Input::get('content')
+    ));
+    Session::flash('success', 'News article edited successfully! ');
+    Redirect::to('admin.php?page=newsmanage');
+} elseif (Input::get('action') === 'newarticle') {
+    News::new(array(
+        'subject' => Input::get('title'),
+        'content' => Input::get('content'),
+        'author' => Input::get('author')
+    ));
+    Session::flash('success', 'News article added successfully! ');
+    Redirect::to('admin.php?page=newsmanage');
+}
 
 
 
