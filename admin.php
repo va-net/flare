@@ -450,26 +450,27 @@ if (!$user->isLoggedIn()) {
                                                 <th>Flight Number</th>
                                                 <th class="mobile-hidden">Departure</th>
                                                 <th class="mobile-hidden">Arrival</th>
-                                                <th class="mobile-hidden">IFC Username</th>
+                                                <th class="mobile-hidden">Date</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <?php 
+                                            $x = 0;
                                             $pireps = Pirep::fetchPending();
                                             foreach ($pireps as $pirep) {
                                                 echo '<tr><td class="align-middle">';
-                                                $callsign = $user->idToCallsign($id);
+                                                $callsign = $user->idToCallsign($pirep['pilotid']);
                                                 echo $callsign;
-                                                echo '<tr><td class="align-middle">';
+                                                echo '</td><td class="align-middle">';
                                                 echo $pirep['flightnum'];
-                                                echo '<tr><td class="align-middle mobile-hidden">';
+                                                echo '</td><td class="align-middle mobile-hidden">';
                                                 echo $pirep['departure'];
-                                                echo '<tr><td class="align-middle mobile-hidden">';
+                                                echo '</td><td class="align-middle mobile-hidden">';
                                                 echo $pirep['arrival'];
-                                                echo '<tr><td class="align-middle mobile-hidden">';
-                                                echo $pirep['ifc'];
-                                                echo '<tr><td class="align-middle">';
+                                                echo '</td><td class="align-middle mobile-hidden">';
+                                                echo $pirep['date'];
+                                                echo '</td><td class="align-middle">';
                                                 echo '<button class="btn btn-success text-light" value="'.$pirep['id'].'" form="acceptpirep" type="submit" name="accept"><i class="fa fa-check"></i></button>';
                                                 echo '&nbsp;<button value="'.$pirep['id'].'" form="declinepirep" type="submit" class="btn btn-danger text-light" name="decline"><i class="fa fa-times"></i></button>';
                                                 echo '</td>';
@@ -481,13 +482,15 @@ if (!$user->isLoggedIn()) {
                                 <?php endif; ?>
                             <?php elseif (Input::get('page') === 'newsmanage'): ?>
                                 <h3>Manage News</h3>
+                                <br>
                                 <?php if (!$user->hasPermission('usermanage')): ?>
                                     <div class="alert alert-danger text-center">Whoops! You don't have the necessary permissions to access this.</div>
                                 <?php else: ?>
-
+                                    
                                 <?php endif; ?>
                             <?php elseif (Input::get('page') === 'staffmanage'): ?>
                                 <h3>Email Pilots</h3>
+                                <br>
                                 <?php if (!$user->hasPermission('usermanage')): ?>
                                     <div class="alert alert-danger text-center">Whoops! You don't have the necessary permissions to access this.</div>
                                 <?php else: ?>
@@ -495,6 +498,7 @@ if (!$user->isLoggedIn()) {
                                 <?php endif; ?>
                             <?php elseif (Input::get('page') === 'opsmanage'): ?>
                                 <h3>Operations Management</h3>
+                                <br>
                                 <?php if (!$user->hasPermission('usermanage')): ?>
                                     <div class="alert alert-danger text-center">Whoops! You don't have the necessary permissions to access this.</div>
                                 <?php else: ?>
@@ -502,6 +506,7 @@ if (!$user->isLoggedIn()) {
                                 <?php endif; ?>
                             <?php elseif (Input::get('page') === 'statsviewing'): ?>
                                 <h3>VA Statistics</h3>
+                                <br>
                                 <?php if (!$user->hasPermission('usermanage')): ?>
                                     <div class="alert alert-danger text-center">Whoops! You don't have the necessary permissions to access this.</div>
                                 <?php else: ?>

@@ -482,7 +482,8 @@ class User
     {
 
         $result = $this->_db->get('pilots', array('id', '=', $id));
-        return $result->first();
+        $result =  $result->first();
+        return $result->callsign;
 
     }
 
