@@ -1,4 +1,7 @@
 {
     "name": "va-net/flare",
-    "description": "Modern and Responsive VA Crew Center - Designed for Infinite Flight and Integrated with VANet"
+    "description": "Modern and Responsive VA Crew Center - Designed for Infinite Flight and Integrated with VANet",
+    "require": {
+        "phpmailer/phpmailer": "^6.1"
+    }
 }
