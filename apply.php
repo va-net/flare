@@ -100,7 +100,7 @@ if (Input::exists()) {
     </nav>
     <div class="container-fluid">
         <div class="container-fluid mt-4 text-center" style="overflow: auto;">
-            <h1 class="text-center pb-0 mb-0"><?= Config::get('va/name') ?></h1>
+            <h1 class="text-center pb-0 mb-0"><?= escape(Config::get('va/name')) ?></h1>
             <h3 class="text-center py-0 my-0">Application Form<br><br></h3>
             <?php
                 if (Session::exists('error')) {
@@ -115,29 +115,29 @@ if (Input::exists()) {
                     <input type="hidden" name="token" value="<?= Token::generate() ?>">
                     <div class="form-group text-center">
                     <label for="name">Name</label>
-                    <input required class="form-control" type="text" id="name" name="name" value="<?= Input::get('name') ?>">
+                    <input required class="form-control" type="text" id="name" name="name" value="<?= escape(Input::get('name')) ?>">
                     </div>
 
                     <div class="form-group text-center">
                     <label for="ifc">Infinite Flight Community Profile URL</label>
-                    <input required class="form-control" type="url" id="ifc" name="ifc" value="<?= Input::get('ifc') ?>">
+                    <input required class="form-control" type="url" id="ifc" name="ifc" value="<?= escape(Input::get('ifc')) ?>">
                     <small class="form-text text-muted">All pilots are required to have an active Infinite Flight Community account</small>
                     </div>
                     
                     <div class="form-group text-center">
                     <label for="email">Email Address</label>
-                    <input required class="form-control" type="email" id="email" name="email" value="<?= Input::get('email') ?>">
+                    <input required class="form-control" type="email" id="email" name="email" value="<?= escape(Input::get('email')) ?>">
                     </div>
 
                     <div class="form-group text-center">
                     <label for="callsign">Callsign</label>
-                    <input required class="form-control" type="text" value="VGVA" id="callsign" name="callsign" value="<?= Input::get('callsign') ?>">
+                    <input required class="form-control" type="text" value="VGVA" id="callsign" name="callsign" value="<?= escape(Input::get('callsign')) ?>">
                     <small class="form-text text-muted">Must begin with VGVA then have 2-4 numbers, eg VGVA123</small>
                     </div>
 
                     <div class="form-group text-center">
                     <label for="violand">Violations to Landings Ratio</label>
-                    <input required class="form-control" step="0.01" type="number" id="violand" name="violand" value="<?= Input::get('violand') ?>">
+                    <input required class="form-control" step="0.01" type="number" id="violand" name="violand" value="<?= escape(Input::get('violand')) ?>">
                     <small class="form-text text-muted">Decimal format, eg 0.35</small>
                     </div>
 
@@ -153,7 +153,7 @@ if (Input::exists()) {
 
                     <div class="form-group text-center">
                     <label for="comments">Other Comments</label>
-                    <textarea class="form-control" id="comments" name="comments"><?= Input::get('violand') ?></textarea>
+                    <textarea class="form-control" id="comments" name="comments"><?= escape(Input::get('violand')) ?></textarea>
                     </div>
 
                     <div class="form-group text-center">

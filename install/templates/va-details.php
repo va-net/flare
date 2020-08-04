@@ -46,15 +46,15 @@
                                     <input class="form-control" type="hidden" name="token" value="<?= Token::generate(); ?>">
                                     <div class="form-group">
                                         <label for="va-name">Full VA Name</label>
-                                        <input type="text" min="1" class="form-control" name="va-name" value="<?= Input::get('va-name') ?>">
+                                        <input type="text" min="1" class="form-control" name="va-name" value="<?= escape(Input::get('va-name')) ?>">
                                     </div>
                                     <div class="form-group">
                                         <label for="va-identifier">VA Callsign Prefix</label>
-                                        <input type="text" min="1" class="form-control" name="va-ident" value="<?= Input::get('va-ident') ?>">
+                                        <input type="text" min="1" class="form-control" name="va-ident" value="<?= escape(Input::get('va-ident')) ?>">
                                     </div>
                                     <div class="form-group">
                                         <label for="vanet-api">VANet API Key</label>
-                                        <input type="text" min="1" class="form-control" name="vanet-api" value="<?= Input::get('vanet-api') ?>">
+                                        <input type="text" min="1" class="form-control" name="vanet-api" value="<?= escape(Input::get('vanet-api')) ?>">
                                     </div>
                                     <input type="submit" class="btn bg-virgin" value="Save">
                                 </form>

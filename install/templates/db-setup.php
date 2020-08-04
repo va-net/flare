@@ -43,11 +43,11 @@
                                     <input class="form-control" type="hidden" name="token" value="<?= Token::generate(); ?>">
                                     <div class="form-group">
                                         <label for="db-host">Database Host (usually <i>localhost</i>)</label>
-                                        <input type="text" min="1" class="form-control" name="db-host" value="<?= Input::get('db-host') ?>">
+                                        <input type="text" min="1" class="form-control" name="db-host" value="<?= escape(Input::get('db-host')) ?>">
                                     </div>
                                     <div class="form-group">
                                         <label for="db-user">Database Username</label>
-                                        <input type="text" min="1" class="form-control" name="db-user" value="<?= Input::get('db-user') ?>">
+                                        <input type="text" min="1" class="form-control" name="db-user" value="<?= escape(Input::get('db-user')) ?>">
                                     </div>
                                     <div class="form-group">
                                         <label for="db-pass">Database Password</label>
@@ -55,7 +55,7 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="db-name">Database Name</label>
-                                        <input type="text" min="1" class="form-control" name="db-name" value="<?= Input::get('db-name') ?>">
+                                        <input type="text" min="1" class="form-control" name="db-name" value="<?= escape(Input::get('db-name')) ?>">
                                     </div>
                                     <input type="submit" class="btn bg-virgin" value="Save">
                                 </form>

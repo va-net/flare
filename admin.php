@@ -1,4 +1,5 @@
 <?php
+
 require_once './core/init.php';
 
 $user = new User();
@@ -40,7 +41,7 @@ if (!$user->isLoggedIn()) {
         <div class="container-fluid mt-4 text-center" style="overflow: auto;">
         <div class="row m-0 p-0">
             <div class="col-lg-3 p-3 bg-light text-left mobile-hidden" id="desktopMenu" style="height: 100%;">
-                <h3>Pilot Panel - <?= $user->data()->callsign ?></h3>
+                <h3>Pilot Panel - <?= escape($user->data()->callsign) ?></h3>
                 <hr class="mt-0 divider" />
                 <a href="home.php" id="homelink" class="panel-link"><i class="fa fa-home"></i>&nbsp;Pilot Home</a><br>
                 <a href="pireps.php#filepirep" id="filepireplink" class="panel-link"><i class="fa fa-plane"></i>&nbsp;File PIREP</a><br>
@@ -78,7 +79,7 @@ if (!$user->isLoggedIn()) {
                             ?>
                             <?php if (Input::get('page') == ''): ?>
                                 <h3>Admin Panel</h3>
-                                <p>Welcome to the Admin Panel. Here you can find the administration tools required to manage <?= Config::get('va/name') ?></p>
+                                <p>Welcome to the Admin Panel. Here you can find the administration tools required to manage <?= escape(Config::get('va/name')) ?></p>
                                 <p>Looks like no page was specified. Make sure you use the buttons in the navbar/sidebar!</p>
                             <?php endif; ?>
                             <?php if (Input::get('page') === 'usermanage'): ?>
@@ -584,18 +585,54 @@ if (!$user->isLoggedIn()) {
                                     </div>
                                     <div class="form-group">
                                         <label>Author</label>
-                                        <input readonly type="text" value="<?= $user->data()->name ?>" class="form-control" name="author">
+                                        <input readonly type="text" value="<?= escape($user->data()->name) ?>" class="form-control" name="author">
                                     </div>
                                     <input type="submit" class="btn bg-virgin" value="Save">
                                 </form>
                                 <?php endif; ?>
-                            <?php elseif (Input::get('page') === 'staffmanage'): ?>
+                            <?php elseif (Input::get('page') === 'emailpilots'): ?>
                                 <h3>Email Pilots</h3>
                                 <br>
-                                <?php if (!$user->hasPermission('usermanage')): ?>
+                                <?php if (!$user->hasPermission('emailpilots')): ?>
                                     <div class="alert alert-danger text-center">Whoops! You don't have the necessary permissions to access this.</div>
                                 <?php else: ?>
-                                    
+                                    <?php if (Config::get('email/setup') == false): ?>
+                                        <p>Let's setup email, which will enable you to send emails to your pilots, as well as receive notifications for applications if you so wish. Please fill out all of the required fields below. You will be sent a test email to confirm that you have entered the correct details.</p>
+                                        <form id="testemail" method="post" action="update.php">
+                                            <input hidden value="testemail" name="action">
+                                        </form>
+                                        <form method="post" action="update.php" id="setupemail">
+                                            <input hidden value="setupemail" name="action">
+                                            <div class="form-group">
+                                                <label>SMTP Server/Host</label>
+                                                <input type="text" class="form-control" name="host" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>SMTP Port</label>
+                                                <input type="text" value="587" class="form-control" name="port" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>SMTP Protocol</label>
+                                                <select class="form-control" name="protocol" required>
+                                                    <option value>Select</option>
+                                                    <option value selected="selected">TLS</option>
+                                                    <option value>SSL</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Email Address</label>
+                                                <input type="text" class="form-control" name="email" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>SMTP Username/Email</label>
+                                                <input type="password" class="form-control" name="password" required>
+                                            </div>
+                                            <input type="submit" class="btn bg-virgin" name="testemail" value="Send Test Email">
+                                            <input type="submit" class="btn bg-virgin" name="complete" value="Finish">
+                                        </form>
+                                    <?php else: ?>
+
+                                    <?php endif; ?>
                                 <?php endif; ?>
                             <?php elseif (Input::get('page') === 'opsmanage'): ?>
                                 <h3>Operations Management</h3>

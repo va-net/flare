@@ -71,7 +71,7 @@ if (Input::exists()) {
     </nav>
     <div class="container-fluid">
         <div class="container-fluid mt-4 text-center" style="overflow: auto;">
-            <h1 class="text-center pb-0 mb-0"><?= Config::get('va/name') ?></h1>
+            <h1 class="text-center pb-0 mb-0"><?= escape(Config::get('va/name')) ?></h1>
             <h3 class="text-center py-0 my-0">Pilot Login<br><br></h3>
             <div class="container w-50 justify-content-center">
                 <?php
