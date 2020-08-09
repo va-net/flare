@@ -3,24 +3,65 @@
 class Aircraft
 {
 
-    private static $_list;
     private static $_db;
 
-    private static function init()
+    private static function init() 
     {
 
-        self::$_db = DB::newInstance();
-        self::$_list = file_get_contents('aircraft.txt');
-        self::$_list = json_decode(self::$_list, true);
+        self::$_db = DB::getInstance();
 
     }
 
-    public static function getAllAircraftIF()
+    public static function fetchAllAircraftFromVANet()
+    {
+
+        $curl = new Curl;
+        $response = $curl->get(Config::get('vanet/base_url').'/api/aircraft', array(
+            'apikey' => Config::get('vanet/api_key')
+        ));
+        $response = Json::decode($response->body);
+
+        $completed = array();
+        foreach ($response as $aircraft) {
+            if (in_array($aircraft['aircraftID'], $completed)) {
+                continue;
+            } else {
+                $completed[$aircraft['aircraftID']] = $aircraft['aircraftName'];
+            }
+        }
+        return $completed;
+
+    }
+
+    public static function fetchAircraftFromVANet($aircraft, $search = 'AircraftID') 
+    {
+
+        $curl = new Curl;
+        $response = $curl->get(Config::get('vanet/base_url')."/api/aircraft/{$search}/{$aircraft}", array(
+            'apikey' => Config::get('vanet/api_key')
+        ));
+        return Json::decode($response->body);
+
+    }
+
+    public static function fetchActiveAircraft()
     {
 
         self::init();
 
-        return self::$_list;
+        if (!$results = self::$_db->get('aircraft', array('status', '=', 1), array('name', 'ASC'))) {
+            return false;
+        }
+        return $results;
+
+    }
+
+    public static function getAvailableAircraft($rankid)
+    {
+
+        self::init();
+
+        return self::$_db->get('aircraft', array('rankreq', '<=', $rankid), array('name', 'ASC'));
 
     }
 
@@ -35,24 +76,6 @@ class Aircraft
 
     }
 
-    public static function getAllAircraft()
-    {
-
-        self::init();
-
-        return self::$_db->get('aircraft', array('id', '>', '0'));
-
-    }
-
-    public static function getAvailableAircraft($rankid)
-    {
-
-        self::init();
-
-        return self::$_db->get('aircraft', array('rankreq', '<=', $rankid));
-
-    }
-
     public static function getId($name)
     {
 
@@ -63,4 +86,5 @@ class Aircraft
         return $result->first()->id;
 
     }
+
 }
