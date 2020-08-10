@@ -180,6 +180,15 @@ if (Input::get('action') === 'editprofile') {
     ));
     Session::flash('success', 'News article added successfully! ');
     Redirect::to('admin.php?page=newsmanage');
+} elseif (Input::get('action') === 'deleteaircraft') {
+    Aircraft::archive(Input::get('delete'));
+    Session::flash('success', 'Aircraft archived successfully! ');
+    Redirect::to('admin.php?page=opsmanage&section=fleet');
+} elseif (Input::get('action') === 'addaircraft') {
+    die(Input::get('aircraft'));
+    Aircraft::add(Input::get('aircraft'));
+    Session::flash('success', 'Aircraft added successfully! ');
+    Redirect::to('admin.php?page=opsmanage&section=fleet');
 }
 
 

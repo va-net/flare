@@ -49,10 +49,16 @@ class Aircraft
 
         self::init();
 
-        if (!$results = self::$_db->get('aircraft', array('status', '=', 1), array('name', 'ASC'))) {
-            return false;
-        }
-        return $results;
+        return self::$_db->get('aircraft', array('status', '=', 1), array('name', 'ASC'));
+
+    }
+
+    public static function fetchAllAircraft()
+    {
+
+        self::init();
+
+        return self::$_db->get('aircraft', array('status', '<', 3), array('name', 'ASC'));
 
     }
 
@@ -61,7 +67,7 @@ class Aircraft
 
         self::init();
 
-        return self::$_db->get('aircraft', array('rankreq', '<=', $rankid), array('name', 'ASC'));
+        return self::$_db->query('SELECT * FROM aircraft WHERE rankreq <= ? AND status = 1 ORDER BY name ASC', array($rankid));
 
     }
 
@@ -84,6 +90,28 @@ class Aircraft
         $result = self::$_db->get('aircraft', array('name', '=', $name));
 
         return $result->first()->id;
+
+    }
+
+    public static function archive($id)
+    {
+
+        self::init();
+
+        self::$_db->update('aircraft', $id, 'id', array(
+            'status' => 0
+        ));
+
+    }
+
+    public static function add($aircraft) 
+    {
+
+        self::init();
+
+        self::$_db->update('aircraft', $aircraft, 'name', array(
+            'status' => 1
+        ));
 
     }
 

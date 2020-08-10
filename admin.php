@@ -596,43 +596,7 @@ if (!$user->isLoggedIn()) {
                                 <?php if (!$user->hasPermission('emailpilots')): ?>
                                     <div class="alert alert-danger text-center">Whoops! You don't have the necessary permissions to access this.</div>
                                 <?php else: ?>
-                                    <?php if (Config::get('email/setup') == false): ?>
-                                        <p>Let's setup email, which will enable you to send emails to your pilots, as well as receive notifications for applications if you so wish. Please fill out all of the required fields below. You will be sent a test email to confirm that you have entered the correct details.</p>
-                                        <form id="testemail" method="post" action="update.php">
-                                            <input hidden value="testemail" name="action">
-                                        </form>
-                                        <form method="post" action="update.php" id="setupemail">
-                                            <input hidden value="setupemail" name="action">
-                                            <div class="form-group">
-                                                <label>SMTP Server/Host</label>
-                                                <input type="text" class="form-control" name="host" required>
-                                            </div>
-                                            <div class="form-group">
-                                                <label>SMTP Port</label>
-                                                <input type="text" value="587" class="form-control" name="port" required>
-                                            </div>
-                                            <div class="form-group">
-                                                <label>SMTP Protocol</label>
-                                                <select class="form-control" name="protocol" required>
-                                                    <option value>Select</option>
-                                                    <option value selected="selected">TLS</option>
-                                                    <option value>SSL</option>
-                                                </select>
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Email Address</label>
-                                                <input type="text" class="form-control" name="email" required>
-                                            </div>
-                                            <div class="form-group">
-                                                <label>SMTP Username/Email</label>
-                                                <input type="password" class="form-control" name="password" required>
-                                            </div>
-                                            <input type="submit" class="btn bg-virgin" name="testemail" value="Send Test Email">
-                                            <input type="submit" class="btn bg-virgin" name="complete" value="Finish">
-                                        </form>
-                                    <?php else: ?>
 
-                                    <?php endif; ?>
                                 <?php endif; ?>
                             <?php elseif (Input::get('page') === 'opsmanage'): ?>
                                 <h3>Operations Management</h3>
@@ -640,7 +604,76 @@ if (!$user->isLoggedIn()) {
                                 <?php if (!$user->hasPermission('usermanage')): ?>
                                     <div class="alert alert-danger text-center">Whoops! You don't have the necessary permissions to access this.</div>
                                 <?php else: ?>
-                                    
+                                    <p>Here you may change your main VA settings, including fleet, routes, and schedules.</p>
+                                    <br>
+                                    <?php if (Input::get('section') === 'fleet'): ?>
+                                        <h4>Fleet</h4>
+                                        <br>
+                                        <button type="button" class="btn bg-virgin mb-2" data-toggle="modal" data-target="#addAircraft">Add Aircraft</button>
+                                        <div id="addAircraft" class="modal fade" role="dialog">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h4 class="modal-title">Add Aircraft</h4>
+                                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form action="update.php" method="post">
+                                                            <input hidden name="action" value="addaircraft">
+                                                            <div class="form-group">
+                                                                <label for="aircraft">Type</label>
+                                                                <select class="form-control" name="aircraft" required>
+                                                                    <option>Select</option>
+                                                                    <?php
+                                                                    $all = Aircraft::fetchAllAircraft();
+
+                                                                    $x = 0;
+
+                                                                    while ($all->count() > $x) {
+                                                                        echo '<option>'.$all->results()[$x]->name.'</option>';
+                                                                        $x++;
+                                                                    }
+                                                                    ?>
+                                                                </select>
+                                                            </div>
+                                                            <input type="submit" class="btn bg-virgin" value="Add aircraft">
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <form id="deleteaircraft" method="post" action="update.php">
+                                            <input hidden value="deleteaircraft" name="action">
+                                        </form>
+                                        <br>
+                                        <table class="table table-striped">
+                                            <thead class="bg-virgin">
+                                                <tr>
+                                                    <th>Name</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php 
+                                                $all = Aircraft::fetchActiveAircraft();
+                                                $x = 0;
+
+                                                while ($all->count() > $x) {
+                                                    echo '<tr><td class="align-middle">';
+                                                    echo $all->results()[$x]->name;
+                                                    echo '</td><td class="align-middle">';
+                                                    echo '&nbsp;<button value="'.$all->results()[$x]->id.'" form="deleteaircraft" type="submit" class="btn btn-danger text-light" name="delete"><i class="fa fa-trash"></i></button>';
+                                                    echo '</td>';
+                                                    $x++;
+                                                }
+                                                ?>
+                                            </tbody>
+                                        </table>
+                                    <?php elseif (Input::get('section') === 'routes'): ?>
+
+                                    <?php elseif (Input::get('section') === 'site'): ?>
+
+                                    <?php endif; ?>
                                 <?php endif; ?>
                             <?php elseif (Input::get('page') === 'statsviewing'): ?>
                                 <h3>VA Statistics</h3>
