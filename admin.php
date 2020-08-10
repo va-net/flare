@@ -33,7 +33,7 @@ if (!$user->isLoggedIn()) {
         }
     </style>
 
-    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #E4181E;">
+    <nav class="navbar navbar-expand-lg navbar-dark" class="bg-custom">
         <?php include './includes/navbar.php'; ?>
     </nav>
 
@@ -89,7 +89,7 @@ if (!$user->isLoggedIn()) {
                                 <?php else: ?>
                                     <p>Here you can view all users, active and inactive. Click on a user to view/edit the information.</p>
                                     <table class="table table-striped">
-                                    <thead class="bg-virgin">
+                                    <thead class="bg-custom">
                                         <tr>
                                             <th>Callsign</th>
                                             <th class="mobile-hidden">Name</th>
@@ -134,7 +134,7 @@ if (!$user->isLoggedIn()) {
                                                 <form action="update.php" method="post">
                                                     <input hidden name="action" value="deluser">
                                                     <input type="hidden" value="" name="id" id="delconfirmuserid">
-                                                    <input type="submit" class="btn bg-virgin" value="Mark as inactive">
+                                                    <input type="submit" class="btn bg-custom" value="Mark as inactive">
                                                 </form>
                                             </div>
                                         </div>
@@ -177,7 +177,7 @@ if (!$user->isLoggedIn()) {
                                                         <label for="usermodal-status">Status</label>
                                                         <input readonly type="text" value="" class="form-control" name="status" id="usermodal-status">
                                                     </div>
-                                                    <input type="submit" class="btn bg-virgin" value="Save">
+                                                    <input type="submit" class="btn bg-custom" value="Save">
                                                 </form>
                                             </div>
                                         </div>
@@ -191,7 +191,7 @@ if (!$user->isLoggedIn()) {
                                 <?php else: ?>
                                     <p>Here you can manage staff members, and their permissions. Be sure to select the correct permissions, as setting the wrong permissions can give them access to sensitive information!</p>
                                     <table class="table table-striped">
-                                    <thead class="bg-virgin">
+                                    <thead class="bg-custom">
                                         <tr>
                                             <th>Callsign</th>
                                             <th class="mobile-hidden">Name</th>
@@ -295,7 +295,7 @@ if (!$user->isLoggedIn()) {
                                                         echo 
                                                         '
                                                         <br>
-                                                        <input type="submit" class="btn bg-virgin" value="Save">
+                                                        <input type="submit" class="btn bg-custom" value="Save">
                                                     </form>
                                                 </div>
                                             </div>
@@ -317,7 +317,7 @@ if (!$user->isLoggedIn()) {
                                         <input hidden name="action" value="acceptapplication">
                                     </form>
                                     <table class="table table-striped">
-                                    <thead class="bg-virgin">
+                                    <thead class="bg-custom">
                                         <tr>
                                             <th>Callsign</th>
                                             <th class="mobile-hidden">Name</th>
@@ -396,7 +396,7 @@ if (!$user->isLoggedIn()) {
                                                     </form>
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <button type="button" class="btn bg-virgin" data-dismiss="modal">Close</button>
+                                                    <button type="button" class="btn bg-custom" data-dismiss="modal">Close</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -421,7 +421,7 @@ if (!$user->isLoggedIn()) {
                                                     </form>
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <button class="btn bg-virgin" form="declinemodal" type="submit">Decline</button>
+                                                    <button class="btn bg-custom" form="declinemodal" type="submit">Decline</button>
                                                     <button type="button" class="btn bg-secondary" data-dismiss="modal">Close</button>
                                                 </div>
                                             </div>
@@ -445,7 +445,7 @@ if (!$user->isLoggedIn()) {
                                         <input hidden name="action" value="declinepirep">
                                     </form>
                                     <table class="table table-striped">
-                                        <thead class="bg-virgin">
+                                        <thead class="bg-custom">
                                             <tr>
                                                 <th>Callsign</th>
                                                 <th>Flight Number</th>
@@ -492,7 +492,7 @@ if (!$user->isLoggedIn()) {
                                         <input hidden name="action" value="deletearticle">
                                     </form>
                                     <table class="table table-striped">
-                                        <thead class="bg-virgin">
+                                        <thead class="bg-custom">
                                             <tr>
                                                 <th>Title</th>
                                                 <th class="mobile-hidden">Date Posted</th>
@@ -587,7 +587,7 @@ if (!$user->isLoggedIn()) {
                                         <label>Author</label>
                                         <input readonly type="text" value="<?= escape($user->data()->name) ?>" class="form-control" name="author">
                                     </div>
-                                    <input type="submit" class="btn bg-virgin" value="Save">
+                                    <input type="submit" class="btn bg-custom" value="Save">
                                 </form>
                                 <?php endif; ?>
                             <?php elseif (Input::get('page') === 'emailpilots'): ?>
@@ -599,17 +599,13 @@ if (!$user->isLoggedIn()) {
 
                                 <?php endif; ?>
                             <?php elseif (Input::get('page') === 'opsmanage'): ?>
-                                <h3>Operations Management</h3>
-                                <br>
                                 <?php if (!$user->hasPermission('usermanage')): ?>
                                     <div class="alert alert-danger text-center">Whoops! You don't have the necessary permissions to access this.</div>
                                 <?php else: ?>
-                                    <p>Here you may change your main VA settings, including fleet, routes, and schedules.</p>
-                                    <br>
                                     <?php if (Input::get('section') === 'fleet'): ?>
-                                        <h4>Fleet</h4>
+                                        <h3>Fleet</h3>
                                         <br>
-                                        <button type="button" class="btn bg-virgin mb-2" data-toggle="modal" data-target="#addAircraft">Add Aircraft</button>
+                                        <button type="button" class="btn bg-custom mb-2" data-toggle="modal" data-target="#addAircraft">Add Aircraft</button>
                                         <div id="addAircraft" class="modal fade" role="dialog">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
@@ -636,7 +632,7 @@ if (!$user->isLoggedIn()) {
                                                                     ?>
                                                                 </select>
                                                             </div>
-                                                            <input type="submit" class="btn bg-virgin" value="Add aircraft">
+                                                            <input type="submit" class="btn bg-custom" value="Add aircraft">
                                                         </form>
                                                     </div>
                                                 </div>
@@ -647,7 +643,7 @@ if (!$user->isLoggedIn()) {
                                         </form>
                                         <br>
                                         <table class="table table-striped">
-                                            <thead class="bg-virgin">
+                                            <thead class="bg-custom">
                                                 <tr>
                                                     <th>Name</th>
                                                     <th>Action</th>
@@ -672,7 +668,8 @@ if (!$user->isLoggedIn()) {
                                     <?php elseif (Input::get('section') === 'routes'): ?>
 
                                     <?php elseif (Input::get('section') === 'site'): ?>
-
+                                        <h3>Site Configuration</h3>
+                                        <p>Here you can configure Flare to be your own.</p>
                                     <?php endif; ?>
                                 <?php endif; ?>
                             <?php elseif (Input::get('page') === 'statsviewing'): ?>

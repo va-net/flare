@@ -56,7 +56,7 @@
                                         <label for="vanet-api">VANet API Key</label>
                                         <input type="text" min="1" class="form-control" name="vanet-api" value="<?= escape(Input::get('vanet-api')) ?>">
                                     </div>
-                                    <input type="submit" class="btn bg-virgin" value="Save">
+                                    <input type="submit" class="btn bg-custom" value="Save">
                                 </form>
                             </section>
                         </div>

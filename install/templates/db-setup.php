@@ -57,7 +57,7 @@
                                         <label for="db-name">Database Name</label>
                                         <input type="text" min="1" class="form-control" name="db-name" value="<?= escape(Input::get('db-name')) ?>">
                                     </div>
-                                    <input type="submit" class="btn bg-virgin" value="Save">
+                                    <input type="submit" class="btn bg-custom" value="Save">
                                 </form>
                             </section>
                         </div>

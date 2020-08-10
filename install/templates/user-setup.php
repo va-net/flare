@@ -69,7 +69,7 @@ require_once '../core/init.php';
                                         <label for="password-repeat">Password Repeat</label>
                                         <input type="password" min="1" class="form-control" name="password-repeat">
                                     </div>
-                                    <input type="submit" class="btn bg-virgin" value="Save">
+                                    <input type="submit" class="btn bg-custom" value="Save">
                                 </form>
                             </section>
                         </div>
