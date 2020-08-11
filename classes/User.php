@@ -245,9 +245,6 @@ class User
         while ($x < $result->count()) {
             $newdata = array(
                 'name' => $result->results()[$x]->name,
-                'code' => $result->results()[$x]->code,
-                'size' => $result->results()[$x]->size,
-                'liveryid' => $result->results()[$x]->ifliveryid
             );
             $aircraft[$x] = $newdata;
             $x++;
@@ -337,7 +334,6 @@ class User
                 'status' => $statuses[$results->results()[$x]->status],
                 'flighttime' => $results->results()[$x]->flighttime,
                 'aircraft' => Aircraft::getAircraftName($results->results()[$x]->aircraftid),
-                'multi' => $results->results()[$x]->multi
             );
             $pireps[$x] = $newdata;
             $counter++;

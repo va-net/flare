@@ -35,7 +35,7 @@ if (!$user->isLoggedIn()) {
         <div class="container-fluid mt-4 text-center" style="overflow: auto;">
             <div class="row m-0 p-0">
                 <div class="col-lg-3 p-3 bg-light text-left mobile-hidden" id="desktopMenu" style="height: 100%;">
-                    <h3>Pilot Panel - <?= $user->data()->callsign ?></h3>
+                    <h3>Pilot Panel - <?= escape($user->data()->callsign) ?></h3>
                     <hr class="mt-0 divider" />
                     <a href="home.php" id="homelink" class="panel-link"><i class="fa fa-home"></i>&nbsp;Pilot Home</a><br>
                     <a href="pireps.php#filepirep" id="filepireplink" class="panel-link"><i class="fa fa-plane"></i>&nbsp;File PIREP</a><br>
@@ -199,19 +199,19 @@ if (!$user->isLoggedIn()) {
                                     </div>
                                     <div class="form-group">
                                         <label for="fnum">Flight Number</label>
-                                        <input type="number" min="1" class="form-control" name="fnum" value="<?= Input::get('fnum') ?>">
+                                        <input type="number" min="1" class="form-control" name="fnum" value="<?= escape(Input::get('fnum')) ?>">
                                     </div>
                                     <div class="form-group">
                                         <label for="hrs">Flight Time</label>
-                                        <input type="time" class="form-control" name="ftime" value="<?= Input::get('ftime') ?>">
+                                        <input type="time" class="form-control" name="ftime" value="<?= escape(Input::get('ftime')) ?>">
                                     </div>
                                     <div class="form-group">
                                         <label for="dep">Departure</label>
-                                        <input required type="text" class="form-control" maxlength="4" placeholder="ICAO" maxlength="4" minlength="4" name="dep" value="<?= Input::get('dep') ?>">
+                                        <input required type="text" class="form-control" maxlength="4" placeholder="ICAO" maxlength="4" minlength="4" name="dep" value="<?= escape(Input::get('dep')) ?>">
                                     </div>
                                     <div class="form-group">
                                         <label for="arr">Arrival</label>
-                                        <input required type="text" class="form-control" maxlength="4" placeholder="ICAO" maxlength="4" minlength="4" name="arr" value="<?= Input::get('arr') ?>">
+                                        <input required type="text" class="form-control" maxlength="4" placeholder="ICAO" maxlength="4" minlength="4" name="arr" value="<?= escape(Input::get('arr')) ?>">
                                     </div>
                                     <div class="form-group">
                                         <label for="aircraft">Aircraft</label>

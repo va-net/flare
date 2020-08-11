@@ -47,19 +47,19 @@ require_once '../core/init.php';
                                     <input hidden name="action" value="filepirep">
                                     <div class="form-group">
                                         <label for="va-name">Name</label>
-                                        <input type="text" min="1" class="form-control" name="name" value="<?= Input::get('name') ?>">
+                                        <input type="text" min="1" class="form-control" name="name" value="<?= escape(Input::get('name')) ?>">
                                     </div>
                                     <div class="form-group">
                                         <label for="callsign">Callsign</label>
-                                        <input type="text" min="1" class="form-control" name="callsign" value="<?= Config::get('va/identifier') ?>">
+                                        <input type="text" min="1" class="form-control" name="callsign" value="<?= escape(Config::get('va/identifier')) ?>">
                                     </div>
                                     <div class="form-group">
                                         <label for="callsign">Link to IFC account</label>
-                                        <input type="text" min="1" class="form-control" name="ifc" value="<?= Input::get('ifc') ?>">
+                                        <input type="text" min="1" class="form-control" name="ifc" value="<?= escape(Input::get('ifc')) ?>">
                                     </div>
                                     <div class="form-group">
                                         <label for="email">Email Address</label>
-                                        <input type="email" min="1" class="form-control" name="email" value="<?= Input::get('email') ?>">
+                                        <input type="email" min="1" class="form-control" name="email" value="<?= escape(Input::get('email')) ?>">
                                     </div>
                                     <div class="form-group">
                                         <label for="password-repeat">Password</label>
@@ -69,7 +69,7 @@ require_once '../core/init.php';
                                         <label for="password-repeat">Password Repeat</label>
                                         <input type="password" min="1" class="form-control" name="password-repeat">
                                     </div>
-                                    <input type="submit" class="btn bg-virgin" value="Save">
+                                    <input type="submit" class="btn bg-custom" value="Save">
                                 </form>
                             </section>
                         </div>

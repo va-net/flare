@@ -37,7 +37,7 @@ if (!$user->isLoggedIn()) {
         <div class="container-fluid mt-4 text-center" style="overflow: auto;">
         <div class="row m-0 p-0">
             <div class="col-lg-3 p-3 bg-light text-left mobile-hidden" id="desktopMenu" style="height: 100%;">
-                <h3>Pilot Panel - <?= $user->data()->callsign ?></h3>
+                <h3>Pilot Panel - <?= escape($user->data()->callsign) ?></h3>
                 <hr class="mt-0 divider" />
                 <a href="home.php" id="homelink" class="panel-link"><i class="fa fa-home"></i>&nbsp;Pilot Home</a><br>
                 <a href="pireps.php#filepirep" id="filepireplink" class="panel-link"><i class="fa fa-plane"></i>&nbsp;File PIREP</a><br>
@@ -66,7 +66,7 @@ if (!$user->isLoggedIn()) {
                     <div class="tab-content" id="tc">
                         <div class="tab-pane container active" id="home" style="display: none;">
                             <h3>Pilot Home</h3>
-                            <p>Welcome to the <?= Config::get('va/name') ?> crew center, <?= $user->data()->name ?>!</p>
+                            <p>Welcome to the <?= escape(Config::get('va/name')) ?> crew center, <?= escape($user->data()->name) ?>!</p>
                             <?php
                             if (Session::exists('errormain')) {
                                 echo '<div class="alert alert-danger text-center">Error: '.Session::flash('errormain').'</div>';
@@ -101,19 +101,19 @@ if (!$user->isLoggedIn()) {
                                                     <input type="hidden" name="action" value="editprofile">
                                                     <div class="form-group">
                                                         <label for="name">Name</label>
-                                                        <input type="text" maxlegnth="120" name="name" id="name" class="form-control" required value="<?= $user->data()->name ?>">
+                                                        <input type="text" maxlegnth="120" name="name" id="name" class="form-control" required value="<?= escape($user->data()->name) ?>">
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="callsign">Callsign</label>
-                                                        <input type="text" maxlegnth="8" name="callsign" id="callsign" class="form-control" required value="<?= $user->data()->callsign ?>"> 
+                                                        <input type="text" maxlegnth="8" name="callsign" id="callsign" class="form-control" required value="<?= escape($user->data()->callsign) ?>"> 
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="email">Email</label>
-                                                        <input type="email" name="email" id="email" class="form-control" required value="<?= $user->data()->email ?>">
+                                                        <input type="email" name="email" id="email" class="form-control" required value="<?= escape($user->data()->email) ?>">
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="ifc">IFC URL</label>
-                                                        <input type="url" name="ifc" id="ifc" class="form-control" required value="<?= $user->data()->ifc ?>">
+                                                        <input type="url" name="ifc" id="ifc" class="form-control" required value="<?= escape($user->data()->ifc) ?>">
                                                     </div>
                                                     <input type="submit" class="btn bg-virgin" value="Edit Profile">
                                                 </form>
@@ -157,23 +157,23 @@ if (!$user->isLoggedIn()) {
                                 <table class="table mb-0 border-bottom">
                                     <tr>
                                         <td class="align-middle"><b>Name</b></td>
-                                        <td class="align-middle"><?= $user->data()->name ?></td>
+                                        <td class="align-middle"><?= escape($user->data()->name) ?></td>
                                     </tr>
                                     <tr>
                                         <td class="align-middle"><b>Callsign</b></td>
-                                        <td class="align-middle"><?= $user->data()->callsign ?></td>
+                                        <td class="align-middle"><?= escape($user->data()->callsign) ?></td>
                                     </tr>
                                     <tr>
                                         <td class="align-middle"><b>Flight Time</b></td>
-                                        <td class="align-middle"><?= $user->getFlightTime() ?></td>
+                                        <td class="align-middle"><?= escape($user->getFlightTime()) ?></td>
                                     </tr>
                                     <tr>
                                         <td class="align-middle"><b>Rank</b></td>
-                                        <td class="align-middle"><?= $user->rank() ?></td>
+                                        <td class="align-middle"><?= escape($user->rank()) ?></td>
                                     </tr>
                                     <tr>
                                         <td class="align-middle"><b>PIREPs</b></td>
-                                        <td class="align-middle"><?= $user->numPirepsFiled() ?></td>
+                                        <td class="align-middle"><?= escape($user->numPirepsFiled()) ?></td>
                                     </tr>
                                 </table>
                                 <br />

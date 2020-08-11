@@ -1,4 +1,5 @@
 <?php
+
 require_once './core/init.php';
 
 $user = new User();
@@ -32,7 +33,7 @@ if (!$user->isLoggedIn()) {
         }
     </style>
 
-    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #E4181E;">
+    <nav class="navbar navbar-expand-lg navbar-dark" class="bg-custom">
         <?php include './includes/navbar.php'; ?>
     </nav>
 
@@ -40,7 +41,7 @@ if (!$user->isLoggedIn()) {
         <div class="container-fluid mt-4 text-center" style="overflow: auto;">
         <div class="row m-0 p-0">
             <div class="col-lg-3 p-3 bg-light text-left mobile-hidden" id="desktopMenu" style="height: 100%;">
-                <h3>Pilot Panel - <?= $user->data()->callsign ?></h3>
+                <h3>Pilot Panel - <?= escape($user->data()->callsign) ?></h3>
                 <hr class="mt-0 divider" />
                 <a href="home.php" id="homelink" class="panel-link"><i class="fa fa-home"></i>&nbsp;Pilot Home</a><br>
                 <a href="pireps.php#filepirep" id="filepireplink" class="panel-link"><i class="fa fa-plane"></i>&nbsp;File PIREP</a><br>
@@ -78,7 +79,7 @@ if (!$user->isLoggedIn()) {
                             ?>
                             <?php if (Input::get('page') == ''): ?>
                                 <h3>Admin Panel</h3>
-                                <p>Welcome to the Admin Panel. Here you can find the administration tools required to manage <?= Config::get('va/name') ?></p>
+                                <p>Welcome to the Admin Panel. Here you can find the administration tools required to manage <?= escape(Config::get('va/name')) ?></p>
                                 <p>Looks like no page was specified. Make sure you use the buttons in the navbar/sidebar!</p>
                             <?php endif; ?>
                             <?php if (Input::get('page') === 'usermanage'): ?>
@@ -88,7 +89,7 @@ if (!$user->isLoggedIn()) {
                                 <?php else: ?>
                                     <p>Here you can view all users, active and inactive. Click on a user to view/edit the information.</p>
                                     <table class="table table-striped">
-                                    <thead class="bg-virgin">
+                                    <thead class="bg-custom">
                                         <tr>
                                             <th>Callsign</th>
                                             <th class="mobile-hidden">Name</th>
@@ -133,7 +134,7 @@ if (!$user->isLoggedIn()) {
                                                 <form action="update.php" method="post">
                                                     <input hidden name="action" value="deluser">
                                                     <input type="hidden" value="" name="id" id="delconfirmuserid">
-                                                    <input type="submit" class="btn bg-virgin" value="Mark as inactive">
+                                                    <input type="submit" class="btn bg-custom" value="Mark as inactive">
                                                 </form>
                                             </div>
                                         </div>
@@ -176,7 +177,7 @@ if (!$user->isLoggedIn()) {
                                                         <label for="usermodal-status">Status</label>
                                                         <input readonly type="text" value="" class="form-control" name="status" id="usermodal-status">
                                                     </div>
-                                                    <input type="submit" class="btn bg-virgin" value="Save">
+                                                    <input type="submit" class="btn bg-custom" value="Save">
                                                 </form>
                                             </div>
                                         </div>
@@ -190,7 +191,7 @@ if (!$user->isLoggedIn()) {
                                 <?php else: ?>
                                     <p>Here you can manage staff members, and their permissions. Be sure to select the correct permissions, as setting the wrong permissions can give them access to sensitive information!</p>
                                     <table class="table table-striped">
-                                    <thead class="bg-virgin">
+                                    <thead class="bg-custom">
                                         <tr>
                                             <th>Callsign</th>
                                             <th class="mobile-hidden">Name</th>
@@ -294,7 +295,7 @@ if (!$user->isLoggedIn()) {
                                                         echo 
                                                         '
                                                         <br>
-                                                        <input type="submit" class="btn bg-virgin" value="Save">
+                                                        <input type="submit" class="btn bg-custom" value="Save">
                                                     </form>
                                                 </div>
                                             </div>
@@ -316,7 +317,7 @@ if (!$user->isLoggedIn()) {
                                         <input hidden name="action" value="acceptapplication">
                                     </form>
                                     <table class="table table-striped">
-                                    <thead class="bg-virgin">
+                                    <thead class="bg-custom">
                                         <tr>
                                             <th>Callsign</th>
                                             <th class="mobile-hidden">Name</th>
@@ -395,7 +396,7 @@ if (!$user->isLoggedIn()) {
                                                     </form>
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <button type="button" class="btn bg-virgin" data-dismiss="modal">Close</button>
+                                                    <button type="button" class="btn bg-custom" data-dismiss="modal">Close</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -420,7 +421,7 @@ if (!$user->isLoggedIn()) {
                                                     </form>
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <button class="btn bg-virgin" form="declinemodal" type="submit">Decline</button>
+                                                    <button class="btn bg-custom" form="declinemodal" type="submit">Decline</button>
                                                     <button type="button" class="btn bg-secondary" data-dismiss="modal">Close</button>
                                                 </div>
                                             </div>
@@ -444,7 +445,7 @@ if (!$user->isLoggedIn()) {
                                         <input hidden name="action" value="declinepirep">
                                     </form>
                                     <table class="table table-striped">
-                                        <thead class="bg-virgin">
+                                        <thead class="bg-custom">
                                             <tr>
                                                 <th>Callsign</th>
                                                 <th>Flight Number</th>
@@ -491,7 +492,7 @@ if (!$user->isLoggedIn()) {
                                         <input hidden name="action" value="deletearticle">
                                     </form>
                                     <table class="table table-striped">
-                                        <thead class="bg-virgin">
+                                        <thead class="bg-custom">
                                             <tr>
                                                 <th>Title</th>
                                                 <th class="mobile-hidden">Date Posted</th>
@@ -584,26 +585,92 @@ if (!$user->isLoggedIn()) {
                                     </div>
                                     <div class="form-group">
                                         <label>Author</label>
-                                        <input readonly type="text" value="<?= $user->data()->name ?>" class="form-control" name="author">
+                                        <input readonly type="text" value="<?= escape($user->data()->name) ?>" class="form-control" name="author">
                                     </div>
-                                    <input type="submit" class="btn bg-virgin" value="Save">
+                                    <input type="submit" class="btn bg-custom" value="Save">
                                 </form>
                                 <?php endif; ?>
-                            <?php elseif (Input::get('page') === 'staffmanage'): ?>
+                            <?php elseif (Input::get('page') === 'emailpilots'): ?>
                                 <h3>Email Pilots</h3>
                                 <br>
-                                <?php if (!$user->hasPermission('usermanage')): ?>
+                                <?php if (!$user->hasPermission('emailpilots')): ?>
                                     <div class="alert alert-danger text-center">Whoops! You don't have the necessary permissions to access this.</div>
                                 <?php else: ?>
-                                    
+
                                 <?php endif; ?>
                             <?php elseif (Input::get('page') === 'opsmanage'): ?>
-                                <h3>Operations Management</h3>
-                                <br>
                                 <?php if (!$user->hasPermission('usermanage')): ?>
                                     <div class="alert alert-danger text-center">Whoops! You don't have the necessary permissions to access this.</div>
                                 <?php else: ?>
-                                    
+                                    <?php if (Input::get('section') === 'fleet'): ?>
+                                        <h3>Fleet</h3>
+                                        <br>
+                                        <button type="button" class="btn bg-custom mb-2" data-toggle="modal" data-target="#addAircraft">Add Aircraft</button>
+                                        <div id="addAircraft" class="modal fade" role="dialog">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h4 class="modal-title">Add Aircraft</h4>
+                                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form action="update.php" method="post">
+                                                            <input hidden name="action" value="addaircraft">
+                                                            <div class="form-group">
+                                                                <label for="aircraft">Type</label>
+                                                                <select class="form-control" name="aircraft" required>
+                                                                    <option>Select</option>
+                                                                    <?php
+                                                                    $all = Aircraft::fetchAllAircraft();
+
+                                                                    $x = 0;
+
+                                                                    while ($all->count() > $x) {
+                                                                        echo '<option>'.$all->results()[$x]->name.'</option>';
+                                                                        $x++;
+                                                                    }
+                                                                    ?>
+                                                                </select>
+                                                            </div>
+                                                            <input type="submit" class="btn bg-custom" value="Add aircraft">
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <form id="deleteaircraft" method="post" action="update.php">
+                                            <input hidden value="deleteaircraft" name="action">
+                                        </form>
+                                        <br>
+                                        <table class="table table-striped">
+                                            <thead class="bg-custom">
+                                                <tr>
+                                                    <th>Name</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php 
+                                                $all = Aircraft::fetchActiveAircraft();
+                                                $x = 0;
+
+                                                while ($all->count() > $x) {
+                                                    echo '<tr><td class="align-middle">';
+                                                    echo $all->results()[$x]->name;
+                                                    echo '</td><td class="align-middle">';
+                                                    echo '&nbsp;<button value="'.$all->results()[$x]->id.'" form="deleteaircraft" type="submit" class="btn btn-danger text-light" name="delete"><i class="fa fa-trash"></i></button>';
+                                                    echo '</td>';
+                                                    $x++;
+                                                }
+                                                ?>
+                                            </tbody>
+                                        </table>
+                                    <?php elseif (Input::get('section') === 'routes'): ?>
+
+                                    <?php elseif (Input::get('section') === 'site'): ?>
+                                        <h3>Site Configuration</h3>
+                                        <p>Here you can configure Flare to be your own.</p>
+                                    <?php endif; ?>
                                 <?php endif; ?>
                             <?php elseif (Input::get('page') === 'statsviewing'): ?>
                                 <h3>VA Statistics</h3>
