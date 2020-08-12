@@ -117,4 +117,32 @@ class Pirep
 
     }
 
+    public static function setup($callsign) 
+    {
+
+        self::init();
+
+        $curl = new Curl;
+        $request = $curl->get(Config::get('vanet/base_url').'/api/userid', array(
+            'apikey' => Config::get('vanet/api_key'),
+            'callsign' => $callsign,
+            'server' => 'casual'
+        ));
+        $response = Json::decode($request->body);
+        if (array_key_exists('status', $response)) {
+            if ($response['status'] == 404) {
+                return false;
+            }
+        }
+
+        die($callsign);
+
+        self::$_db->update('pilots', $callsign, 'callsign', array(
+            'ifuserid' => $response['data']
+        ));
+        
+        return true;
+
+    }
+
 }

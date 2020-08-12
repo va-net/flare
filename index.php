@@ -1,6 +1,10 @@
 <?php
 require_once './core/init.php';
 
+if (!file_exists('./core/config.php')) {
+    Redirect::to('./install/install.php');
+}
+
 Session::create('darkmode', false);
 
 $user = new User();
