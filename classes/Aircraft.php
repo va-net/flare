@@ -115,4 +115,14 @@ class Aircraft
 
     }
 
+    public static function nameToId($name)
+    {
+
+        self::init();
+
+        $result = self::$_db->get('aircraft', array('name', '=', $name));
+        return $result->first()->id;
+
+    }
+
 }

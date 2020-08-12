@@ -195,8 +195,15 @@ if (Input::get('action') === 'editprofile') {
     }
     Session::flash('successrecent', 'PIREPs setup successfully! You can now file PIREPs.');
     Redirect::to('pireps.php');
+} elseif (Input::get('action') === 'addroute') {
+    Route::add(array(Input::get('fltnum'), Input::get('dep'), Input::get('arr'), Input::get('duration'), Aircraft::nameToId(Input::get('aircraft'))));
+    Session::flash('success', 'Route added successfully! ');
+    Redirect::to('admin.php?page=opsmanage&section=route');
+} elseif (Input::get('action') === 'deleteroute') {
+    Route::delete(Input::get('deleteroute'));
+    Session::flash('success', 'Route removed successfully! ');
+    Redirect::to('admin.php?page=opsmanage&section=route');
 }
-
 
 
 

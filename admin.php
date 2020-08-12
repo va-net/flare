@@ -666,19 +666,93 @@ if (!$user->isLoggedIn()) {
                                             </tbody>
                                         </table>
                                     <?php elseif (Input::get('section') === 'routes'): ?>
+                                        <h3>Route Management</h3>
+                                        <p>Here you can manage your VA's routes, please note that importing from CSV is not yet available.</p>
+                                        <br>
+                                        <button type="button" class="btn bg-custom mb-2" data-toggle="modal" data-target="#addRoute">Add Route</button>
+                                        <div id="addRoute" class="modal fade" role="dialog">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h4 class="modal-title">Add Route</h4>
+                                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form action="update.php" method="post">
+                                                            <input hidden name="action" value="addroute">
+                                                            <div class="form-group">
+                                                                <label for="aircraft">Departure Airport</label>
+                                                                <input type="text" name="dep" class="form-control" placeholder="ICAO" required>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="aircraft">Arrival Airport</label>
+                                                                <input type="text" name="arr" class="form-control" placeholder="ICAO" required>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="aircraft">Flight Duration</label>
+                                                                <input type="time" name="duration" class="form-control" required>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="aircraft">Aircraft</label>
+                                                                <select class="form-control" name="aircraft" required>
+                                                                    <option>Select</option>
+                                                                    <?php
+                                                                    $all = Aircraft::fetchAllAircraft();
 
+                                                                    $x = 0;
+
+                                                                    while ($all->count() > $x) {
+                                                                        echo '<option>'.$all->results()[$x]->name.'</option>';
+                                                                        $x++;
+                                                                    }
+                                                                    ?>
+                                                                </select>
+                                                            </div>
+                                                            <input type="submit" class="btn bg-custom" value="Add route">
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <table class="table table-striped">
+                                            <thead class="bg-custom">
+                                                <tr>
+                                                    <th>Flight Number</th>
+                                                    <th>Departure</th>
+                                                    <th>Arrival</th>
+                                                    <th>Aircraft</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php 
+                                                $all = Route::fetchAll();
+                                                $x = 0;
+
+                                                while ($all->count() > $x) {
+                                                    echo '<tr><td class="align-middle">';
+                                                    echo $all->results()[$x]->fltnum;
+                                                    echo '<tr><td class="align-middle">';
+                                                    echo $all->results()[$x]->dep;
+                                                    echo '<tr><td class="align-middle">';
+                                                    echo $all->results()[$x]->arr;
+                                                    echo '<tr><td class="align-middle">';
+                                                    echo $all->results()[$x]->aircraft;
+                                                    echo '</td><td class="align-middle">';
+                                                    echo '&nbsp;<button value="'.$all->results()[$x]->id.'" form="deleteroute" type="submit" class="btn btn-danger text-light" name="delete"><i class="fa fa-trash"></i></button>';
+                                                    echo '</td>';
+                                                    $x++;
+                                                }
+                                                ?>
+                                            </tbody>
+                                        </table>
+                                        <form id="deleteroute" method="post" action="update.php">
+                                            <input hidden value="deleteroute" name="action">
+                                        </form>
                                     <?php elseif (Input::get('section') === 'site'): ?>
                                         <h3>Site Configuration</h3>
                                         <p>Here you can configure Flare to be your own.</p>
                                     <?php endif; ?>
-                                <?php endif; ?>
-                            <?php elseif (Input::get('page') === 'statsviewing'): ?>
-                                <h3>VA Statistics</h3>
-                                <br>
-                                <?php if (!$user->hasPermission('usermanage')): ?>
-                                    <div class="alert alert-danger text-center">Whoops! You don't have the necessary permissions to access this.</div>
-                                <?php else: ?>
-                                    
                                 <?php endif; ?>
                             <?php endif; ?>
                         </div>
