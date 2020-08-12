@@ -5,19 +5,11 @@ This is the main Flare configuration file. Please do not change anything in this
 doing! If updating, please backup this file prior to doing so.
 */
 
-session_start();
-
-spl_autoload_register(function($class) {
-
-    require_once 'classes/'.$class.'.php';
-
-});
-
 $GLOBALS['config'] = array(
     'mysql' => array(
         'host' => 'localhost',
         'username' => 'root',
-        'password' => 'root',
+        'password' => '',
         'db' => 'flare'
         ),
     'remember' => array(
@@ -41,13 +33,3 @@ $GLOBALS['config'] = array(
         'fulladminpermissions' => '{"admin": 1, "usermanage": 1, "staffmanage": 1, "recruitment": 1, "pirepmanage": 1, "newsmanage": 1, "emailpilots": 1, "opsmanage": 1, "statsviewing": 1}'
     )
 );
-
-if (Cookie::exists(Config::get('remember/cookie_name')) && !Session::exists(Config::get('session/session_name'))) {
-    $hash = Cookie::get(Config::get('remember/cookie_name'));
-    $hashCheck = DB::getInstance()->get('sessions', array('hash', '=', $hash));
-
-    if ($hashCheck->count()) {
-        $user = new User($hashCheck->first()->user_id);
-        $user->login();
-    }
-}
