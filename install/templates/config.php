@@ -25,7 +25,8 @@ $GLOBALS['config'] = array(
         'identifier' => 'VA_IDENTIFIER'
     ),
     'vanet' => array(
-        'api_key' => 'VANET_API_KEY'
+        'api_key' => 'VANET_API_KEY',
+        'bas_url' => 'https://vanet.app'
     ),
     'defaults' => array(
         'permissions' => '{"admin": 0, "usermanage": 0, "staffmanage": 0, "recruitment": 0, "pirepmanage": 0, "newsmanage":0, "emailpilots": 0, "opsmanage": 0, "statsviewing": 0}',
