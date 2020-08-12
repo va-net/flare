@@ -1,4 +1,4 @@
-<a class="navbar-brand" href="#"><img src="assets/logo_white.png" style="height: 30px; width: auto;"><span class="mobile-hidden">Virgin Virtual Group Crew</span><span class="desktop-hidden">VGVA Crew</span></a>
+<a class="navbar-brand" href="#"><span class="mobile-hidden"><?= Config::get('va/name') ?></span><span class="desktop-hidden">VGVA Crew</span></a>
 
 <!-- navbar toggler -->
 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
