@@ -27,7 +27,7 @@ class Installer
             $template = str_replace($name, $val, $template);
         }
 
-        $file = fopen('../core/init.php', 'w');
+        $file = fopen('../core/config.php', 'w');
 
         if (!$file) {
             self::$_error = true;
@@ -43,12 +43,12 @@ class Installer
     public static function appendConfig($data = array()) 
     {
 
-        $currentConf = file_get_contents('../core/init.php');
+        $currentConf = file_get_contents('../core/config.php');
         foreach ($data as $name => $val) {
             $currentConf = str_replace($name, $val, $currentConf);
         }
 
-        $file = fopen('../core/init.php', 'w+');
+        $file = fopen('../core/config.php', 'w+');
 
         if (!$file) {
             self::$_error = true;

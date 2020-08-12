@@ -1,11 +1,6 @@
 <?php
 
-spl_autoload_register(function($class) {
-
-    require_once '../classes/'.$class.'.php';
-
-});
-
+require __DIR__.'/../core/init.php';
 require_once 'Installer.php';
 
 Page::setTitle('Install Flare');
