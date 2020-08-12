@@ -171,6 +171,13 @@ if (!$user->isLoggedIn()) {
                                         <td class="align-middle"><?= escape($user->data()->name) ?></td>
                                     </tr>
                                     <tr>
+                                        <td class="align-middle"><b>IFC Profile</b></td>
+                                        <?php
+                                        $username = explode('/', $user->data()->ifc);
+                                        ?>
+                                        <td class="align-middle"><a href="<?= $user->data()->ifc ?>" target="_blank"><?= escape($username[4]) ?></td>
+                                    </tr>
+                                    <tr>
                                         <td class="align-middle"><b>Callsign</b></td>
                                         <td class="align-middle"><?= escape($user->data()->callsign) ?></td>
                                     </tr>
@@ -198,15 +205,15 @@ if (!$user->isLoggedIn()) {
 
                                 if ($news === array()) {
                                     echo 'No news';
-                                }
-
-                                foreach ($news as $article) {
-                                    echo '<div class="card mb-3">';
-                                    echo '<div class="card-body">';
-                                    echo '<h5 class="card-title"><u>'.$article['title'].'</u></h5>';
-                                    echo '<p><small><i class="fa fa-user"></i> '.$article['author'].'&nbsp;&nbsp;&nbsp;<i class="fa fa-clock"></i> '.date_format(date_create($article['dateposted']), 'Y-m-d').'</small></p>';
-                                    echo '<p class="card-text">'.$article['content'].'</p>';
-                                    echo '</div></div>';
+                                } else {
+                                    foreach ($news as $article) {
+                                        echo '<div class="card mb-3">';
+                                        echo '<div class="card-body">';
+                                        echo '<h5 class="card-title"><u>'.$article['title'].'</u></h5>';
+                                        echo '<p><small><i class="fa fa-user"></i> '.$article['author'].'&nbsp;&nbsp;&nbsp;<i class="fa fa-clock"></i> '.date_format(date_create($article['dateposted']), 'Y-m-d').'</small></p>';
+                                        echo '<p class="card-text">'.$article['content'].'</p>';
+                                        echo '</div></div>';
+                                    }
                                 }
                                 ?>
                                 <br>
@@ -216,36 +223,40 @@ if (!$user->isLoggedIn()) {
                             <section id="pireps">
                                 <h3>Your Recent PIREPs</h3>
                                 <br>
-                                <table class="table table-striped">
-                                    <thead class="bg-custom">
-                                        <tr>
-                                            <th class="mobile-hidden">Flight Number</th>
-                                            <th>Route</th>
-                                            <th class="mobile-hidden">Date</th>
-                                            <th class="mobile-hidden">Aircraft</th>
-                                            <th>Status</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php
-                                        $pireps = $user->recentPireps();
+                                <?php $pireps = $user->recentPireps(); ?>
+                                <?php if ($pireps): ?>
+                                    <table class="table table-striped">
+                                        <thead class="bg-custom">
+                                            <tr>
+                                                <th class="mobile-hidden">Flight Number</th>
+                                                <th>Route</th>
+                                                <th class="mobile-hidden">Date</th>
+                                                <th class="mobile-hidden">Aircraft</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php
 
-                                        foreach ($pireps as $pirep) {
-                                            echo '<tr><td class="mobile-hidden align-middle">';
-                                            echo $pirep["number"];
-                                            echo '</td><td class="align-middle">';
-                                            echo $pirep["departure"].'-'.$pirep["arrival"];
-                                            echo '</td><td class="mobile-hidden align-middle">';
-                                            echo date_format(date_create($pirep['date']), 'Y-m-d');
-                                            echo '</td><td class="mobile-hidden align-middle">';
-                                            echo $pirep["aircraft"];
-                                            echo '</td><td class="align-middle">';
-                                            echo $pirep["status"];
-                                            echo '</td></tr>';
-                                        }
-                                        ?>
-                                    </tbody>
-                                </table>
+                                            foreach ($pireps as $pirep) {
+                                                echo '<tr><td class="mobile-hidden align-middle">';
+                                                echo $pirep["number"];
+                                                echo '</td><td class="align-middle">';
+                                                echo $pirep["departure"].'-'.$pirep["arrival"];
+                                                echo '</td><td class="mobile-hidden align-middle">';
+                                                echo date_format(date_create($pirep['date']), 'Y-m-d');
+                                                echo '</td><td class="mobile-hidden align-middle">';
+                                                echo $pirep["aircraft"];
+                                                echo '</td><td class="align-middle">';
+                                                echo $pirep["status"];
+                                                echo '</td></tr>';
+                                            }
+                                            ?>
+                                        </tbody>
+                                    </table>
+                                <?php else: ?>
+                                    <?= 'No recent PIREPs' ?>
+                                <?php endif; ?>
                             </section>
                         </div>
                     </div>
