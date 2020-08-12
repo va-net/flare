@@ -185,12 +185,25 @@ if (Input::get('action') === 'editprofile') {
     Session::flash('success', 'Aircraft archived successfully! ');
     Redirect::to('admin.php?page=opsmanage&section=fleet');
 } elseif (Input::get('action') === 'addaircraft') {
-    die(Input::get('aircraft'));
     Aircraft::add(Input::get('aircraft'));
     Session::flash('success', 'Aircraft added successfully! ');
     Redirect::to('admin.php?page=opsmanage&section=fleet');
+} elseif (Input::get('action') === 'setuppireps') {
+    if (!Pirep::setup(Input::get('callsign'))) {
+        Session::flash('errorrecent', 'There was an error connecting to Infinite Flight. Ensure you are spawned in on the <b>Casual Server, and have set your callsign to \''.$user->data()->callsign.'\'</b>!');
+        Redirect::to('pireps.php');
+    }
+    Session::flash('successrecent', 'PIREPs setup successfully! You can now file PIREPs.');
+    Redirect::to('pireps.php');
+} elseif (Input::get('action') === 'addroute') {
+    Route::add(array(Input::get('fltnum'), Input::get('dep'), Input::get('arr'), Input::get('duration'), Aircraft::nameToId(Input::get('aircraft'))));
+    Session::flash('success', 'Route added successfully! ');
+    Redirect::to('admin.php?page=opsmanage&section=route');
+} elseif (Input::get('action') === 'deleteroute') {
+    Route::delete(Input::get('deleteroute'));
+    Session::flash('success', 'Route removed successfully! ');
+    Redirect::to('admin.php?page=opsmanage&section=route');
 }
-
 
 
 

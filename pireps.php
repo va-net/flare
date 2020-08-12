@@ -63,17 +63,18 @@ if (!$user->isLoggedIn()) {
                     <div id="loader" class="spinner-border spinner-border-sm text-danger"></div>
                     <div class="tab-content" id="tc">
                         <div class="tab-pane container active" id="home" style="display: none;">
+                        <?php
+                        if (Session::exists('errorrecent')) {
+                            echo '<div class="alert alert-danger text-center">Error: '.Session::flash('errorrecent').'</div>';
+                        }
+                        if (Session::exists('successrecent')) {
+                            echo '<div class="alert alert-success text-center">'.Session::flash('successrecent').'</div>';
+                        }
+                        ?>
+                        <?php if ($user->data()->ifuserid != null): ?>
                             <section id="recents">
                                 <h4>My Recent PIREPs</h4>
                                 <p>Showing your 30 most recent PIREPs</p>
-                                <?php
-                                if (Session::exists('errorrecent')) {
-                                    echo '<div class="alert alert-danger text-center">Error: '.Session::flash('errorrecent').'</div>';
-                                }
-                                if (Session::exists('successrecent')) {
-                                    echo '<div class="alert alert-success text-center">'.Session::flash('successrecent').'</div>';
-                                }
-                                ?>
                                 <br>
                                 <table class="table table-striped">
                                     <thead class="bg-virgin">
@@ -233,6 +234,15 @@ if (!$user->isLoggedIn()) {
                                     <input type="submit" class="btn text-light" style="background-color: #E4181E;" value="Submit">
                                 </form>
                             </section>
+                            <?php else: ?>
+                                <h3>Setup PIREPs</h3>
+                                <p>Before you can start filing PIREPs, we need to grab a bit of data from Infinite Flight. Please spawn in on the Casual Server, and ensure that you <b>set your callsign to your assigned one (<?= $user->data()->callsign ?>, if you've forgotten!).</b> Then, click the button below.</p>
+                                <form method="post" action="update.php">
+                                    <input hidden name="action" value="setuppireps">
+                                    <input hidden name="callsign" value="<?= $user->data()->callsign ?>">
+                                    <input type="submit" class="btn text-light bg-custom" value="I have spawned in on the Casual Server">
+                                </form>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>

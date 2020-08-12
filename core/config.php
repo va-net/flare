@@ -7,10 +7,10 @@ doing! If updating, please backup this file prior to doing so.
 
 $GLOBALS['config'] = array(
     'mysql' => array(
-        'host' => 'DB_HOST',
-        'username' => 'DB_USER',
-        'password' => 'DB_PASS',
-        'db' => 'DB_NAME'
+        'host' => 'localhost',
+        'username' => 'root',
+        'password' => '',
+        'db' => 'flare'
         ),
     'remember' => array(
         'cookie_name' => 'remember',
@@ -21,11 +21,12 @@ $GLOBALS['config'] = array(
         'token_name' => 'token'
     ),
     'va' => array(
-        'name' => 'VA_NAME',
-        'identifier' => 'VA_IDENTIFIER'
+        'name' => 'IFHUB',
+        'identifier' => 'IFHUB'
     ),
     'vanet' => array(
-        'api_key' => 'VANET_API_KEY'
+        'api_key' => '1bcf4484-d982-4e6c-9a33-63634d72ae28',
+        'base_url' => 'https://vanet.app'
     ),
     'defaults' => array(
         'permissions' => '{"admin": 0, "usermanage": 0, "staffmanage": 0, "recruitment": 0, "pirepmanage": 0, "newsmanage":0, "emailpilots": 0, "opsmanage": 0, "statsviewing": 0}',
