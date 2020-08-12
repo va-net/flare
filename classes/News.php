@@ -22,6 +22,10 @@ class News
         $x = 0;
         $news = array();
 
+        if ($result->count() < 1) {
+            return array();
+        }
+
         while ($x < $result->count()) {
             $newdata = array(
                 'id' => $result->results()[$x]->id,

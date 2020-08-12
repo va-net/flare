@@ -324,6 +324,10 @@ class User
         $pireps = array();
         $statuses = array('Pending', 'Approved', 'Denied');
 
+        if ($results->count() < 1) {
+            return false;
+        }
+
         while ($x < $results->count()) {
             $newdata = array(
                 'id' => $results->results()[$x]->id,
