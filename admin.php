@@ -81,6 +81,9 @@ if (!$user->isLoggedIn()) {
                     <div class="tab-content" id="tc">
                         <div class="tab-pane container active" id="home" style="display: none;">
                             <?php
+                            if (file_exists('./install/install.php')) {
+                                Session::flash('error', 'The install folder still exists! Please delete this immediately, as this poses a severe security risk!');
+                            }
                             if (Session::exists('error')) {
                                 echo '<div class="alert alert-danger text-center">Error: '.Session::flash('error').'</div>';
                             }
@@ -600,14 +603,6 @@ if (!$user->isLoggedIn()) {
                                     </div>
                                     <input type="submit" class="btn bg-custom" value="Save">
                                 </form>
-                                <?php endif; ?>
-                            <?php elseif (Input::get('page') === 'emailpilots'): ?>
-                                <h3>Email Pilots</h3>
-                                <br>
-                                <?php if (!$user->hasPermission('emailpilots')): ?>
-                                    <div class="alert alert-danger text-center">Whoops! You don't have the necessary permissions to access this.</div>
-                                <?php else: ?>
-
                                 <?php endif; ?>
                             <?php elseif (Input::get('page') === 'opsmanage'): ?>
                                 <?php if (!$user->hasPermission('usermanage')): ?>
