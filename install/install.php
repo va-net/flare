@@ -36,12 +36,11 @@ switch (Input::get('page')) {
             Session::flash('error', 'Whoops! Flare couldn\'t connect to the database. Please try again.');
             Redirect::to('?page=db-setup');
         }
-        require_once '../core/init.php';
-        $db = DB::newInstance();
-        $sql = file_get_contents('./db.sql');
-        if ($db->query($sql)) {
-            Redirect::to('?page=user-setup');
+        if (!Installer::setupDb()) {
+            Session::flash('error', 'Hmm. Looks like there was an error setting up the database. Ensure you have entered the correct database details, and try again.');
+            Redirect::to('?page=db-setup');
         }
+        Redirect::to('?page=user-setup');
         break;
     case 'user-setup':
         Installer::showTemplate('user-setup');
