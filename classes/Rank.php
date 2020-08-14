@@ -42,6 +42,15 @@ class Rank
 
     }
 
+    public static function getName($hours)
+    {
+
+        self::init();
+
+        return self::calc($hours, false);
+
+    }
+
     public static function newRank($name, $timereq) 
     {
 
@@ -64,6 +73,15 @@ class Rank
 
         self::init();
         $rank = self::$_db->get('ranks', array('id', '>', '0'), array('timereq', 'asc'));
+        return $rank->first()->name;
+
+    }
+
+    public static function idToName($id) 
+    {
+
+        self::init();
+        $rank = self::$_db->get('ranks', array('id', '=', $id));
         return $rank->first()->name;
 
     }
