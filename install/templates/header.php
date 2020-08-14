@@ -24,3 +24,9 @@
   });
 </script>
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+<style>
+  .bg-custom {
+    background-color: #E4181E !important;
+    color: #f8f9fa !important;
+  }
+</style>

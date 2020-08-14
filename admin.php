@@ -33,7 +33,7 @@ if (!$user->isLoggedIn()) {
         }
     </style>
 
-    <nav class="navbar navbar-expand-lg navbar-dark" class="bg-custom">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-custom">
         <?php include './includes/navbar.php'; ?>
     </nav>
 
@@ -57,7 +57,18 @@ if (!$user->isLoggedIn()) {
                     echo '<hr class="mt-0 divider">';
                     foreach ($permissions as $permission => $data) {
                         if ($user->hasPermission($permission)) {
-                            echo '<a href="admin.php?page='.$permission.'" id="userslink" class="panel-link"><i class="fa '.$data['icon'].'"></i>&nbsp;'.$data['name'].'</a><br>';
+                            if ($permission == 'opsmanage') {
+                                echo '
+                                <a href="#" data-toggle="collapse" data-target="#demo" class="panel-link"><i class="fa fa-caret-down"></i>&nbsp;Operations Management</a><br>
+                                <div id="demo" class="collapse">
+                                &nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-plane"></i>&nbsp;<a href="./admin.php?page=opsmanage&section=fleet" class="panel-link">Manage Fleet</a><br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-plane-departure"></i>&nbsp;<a href="./admin.php?page=opsmanage&section=routes" class="panel-link">Manage Routes</a><br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-globe"></i>&nbsp;<a href="./admin.php?page=opsmanage&section=site" class="panel-link">Manage Site</a>
+                                </div>
+                                ';
+                            } else {
+                                echo '<a href="admin.php?page='.$permission.'" id="userslink" class="panel-link"><i class="fa '.$data['icon'].'"></i>&nbsp;'.$data['name'].'</a><br>';
+                            }
                         }
                     }
                 }
@@ -70,6 +81,9 @@ if (!$user->isLoggedIn()) {
                     <div class="tab-content" id="tc">
                         <div class="tab-pane container active" id="home" style="display: none;">
                             <?php
+                            if (file_exists('./install/install.php')) {
+                                Session::flash('error', 'The install folder still exists! Please delete this immediately, as this poses a severe security risk!');
+                            }
                             if (Session::exists('error')) {
                                 echo '<div class="alert alert-danger text-center">Error: '.Session::flash('error').'</div>';
                             }
@@ -589,14 +603,6 @@ if (!$user->isLoggedIn()) {
                                     </div>
                                     <input type="submit" class="btn bg-custom" value="Save">
                                 </form>
-                                <?php endif; ?>
-                            <?php elseif (Input::get('page') === 'emailpilots'): ?>
-                                <h3>Email Pilots</h3>
-                                <br>
-                                <?php if (!$user->hasPermission('emailpilots')): ?>
-                                    <div class="alert alert-danger text-center">Whoops! You don't have the necessary permissions to access this.</div>
-                                <?php else: ?>
-
                                 <?php endif; ?>
                             <?php elseif (Input::get('page') === 'opsmanage'): ?>
                                 <?php if (!$user->hasPermission('usermanage')): ?>
