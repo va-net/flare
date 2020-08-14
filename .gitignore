@@ -3,3 +3,4 @@ core/init.php
 ._flare.sql
 permissions.json
 core/config.php
+classes/curl_cookie.txt

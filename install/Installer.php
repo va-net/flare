@@ -64,12 +64,19 @@ class Installer
     public static function setupDb()
     {
 
-        $sql = file_get_contents('./install.sql');
+        $sql = file_get_contents('./db.sql');
         $db = DB::newInstance();
 
         if (!$db->query($sql)) {
             self::$_error = true;
             return false;
+        }
+        $all = Aircraft::fetchAllAircraftFromVANet();
+        foreach ($all as $id => $name) {
+            $db->insert('aircraft', array(
+                'ifliveryid' => $id,
+                'name' => $name
+            ));
         }
         return true;
 

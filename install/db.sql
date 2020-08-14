@@ -1,34 +1,10 @@
--- phpMyAdmin SQL Dump
--- version 4.9.2
--- https://www.phpmyadmin.net/
---
--- Host: 127.0.0.1:3308
--- Generation Time: Aug 13, 2020 at 02:21 PM
--- Server version: 8.0.18
--- PHP Version: 7.3.12
-
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
-
---
--- Database: `flare`
---
 CREATE DATABASE IF NOT EXISTS `flare` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
 USE `flare`;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `aircraft`
---
 
 DROP TABLE IF EXISTS `aircraft`;
 CREATE TABLE IF NOT EXISTS `aircraft` (
@@ -40,12 +16,6 @@ CREATE TABLE IF NOT EXISTS `aircraft` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `news`
---
-
 DROP TABLE IF EXISTS `news`;
 CREATE TABLE IF NOT EXISTS `news` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -56,12 +26,6 @@ CREATE TABLE IF NOT EXISTS `news` (
   `status` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `pilots`
---
 
 DROP TABLE IF EXISTS `pilots`;
 CREATE TABLE IF NOT EXISTS `pilots` (
@@ -85,19 +49,6 @@ CREATE TABLE IF NOT EXISTS `pilots` (
   UNIQUE KEY `callsign` (`callsign`)
 ) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
---
--- Dumping data for table `pilots`
---
-
-INSERT INTO `pilots` (`id`, `callsign`, `name`, `ifc`, `ifuserid`, `email`, `password`, `transhours`, `transflights`, `violand`, `grade`, `notes`, `darkmode`, `permissions`, `status`, `joined`) VALUES
-(4, 'IFHUB001', 'Lucas Rebato', 'https://community.infiniteflight.com/u/rebal15/summary', NULL, 'lrebato10@gmail.com', '$argon2id$v=19$m=65536,t=4,p=1$YW9MR3ZDQ1ZkWHEzTGIzZQ$5D+kJ3Hhq9f0DlWeOb6nijSctS9NhkKhIluVMPKFP8w', 0, 0, NULL, NULL, '', 0, '{\"admin\":1,\"usermanage\":1,\"staffmanage\":1,\"recruitment\":1,\"pirepmanage\":1,\"newsmanage\":1,\"emailpilots\":1,\"opsmanage\":1,\"statsviewing\":1}', 1, '2020-08-12 16:18:32');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `pireps`
---
-
 DROP TABLE IF EXISTS `pireps`;
 CREATE TABLE IF NOT EXISTS `pireps` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -113,12 +64,6 @@ CREATE TABLE IF NOT EXISTS `pireps` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `ranks`
---
-
 DROP TABLE IF EXISTS `ranks`;
 CREATE TABLE IF NOT EXISTS `ranks` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -127,18 +72,8 @@ CREATE TABLE IF NOT EXISTS `ranks` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
---
--- Dumping data for table `ranks`
---
-
 INSERT INTO `ranks` (`id`, `name`, `timereq`) VALUES
 (4, 'Cadet', 0);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `routes`
---
 
 DROP TABLE IF EXISTS `routes`;
 CREATE TABLE IF NOT EXISTS `routes` (
@@ -152,7 +87,3 @@ CREATE TABLE IF NOT EXISTS `routes` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 COMMIT;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

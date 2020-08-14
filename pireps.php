@@ -87,7 +87,12 @@ if (!$user->isLoggedIn()) {
                                 <h4>My Recent PIREPs</h4>
                                 <p>Showing your 30 most recent PIREPs</p>
                                 <br>
-                                <table class="table table-striped">
+                                <?php
+                                $pireps = $user->recentPireps($user->data()->id, 30);
+                                if (!$pireps) {
+                                    echo '<h5><b>No recent PIREPS<b></h5>';
+                                } else { ?>
+                                    <table class="table table-striped">
                                     <thead class="bg-virgin">
                                         <tr>
                                             <th class="mobile-hidden">Flight Number</th>
@@ -100,7 +105,6 @@ if (!$user->isLoggedIn()) {
                                     </thead>
                                     <tbody>
                                         <?php
-                                        $pireps = $user->recentPireps($user->data()->id, 30);
                                         $x = 0;
                                         foreach ($pireps as $pirep) {
                                             echo '<tr><td class="mobile-hidden align-middle">';
@@ -188,6 +192,7 @@ if (!$user->isLoggedIn()) {
                                     </div>
                                     ';
                                     $x++;
+                                }
                                 }
                                 ?>
                             </section>
