@@ -104,13 +104,14 @@ class Aircraft
 
     }
 
-    public static function add($aircraft) 
+    public static function add($aircraft, $rank) 
     {
 
         self::init();
 
-        self::$_db->update('aircraft', $aircraft, 'name', array(
-            'status' => 1
+        self::$_db->update('aircraft', $aircraft, 'id', array(
+            'status' => 1,
+            'rankreq' => $rank
         ));
 
     }

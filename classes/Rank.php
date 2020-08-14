@@ -87,5 +87,22 @@ class Rank
         return $rank->first()->name;
 
     }
+    
+    public static function nameToId($name) 
+    {
+
+        self::init();
+        $rank = self::$_db->get('ranks', array('name', '=', $name));
+        return $rank->first()->id;
+
+    }
+
+    public static function fetchAllNames() 
+    {
+
+        self::init();
+        return self::$_db->getAll('ranks');
+
+    }
 
 }

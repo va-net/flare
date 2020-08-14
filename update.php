@@ -185,7 +185,7 @@ if (Input::get('action') === 'editprofile') {
     Session::flash('success', 'Aircraft archived successfully! ');
     Redirect::to('admin.php?page=opsmanage&section=fleet');
 } elseif (Input::get('action') === 'addaircraft') {
-    Aircraft::add(Input::get('aircraft'));
+    Aircraft::add(Aircraft::nameToId(Input::get('aircraft')), Rank::nameToId(Input::get('rank')));
     Session::flash('success', 'Aircraft added successfully! ');
     Redirect::to('admin.php?page=opsmanage&section=fleet');
 } elseif (Input::get('action') === 'setuppireps') {

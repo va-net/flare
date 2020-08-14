@@ -629,9 +629,21 @@ if (!$user->isLoggedIn()) {
                                                                     <option>Select</option>
                                                                     <?php
                                                                     $all = Aircraft::fetchAllAircraft();
-
                                                                     $x = 0;
-
+                                                                    while ($all->count() > $x) {
+                                                                        echo '<option>'.$all->results()[$x]->name.'</option>';
+                                                                        $x++;
+                                                                    }
+                                                                    ?>
+                                                                </select>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="rank">Rank required</label>
+                                                                <select class="form-control" name="rank" required>
+                                                                    <option>Select</option>
+                                                                    <?php
+                                                                    $all = Rank::fetchAllNames();
+                                                                    $x = 0;
                                                                     while ($all->count() > $x) {
                                                                         echo '<option>'.$all->results()[$x]->name.'</option>';
                                                                         $x++;
