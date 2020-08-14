@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS `aircraft` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` text NOT NULL,
   `ifliveryid` varchar(36) NOT NULL,
-  `rankreq` int(11) NOT NULL DEFAULT '0',
+  `rankreq` int(11) NOT NULL DEFAULT '1',
   `status` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
