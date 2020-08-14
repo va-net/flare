@@ -56,10 +56,10 @@ if (Input::get('action') === 'editprofile') {
         'multi' => $multi
     ))) {
         Session::flash('error', 'There was an error filing the PIREP.');
-        Redirect::to('pireps.php#filepirep');
+        Redirect::to('pireps.php?page=new');
     } else {
         Session::flash('success', 'PIREP filed successfully!');
-        Redirect::to('pireps.php#filepirep');
+        Redirect::to('pireps.php?page=new');
     }
 } elseif (Input::get('action') === 'editpirep') {
     if (!Pirep::update(Input::get('id'), array(
@@ -185,7 +185,7 @@ if (Input::get('action') === 'editprofile') {
     Session::flash('success', 'Aircraft archived successfully! ');
     Redirect::to('admin.php?page=opsmanage&section=fleet');
 } elseif (Input::get('action') === 'addaircraft') {
-    Aircraft::add(Input::get('aircraft'));
+    Aircraft::add(Aircraft::nameToId(Input::get('aircraft')), Rank::nameToId(Input::get('rank')));
     Session::flash('success', 'Aircraft added successfully! ');
     Redirect::to('admin.php?page=opsmanage&section=fleet');
 } elseif (Input::get('action') === 'setuppireps') {
@@ -201,8 +201,12 @@ if (Input::get('action') === 'editprofile') {
     Redirect::to('admin.php?page=opsmanage&section=route');
 } elseif (Input::get('action') === 'deleteroute') {
     Route::delete(Input::get('deleteroute'));
-    Session::flash('success', 'Route removed successfully! ');
+    Session::flash('success', 'Route removed successfully!');
     Redirect::to('admin.php?page=opsmanage&section=route');
+} elseif (Input::get('action') === 'addrank') {
+    Rank::add(Input::get('name'), Time::hrsToSecs(Input::get('time')));
+    Session::flash('success', 'Rank added successfully!');
+    Redirect::to('admin.php?page=opsmanage&section=ranks');
 }
 
 

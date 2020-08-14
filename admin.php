@@ -44,8 +44,8 @@ if (!$user->isLoggedIn()) {
                 <h3>Pilot Panel - <?= escape($user->data()->callsign) ?></h3>
                 <hr class="mt-0 divider" />
                 <a href="home.php" id="homelink" class="panel-link"><i class="fa fa-home"></i>&nbsp;Pilot Home</a><br>
-                <a href="pireps.php#filepirep" id="filepireplink" class="panel-link"><i class="fa fa-plane"></i>&nbsp;File PIREP</a><br>
-                <a href="pireps.php#mypireps" id="mypirepslink" class="panel-link"><i class="fa fa-folder"></i>&nbsp;My PIREPs</a><br>
+                <a href="pireps.php?page=new" id="filepireplink" class="panel-link"><i class="fa fa-plane"></i>&nbsp;File PIREP</a><br>
+                <a href="pireps.php?page=recents" id="mypirepslink" class="panel-link"><i class="fa fa-folder"></i>&nbsp;My PIREPs</a><br>
                 <a href="routes.php" id="routeslink" class="panel-link"><i class="fa fa-database"></i>&nbsp;Route Database</a><br>
                 <a href="acars.php" id="acarslink" class="panel-link"><i class="fa fa-sync"></i>&nbsp;ACARS</a><br>
                 <?php
@@ -61,6 +61,7 @@ if (!$user->isLoggedIn()) {
                                 echo '
                                 <a href="#" data-toggle="collapse" data-target="#demo" class="panel-link"><i class="fa fa-caret-down"></i>&nbsp;Operations Management</a><br>
                                 <div id="demo" class="collapse">
+                                &nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-medal"></i>&nbsp;<a href="./admin.php?page=opsmanage&section=ranks" class="panel-link">Manage Ranks</a><br>
                                 &nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-plane"></i>&nbsp;<a href="./admin.php?page=opsmanage&section=fleet" class="panel-link">Manage Fleet</a><br>
                                 &nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-plane-departure"></i>&nbsp;<a href="./admin.php?page=opsmanage&section=routes" class="panel-link">Manage Routes</a><br>
                                 &nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-globe"></i>&nbsp;<a href="./admin.php?page=opsmanage&section=site" class="panel-link">Manage Site</a>
@@ -628,9 +629,21 @@ if (!$user->isLoggedIn()) {
                                                                     <option>Select</option>
                                                                     <?php
                                                                     $all = Aircraft::fetchAllAircraft();
-
                                                                     $x = 0;
-
+                                                                    while ($all->count() > $x) {
+                                                                        echo '<option>'.$all->results()[$x]->name.'</option>';
+                                                                        $x++;
+                                                                    }
+                                                                    ?>
+                                                                </select>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="rank">Rank required</label>
+                                                                <select class="form-control" name="rank" required>
+                                                                    <option>Select</option>
+                                                                    <?php
+                                                                    $all = Rank::fetchAllNames();
+                                                                    $x = 0;
                                                                     while ($all->count() > $x) {
                                                                         echo '<option>'.$all->results()[$x]->name.'</option>';
                                                                         $x++;
@@ -652,6 +665,7 @@ if (!$user->isLoggedIn()) {
                                             <thead class="bg-custom">
                                                 <tr>
                                                     <th>Name</th>
+                                                    <th>Rank required</th>
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
@@ -663,6 +677,8 @@ if (!$user->isLoggedIn()) {
                                                 while ($all->count() > $x) {
                                                     echo '<tr><td class="align-middle">';
                                                     echo $all->results()[$x]->name;
+                                                    echo '</td><td class="align-middle">';
+                                                    echo Rank::idToName($all->results()[$x]->rankreq);
                                                     echo '</td><td class="align-middle">';
                                                     echo '&nbsp;<button value="'.$all->results()[$x]->id.'" form="deleteaircraft" type="submit" class="btn btn-danger text-light" name="delete"><i class="fa fa-trash"></i></button>';
                                                     echo '</td>';
@@ -758,6 +774,34 @@ if (!$user->isLoggedIn()) {
                                     <?php elseif (Input::get('section') === 'site'): ?>
                                         <h3>Site Configuration</h3>
                                         <p>Here you can configure Flare to be your own.</p>
+                                    <?php elseif (Input::get('section') === 'ranks'): ?>
+                                        <h3>Manage Ranks</h3>
+                                        <p>Here you can add ranks that your pilots will be awarded.</p>
+                                        <button type="button" class="btn bg-custom mb-2" data-toggle="modal" data-target="#addRank">Add Rank</button>
+                                        <div id="addRank" class="modal fade" role="dialog">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h4 class="modal-title">Add Rank</h4>
+                                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form action="update.php" method="post">
+                                                            <input hidden name="action" value="addrank">
+                                                            <div class="form-group">
+                                                                <label for="name">Name</label>
+                                                                <input type="text" name="name" class="form-control" placeholder="Second Officer" required>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="time">Flight time required (<b>in hours</b>)</label>
+                                                                <input type="number" name="time" class="form-control" placeholder="50" required>
+                                                            </div>
+                                                            <input type="submit" class="btn bg-custom" value="Add rank">
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     <?php endif; ?>
                                 <?php endif; ?>
                             <?php endif; ?>

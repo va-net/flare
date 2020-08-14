@@ -22,4 +22,11 @@ class Time
 
     }
 
+    public static function hrsToSecs($secs)
+    {
+
+        return $secs * 3600;
+
+    }
+
 }
