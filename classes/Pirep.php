@@ -117,7 +117,7 @@ class Pirep
 
     }
 
-    public static function setup($callsign) 
+    public static function setup($callsign, $id) 
     {
 
         self::init();
@@ -135,11 +135,11 @@ class Pirep
             }
         }
 
-        die($callsign);
-
-        self::$_db->update('pilots', $callsign, 'callsign', array(
+        if (!self::$_db->update('pilots', $id, 'id', array(
             'ifuserid' => $response['data']
-        ));
+        ))) {
+            return false;
+        }
         
         return true;
 

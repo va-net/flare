@@ -151,7 +151,7 @@ class DB
 
     }
 
-    public function update($table, $id, $where = 'id', $fields = array())
+    public function update($table, $id, $where, $fields = array())
     {
 
         $set = '';

@@ -189,7 +189,7 @@ if (Input::get('action') === 'editprofile') {
     Session::flash('success', 'Aircraft added successfully! ');
     Redirect::to('admin.php?page=opsmanage&section=fleet');
 } elseif (Input::get('action') === 'setuppireps') {
-    if (!Pirep::setup(Input::get('callsign'))) {
+    if (!Pirep::setup(Input::get('callsign'), $user->data()->id)) {
         Session::flash('errorrecent', 'There was an error connecting to Infinite Flight. Ensure you are spawned in on the <b>Casual Server, and have set your callsign to \''.$user->data()->callsign.'\'</b>!');
         Redirect::to('pireps.php');
     }
