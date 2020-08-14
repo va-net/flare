@@ -762,6 +762,34 @@ if (!$user->isLoggedIn()) {
                                     <?php elseif (Input::get('section') === 'site'): ?>
                                         <h3>Site Configuration</h3>
                                         <p>Here you can configure Flare to be your own.</p>
+                                    <?php elseif (Input::get('section') === 'ranks'): ?>
+                                        <h3>Manage Ranks</h3>
+                                        <p>Here you can add ranks that your pilots will be awarded.</p>
+                                        <button type="button" class="btn bg-custom mb-2" data-toggle="modal" data-target="#addRank">Add Rank</button>
+                                        <div id="addRank" class="modal fade" role="dialog">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h4 class="modal-title">Add Rank</h4>
+                                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form action="update.php" method="post">
+                                                            <input hidden name="action" value="addrank">
+                                                            <div class="form-group">
+                                                                <label for="name">Name</label>
+                                                                <input type="text" name="name" class="form-control" placeholder="Second Officer" required>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="time">Flight time required (<b>in hours</b>)</label>
+                                                                <input type="number" name="time" class="form-control" placeholder="50" required>
+                                                            </div>
+                                                            <input type="submit" class="btn bg-custom" value="Add rank">
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     <?php endif; ?>
                                 <?php endif; ?>
                             <?php endif; ?>

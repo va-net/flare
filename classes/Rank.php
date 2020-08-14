@@ -51,8 +51,10 @@ class Rank
 
     }
 
-    public static function newRank($name, $timereq) 
+    public static function add($name, $timereq) 
     {
+
+        self::init();
 
         self::$_db->insert('ranks', array(
             'name' => $name,

@@ -201,8 +201,12 @@ if (Input::get('action') === 'editprofile') {
     Redirect::to('admin.php?page=opsmanage&section=route');
 } elseif (Input::get('action') === 'deleteroute') {
     Route::delete(Input::get('deleteroute'));
-    Session::flash('success', 'Route removed successfully! ');
+    Session::flash('success', 'Route removed successfully!');
     Redirect::to('admin.php?page=opsmanage&section=route');
+} elseif (Input::get('action') === 'addrank') {
+    Rank::add(Input::get('name'), Time::hrsToSecs(Input::get('time')));
+    Session::flash('success', 'Rank added successfully!');
+    Redirect::to('admin.php?page=opsmanage&section=ranks');
 }
 
 
