@@ -191,18 +191,18 @@ if (Input::get('action') === 'editprofile') {
 } elseif (Input::get('action') === 'setuppireps') {
     if (!Pirep::setup(Input::get('callsign'), $user->data()->id)) {
         Session::flash('errorrecent', 'There was an error connecting to Infinite Flight. Ensure you are spawned in on the <b>Casual Server, and have set your callsign to \''.$user->data()->callsign.'\'</b>!');
-        Redirect::to('pireps.php');
+        Redirect::to('pireps.php?page=new');
     }
     Session::flash('successrecent', 'PIREPs setup successfully! You can now file PIREPs.');
-    Redirect::to('pireps.php');
+    Redirect::to('pireps.php?page=new');
 } elseif (Input::get('action') === 'addroute') {
     Route::add(array(Input::get('fltnum'), Input::get('dep'), Input::get('arr'), Input::get('duration'), Aircraft::nameToId(Input::get('aircraft'))));
     Session::flash('success', 'Route added successfully! ');
-    Redirect::to('admin.php?page=opsmanage&section=route');
+    Redirect::to('admin.php?page=opsmanage&section=routes');
 } elseif (Input::get('action') === 'deleteroute') {
     Route::delete(Input::get('deleteroute'));
     Session::flash('success', 'Route removed successfully!');
-    Redirect::to('admin.php?page=opsmanage&section=route');
+    Redirect::to('admin.php?page=opsmanage&section=routes');
 } elseif (Input::get('action') === 'addrank') {
     Rank::add(Input::get('name'), Time::hrsToSecs(Input::get('time')));
     Session::flash('success', 'Rank added successfully!');
