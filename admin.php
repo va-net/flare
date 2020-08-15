@@ -742,7 +742,7 @@ if (!$user->isLoggedIn()) {
                                                                 <select class="form-control" name="aircraft" required>
                                                                     <option>Select</option>
                                                                     <?php
-                                                                    $all = Aircraft::fetchAllAircraft();
+                                                                    $all = Aircraft::fetchActiveAircraft();
 
                                                                     $x = 0;
 
