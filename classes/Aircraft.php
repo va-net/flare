@@ -33,6 +33,24 @@ class Aircraft
 
     }
 
+    public static function fetchLiveryIdsForAircraft($aircraftid)
+    {
+
+        self::init();
+        $curl = new Curl;
+        $response = $curl->get(Config::get('vanet/base_url')."/api/aircraft/AircraftID/{$aircraftid}", array(
+            'apikey' => Config::get('vanet/api_key')
+        ));
+        $all = Json::decode($response->body);
+        $final = array();
+        foreach ($all as $aircraft) {
+            $final[$aircraft['liveryName']] = $aircraft['liveryID'];
+        }
+
+        return $final;
+
+    }
+
     public static function fetchAircraftFromVANet($aircraft, $search = 'AircraftID') 
     {
 
@@ -104,14 +122,35 @@ class Aircraft
 
     }
 
-    public static function add($aircraft, $rank) 
+    public static function liveryNameToId($livery, $aircraftid) 
+    {
+
+        $response = self::fetchAircraftFromVANet(rawurlencode($livery), 'LiveryName');
+
+        foreach ($response as $aircraft) {
+            if ($aircraftid == $aircraft['aircraftID']) {
+                continue;
+            }
+            $fin = $aircraft['liveryID'];
+        }
+        return $fin;
+
+    }
+
+    public static function add($aircraft, $rank, $livery) 
     {
 
         self::init();
 
-        self::$_db->update('aircraft', $aircraft, 'id', array(
+        $liveryId = self::liveryNameToId($livery, $aircraft);
+
+        $id = self::nameToId($aircraft);
+
+        self::$_db->update('aircraft', $id, 'id', array(
             'status' => 1,
-            'rankreq' => $rank
+            'rankreq' => $rank,
+            'ifliveryid' => $liveryId,
+            'liveryname' => $livery
         ));
 
     }
@@ -123,6 +162,16 @@ class Aircraft
 
         $result = self::$_db->get('aircraft', array('name', '=', $name));
         return $result->first()->id;
+
+    }
+
+    public static function nameToAircraftId($name)
+    {
+
+        self::init();
+
+        $result = self::$_db->get('aircraft', array('name', '=', $name));
+        return $result->first()->ifaircraftid;
 
     }
 

@@ -185,7 +185,7 @@ if (Input::get('action') === 'editprofile') {
     Session::flash('success', 'Aircraft archived successfully! ');
     Redirect::to('admin.php?page=opsmanage&section=fleet');
 } elseif (Input::get('action') === 'addaircraft') {
-    Aircraft::add(Aircraft::nameToId(Input::get('aircraft')), Rank::nameToId(Input::get('rank')));
+    Aircraft::add(Input::get('aircraftselect'), Rank::nameToId(Input::get('rank')), Input::get('livery'));
     Session::flash('success', 'Aircraft added successfully! ');
     Redirect::to('admin.php?page=opsmanage&section=fleet');
 } elseif (Input::get('action') === 'setuppireps') {
@@ -207,6 +207,11 @@ if (Input::get('action') === 'editprofile') {
     Rank::add(Input::get('name'), Time::hrsToSecs(Input::get('time')));
     Session::flash('success', 'Rank added successfully!');
     Redirect::to('admin.php?page=opsmanage&section=ranks');
+} elseif ($_POST['action'] == 'getliveriesforaircraft') {
+    $all = Aircraft::fetchLiveryIdsForAircraft(Aircraft::nameToAircraftId(Input::get('aircraftid')));
+    foreach ($all as $name => $id) {
+        echo '<option>'.$name.'</option>';
+    }
 }
 
 
