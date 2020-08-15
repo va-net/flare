@@ -45,6 +45,23 @@ if (Input::get('action') === 'editprofile') {
         $multi = Input::get('multi');
     }
 
+    $curl = new Curl;
+    $response = $curl->post(Config::get('vanet/base_url').'/api/flights/new?apikey='.Config::get('vanet/api_key'), array(
+        'AircraftID' => Aircraft::nameToLiveryId(Input::get('aircraft')),
+        'Arrival' => Input::get('arr'),
+        'DateTime' => Input::get('date'),
+        'Departure' => Input::get('dep'),
+        'FlightTime' => Time::strToSecs(Input::get('ftime')),
+        'FuelUsed' => Input::get('fuel'),
+        'PilotId' => $user->data()->ifuserid
+    ));
+
+    $response = Json::decode($response->body);
+    if ($response['success'] != true) {
+        Session::flash('error', 'There was an error connecting to VANet.');
+        Redirect::to('pireps.php?page=new');
+    }
+
     if (!Pirep::file(array(
         'flightnum' => Input::get('fnum'),
         'departure' => Input::get('dep'),
@@ -52,6 +69,7 @@ if (Input::get('action') === 'editprofile') {
         'flighttime' => Time::strToSecs(Input::get('ftime')),
         'pilotid' => $user->data()->id,
         'date' => Input::get('date'),
+        'fuel' => Input::get('fuel'),
         'aircraftid' => Aircraft::getId(Input::get('aircraft')),
         'multi' => $multi
     ))) {
