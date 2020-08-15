@@ -1,6 +1,14 @@
 <?php
 
 /*
+Flare, a fully featured and easy to use crew centre, designed for Infinite Flight.
+Copyright (C) 2020  Lucas Rebato
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
+/*
 This is the main Flare configuration file. Please do not change anything in this unless you know what you are
 doing! If updating, please backup this file prior to doing so.
 */
