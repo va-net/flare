@@ -175,4 +175,12 @@ class Aircraft
 
     }
 
+    public static function nameToLiveryId($name)
+    {
+
+        self::init();
+        $result = self::$_db->get('aircraft', array('name', '=', $name));
+        return $result->first()->ifliveryid;
+
+    }
 }
