@@ -6,7 +6,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 ?>
-<a class="navbar-brand" href="#"><img src="../assets/logo_white.png" style="height: 30px; width: auto;"><span>Install Flare</span></a>
+<a class="navbar-brand" href="#"><span>Install Flare</span></a>
 
 <!-- navbar toggler -->
 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">

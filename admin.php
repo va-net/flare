@@ -71,7 +71,7 @@ if (!$user->isLoggedIn()) {
                                 &nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-medal"></i>&nbsp;<a href="./admin.php?page=opsmanage&section=ranks" class="panel-link">Manage Ranks</a><br>
                                 &nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-plane"></i>&nbsp;<a href="./admin.php?page=opsmanage&section=fleet" class="panel-link">Manage Fleet</a><br>
                                 &nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-plane-departure"></i>&nbsp;<a href="./admin.php?page=opsmanage&section=routes" class="panel-link">Manage Routes</a><br>
-                                &nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-globe"></i>&nbsp;<a href="./admin.php?page=opsmanage&section=site" class="panel-link">Manage Site</a>
+                                
                                 </div>
                                 ';
                             } else {
@@ -612,6 +612,13 @@ if (!$user->isLoggedIn()) {
                                     <input type="submit" class="btn bg-custom" value="Save">
                                 </form>
                                 <?php endif; ?>
+                                <?php elseif (Input::get('page') === 'statsviewing'): ?>
+                                    <h3>Your VA's Stats</h3>
+                                    <?php if (!VANet::isGold()): ?>
+                                        <p>Hmm, you need to signup to VANet Gold in order to get access to statistics.</p>
+                                    <?php else: ?>
+                                        <p>Coming soon...</p>
+                                    <?php endif; ?>
                             <?php elseif (Input::get('page') === 'opsmanage'): ?>
                                 <?php if (!$user->hasPermission('usermanage')): ?>
                                     <div class="alert alert-danger text-center">Whoops! You don't have the necessary permissions to access this.</div>
@@ -801,9 +808,6 @@ if (!$user->isLoggedIn()) {
                                         <form id="deleteroute" method="post" action="update.php">
                                             <input hidden value="deleteroute" name="action">
                                         </form>
-                                    <?php elseif (Input::get('section') === 'site'): ?>
-                                        <h3>Site Configuration</h3>
-                                        <p>Here you can configure Flare to be your own.</p>
                                     <?php elseif (Input::get('section') === 'ranks'): ?>
                                         <h3>Manage Ranks</h3>
                                         <p>Here you can add ranks that your pilots will be awarded.</p>

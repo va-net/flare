@@ -67,7 +67,7 @@ if (!$user->isLoggedIn()) {
                                     <div id="demo" class="collapse">
                                     &nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-plane"></i>&nbsp;<a href="./admin.php?page=opsmanage&section=fleet" class="panel-link">Manage Fleet</a><br>
                                     &nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-plane-departure"></i>&nbsp;<a href="./admin.php?page=opsmanage&section=routes" class="panel-link">Manage Routes</a><br>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-globe"></i>&nbsp;<a href="./admin.php?page=opsmanage&section=site" class="panel-link">Manage Site</a>
+                                    
                                     </div>
                                     ';
                                 } else {
