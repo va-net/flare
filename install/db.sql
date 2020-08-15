@@ -10,7 +10,9 @@ DROP TABLE IF EXISTS `aircraft`;
 CREATE TABLE IF NOT EXISTS `aircraft` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` text NOT NULL,
-  `ifliveryid` varchar(36) NOT NULL,
+  `ifaircraftid` text NOT NULL,
+  `liveryname` text DEFAULT NULL,
+  `ifliveryid` text DEFAULT NULL,
   `rankreq` int(11) NOT NULL DEFAULT '1',
   `status` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
@@ -87,3 +89,13 @@ CREATE TABLE IF NOT EXISTS `routes` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 COMMIT;
+
+DROP TABLE IF EXISTS `multipliers`;
+CREATE TABLE IF NOT EXISTS `multipliers` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `code` int(11) NOT NULL,
+  `multiplier` double NOT NULL,
+  `name` varchar(120) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `code` (`code`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;

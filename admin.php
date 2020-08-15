@@ -625,7 +625,7 @@ if (!$user->isLoggedIn()) {
                                                             <input hidden name="action" value="addaircraft">
                                                             <div class="form-group">
                                                                 <label for="aircraft">Type</label>
-                                                                <select class="form-control" name="aircraft" required>
+                                                                <select class="form-control" name="aircraftselect" id="aircraftselect" required>
                                                                     <option>Select</option>
                                                                     <?php
                                                                     $all = Aircraft::fetchAllAircraft();
@@ -637,6 +637,26 @@ if (!$user->isLoggedIn()) {
                                                                     ?>
                                                                 </select>
                                                             </div>
+                                                            <div class="form-group">
+                                                                <label for="rank">Livery</label>
+                                                                <select class="form-control" name="livery" id="liveriesselect" required>
+                                                                    <option>Select</option>
+                                                                </select>
+                                                            </div>
+                                                            <script>
+                                                                $("#aircraftselect").change(function() {
+                                                                    $.ajax({
+                                                                        url: "test.php",
+                                                                        type: "POST",
+                                                                        data: { action: "getliveriesforaircraft", aircraft: $(this).val() },
+                                                                        success: function(html){
+                                                                            $("#liveriesselect").empty()
+                                                                            $("#liveriesselect").append("<option>Select</option>");
+                                                                            $("#liveriesselect").append(html);
+                                                                        }
+                                                                        });
+                                                                    });
+                                                            </script>
                                                             <div class="form-group">
                                                                 <label for="rank">Rank required</label>
                                                                 <select class="form-control" name="rank" required>
@@ -665,6 +685,7 @@ if (!$user->isLoggedIn()) {
                                             <thead class="bg-custom">
                                                 <tr>
                                                     <th>Name</th>
+                                                    <th>Livery</th>
                                                     <th>Rank required</th>
                                                     <th>Action</th>
                                                 </tr>
@@ -677,6 +698,8 @@ if (!$user->isLoggedIn()) {
                                                 while ($all->count() > $x) {
                                                     echo '<tr><td class="align-middle">';
                                                     echo $all->results()[$x]->name;
+                                                    echo '</td><td class="align-middle">';
+                                                    echo $all->results()[$x]->liveryname;
                                                     echo '</td><td class="align-middle">';
                                                     echo Rank::idToName($all->results()[$x]->rankreq);
                                                     echo '</td><td class="align-middle">';
@@ -719,7 +742,7 @@ if (!$user->isLoggedIn()) {
                                                                 <select class="form-control" name="aircraft" required>
                                                                     <option>Select</option>
                                                                     <?php
-                                                                    $all = Aircraft::fetchAllAircraft();
+                                                                    $all = Aircraft::fetchActiveAircraft();
 
                                                                     $x = 0;
 

@@ -226,6 +226,10 @@ if (!$user->isLoggedIn()) {
                                             <input type="time" class="form-control" name="ftime" value="<?= escape(Input::get('ftime')) ?>">
                                         </div>
                                         <div class="form-group">
+                                            <label for="fuel">Fuel Used in Kilograms (Kg)</label>
+                                            <input required type="number" class="form-control" name="fuel" value="<?= escape(Input::get('fuel')) ?>">
+                                        </div>
+                                        <div class="form-group">
                                             <label for="dep">Departure</label>
                                             <input required type="text" class="form-control" maxlength="4" placeholder="ICAO" maxlength="4" minlength="4" name="dep" value="<?= escape(Input::get('dep')) ?>">
                                         </div>

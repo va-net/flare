@@ -12,10 +12,15 @@ switch (Input::get('page')) {
         Installer::showTemplate('va-details');
         break;
     case 'va-details-complete':
+        if (!VANet::isVeKey(Input::get('vanet-api'))) {
+            Session::flash('error', 'Hmm, that seems to be a personal VANet API Key. Ensure you are using your VA/O one, you can find it <a href="https://vanet.app/airline/profile" target="_blank">here</a>.');
+            Redirect::to('?page=va-details');
+            die();
+        }
         if (!Installer::createConfig(array(
-            'VA_NAME' => Input::get('va-name'),
-            'VA_IDENTIFIER' => Input::get('va-ident'),
-            'VANET_API_KEY' => Input::get('vanet-api')
+            'VA_NAME' => escape(Input::get('va-name')),
+            'VA_IDENTIFIER' => escape(Input::get('va-ident')),
+            'VANET_API_KEY' => escape(Input::get('vanet-api'))
         ))) {
             Session::flash('error', 'Whoops! Something went wrong. Please try again.');
             Redirect::to('?page=va-details');

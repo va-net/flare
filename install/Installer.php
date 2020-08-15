@@ -74,7 +74,7 @@ class Installer
         $all = Aircraft::fetchAllAircraftFromVANet();
         foreach ($all as $id => $name) {
             $db->insert('aircraft', array(
-                'ifliveryid' => $id,
+                'ifaircraftid' => $id,
                 'name' => $name
             ));
         }
