@@ -27,7 +27,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
         }
     </style>
 
-    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #E4181E;">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-custom">
         <?php include './templates/navbar.php'; ?>
     </nav>
 

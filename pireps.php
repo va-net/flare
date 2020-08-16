@@ -36,7 +36,7 @@ if (!$user->isLoggedIn()) {
             height: 120px;
         }
     </style>
-    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #E4181E;">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-custom">
         <?php include './includes/navbar.php'; ?>
     </nav>
     <div class="container-fluid">
@@ -128,7 +128,7 @@ if (!$user->isLoggedIn()) {
                                                 echo '</td><td class="align-middle">';
                                                 echo $pirep["status"];
                                                 echo '</td><td class="align-middle">';
-                                                echo '<button class="btn text-light" style="background-color: #E4181E;" data-toggle="modal" data-target="#pirep'.$x.'"><i class="fa fa-edit"></i></button>';
+                                                echo '<button class="btn text-light btn-success" data-toggle="modal" data-target="#pirep'.$x.'"><i class="fa fa-edit"></i></button>';
                                                 echo '</td></tr>';
                                                 $x++;
                                             }
@@ -262,7 +262,7 @@ if (!$user->isLoggedIn()) {
                                             <label for="multi">Multiplier number (if applicable)</label>
                                             <input type="number" class="form-control" maxlength="6" minlength="6" id="multi" name="multi" value="0">
                                         </div>
-                                        <input type="submit" class="btn text-light" style="background-color: #E4181E;" value="Submit">
+                                        <input type="submit" class="btn text-light bg-custom" value="Submit">
                                     </form>
                                 </section>
                             <?php endif; ?>
