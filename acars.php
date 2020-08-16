@@ -23,24 +23,9 @@ if (!$user->isLoggedIn()) {
     <?php include './includes/header.php'; ?>
 </head>
 <body>
-    <style>
-        #loader {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        z-index: 1;
-        width: 150px;
-        height: 150px;
-        margin: -75px 0 0 -75px;
-        width: 120px;
-        height: 120px;
-        }
-    </style>
-
     <nav class="navbar navbar-expand-lg navbar-dark bg-custom">
         <?php include './includes/navbar.php'; ?>
     </nav>
-
     <div class="container-fluid">
         <div class="container-fluid mt-4 text-center" style="overflow: auto;">
             <div class="row m-0 p-0">
@@ -81,7 +66,7 @@ if (!$user->isLoggedIn()) {
                     <a href="logout.php" class="panel-link"><i class="fa fa-sign-out-alt"></i>&nbsp;Log Out</a>
                 </div>
                 <div class="col-lg-9 p-3 main-content">
-                    <div id="loader" class="spinner-border spinner-border-sm text-danger"></div>
+                    <div id="loader" class="spinner-border spinner-border-sm spinner-custom"></div>
                     <div class="tab-content" id="tc">
                         <div class="tab-pane container active" id="home" style="display: none;">
                             <h3>ACARS</h3>

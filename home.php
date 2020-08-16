@@ -82,7 +82,7 @@ if (!$user->isLoggedIn()) {
                 <a href="logout.php" class="panel-link"><i class="fa fa-sign-out-alt"></i>&nbsp;Log Out</a>
             </div>
             <div class="col-lg-9 p-3 main-content">
-                <div id="loader" class="spinner-border spinner-border-sm text-danger"></div>
+                <div id="loader" class="spinner-border spinner-border-sm spinner-custom"></div>
                     <div class="tab-content" id="tc">
                         <div class="tab-pane container active" id="home" style="display: none;">
                             <h3>Pilot Home</h3>

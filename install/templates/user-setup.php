@@ -37,7 +37,7 @@ require_once '../core/init.php';
     <div class="container-fluid">
         <div class="container-fluid mt-4 text-center" style="overflow: auto;">
             <div class="main-content">
-                <div id="loader" class="spinner-border spinner-border-sm text-danger"></div>
+                <div id="loader" class="spinner-border spinner-border-sm spinner-custom"></div>
                     <div class="tab-content" id="tc">
                         <div class="tab-pane container active" id="home" style="display: none;">
                             <h3>Admin user setup</h3>

@@ -76,3 +76,19 @@ header("Content-type: text/css; charset: UTF-8");
     background-color: <?= Config::get('site/colour_main_hex') ?>;
     color: #f8f9fa
 }
+
+#loader {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 1;
+    width: 150px;
+    height: 150px;
+    margin: -75px 0 0 -75px;
+    width: 120px;
+    height: 120px;
+}
+
+.spinner-custom {
+    color: <?= Config::get('site/colour_main_hex') ?>;
+}
