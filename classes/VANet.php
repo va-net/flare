@@ -16,7 +16,7 @@ class VANet
 
         $curl = new Curl;
         $curl->options['CURLOPT_FRESH_CONNECT'] = true;
-        $response = $curl->get(Config::get('vanet/base_url').'/api/myinfo/bykey', array(
+        $response = $curl->get('https://vanet.app/api/myinfo/bykey', array(
             'apikey' => $key
         ));
         return Json::decode($response->body);
