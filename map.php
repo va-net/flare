@@ -11,7 +11,7 @@ require_once './core/init.php';
 
 $user = new User();
 
-Page::setTitle('ACARS - '.$user->data()->callsign);
+Page::setTitle('Live Map - '.$user->data()->callsign);
 
 if (!$user->isLoggedIn()) {
     Redirect::to('index.php');
@@ -70,32 +70,9 @@ if (!$user->isLoggedIn()) {
                 <div id="loader" class="spinner-border spinner-border-sm spinner-custom"></div>
                     <div class="tab-content" id="tc">
                         <div class="tab-pane container active" id="home" style="display: none;">
-                            <h3>ACARS</h3>
-                            <?php if (VANet::isGold()): ?>
-                                <?php if ($user->data()->ifuserid != null): ?>
-                                    <?php
-                                    $curl = new Curl;
-                                    $request = $curl->get(Config::get('vanet/base_url').'/api/acars', array(
-                                        'callsign' => $user->data()->callsign,
-                                        'userid' => $user->data()->ifuserid,
-                                        'server' => 'expert',
-                                        'apikey' => Config::get('vanet/api_key')
-                                    ));
-                                    $response = Json::decode($request->body);
-                                    if (array_key_exists('status', $response)) {
-                                        if ($response['status'] == 404 || $response['status'] == 409) {
-                                            echo 'Hmm, looks like we couldn\'t find you on the server. Ensure that you have filed a flightplan, and are still connected to Infinite Flight. Then, refresh the page.';
-                                        }
-                                    } else {
-                                        echo 'Nice! We\'ve found you. Once you\'ve completed your flight, come back here and click the button below.';
-                                    }
-                                    ?>
-                                <?php else: ?>
-                                    <p>Looks like you haven't yet setup PIREPs! Go to <a href="./pireps.php">pireps</a>, set them up, and then come back here and try again.</p>
-                                <?php endif ?> 
-                            <?php else: ?>
-                                <p>Hmm. In order to run ACARS, <?= Config::get('va/name') ?> needs to sign up to VANet Gold. You can take a look at it <a href="https://vanet.app/getstarted" target="_blank">here</a>!</p>
-                            <?php endif; ?>
+                            <h3>Live Map</h3>
+                            <p>Here you can view all the pilots that are currently flying through the Infinite Flight skies, using their <?= Config::get('va/name') ?> callsign.</p>
+                            <iframe src='https://ifvarb.com/liveflightmap.php?callsign=<?= Config::get('va/identifier') ?>&color=red&apikey=b48e66-79248c-d11549-090d5f-b39ea4' width='100%;' height='600px;' frameborder='0' scrolling='no'></iframe>
                         </div>
                     </div>
                 </div>

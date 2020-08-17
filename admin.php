@@ -71,7 +71,7 @@ if (!$user->isLoggedIn()) {
                                 &nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-medal"></i>&nbsp;<a href="./admin.php?page=opsmanage&section=ranks" class="panel-link">Manage Ranks</a><br>
                                 &nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-plane"></i>&nbsp;<a href="./admin.php?page=opsmanage&section=fleet" class="panel-link">Manage Fleet</a><br>
                                 &nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-plane-departure"></i>&nbsp;<a href="./admin.php?page=opsmanage&section=routes" class="panel-link">Manage Routes</a><br>
-                                
+                                &nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-globe"></i>&nbsp;<a href="./admin.php?page=site" class="panel-link">Manage Site</a><br>
                                 </div>
                                 ';
                             } else {
@@ -329,6 +329,46 @@ if (!$user->isLoggedIn()) {
 
                                 ?>
                                 <?php endif; ?>
+                            <?php elseif (Input::get('page') === 'site'): ?>
+                                <h3>Configure Flare</h3>
+                                <p>Here you may configure Flare to be your own.</p>
+                                <br>
+                                <br>
+                                <h4>Colour Theme</h4>
+                                <form action="update.php" method="post">
+                                    <input hidden name="action" value="setcolour">
+                                    <div class="form-group">
+                                        <label for="">Main Colour (hex, without #)</label>
+                                        <input required type="text" class="form-control" name="hexcol" value="<?= str_replace('#', '', Config::get('site/colour_main_hex')) ?>">
+                                    </div>
+                                    <input type="submit" class="btn bg-custom" value="Save">
+                                </form>
+                                <br>
+                                <br>
+                                <h4>VA Settings</h4>
+                                <form action="update.php" method="post">
+                                    <input hidden name="action" value="vasettingsupdate">
+                                    <div class="form-group">
+                                        <label for="">VA Full Name</label>
+                                        <input required type="text" class="form-control" name="vaname" value="<?= Config::get('va/name') ?>">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="">VA Callsign Identifier</label>
+                                        <input required type="text" class="form-control" name="vaident" value="<?= Config::get('va/identifier') ?>">
+                                    </div>
+                                    <input type="submit" class="btn bg-custom" value="Save">
+                                </form>
+                                <br>
+                                <br>
+                                <h4>VANet</h4>
+                                <form action="update.php" method="post">
+                                    <input hidden name="action" value="vanetupdate">
+                                    <div class="form-group">
+                                        <label for="">VANet API Key</label>
+                                        <input required type="text" class="form-control" name="vanetkey" value="<?= Config::get('vanet/api_key') ?>">
+                                    </div>
+                                    <input type="submit" class="btn bg-custom" value="Save">
+                                </form>
                             <?php elseif (Input::get('page') === 'recruitment'): ?>
                                 <h3>Recruitment</h3>
                                 <?php if (!$user->hasPermission('usermanage')): ?>
@@ -625,6 +665,7 @@ if (!$user->isLoggedIn()) {
                                 <?php else: ?>
                                     <?php if (Input::get('section') === 'fleet'): ?>
                                         <h3>Fleet</h3>
+                                        <p>Please note that importing from a CSV is not yet supported, and will be coming in a later build.</p>
                                         <br>
                                         <button type="button" class="btn bg-custom mb-2" data-toggle="modal" data-target="#addAircraft">Add Aircraft</button>
                                         <div id="addAircraft" class="modal fade" role="dialog">
@@ -748,6 +789,10 @@ if (!$user->isLoggedIn()) {
                                                                 <input type="text" name="arr" class="form-control" placeholder="ICAO" required>
                                                             </div>
                                                             <div class="form-group">
+                                                                <label for="aircraft">Flight Number</label>
+                                                                <input type="number" name="fltnum" class="form-control" required>
+                                                            </div>
+                                                            <div class="form-group">
                                                                 <label for="aircraft">Flight Duration</label>
                                                                 <input type="time" name="duration" class="form-control" required>
                                                             </div>
@@ -791,15 +836,15 @@ if (!$user->isLoggedIn()) {
                                                 while ($all->count() > $x) {
                                                     echo '<tr><td class="align-middle">';
                                                     echo $all->results()[$x]->fltnum;
-                                                    echo '<tr><td class="align-middle">';
+                                                    echo '</td><td class="align-middle">';
                                                     echo $all->results()[$x]->dep;
-                                                    echo '<tr><td class="align-middle">';
+                                                    echo '</td><td class="align-middle">';
                                                     echo $all->results()[$x]->arr;
-                                                    echo '<tr><td class="align-middle">';
-                                                    echo $all->results()[$x]->aircraft;
+                                                    echo '</td><td class="align-middle">';
+                                                    echo Aircraft::idToName($all->results()[$x]->aircraftid);
                                                     echo '</td><td class="align-middle">';
                                                     echo '&nbsp;<button value="'.$all->results()[$x]->id.'" form="deleteroute" type="submit" class="btn btn-danger text-light" name="delete"><i class="fa fa-trash"></i></button>';
-                                                    echo '</td>';
+                                                    echo '</td></tr>';
                                                     $x++;
                                                 }
                                                 ?>

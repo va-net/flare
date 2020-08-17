@@ -14,9 +14,11 @@ class Time
     public static function strToSecs($string)
     {
 
-        sscanf($string, "%d:%d", $hours, $minutes);
+        $secs = explode(':', $string);
 
-        return ($hours * 3600) + ($minutes * 60);
+        $secs = (int)$secs[0] * 3600 + (int)$secs[1] * 60;
+
+        return $secs;
 
     }
 

@@ -221,7 +221,7 @@ if (Input::get('action') === 'editprofile') {
     Session::flash('successrecent', 'PIREPs setup successfully! You can now file PIREPs.');
     Redirect::to('pireps.php?page=new');
 } elseif (Input::get('action') === 'addroute') {
-    Route::add(array(Input::get('fltnum'), Input::get('dep'), Input::get('arr'), Input::get('duration'), Aircraft::nameToId(Input::get('aircraft'))));
+    Route::add(array(Input::get('fltnum'), Input::get('dep'), Input::get('arr'), Time::strToSecs(Input::get('duration')), Aircraft::nameToId(Input::get('aircraft'))));
     Session::flash('success', 'Route added successfully! ');
     Redirect::to('admin.php?page=opsmanage&section=routes');
 } elseif (Input::get('action') === 'deleteroute') {
@@ -232,11 +232,35 @@ if (Input::get('action') === 'editprofile') {
     Rank::add(Input::get('name'), Time::hrsToSecs(Input::get('time')));
     Session::flash('success', 'Rank added successfully!');
     Redirect::to('admin.php?page=opsmanage&section=ranks');
-} elseif ($_POST['action'] == 'getliveriesforaircraft') {
+} elseif (Input::get('action') == 'getliveriesforaircraft') {
     $all = Aircraft::fetchLiveryIdsForAircraft(Aircraft::nameToAircraftId(Input::get('aircraftid')));
     foreach ($all as $name => $id) {
         echo '<option>'.$name.'</option>';
     }
+} elseif (Input::get('action') === 'setcolour') {
+    if (!Config::replaceColour(Input::get('hexcol'))) {
+        Session::flash('error', 'There was an error updating the colour theme!');
+        Redirect::to('admin.php?page=site');
+        die();
+    }
+    Session::flash('success', 'Colour theme updated successfully! You may need to reload the page or clear your cache in order for it to show.');
+    Redirect::to('admin.php?page=site');
+} elseif (Input::get('action') === 'vasettingsupdate') {
+    if (!Config::replace('name', Input::get('vaname')) || !Config::replace('identifier', Input::get('vaident'))) {
+        Session::flash('error', 'There was an error updating the config file!');
+        Redirect::to('admin.php?page=site');
+        die();
+    }
+    Session::flash('success', 'VA details changed successfully. You may need to reload the page a few times or clear your cache in order for it to show.');
+    Redirect::to('admin.php?page=site');
+} elseif (Input::get('action') === 'vanetupdate') {
+    if (!Config::replace('api_key', Input::get('vanetkey'))) {
+        Session::flash('error', 'There was an error updating the config file!');
+        Redirect::to('admin.php?page=site');
+        die();
+    }
+    Session::flash('success', 'VANet API key changed successfully.');
+    Redirect::to('admin.php?page=site');
 }
 
 

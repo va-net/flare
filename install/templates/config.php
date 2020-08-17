@@ -40,7 +40,7 @@ $GLOBALS['config'] = array(
         'colour_main_hex' => '#E4181E'
     ),
     'defaults' => array(
-        'permissions' => '{"admin": 0, "usermanage": 0, "staffmanage": 0, "recruitment": 0, "pirepmanage": 0, "newsmanage":0, "emailpilots": 0, "opsmanage": 0, "statsviewing": 0}',
-        'fulladminpermissions' => '{"admin": 1, "usermanage": 1, "staffmanage": 1, "recruitment": 1, "pirepmanage": 1, "newsmanage": 1, "emailpilots": 1, "opsmanage": 1, "statsviewing": 1}'
+        'permissions' => '{"admin": 0, "usermanage": 0, "staffmanage": 0, "recruitment": 0, "pirepmanage": 0, "newsmanage":0, "opsmanage": 0, "statsviewing": 0}',
+        'fulladminpermissions' => '{"admin": 1, "usermanage": 1, "staffmanage": 1, "recruitment": 1, "pirepmanage": 1, "newsmanage": 1, "opsmanage": 1, "statsviewing": 1}'
     )
 );
