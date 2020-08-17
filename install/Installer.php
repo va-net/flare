@@ -65,6 +65,17 @@ class Installer
         fwrite($file, $currentConf);
         fclose($file);
 
+        // write init file
+        $newConf = file_get_contents(__DIR__.'/templates/init.php');
+        $file = fopen(__DIR__.'/../core/init.php', 'w+');
+
+        if (!$file) {
+            self::$_error = true;
+        }
+
+        fwrite($file, $newConf);
+        fclose($file);
+
         return true;
 
     }   

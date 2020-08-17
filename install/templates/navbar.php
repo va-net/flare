@@ -1,4 +1,5 @@
-<?php/*
+<?php
+/*
 Flare, a fully featured and easy to use crew centre, designed for Infinite Flight.
 Copyright (C) 2020  Lucas Rebato
 
