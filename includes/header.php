@@ -17,7 +17,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 <script src="https://kit.fontawesome.com/a076d05399.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/cferdinandi/smooth-scroll@15/dist/smooth-scroll.polyfills.min.js"></script>
 <script>
   $(document).ready(function() {
     $("nav .panel-link").addClass("nav-link");
@@ -32,7 +31,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
     });
   });
 </script>
-<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 <style>
   .bg-custom {
     background-color: <?= Config::get('site/colour_hex') ?> !important;
