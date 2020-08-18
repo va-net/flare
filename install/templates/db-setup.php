@@ -52,19 +52,23 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                                     <input class="form-control" type="hidden" name="token" value="<?= Token::generate(); ?>">
                                     <div class="form-group">
                                         <label for="db-host">Database Host (usually <i>localhost</i>)</label>
-                                        <input type="text" min="1" class="form-control" name="db-host" value="<?= escape(Input::get('db-host')) ?>">
+                                        <input type="text" required min="1" class="form-control" name="db-host" value="<?= escape(Input::get('db-host')) ?>">
                                     </div>
                                     <div class="form-group">
                                         <label for="db-user">Database Username</label>
-                                        <input type="text" min="1" class="form-control" name="db-user" value="<?= escape(Input::get('db-user')) ?>">
+                                        <input type="text" required min="1" class="form-control" name="db-user" value="<?= escape(Input::get('db-user')) ?>">
                                     </div>
                                     <div class="form-group">
                                         <label for="db-pass">Database Password</label>
-                                        <input type="password" min="1" class="form-control" name="db-pass">
+                                        <input type="password" required min="1" class="form-control" name="db-pass">
                                     </div>
                                     <div class="form-group">
                                         <label for="db-name">Database Name</label>
-                                        <input type="text" min="1" class="form-control" name="db-name" value="<?= escape(Input::get('db-name')) ?>">
+                                        <input type="text" required min="1" class="form-control" name="db-name" value="<?= escape(Input::get('db-name')) ?>">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="db-port">Database Port (usually <i>3306</i>)</label>
+                                        <input type="text" required min="1" class="form-control" name="db-port" value="<?= escape(Input::get('db-port')) ?>">
                                     </div>
                                     <input type="submit" class="btn bg-custom" value="Save">
                                 </form>
