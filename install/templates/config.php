@@ -18,7 +18,8 @@ $GLOBALS['config'] = array(
         'host' => 'DB_HOST',
         'username' => 'DB_USER',
         'password' => 'DB_PASS',
-        'db' => 'DB_NAME'
+        'db' => 'DB_NAME',
+        'port' => 'DB_PORT'
         ),
     'remember' => array(
         'cookie_name' => 'remember',
