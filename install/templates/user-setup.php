@@ -40,7 +40,7 @@ require_once '../core/init.php';
                 <div id="loader" class="spinner-border spinner-border-sm text-danger"></div>
                     <div class="tab-content" id="tc">
                         <div class="tab-pane container active" id="home" style="display: none;">
-                            <h3>Admin user setup</h3>
+                            <h3>Admin User Setup</h3>
                             <p>This user will be the first administrator account on the crew center.</p>
                             <?php
                             if (Session::exists('error')) {
