@@ -60,7 +60,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                                     </div>
                                     <div class="form-group">
                                         <label for="db-pass">Database Password</label>
-                                        <input type="password" required min="1" class="form-control" name="db-pass">
+                                        <input type="password" class="form-control" name="db-pass">
                                     </div>
                                     <div class="form-group">
                                         <label for="db-name">Database Name</label>
