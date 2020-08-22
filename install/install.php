@@ -43,7 +43,8 @@ switch (Input::get('page')) {
             'DB_HOST' => Input::get('db-host'),
             'DB_USER' => Input::get('db-user'),
             'DB_PASS' => Input::get('db-pass'),
-            'DB_NAME' => Input::get('db-name')
+            'DB_NAME' => Input::get('db-name'),
+            'DB_PORT' => Input::get('db-port')
         ))) {
             Session::flash('error', 'Whoops! Flare couldn\'t connect to the database. Please try again.');
             Redirect::to('?page=db-setup');
