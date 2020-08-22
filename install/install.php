@@ -48,11 +48,17 @@ switch (Input::get('page')) {
             Session::flash('error', 'Whoops! Flare couldn\'t connect to the database. Please try again.');
             Redirect::to('?page=db-setup');
         }
-        if (!Installer::setupDb()) {
-            Session::flash('error', 'Hmm. Looks like there was an error setting up the database. Ensure you have entered the correct database details, and try again.');
-            Redirect::to('?page=db-setup');
+        Redirect::to('?page=db-setup-cont');
+        break;
+    case 'db-setup-cont':
+        Installer::showTemplate('db-setup-cont');
+        if (Input::get('submit')) {
+            if (!Installer::setupDb()) {
+                Session::flash('error', 'Hmm. Looks like there was an error setting up the database. Ensure you have entered the correct database details, and try again.');
+                Redirect::to('?page=db-setup');
+            }
+            Redirect::to('?page=user-setup');
         }
-        Redirect::to('?page=user-setup');
         break;
     case 'user-setup':
         Installer::showTemplate('user-setup');

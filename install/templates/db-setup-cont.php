@@ -37,7 +37,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                 <div id="loader" class="spinner-border spinner-border-sm spinner-custom"></div>
                     <div class="tab-content" id="tc">
                         <div class="tab-pane container active" id="home" style="display: none;">
-                            <h3>Database setup</h3>
+                            <h3>Database setup continued</h3>
                             <br>
                             <?php
                             if (Session::exists('error')) {
@@ -48,27 +48,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                             }
                             ?>
                             <section>
-                                <form action="?page=db-install" method="post">
-                                    <input class="form-control" type="hidden" name="token" value="<?= Token::generate(); ?>">
-                                    <div class="form-group">
-                                        <label for="db-host">Database Host (usually <i>localhost</i>)</label>
-                                        <input type="text" min="1" class="form-control" name="db-host" value="<?= escape(Input::get('db-host')) ?>">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="db-user">Database Username</label>
-                                        <input type="text" min="1" class="form-control" name="db-user" value="<?= escape(Input::get('db-user')) ?>">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="db-pass">Database Password</label>
-                                        <input type="password" min="1" class="form-control" name="db-pass">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="db-name">Database Name</label>
-                                        <input type="text" min="1" class="form-control" name="db-name" value="<?= escape(Input::get('db-name')) ?>">
-                                    </div>
-                                    <input type="submit" class="btn bg-custom" value="Save">
+                                <p>Time to install the database! Please press continue to, well, continue.</p>
+                                <form action="" method="post">
+                                    <input type="submit" name="submit" class="btn bg-custom" value="Continue with installation">
                                 </form>
-                                <br>
                             </section>
                         </div>
                     </div>

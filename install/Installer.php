@@ -13,8 +13,6 @@ require_once '../classes/DB.php';
 class Installer
 {
 
-    private static $_error;
-
     public static function showTemplate($name) 
     {
 
@@ -38,7 +36,7 @@ class Installer
         $file = fopen('../core/config.php', 'w');
 
         if (!$file) {
-            self::$_error = true;
+            return false;
         }
 
         fwrite($file, $template);
@@ -51,7 +49,7 @@ class Installer
     public static function appendConfig($data = array()) 
     {
 
-        $currentConf = file_get_contents('../core/config.php');
+        $currentConf = file_get_contents(__DIR__.'/../core/config.php');
         foreach ($data as $name => $val) {
             $currentConf = str_replace($name, $val, $currentConf);
         }
@@ -59,7 +57,7 @@ class Installer
         $file = fopen('../core/config.php', 'w+');
 
         if (!$file) {
-            self::$_error = true;
+            return false;
         }
 
         fwrite($file, $currentConf);
@@ -70,7 +68,7 @@ class Installer
         $file = fopen(__DIR__.'/../core/init.php', 'w+');
 
         if (!$file) {
-            self::$_error = true;
+            return false;
         }
 
         fwrite($file, $newConf);
@@ -83,11 +81,9 @@ class Installer
     public static function setupDb()
     {
 
-        $sql = file_get_contents('./db.sql');
-        $db = DB::newInstance();
-
+        $sql = file_get_contents(__DIR__.'/db.sql');
+        $db = DB::getInstance();
         if (!$db->query($sql)) {
-            self::$_error = true;
             return false;
         }
         $all = Aircraft::fetchAllAircraftFromVANet();
@@ -98,13 +94,6 @@ class Installer
             ));
         }
         return true;
-
-    }
-
-    public static function error()
-    {
-
-        return self::$_error;
 
     }
 
