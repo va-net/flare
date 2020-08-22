@@ -191,4 +191,14 @@ class Aircraft
         return $result->first()->ifliveryid;
 
     }
+
+    public static function idToName($id)
+    {
+
+        self::init();
+        $result = self::$_db->get('aircraft', array('id', '=', $id));
+        return $result->first()->name;
+
+    }
+
 }

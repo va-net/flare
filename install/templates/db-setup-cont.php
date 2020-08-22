@@ -37,10 +37,22 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                 <div id="loader" class="spinner-border spinner-border-sm spinner-custom"></div>
                     <div class="tab-content" id="tc">
                         <div class="tab-pane container active" id="home" style="display: none;">
-                            <h3>Success!</h3>
-                            <p>Yay! Flare has been setup correctly. You may now <a href="../index.php">login</a> with the credentials you entered earlier, to setup your staff members, permissions, and other handy features that Flare has to offer. Good luck!</p>
+                            <h3>Database setup continued</h3>
                             <br>
-                            <p>If you need any help with anything, be sure to visit the docs.</p>
+                            <?php
+                            if (Session::exists('error')) {
+                                echo '<div class="alert alert-danger text-center">Error: '.Session::flash('error').'</div>';
+                            }
+                            if (Session::exists('success')) {
+                                echo '<div class="alert alert-success text-center">'.Session::flash('success').'</div>';
+                            }
+                            ?>
+                            <section>
+                                <p>Time to install the database! Please press continue to, well, continue.</p>
+                                <form action="" method="post">
+                                    <input type="submit" name="submit" class="btn bg-custom" value="Continue with installation">
+                                </form>
+                            </section>
                         </div>
                     </div>
                 </div>

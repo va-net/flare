@@ -36,7 +36,7 @@ if (!$user->isLoggedIn()) {
             height: 120px;
         }
     </style>
-    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #E4181E;">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-custom">
         <?php include './includes/navbar.php'; ?>
     </nav>
     <div class="container-fluid">
@@ -66,7 +66,7 @@ if (!$user->isLoggedIn()) {
                                     &nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-medal"></i>&nbsp;<a href="./admin.php?page=opsmanage&section=ranks" class="panel-link">Manage Ranks</a><br>
                                     &nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-plane"></i>&nbsp;<a href="./admin.php?page=opsmanage&section=fleet" class="panel-link">Manage Fleet</a><br>
                                     &nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-plane-departure"></i>&nbsp;<a href="./admin.php?page=opsmanage&section=routes" class="panel-link">Manage Routes</a><br>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-globe"></i>&nbsp;<a href="./admin.php?page=opsmanage&section=site" class="panel-link">Manage Site</a>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-globe"></i>&nbsp;<a href="./admin.php?page=site" class="panel-link">Manage Site</a><br>
                                     </div>
                                     ';
                                 } else {
@@ -80,7 +80,7 @@ if (!$user->isLoggedIn()) {
                     <a href="logout.php" class="panel-link"><i class="fa fa-sign-out-alt"></i>&nbsp;Log Out</a>
                 </div>
                 <div class="col-lg-9 p-3 main-content">
-                    <div id="loader" class="spinner-border spinner-border-sm text-danger"></div>
+                    <div id="loader" class="spinner-border spinner-border-sm spinner-custom"></div>
                     <div class="tab-content" id="tc">
                         <div class="tab-pane container active" id="home" style="display: none;">
                         <?php
@@ -128,7 +128,7 @@ if (!$user->isLoggedIn()) {
                                                 echo '</td><td class="align-middle">';
                                                 echo $pirep["status"];
                                                 echo '</td><td class="align-middle">';
-                                                echo '<button class="btn text-light" style="background-color: #E4181E;" data-toggle="modal" data-target="#pirep'.$x.'"><i class="fa fa-edit"></i></button>';
+                                                echo '<button class="btn text-light btn-success" data-toggle="modal" data-target="#pirep'.$x.'"><i class="fa fa-edit"></i></button>';
                                                 echo '</td></tr>';
                                                 $x++;
                                             }
@@ -262,7 +262,7 @@ if (!$user->isLoggedIn()) {
                                             <label for="multi">Multiplier number (if applicable)</label>
                                             <input type="number" class="form-control" maxlength="6" minlength="6" id="multi" name="multi" value="0">
                                         </div>
-                                        <input type="submit" class="btn text-light" style="background-color: #E4181E;" value="Submit">
+                                        <input type="submit" class="btn text-light bg-custom" value="Submit">
                                     </form>
                                 </section>
                             <?php endif; ?>

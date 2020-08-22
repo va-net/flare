@@ -78,7 +78,7 @@ if (Input::exists()) {
         }
     </style>
 
-    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #E4181E;">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-custom">
         <?php include './includes/navbar.php'; ?>
     </nav>
     <div class="container-fluid">
@@ -108,7 +108,7 @@ if (Input::exists()) {
                     <input class="form-control" type="hidden" name="token" value="<?= Token::generate(); ?>">
                     <div class="row">
                         <div class="col text-center">
-                            <input type="submit" style="background-color: #E4181E; color: white;" class="btn ml-auto mr-auto display-block" value="Log In">
+                            <input type="submit" class="btn ml-auto mr-auto display-block bg-custom" value="Log In">
                         </div>
                     </div>
                 </form>

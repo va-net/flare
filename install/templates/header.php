@@ -33,7 +33,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 </script>
 <style>
   .bg-custom {
-    background-color: #E4181E !important;
-    color: #f8f9fa !important;
+    background-color: #ff7e00;
+    color: #f8f9fa;
   }
 </style>

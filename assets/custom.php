@@ -1,3 +1,4 @@
+<?php
 /*
 Flare, a fully featured and easy to use crew centre, designed for Infinite Flight.
 Copyright (C) 2020  Lucas Rebato
@@ -6,6 +7,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+require_once __DIR__.'/../core/init.php';
+header("Content-type: text/css; charset: UTF-8");
+
+?>
 @import url('https://fonts.googleapis.com/css2?family=Rubik&display=swap');
 
 @media only screen and (max-width: 991px) {
@@ -61,4 +66,25 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 .toggledark {
     cursor: pointer;
+}
+
+.bg-custom {
+    background-color: <?= Config::get('site/colour_main_hex') ?>;
+    color: #f8f9fa
+}
+
+#loader {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 1;
+    width: 150px;
+    height: 150px;
+    margin: -75px 0 0 -75px;
+    width: 120px;
+    height: 120px;
+}
+
+.spinner-custom {
+    color: <?= Config::get('site/colour_main_hex') ?>;
 }

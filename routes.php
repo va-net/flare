@@ -70,32 +70,37 @@ if (!$user->isLoggedIn()) {
                 <div id="loader" class="spinner-border spinner-border-sm spinner-custom"></div>
                     <div class="tab-content" id="tc">
                         <div class="tab-pane container active" id="home" style="display: none;">
-                            <h3>ACARS</h3>
-                            <?php if (VANet::isGold()): ?>
-                                <?php if ($user->data()->ifuserid != null): ?>
-                                    <?php
-                                    $curl = new Curl;
-                                    $request = $curl->get(Config::get('vanet/base_url').'/api/acars', array(
-                                        'callsign' => $user->data()->callsign,
-                                        'userid' => $user->data()->ifuserid,
-                                        'server' => 'expert',
-                                        'apikey' => Config::get('vanet/api_key')
-                                    ));
-                                    $response = Json::decode($request->body);
-                                    if (array_key_exists('status', $response)) {
-                                        if ($response['status'] == 404 || $response['status'] == 409) {
-                                            echo 'Hmm, looks like we couldn\'t find you on the server. Ensure that you have filed a flightplan, and are still connected to Infinite Flight. Then, refresh the page.';
-                                        }
-                                    } else {
-                                        echo 'Nice! We\'ve found you. Once you\'ve completed your flight, come back here and click the button below.';
+                            <h3>Route Database</h3>
+                            <p>Please note that importing from a CSV is not yet supported, and will be coming in a later build.</p>
+                            <table class="table table-striped">
+                                <thead class="bg-custom">
+                                    <tr>
+                                        <th>Flight Number</th>
+                                        <th>Departure</th>
+                                        <th>Arrival</th>
+                                        <th>Aircraft</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php 
+                                    $all = Route::fetchAll();
+                                    $x = 0;
+
+                                    while ($all->count() > $x) {
+                                        echo '<tr><td class="align-middle">';
+                                        echo $all->results()[$x]->fltnum;
+                                        echo '</td><td class="align-middle">';
+                                        echo $all->results()[$x]->dep;
+                                        echo '</td><td class="align-middle">';
+                                        echo $all->results()[$x]->arr;
+                                        echo '</td><td class="align-middle">';
+                                        echo Aircraft::idToName($all->results()[$x]->aircraftid);
+                                        echo '</td></tr>';
+                                        $x++;
                                     }
                                     ?>
-                                <?php else: ?>
-                                    <p>Looks like you haven't yet setup PIREPs! Go to <a href="./pireps.php">pireps</a>, set them up, and then come back here and try again.</p>
-                                <?php endif ?> 
-                            <?php else: ?>
-                                <p>Hmm. In order to run ACARS, <?= Config::get('va/name') ?> needs to sign up to VANet Gold. You can take a look at it <a href="https://vanet.app/getstarted" target="_blank">here</a>!</p>
-                            <?php endif; ?>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
