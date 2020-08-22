@@ -37,7 +37,7 @@ $GLOBALS['config'] = array(
         'base_url' => 'https://vanet.app'
     ),
     'site' => array(
-        'colour_main_hex' => '#E4181E'
+        'colour_main_hex' => '#FF7E00'
     ),
     'defaults' => array(
         'permissions' => '{"admin": 0, "usermanage": 0, "staffmanage": 0, "recruitment": 0, "pirepmanage": 0, "newsmanage":0, "opsmanage": 0, "statsviewing": 0}',
