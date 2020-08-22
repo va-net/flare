@@ -11,6 +11,7 @@ require_once __DIR__.'/../core/init.php';
 header("Content-type: text/css; charset: UTF-8");
 
 ?>
+@import url('https://fonts.googleapis.com/css2?family=Rubik&display=swap');
 
 @media only screen and (max-width: 991px) {
     .mobile-hidden {
@@ -33,13 +34,8 @@ header("Content-type: text/css; charset: UTF-8");
     }
 }
 
-@font-face {
-    src: url(GothamLight.otf);
-    font-family: GothamLight;
-}
-
 * {
-    font-family: GothamLight;
+    font-family: 'Rubik', sans-serif;
 }
 
 .nav-link {

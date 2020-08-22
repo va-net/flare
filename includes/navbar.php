@@ -7,7 +7,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 ?>
-<a class="navbar-brand" href="#"><span class="mobile-hidden"><?= Config::get('va/name') ?></span><span class="desktop-hidden">VGVA Crew</span></a>
+<a class="navbar-brand" href="#"><?= Config::get('va/name') ?></a>
 
 <!-- navbar toggler -->
 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
@@ -18,9 +18,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 <div class="collapse navbar-collapse" id="collapsibleNavbar">
     <ul class="navbar-nav">
         <?php if (!$user->isLoggedIn()): ?>
-        <li class="nav-item">
-            <a class="nav-link" href="https://ifvirginvirtual.vip">Main Site</a>
-        </li>
         <li class="nav-item">
             <a class="nav-link" href="apply.php">Apply</a>
         </li>
