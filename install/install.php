@@ -54,6 +54,7 @@ switch (Input::get('page')) {
     case 'db-setup-cont':
         Installer::showTemplate('db-setup-cont');
         if (Input::get('submit')) {
+            sleep(8);
             if (!Installer::setupDb()) {
                 Session::flash('error', 'Hmm. Looks like there was an error setting up the database. Ensure you have entered the correct database details, and try again.');
                 Redirect::to('?page=db-setup');
