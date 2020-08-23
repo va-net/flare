@@ -11,7 +11,7 @@ require_once './core/init.php';
 
 $user = new User();
 
-Page::setTitle('Admin Panel - '.$user->data()->callsign);
+Page::setTitle('Admin Panel - '.Config::get('va/name'));
 
 if (!$user->isLoggedIn()) {
     Redirect::to('index.php');
