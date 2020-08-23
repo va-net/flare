@@ -69,7 +69,7 @@ class News
 
     }
 
-    public static function new($fields) 
+    public static function add($fields) 
     {
 
         self::init();

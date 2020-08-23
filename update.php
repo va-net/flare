@@ -52,7 +52,6 @@ if (Input::get('action') === 'editprofile') {
         $multi = Input::get('multi');
     }
 
-    $curl = new Curl;
     $response = $curl->post(Config::get('vanet/base_url').'/api/flights/new?apikey='.Config::get('vanet/api_key'), array(
         'AircraftID' => Aircraft::nameToLiveryId(Input::get('aircraft')),
         'Arrival' => Input::get('arr'),
@@ -198,7 +197,7 @@ if (Input::get('action') === 'editprofile') {
     Session::flash('success', 'News article edited successfully! ');
     Redirect::to('admin.php?page=newsmanage');
 } elseif (Input::get('action') === 'newarticle') {
-    News::new(array(
+    News::add(array(
         'subject' => Input::get('title'),
         'content' => Input::get('content'),
         'author' => Input::get('author')
@@ -233,7 +232,7 @@ if (Input::get('action') === 'editprofile') {
     Session::flash('success', 'Rank added successfully!');
     Redirect::to('admin.php?page=opsmanage&section=ranks');
 } elseif (Input::get('action') == 'getliveriesforaircraft') {
-    $all = Aircraft::fetchLiveryIdsForAircraft(Aircraft::nameToAircraftId(Input::get('aircraftid')));
+    $all = Aircraft::fetchLiveryIdsForAircraft(Aircraft::nameToAircraftId(Input::get('aircraft')));
     foreach ($all as $name => $id) {
         echo '<option>'.$name.'</option>';
     }
