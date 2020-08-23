@@ -40,13 +40,17 @@ if (Input::exists()) {
                 if ($user->data()->status == 1) {
                     Redirect::to('home.php');
                 } elseif ($user->data()->status == 0) {
+                    $user->logout();
                     Session::flash('error', 'Whoops! You need to wait until your application has been approved before logging in!');
                 } elseif ($user->data()->status == 2) {
+                    $user->logout();
                     Session::flash('error', 'Looks like your account has been marked as inactive - contact a member of staff to have this rectified!');
                 } elseif ($user->data()->status == 3) {
+                    $user->logout();
                     Session::flash('error', 'Unfortunately, your application has been declined for the following reason: '.$user->data()->declinereason);
                 }
             } else {
+                $user->logout();
                 Session::flash('error', 'Login failed.');
             } 
 

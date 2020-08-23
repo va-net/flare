@@ -33,7 +33,7 @@ class User
                if ($this->find($user)) {
                    $this->_isLoggedIn = true;
                } else {
-                   //logout
+                   $this->logout();
                }
             }
         } else {
@@ -99,7 +99,7 @@ class User
                 }
             }
         }
-        
+        $_SESSION = array();
         return false;
 
     }
