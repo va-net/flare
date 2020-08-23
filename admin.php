@@ -67,7 +67,7 @@ if (!$user->isLoggedIn()) {
                             if ($permission == 'opsmanage') {
                                 echo '
                                 <a href="#" data-toggle="collapse" data-target="#demo" class="panel-link"><i class="fa fa-caret-down"></i>&nbsp;Operations Management</a><br>
-                                <div id="demo" class="collapse">
+                                <div id="opsCollapse" class="collapse">
                                 &nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-medal"></i>&nbsp;<a href="./admin.php?page=opsmanage&section=ranks" class="panel-link">Manage Ranks</a><br>
                                 &nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-plane"></i>&nbsp;<a href="./admin.php?page=opsmanage&section=fleet" class="panel-link">Manage Fleet</a><br>
                                 &nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-plane-departure"></i>&nbsp;<a href="./admin.php?page=opsmanage&section=routes" class="panel-link">Manage Routes</a><br>
@@ -663,6 +663,11 @@ if (!$user->isLoggedIn()) {
                                 <?php if (!$user->hasPermission('usermanage')): ?>
                                     <div class="alert alert-danger text-center">Whoops! You don't have the necessary permissions to access this.</div>
                                 <?php else: ?>
+                                    <script>
+                                        $(document).ready(function() {
+                                            $("#opsCollapse").collapse('show');
+                                        });
+                                    </script>
                                     <?php if (Input::get('section') === 'fleet'): ?>
                                         <h3>Fleet</h3>
                                         <p>Please note that importing from a CSV is not yet supported, and will be coming in a later build.</p>
