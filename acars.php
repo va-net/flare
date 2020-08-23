@@ -11,7 +11,7 @@ require_once './core/init.php';
 
 $user = new User();
 
-Page::setTitle('ACARS - '.$user->data()->callsign);
+Page::setTitle('ACARS - '.Config::get('va/name'));
 
 if (!$user->isLoggedIn()) {
     Redirect::to('index.php');

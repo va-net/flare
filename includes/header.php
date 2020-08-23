@@ -20,15 +20,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 <script>
   $(document).ready(function() {
     $("nav .panel-link").addClass("nav-link");
-    $(".toggledark").click(function() {
-      $.post("api.php", {
-        "command":"toggledarkmode",
-        "text":false,
-        "token":false
-      }, function(data, status) {
-        window.location.href='home.php';
-      });
-    });
   });
 </script>
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
