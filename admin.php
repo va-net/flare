@@ -11,7 +11,7 @@ require_once './core/init.php';
 
 $user = new User();
 
-Page::setTitle('Admin Panel - '.$user->data()->callsign);
+Page::setTitle('Admin Panel - '.Config::get('va/name'));
 
 if (!$user->isLoggedIn()) {
     Redirect::to('index.php');
@@ -236,7 +236,7 @@ if (!$user->isLoggedIn()) {
                                             echo '</td><td class="align-middle">';
                                             echo $staff["status"];
                                             echo '</td><td class="align-middle">';
-                                            echo '<button class="btn text-light btn-success" data-toggle="modal" data-target="#staff'.$x.'modal" data-callsign="'.$staff['callsign'].'" data-name="'.$staff['name'].'" data-email="'.$staff['email'].'" data-ifc="'.$staff['ifc'].'" data-joined="'.date_format(date_create($staff['joined']), 'Y-m-d').'" data-status="'.$staff['status'].'" data-id="'.$staff['id'].'"><i class="fa fa-edit"></i></button>';
+                                            echo '<button class="btn text-light btn-primary" data-toggle="modal" data-target="#staff'.$x.'modal" data-callsign="'.$staff['callsign'].'" data-name="'.$staff['name'].'" data-email="'.$staff['email'].'" data-ifc="'.$staff['ifc'].'" data-joined="'.date_format(date_create($staff['joined']), 'Y-m-d').'" data-status="'.$staff['status'].'" data-id="'.$staff['id'].'"><i class="fa fa-edit"></i></button>';
                                             echo '&nbsp;<button id="delconfirmbtn" class="btn text-light btn-danger" data-toggle="modal" data-target="#delconfirmmodal" data-callsign="'.$staff['callsign'].'"><i class="fa fa-trash"></i></button>';
                                             echo '</td>';
                                             $x++;
@@ -253,7 +253,7 @@ if (!$user->isLoggedIn()) {
                                         <div class="modal-dialog" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title" id="staffmodaltitle">Edit staff member - '.$staff['callsign'].'</h5>
+                                                    <h5 class="modal-title" id="staffmodaltitle">Edit Staff Member - '.$staff['callsign'].'</h5>
                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                     <span aria-hidden="true">&times;</span>
                                                     </button>
@@ -577,7 +577,7 @@ if (!$user->isLoggedIn()) {
                                                 echo '</td><td class="align-middle mobile-hidden">';
                                                 echo trim(substr($article['content'], 0, 25)).'...';
                                                 echo '</td><td class="align-middle">';
-                                                echo '&nbsp;<button value="'.$article['id'].'" id="articleedit" data-toggle="modal" data-target="#article'.$x.'editmodal" class="btn btn-success text-light" name="edit"><i class="fa fa-edit"></i></button>';
+                                                echo '&nbsp;<button value="'.$article['id'].'" id="articleedit" data-toggle="modal" data-target="#article'.$x.'editmodal" class="btn btn-primary text-light" name="edit"><i class="fa fa-edit"></i></button>';
                                                 echo '&nbsp;<button value="'.$article['id'].'" form="deletearticle" type="submit" class="btn btn-danger text-light" name="delete"><i class="fa fa-trash"></i></button>';
                                                 echo '</td>';
                                                 $x++;

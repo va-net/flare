@@ -28,15 +28,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
         <li class="nav-item mobile-hidden">
             <a class="nav-link" href="home.php"><i class="fa fa-user"></i>&nbsp;Pilot Panel</a>
         </li>
-        <?php if (Session::get('darkmode') != true): ?>
-        <li class="nav-item mobile-hidden">
-            <a class="nav-link toggledark"><i class="fa fa-cloud-moon"></i>&nbsp;Dark Mode</a>
-        </li>
-        <?php else: ?>
-        <li class="nav-item mobile-hidden">
-            <a class="nav-link toggledark"><i class="fa fa-cloud-sun"></i>&nbsp;Light Mode</a>
-        </li>
-        <?php endif; ?>
         <li class="nav-item mobile-hidden">
             <a class="nav-link" href="logout.php"><i class="fa fa-sign-out-alt"></i>&nbsp;Log Out</a>
         </li>
