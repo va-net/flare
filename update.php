@@ -198,7 +198,7 @@ if (Input::get('action') === 'editprofile') {
     Session::flash('success', 'News article edited successfully! ');
     Redirect::to('admin.php?page=newsmanage');
 } elseif (Input::get('action') === 'newarticle') {
-    News::new(array(
+    News::add(array(
         'subject' => Input::get('title'),
         'content' => Input::get('content'),
         'author' => Input::get('author')
