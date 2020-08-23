@@ -52,6 +52,8 @@ if (Input::get('action') === 'editprofile') {
         $multi = Input::get('multi');
     }
 
+    $curl = new Curl;
+
     $response = $curl->post(Config::get('vanet/base_url').'/api/flights/new?apikey='.Config::get('vanet/api_key'), array(
         'AircraftID' => Aircraft::nameToLiveryId(Input::get('aircraft')),
         'Arrival' => Input::get('arr'),

@@ -134,7 +134,7 @@ if (!$user->isLoggedIn()) {
                                             echo '</td><td class="align-middle">';
                                             echo $user["status"];
                                             echo '</td><td class="align-middle">';
-                                            echo '<button class="btn text-light" btn-primary data-toggle="modal" data-target="#usermodal" data-callsign="'.$user['callsign'].'" data-name="'.$user['name'].'" data-email="'.$user['email'].'" data-ifc="'.$user['ifc'].'" data-joined="'.date_format(date_create($user['joined']), 'Y-m-d').'" data-status="'.$user['status'].'" data-id="'.$user['id'].'"><i class="fa fa-edit"></i></button>';
+                                            echo '<button class="btn btn-success text-light" data-toggle="modal" data-target="#usermodal" data-callsign="'.$user['callsign'].'" data-name="'.$user['name'].'" data-email="'.$user['email'].'" data-ifc="'.$user['ifc'].'" data-joined="'.date_format(date_create($user['joined']), 'Y-m-d').'" data-status="'.$user['status'].'" data-id="'.$user['id'].'"><i class="fa fa-edit"></i></button>';
                                             echo '&nbsp;<button id="delconfirmbtn" class="btn text-light btn-danger" data-toggle="modal" data-target="#delconfirmmodal" data-callsign="'.$user['callsign'].'"><i class="fa fa-trash"></i></button>';
                                             echo '</td>';
                                             $x++;
