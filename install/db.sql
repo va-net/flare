@@ -66,8 +66,11 @@ CREATE TABLE IF NOT EXISTS `ranks` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
-INSERT INTO `ranks` (`id`, `name`, `timereq`) VALUES
-(4, 'Cadet', 0);
+INSERT INTO `ranks` (`name`, `timereq`) VALUES
+('Cadet', 0);
+
+INSERT INTO `ranks` (`name`, `timereq`) VALUES
+('Second Officer', 25);
 
 DROP TABLE IF EXISTS `routes`;
 CREATE TABLE IF NOT EXISTS `routes` (
