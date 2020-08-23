@@ -701,7 +701,7 @@ if (!$user->isLoggedIn()) {
                                                             <script>
                                                                 $("#aircraftselect").change(function() {
                                                                     $.ajax({
-                                                                        url: "test.php",
+                                                                        url: "update.php",
                                                                         type: "POST",
                                                                         data: { action: "getliveriesforaircraft", aircraft: $(this).val() },
                                                                         success: function(html){
