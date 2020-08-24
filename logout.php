@@ -12,5 +12,5 @@ require_once 'core/init.php';
 $user = new User();
 $user->logout();
 
-Session::flash('login', 'You have logged out successfully!');
+Session::flash('login', 'You have Logged Out Successfully!');
 Redirect::to('index.php');

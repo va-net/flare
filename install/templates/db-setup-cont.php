@@ -37,7 +37,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                 <div id="loader" class="spinner-border spinner-border-sm spinner-custom"></div>
                     <div class="tab-content" id="tc">
                         <div class="tab-pane container active" id="home" style="display: none;">
-                            <h3>Database setup continued</h3>
+                            <h3>Database Setup</h3>
                             <br>
                             <?php
                             if (Session::exists('error')) {
