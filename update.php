@@ -13,7 +13,7 @@ $user = new User();
 
 if (Input::get('action') === 'editprofile') {
     if (!Callsign::assigned(Input::get('callsign'), $user->data()->id)) {
-        Session::flash('error', 'Callsign is already taken!');
+        Session::flash('error', 'Callsign is Already Taken!');
     } else {
         try {
             $user->update(array(
@@ -39,10 +39,10 @@ if (Input::get('action') === 'editprofile') {
             Session::flash('error', $e->getMessage());
             Redirect::to('home.php');
         }
-        Session::flash('success', 'Password changed successfully!');
+        Session::flash('success', 'Password Changed Successfully!');
         Redirect::to('home.php');
     } else {
-        Session::flash('error', 'Your current password was incorrect!');
+        Session::flash('error', 'Your Current Password was Incorrect!');
         Redirect::to('home.php');
     }
 } elseif (Input::get('action') === 'filepirep') {
@@ -66,7 +66,7 @@ if (Input::get('action') === 'editprofile') {
 
     $response = Json::decode($response->body);
     if ($response['success'] != true) {
-        Session::flash('error', 'There was an error connecting to VANet.');
+        Session::flash('error', 'There was an Error Connecting to VANet.');
         Redirect::to('pireps.php?page=new');
     }
 
@@ -81,10 +81,10 @@ if (Input::get('action') === 'editprofile') {
         'aircraftid' => Aircraft::getId(Input::get('aircraft')),
         'multi' => $multi
     ))) {
-        Session::flash('error', 'There was an error filing the PIREP.');
+        Session::flash('error', 'There was an Error Filing the PIREP.');
         Redirect::to('pireps.php?page=new');
     } else {
-        Session::flash('success', 'PIREP filed successfully!');
+        Session::flash('success', 'PIREP Filed Successfully!');
         Redirect::to('pireps.php?page=new');
     }
 } elseif (Input::get('action') === 'editpirep') {
@@ -98,10 +98,10 @@ if (Input::get('action') === 'editprofile') {
         'aircraftid' => Aircraft::getId(Input::get('aircraft')),
         'multi' => Input::get('multi')
     ))) {
-        Session::flash('errorrecent', 'There was an error editing the PIREP.');
+        Session::flash('errorrecent', 'There was an Error Editing the PIREP.');
         Redirect::to('pireps.php');
     } else {
-        Session::flash('successrecent', 'PIREP edited successfully!');
+        Session::flash('successrecent', 'PIREP Edited successfully!');
         Redirect::to('pireps.php');
     }
 } elseif (Input::get('action') === 'edituser') {
@@ -114,10 +114,10 @@ if (Input::get('action') === 'editprofile') {
             'ifc' => Input::get('ifc')
         ), Input::get('id'));
     } catch (Exception $e) {
-        Session::flash('error', 'There was an error editing the user.');
+        Session::flash('error', 'There was an Error Editing the User.');
         Redirect::to('admin.php?page=usermanage');
     }
-    Session::flash('success', 'User edited successfully!');
+    Session::flash('success', 'User Edited Successfully!');
     Redirect::to('admin.php?page=usermanage');
 } elseif (Input::get('action') === 'deluser') {
 
@@ -126,7 +126,7 @@ if (Input::get('action') === 'editprofile') {
             'status' => 2
         ), Input::get('id'));
     } catch (Exception $e) {
-        Session::flash('error', 'There was an error deleting the user.');
+        Session::flash('error', 'There was an Error Deleting the User.');
         Redirect::to('admin.php?page=usermanage');
     }
     Session::flash('success', 'User deleted successfully!');
@@ -151,10 +151,10 @@ if (Input::get('action') === 'editprofile') {
             'permissions' => Json::encode($finalpermissions)
         ), Input::get('id'));
     } catch (Exception $e) {
-        Session::flash('error', 'There was an error editing the staff member.');
+        Session::flash('error', 'There was an Error Editing the Staff Member.');
         Redirect::to('admin.php?page=staffmanage');
     }
-    Session::flash('success', 'Staff member edited successfully!');
+    Session::flash('success', 'Staff Member Edited Successfully!');
     Redirect::to('admin.php?page=staffmanage');
 } elseif (Input::get('action') === 'declineapplication') {
     try {
@@ -163,10 +163,10 @@ if (Input::get('action') === 'editprofile') {
             'declinereason' => Input::get('declinereason')
         ), Input::get('id'));
     } catch (Exception $e) {
-        Session::flash('error', 'There was an error declining the application.');
+        Session::flash('error', 'There was an error Declining the Application.');
         Redirect::to('admin.php?page=recruitment');
     }
-    Session::flash('success', 'Application declined successfully!');
+    Session::flash('success', 'Application Declined Successfully');
     Redirect::to('admin.php?page=recruitment');
 } elseif (Input::get('action') === 'acceptapplication') {
     try {
@@ -174,29 +174,29 @@ if (Input::get('action') === 'editprofile') {
             'status' => 1
         ), Input::get('accept'));
     } catch (Exception $e) {
-        Session::flash('error', 'There was an error accepting the application.');
+        Session::flash('error', 'There was an Error Accepting the Application.');
         Redirect::to('admin.php?page=recruitment');
     }
-    Session::flash('success', 'Application accepted successfully!');
+    Session::flash('success', 'Application Accepted Successfully!');
     Redirect::to('admin.php?page=recruitment');
 } elseif (Input::get('action') === 'acceptpirep') {
     Pirep::accept(Input::get('accept'));
-    Session::flash('success', 'PIREP accepted successfully!');
+    Session::flash('success', 'PIREP Accepted Successfully!');
     Redirect::to('admin.php?page=pirepmanage');
 } elseif (Input::get('action') === 'declinepirep') {
     Pirep::decline(Input::get('decline'));
-    Session::flash('success', 'PIREP declined successfully! ');
+    Session::flash('success', 'PIREP Declined Successfully');
     Redirect::to('admin.php?page=pirepmanage');
 } elseif (Input::get('action') === 'deletearticle') {
     News::archive(Input::get('delete'));
-    Session::flash('success', 'News archived successfully! ');
+    Session::flash('success', 'News Item Archived Successfully! ');
     Redirect::to('admin.php?page=newsmanage');
 } elseif (Input::get('action') === 'editarticle') {
     News::edit(Input::get('id'), array(
         'subject' => Input::get('title'),
         'content' => Input::get('content')
     ));
-    Session::flash('success', 'News article edited successfully! ');
+    Session::flash('success', 'News Article Edited Successfully! ');
     Redirect::to('admin.php?page=newsmanage');
 } elseif (Input::get('action') === 'newarticle') {
     News::add(array(
@@ -204,34 +204,34 @@ if (Input::get('action') === 'editprofile') {
         'content' => Input::get('content'),
         'author' => Input::get('author')
     ));
-    Session::flash('success', 'News article added successfully! ');
+    Session::flash('success', 'News Article Added Successfully! ');
     Redirect::to('admin.php?page=newsmanage');
 } elseif (Input::get('action') === 'deleteaircraft') {
     Aircraft::archive(Input::get('delete'));
-    Session::flash('success', 'Aircraft archived successfully! ');
+    Session::flash('success', 'Aircraft Archived Successfully! ');
     Redirect::to('admin.php?page=opsmanage&section=fleet');
 } elseif (Input::get('action') === 'addaircraft') {
     Aircraft::add(Input::get('aircraftselect'), Rank::nameToId(Input::get('rank')), Input::get('livery'));
-    Session::flash('success', 'Aircraft added successfully! ');
+    Session::flash('success', 'Aircraft Added Successfully! ');
     Redirect::to('admin.php?page=opsmanage&section=fleet');
 } elseif (Input::get('action') === 'setuppireps') {
     if (!Pirep::setup(Input::get('callsign'), $user->data()->id)) {
-        Session::flash('errorrecent', 'There was an error connecting to Infinite Flight. Ensure you are spawned in on the <b>Casual Server, and have set your callsign to \''.$user->data()->callsign.'\'</b>!');
+        Session::flash('errorrecent', 'There was an Error Connecting to Infinite Flight. Ensure you are spawned in on the <b>Casual Server, and have set your callsign to \''.$user->data()->callsign.'\'</b>!');
         Redirect::to('pireps.php?page=new');
     }
-    Session::flash('successrecent', 'PIREPs setup successfully! You can now file PIREPs.');
+    Session::flash('successrecent', 'PIREPs Setup Successfully! You can now File PIREPs.');
     Redirect::to('pireps.php?page=new');
 } elseif (Input::get('action') === 'addroute') {
     Route::add(array(Input::get('fltnum'), Input::get('dep'), Input::get('arr'), Time::strToSecs(Input::get('duration')), Aircraft::nameToId(Input::get('aircraft'))));
-    Session::flash('success', 'Route added successfully! ');
+    Session::flash('success', 'Route Added Successfully! ');
     Redirect::to('admin.php?page=opsmanage&section=routes');
 } elseif (Input::get('action') === 'deleteroute') {
     Route::delete(Input::get('deleteroute'));
-    Session::flash('success', 'Route removed successfully!');
+    Session::flash('success', 'Route Removed Successfully!');
     Redirect::to('admin.php?page=opsmanage&section=routes');
 } elseif (Input::get('action') === 'addrank') {
     Rank::add(Input::get('name'), Time::hrsToSecs(Input::get('time')));
-    Session::flash('success', 'Rank added successfully!');
+    Session::flash('success', 'Rank Added Successfully!');
     Redirect::to('admin.php?page=opsmanage&section=ranks');
 } elseif (Input::get('action') === 'editrank') {
     try {
@@ -252,19 +252,19 @@ if (Input::get('action') === 'editprofile') {
     }
 } elseif (Input::get('action') === 'setcolour') {
     if (!Config::replaceColour(Input::get('hexcol'))) {
-        Session::flash('error', 'There was an error updating the colour theme!');
+        Session::flash('error', 'There was an Error Updating the Colour Theme!');
         Redirect::to('admin.php?page=site');
         die();
     }
-    Session::flash('success', 'Colour theme updated successfully! You may need to reload the page or clear your cache in order for it to show.');
+    Session::flash('success', 'Colour Theme Updated Successfully! You may need to reload the page or clear your cache in order for it to show.');
     Redirect::to('admin.php?page=site');
 } elseif (Input::get('action') === 'vasettingsupdate') {
     if (!Config::replace('name', Input::get('vaname')) || !Config::replace('identifier', Input::get('vaident'))) {
-        Session::flash('error', 'There was an error updating the config file!');
+        Session::flash('error', 'There was an error updating the Config File!');
         Redirect::to('admin.php?page=site');
         die();
     }
-    Session::flash('success', 'VA details changed successfully. You may need to reload the page a few times or clear your cache in order for it to show.');
+    Session::flash('success', 'VA Details Changed Successfully. You may need to reload the page a few times or clear your cache in order for it to show.');
     Redirect::to('admin.php?page=site');
 } elseif (Input::get('action') === 'vanetupdate') {
     if (!Config::replace('api_key', Input::get('vanetkey'))) {
@@ -272,7 +272,7 @@ if (Input::get('action') === 'editprofile') {
         Redirect::to('admin.php?page=site');
         die();
     }
-    Session::flash('success', 'VANet API key changed successfully.');
+    Session::flash('success', 'VANet API Key changed Successfully.');
     Redirect::to('admin.php?page=site');
 }
 
