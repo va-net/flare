@@ -155,7 +155,7 @@ if (!$user->isLoggedIn()) {
                                                 <p id="delconfirmmessage"></p>
                                                 <form action="update.php" method="post">
                                                     <input hidden name="action" value="deluser">
-                                                    <input type="hidden" value="" name="id" id="delconfirmuserid">
+                                                    <input hidden value="" name="id" id="delconfirmuserid">
                                                     <input type="submit" class="btn bg-custom" value="Mark as Inactive">
                                                 </form>
                                             </div>
@@ -685,7 +685,7 @@ if (!$user->isLoggedIn()) {
                                                             <div class="form-group">
                                                                 <label for="aircraft">Type</label>
                                                                 <select class="form-control" name="aircraftselect" id="aircraftselect" required>
-                                                                    <option>Select</option>
+                                                                    <option value>Select</option>
                                                                     <?php
                                                                     $all = Aircraft::fetchAllAircraft();
                                                                     $x = 0;
@@ -719,7 +719,7 @@ if (!$user->isLoggedIn()) {
                                                             <div class="form-group">
                                                                 <label for="rank">Rank required</label>
                                                                 <select class="form-control" name="rank" required>
-                                                                    <option>Select</option>
+                                                                    <option value>Select</option>
                                                                     <?php
                                                                     $all = Rank::fetchAllNames();
                                                                     $x = 0;
@@ -785,24 +785,58 @@ if (!$user->isLoggedIn()) {
                                                             <input hidden name="action" value="addroute">
                                                             <div class="form-group">
                                                                 <label for="aircraft">Departure Airport</label>
-                                                                <input type="text" name="dep" class="form-control" placeholder="ICAO" required>
+                                                                <input type="text" name="dep" class="form-control" placeholder="ICAO" required />
                                                             </div>
                                                             <div class="form-group">
                                                                 <label for="aircraft">Arrival Airport</label>
-                                                                <input type="text" name="arr" class="form-control" placeholder="ICAO" required>
+                                                                <input type="text" name="arr" class="form-control" placeholder="ICAO" required />
                                                             </div>
                                                             <div class="form-group">
                                                                 <label for="aircraft">Flight Number</label>
-                                                                <input type="number" name="fltnum" class="form-control" required>
+                                                                <input min="1" type="number" name="fltnum" class="form-control" required />
                                                             </div>
                                                             <div class="form-group">
                                                                 <label for="aircraft">Flight Duration</label>
-                                                                <input type="time" name="duration" class="form-control" required>
+                                                                <div class="row">
+                                                                    <div class="col-sm-6">
+                                                                        <input required type="number" min="0" id="flightTimeHrs" class="form-control" placeholder="Hours" />
+                                                                    </div>
+                                                                    <div class="col-sm-6">
+                                                                        <input required type="number" min="1" id="flightTimeMins" class="form-control" placeholder="Minutes" />
+                                                                    </div>
+                                                                </div>
+                                                                <input hidden name="duration" id="flightTimeFormatted" class="form-control" required />
+                                                                <script>
+                                                                    function formatFlightTime() {
+                                                                        var hrs = $("#flightTimeHrs").val();
+                                                                        var mins = $("#flightTimeMins").val();
+                                                                        $("#flightTimeFormatted").val(hrs + ":" + mins);
+                                                                    }
+
+                                                                    function reverseFormatFlightTime() {
+                                                                        var formatted = $("#flightTimeFormatted").val();
+                                                                        var split = formatted.split(":");
+                                                                        var hrs = split[0];
+                                                                        var mins = split[1];
+                                                                        $("#flightTimeHrs").val(hrs);
+                                                                        $("#flightTimeMins").val(mins);
+                                                                    }
+
+                                                                    $(document).ready(function() {
+                                                                        $("#flightTimeHrs").keyup(function() {
+                                                                            formatFlightTime();
+                                                                        });
+                                                                        $("#flightTimeMins").keyup(function() {
+                                                                            formatFlightTime();
+                                                                        });
+                                                                        reverseFormatFlightTime();
+                                                                    });
+                                                                </script>
                                                             </div>
                                                             <div class="form-group">
                                                                 <label for="aircraft">Aircraft</label>
                                                                 <select class="form-control" name="aircraft" required>
-                                                                    <option>Select</option>
+                                                                    <option value>Select</option>
                                                                     <?php
                                                                     $all = Aircraft::fetchActiveAircraft();
 
@@ -815,7 +849,7 @@ if (!$user->isLoggedIn()) {
                                                                     ?>
                                                                 </select>
                                                             </div>
-                                                            <input type="submit" class="btn bg-custom" value="Add Route">
+                                                            <input type="submit" class="btn bg-custom" value="Add Route" />
                                                         </form>
                                                     </div>
                                                 </div>

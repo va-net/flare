@@ -129,7 +129,7 @@ if (Input::exists()) {
                     <div class="form-group text-center">
                     <label for="ifc">Infinite Flight Community Profile URL</label>
                     <input required class="form-control" type="url" id="ifc" name="ifc" value="<?= escape(Input::get('ifc')) ?>">
-                    <small class="form-text text-muted">All pilots are required to have an active Infinite Flight Community account</small>
+                    <small class="form-text text-muted">All pilots are required to have an active Infinite Flight Community Account</small>
                     </div>
                     
                     <div class="form-group text-center">
