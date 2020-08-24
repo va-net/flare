@@ -772,7 +772,6 @@ if (!$user->isLoggedIn()) {
                                     <?php elseif (Input::get('section') === 'routes'): ?>
                                         <h3>Route Management</h3>
                                         <p>Here you can Manage your VA's Routes.</p>
-                                        <br>
                                         <button type="button" class="btn bg-custom mb-2" data-toggle="modal" data-target="#addRoute">Add Route</button>
                                         <div id="addRoute" class="modal fade" role="dialog">
                                             <div class="modal-dialog">
@@ -835,19 +834,21 @@ if (!$user->isLoggedIn()) {
                                             <tbody>
                                                 <?php 
                                                 $all = Route::fetchAll();
+                                                $count = $all->count();
+                                                $results = $all->results();
                                                 $x = 0;
 
-                                                while ($all->count() > $x) {
+                                                while ($count > $x) {
                                                     echo '<tr><td class="align-middle">';
-                                                    echo $all->results()[$x]->fltnum;
+                                                    echo $results[$x]->fltnum;
                                                     echo '</td><td class="align-middle">';
-                                                    echo $all->results()[$x]->dep;
+                                                    echo $results[$x]->dep;
                                                     echo '</td><td class="align-middle">';
-                                                    echo $all->results()[$x]->arr;
+                                                    echo $results[$x]->arr;
                                                     echo '</td><td class="align-middle">';
-                                                    echo Aircraft::idToName($all->results()[$x]->aircraftid);
+                                                    echo Aircraft::idToName($results[$x]->aircraftid);
                                                     echo '</td><td class="align-middle">';
-                                                    echo '&nbsp;<button value="'.$all->results()[$x]->id.'" form="deleteroute" type="submit" class="btn btn-danger text-light" name="delete"><i class="fa fa-trash"></i></button>';
+                                                    echo '&nbsp;<button value="'.$results[$x]->id.'" form="deleteroute" type="submit" class="btn btn-danger text-light" name="delete"><i class="fa fa-trash"></i></button>';
                                                     echo '</td></tr>';
                                                     $x++;
                                                 }
