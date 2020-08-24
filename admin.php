@@ -156,7 +156,7 @@ if (!$user->isLoggedIn()) {
                                                 <form action="update.php" method="post">
                                                     <input hidden name="action" value="deluser">
                                                     <input type="hidden" value="" name="id" id="delconfirmuserid">
-                                                    <input type="submit" class="btn bg-custom" value="Mark as inactive">
+                                                    <input type="submit" class="btn bg-custom" value="Mark as Inactive">
                                                 </form>
                                             </div>
                                         </div>
@@ -816,7 +816,7 @@ if (!$user->isLoggedIn()) {
                                                                     ?>
                                                                 </select>
                                                             </div>
-                                                            <input type="submit" class="btn bg-custom" value="Add route">
+                                                            <input type="submit" class="btn bg-custom" value="Add Route">
                                                         </form>
                                                     </div>
                                                 </div>
@@ -879,7 +879,7 @@ if (!$user->isLoggedIn()) {
                                                                 <label for="time">Flight time required (<b>in hours</b>)</label>
                                                                 <input type="number" name="time" class="form-control" placeholder="50" required>
                                                             </div>
-                                                            <input type="submit" class="btn bg-custom" value="Add rank">
+                                                            <input type="submit" class="btn bg-custom" value="Add Rank">
                                                         </form>
                                                     </div>
                                                 </div>
@@ -931,7 +931,7 @@ if (!$user->isLoggedIn()) {
                                                                 <label for="time">Flight Time Required (<b>in hours</b>)</label>
                                                                 <input type="number" name="time" class="form-control" id="rankmodal-hours" required>
                                                             </div>
-                                                            <input type="submit" class="btn bg-custom" value="Add rank">
+                                                            <input type="submit" class="btn bg-custom" value="Save">
                                                         </form>
                                                     </div>
                                                 </div>
