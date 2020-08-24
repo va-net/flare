@@ -653,11 +653,17 @@ if (!$user->isLoggedIn()) {
                                 </form>
                                 <?php endif; ?>
                                 <?php elseif (Input::get('page') === 'statsviewing'): ?>
-                                    <h3>Your VA's Stats</h3>
+                                    <h3>VA Statistics</h3>
+                                    <table class="table">
+                                        <tr><td><b>Total Hours</b></td><td><?php echo Time::secsToString(Stats::totalHours()); ?></td></tr>
+                                        <tr><td><b>Total Flights</b></td><td><?php echo Stats::totalFlights(); ?></td></tr>
+                                        <tr><td><b>Total Pilots</b></td><td><?php echo Stats::numPilots(); ?></td></tr>
+                                        <tr><td><b>Total Routes</b></td><td><?php echo Stats::numRoutes(); ?></td></tr>
+                                    </table>
                                     <?php if (!VANet::isGold()): ?>
-                                        <p>You need to signup to VANet Gold in order to get access to statistics.</p>
+                                        <p>Sign Up to VANet Gold in order to get access to Finance Stats.</p>
                                     <?php else: ?>
-                                        <p>Coming soon...</p>
+                                        <p>Finance Stats Coming Soon...</p>
                                     <?php endif; ?>
                             <?php elseif (Input::get('page') === 'opsmanage'): ?>
                                 <?php if (!$user->hasPermission('usermanage')): ?>
