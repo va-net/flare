@@ -1,4 +1,3 @@
-DROP TABLE IF EXISTS `aircraft`;
 CREATE TABLE IF NOT EXISTS `aircraft` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` text NOT NULL,
@@ -10,7 +9,6 @@ CREATE TABLE IF NOT EXISTS `aircraft` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
-DROP TABLE IF EXISTS `news`;
 CREATE TABLE IF NOT EXISTS `news` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `subject` text NOT NULL,
@@ -21,7 +19,6 @@ CREATE TABLE IF NOT EXISTS `news` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
-DROP TABLE IF EXISTS `pilots`;
 CREATE TABLE IF NOT EXISTS `pilots` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `callsign` varchar(8) NOT NULL,
@@ -43,7 +40,6 @@ CREATE TABLE IF NOT EXISTS `pilots` (
   UNIQUE KEY `callsign` (`callsign`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
-DROP TABLE IF EXISTS `pireps`;
 CREATE TABLE IF NOT EXISTS `pireps` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `flightnum` int(11) NOT NULL,
@@ -58,7 +54,6 @@ CREATE TABLE IF NOT EXISTS `pireps` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
-DROP TABLE IF EXISTS `ranks`;
 CREATE TABLE IF NOT EXISTS `ranks` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(120) NOT NULL,
@@ -72,7 +67,6 @@ INSERT INTO `ranks` (`name`, `timereq`) VALUES
 INSERT INTO `ranks` (`name`, `timereq`) VALUES
 ('Second Officer', 25);
 
-DROP TABLE IF EXISTS `routes`;
 CREATE TABLE IF NOT EXISTS `routes` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `fltnum` int(11) NOT NULL,
@@ -84,7 +78,6 @@ CREATE TABLE IF NOT EXISTS `routes` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 COMMIT;
 
-DROP TABLE IF EXISTS `multipliers`;
 CREATE TABLE IF NOT EXISTS `multipliers` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `code` int(11) NOT NULL,
