@@ -275,6 +275,3 @@ if (Input::get('action') === 'editprofile') {
     Session::flash('success', 'VANet API Key changed Successfully.');
     Redirect::to('admin.php?page=site');
 }
-
-
-
