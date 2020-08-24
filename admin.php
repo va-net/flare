@@ -701,6 +701,7 @@ if (!$user->isLoggedIn()) {
                                                                 <label for="rank">Livery</label>
                                                                 <select class="form-control" name="livery" id="liveriesselect" required>
                                                                     <option>Select</option>
+                                                                    <option disabled>Loading...</option>
                                                                 </select>
                                                             </div>
                                                             <script>
@@ -731,7 +732,7 @@ if (!$user->isLoggedIn()) {
                                                                     ?>
                                                                 </select>
                                                             </div>
-                                                            <input type="submit" class="btn bg-custom" value="Add aircraft">
+                                                            <input type="submit" class="btn bg-custom" value="Add Aircraft">
                                                         </form>
                                                     </div>
                                                 </div>
@@ -772,7 +773,7 @@ if (!$user->isLoggedIn()) {
                                         </table>
                                     <?php elseif (Input::get('section') === 'routes'): ?>
                                         <h3>Route Management</h3>
-                                        <p>Here you can manage your VA's routes, please note that importing from CSV is not yet available.</p>
+                                        <p>Here you can manage your VA's routes.</p>
                                         <br>
                                         <button type="button" class="btn bg-custom mb-2" data-toggle="modal" data-target="#addRoute">Add Route</button>
                                         <div id="addRoute" class="modal fade" role="dialog">
