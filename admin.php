@@ -685,7 +685,7 @@ if (!$user->isLoggedIn()) {
                                                             <div class="form-group">
                                                                 <label for="aircraft">Type</label>
                                                                 <select class="form-control" name="aircraftselect" id="aircraftselect" required>
-                                                                    <option>Select</option>
+                                                                    <option value>Select</option>
                                                                     <?php
                                                                     $all = Aircraft::fetchAllAircraft();
                                                                     $x = 0;
@@ -719,7 +719,7 @@ if (!$user->isLoggedIn()) {
                                                             <div class="form-group">
                                                                 <label for="rank">Rank required</label>
                                                                 <select class="form-control" name="rank" required>
-                                                                    <option>Select</option>
+                                                                    <option value>Select</option>
                                                                     <?php
                                                                     $all = Rank::fetchAllNames();
                                                                     $x = 0;
@@ -802,7 +802,7 @@ if (!$user->isLoggedIn()) {
                                                             <div class="form-group">
                                                                 <label for="aircraft">Aircraft</label>
                                                                 <select class="form-control" name="aircraft" required>
-                                                                    <option>Select</option>
+                                                                    <option value>Select</option>
                                                                     <?php
                                                                     $all = Aircraft::fetchActiveAircraft();
 
