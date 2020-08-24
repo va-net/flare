@@ -374,7 +374,7 @@ if (!$user->isLoggedIn()) {
                                 <?php if (!$user->hasPermission('usermanage')): ?>
                                     <div class="alert alert-danger text-center">Whoops! You don't have the necessary permissions to access this.</div>
                                 <?php else: ?>
-                                    <p>Here you can manage any pending applications</p>
+                                    <p>Here you can manage any Pending Applications</p>
                                     <form id="accept" action="update.php" method="post">
                                         <input hidden name="action" value="acceptapplication">
                                     </form>
@@ -655,7 +655,7 @@ if (!$user->isLoggedIn()) {
                                 <?php elseif (Input::get('page') === 'statsviewing'): ?>
                                     <h3>Your VA's Stats</h3>
                                     <?php if (!VANet::isGold()): ?>
-                                        <p>Hmm, you need to signup to VANet Gold in order to get access to statistics.</p>
+                                        <p>You need to signup to VANet Gold in order to get access to statistics.</p>
                                     <?php else: ?>
                                         <p>Coming soon...</p>
                                     <?php endif; ?>
@@ -771,7 +771,7 @@ if (!$user->isLoggedIn()) {
                                         </table>
                                     <?php elseif (Input::get('section') === 'routes'): ?>
                                         <h3>Route Management</h3>
-                                        <p>Here you can manage your VA's routes.</p>
+                                        <p>Here you can Manage your VA's Routes.</p>
                                         <br>
                                         <button type="button" class="btn bg-custom mb-2" data-toggle="modal" data-target="#addRoute">Add Route</button>
                                         <div id="addRoute" class="modal fade" role="dialog">
@@ -859,7 +859,7 @@ if (!$user->isLoggedIn()) {
                                         </form>
                                     <?php elseif (Input::get('section') === 'ranks'): ?>
                                         <h3>Manage Ranks</h3>
-                                        <p>Here you can add ranks that your pilots will be awarded.</p>
+                                        <p>Here you can Manage the Ranks that your pilots can be Awarded.</p>
                                         <button type="button" class="btn bg-custom mb-2" data-toggle="modal" data-target="#addRank">Add Rank</button>
                                         <div id="addRank" class="modal fade" role="dialog">
                                             <div class="modal-dialog">

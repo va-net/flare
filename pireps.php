@@ -95,7 +95,7 @@ if (!$user->isLoggedIn()) {
                             <?php if (Input::get('page') === 'recents'): ?>
                                 <section id="recents">
                                     <h3>My Recent PIREPs</h3>
-                                    <p>Showing your 30 most recent PIREPs</p>
+                                    <p>Showing your 30 Most Recent PIREPs</p>
                                     <br>
                                     <?php
                                     $pireps = $user->recentPireps($user->data()->id, 30);

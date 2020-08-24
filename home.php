@@ -86,7 +86,7 @@ if (!$user->isLoggedIn()) {
                     <div class="tab-content" id="tc">
                         <div class="tab-pane container active" id="home" style="display: none;">
                             <h3>Pilot Home</h3>
-                            <p>Welcome to the <?= escape(Config::get('va/name')) ?> crew center, <?= escape($user->data()->name) ?>!</p>
+                            <p>Welcome to the <?= escape(Config::get('va/name')) ?> Crew Center, <?= escape($user->data()->name) ?>!</p>
                             <?php
                             if (Session::exists('errormain')) {
                                 echo '<div class="alert alert-danger text-center">Error: '.Session::flash('errormain').'</div>';
