@@ -66,7 +66,7 @@ if (!$user->isLoggedIn()) {
                         if ($user->hasPermission($permission)) {
                             if ($permission == 'opsmanage') {
                                 echo '
-                                <a href="#" data-toggle="collapse" data-target="#demo" class="panel-link"><i class="fa fa-caret-down"></i>&nbsp;Operations Management</a><br>
+                                <a href="#" data-toggle="collapse" data-target="#opsCollapse" class="panel-link"><i class="fa fa-caret-down"></i>&nbsp;Operations Management</a><br>
                                 <div id="opsCollapse" class="collapse">
                                 &nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-medal"></i>&nbsp;<a href="./admin.php?page=opsmanage&section=ranks" class="panel-link">Manage Ranks</a><br>
                                 &nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-plane"></i>&nbsp;<a href="./admin.php?page=opsmanage&section=fleet" class="panel-link">Manage Fleet</a><br>
@@ -156,7 +156,7 @@ if (!$user->isLoggedIn()) {
                                                 <form action="update.php" method="post">
                                                     <input hidden name="action" value="deluser">
                                                     <input type="hidden" value="" name="id" id="delconfirmuserid">
-                                                    <input type="submit" class="btn bg-custom" value="Mark as inactive">
+                                                    <input type="submit" class="btn bg-custom" value="Mark as Inactive">
                                                 </form>
                                             </div>
                                         </div>
@@ -772,7 +772,6 @@ if (!$user->isLoggedIn()) {
                                     <?php elseif (Input::get('section') === 'routes'): ?>
                                         <h3>Route Management</h3>
                                         <p>Here you can Manage your VA's Routes.</p>
-                                        <br>
                                         <button type="button" class="btn bg-custom mb-2" data-toggle="modal" data-target="#addRoute">Add Route</button>
                                         <div id="addRoute" class="modal fade" role="dialog">
                                             <div class="modal-dialog">
@@ -816,7 +815,7 @@ if (!$user->isLoggedIn()) {
                                                                     ?>
                                                                 </select>
                                                             </div>
-                                                            <input type="submit" class="btn bg-custom" value="Add route">
+                                                            <input type="submit" class="btn bg-custom" value="Add Route">
                                                         </form>
                                                     </div>
                                                 </div>
@@ -835,19 +834,21 @@ if (!$user->isLoggedIn()) {
                                             <tbody>
                                                 <?php 
                                                 $all = Route::fetchAll();
+                                                $count = $all->count();
+                                                $results = $all->results();
                                                 $x = 0;
 
-                                                while ($all->count() > $x) {
+                                                while ($count > $x) {
                                                     echo '<tr><td class="align-middle">';
-                                                    echo $all->results()[$x]->fltnum;
+                                                    echo $results[$x]->fltnum;
                                                     echo '</td><td class="align-middle">';
-                                                    echo $all->results()[$x]->dep;
+                                                    echo $results[$x]->dep;
                                                     echo '</td><td class="align-middle">';
-                                                    echo $all->results()[$x]->arr;
+                                                    echo $results[$x]->arr;
                                                     echo '</td><td class="align-middle">';
-                                                    echo Aircraft::idToName($all->results()[$x]->aircraftid);
+                                                    echo Aircraft::idToName($results[$x]->aircraftid);
                                                     echo '</td><td class="align-middle">';
-                                                    echo '&nbsp;<button value="'.$all->results()[$x]->id.'" form="deleteroute" type="submit" class="btn btn-danger text-light" name="delete"><i class="fa fa-trash"></i></button>';
+                                                    echo '&nbsp;<button value="'.$results[$x]->id.'" form="deleteroute" type="submit" class="btn btn-danger text-light" name="delete"><i class="fa fa-trash"></i></button>';
                                                     echo '</td></tr>';
                                                     $x++;
                                                 }
@@ -879,7 +880,7 @@ if (!$user->isLoggedIn()) {
                                                                 <label for="time">Flight time required (<b>in hours</b>)</label>
                                                                 <input type="number" name="time" class="form-control" placeholder="50" required>
                                                             </div>
-                                                            <input type="submit" class="btn bg-custom" value="Add rank">
+                                                            <input type="submit" class="btn bg-custom" value="Add Rank">
                                                         </form>
                                                     </div>
                                                 </div>
@@ -931,7 +932,7 @@ if (!$user->isLoggedIn()) {
                                                                 <label for="time">Flight Time Required (<b>in hours</b>)</label>
                                                                 <input type="number" name="time" class="form-control" id="rankmodal-hours" required>
                                                             </div>
-                                                            <input type="submit" class="btn bg-custom" value="Add rank">
+                                                            <input type="submit" class="btn bg-custom" value="Save">
                                                         </form>
                                                     </div>
                                                 </div>

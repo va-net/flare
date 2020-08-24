@@ -223,7 +223,7 @@ if (Input::get('action') === 'editprofile') {
     Redirect::to('pireps.php?page=new');
 } elseif (Input::get('action') === 'addroute') {
     Route::add(array(Input::get('fltnum'), Input::get('dep'), Input::get('arr'), Time::strToSecs(Input::get('duration')), Aircraft::nameToId(Input::get('aircraft'))));
-    Session::flash('success', 'Route Added Successfully! ');
+    Session::flash('success', 'Route Added Successfully!');
     Redirect::to('admin.php?page=opsmanage&section=routes');
 } elseif (Input::get('action') === 'deleteroute') {
     Route::delete(Input::get('deleteroute'));
@@ -275,6 +275,3 @@ if (Input::get('action') === 'editprofile') {
     Session::flash('success', 'VANet API Key changed Successfully.');
     Redirect::to('admin.php?page=site');
 }
-
-
-
