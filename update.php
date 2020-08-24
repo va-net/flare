@@ -233,6 +233,18 @@ if (Input::get('action') === 'editprofile') {
     Rank::add(Input::get('name'), Time::hrsToSecs(Input::get('time')));
     Session::flash('success', 'Rank added successfully!');
     Redirect::to('admin.php?page=opsmanage&section=ranks');
+} elseif (Input::get('action') === 'editrank') {
+    try {
+        Rank::update(Input::get('id'), array(
+            'name' => Input::get('name'),
+            'timereq' => Input::get('time')
+        ));
+    } catch (Exception $e) {
+        Session::flash('error', 'There was an Error Editing the Rank.');
+        Redirect::to('admin.php?page=opsmanage&section=ranks');
+    }
+    Session::flash('success', 'Rank Edited Successfully!');
+    Redirect::to('admin.php?page=usermanage');
 } elseif (Input::get('action') == 'getliveriesforaircraft') {
     $all = Aircraft::fetchLiveryIdsForAircraft(Aircraft::nameToAircraftId(Input::get('aircraft')));
     foreach ($all as $name => $id) {

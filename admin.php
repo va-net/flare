@@ -117,7 +117,7 @@ if (!$user->isLoggedIn()) {
                                             <th class="mobile-hidden">Name</th>
                                             <th class="mobile-hidden">Email</th>
                                             <th>Status</th>
-                                            <th>Action</th>
+                                            <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -134,7 +134,7 @@ if (!$user->isLoggedIn()) {
                                             echo '</td><td class="align-middle">';
                                             echo $user["status"];
                                             echo '</td><td class="align-middle">';
-                                            echo '<button class="btn btn-success text-light" data-toggle="modal" data-target="#usermodal" data-callsign="'.$user['callsign'].'" data-name="'.$user['name'].'" data-email="'.$user['email'].'" data-ifc="'.$user['ifc'].'" data-joined="'.date_format(date_create($user['joined']), 'Y-m-d').'" data-status="'.$user['status'].'" data-id="'.$user['id'].'"><i class="fa fa-edit"></i></button>';
+                                            echo '<button class="btn btn-primary text-light" data-toggle="modal" data-target="#usermodal" data-callsign="'.$user['callsign'].'" data-name="'.$user['name'].'" data-email="'.$user['email'].'" data-ifc="'.$user['ifc'].'" data-joined="'.date_format(date_create($user['joined']), 'Y-m-d').'" data-status="'.$user['status'].'" data-id="'.$user['id'].'"><i class="fa fa-edit"></i></button>';
                                             echo '&nbsp;<button id="delconfirmbtn" class="btn text-light btn-danger" data-toggle="modal" data-target="#delconfirmmodal" data-callsign="'.$user['callsign'].'"><i class="fa fa-trash"></i></button>';
                                             echo '</td>';
                                             $x++;
@@ -166,7 +166,7 @@ if (!$user->isLoggedIn()) {
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title" id="usermodaltitle"></h5>
+                                                <h5 class="modal-title" id="usermodal-title"></h5>
                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                                 </button>
@@ -219,7 +219,7 @@ if (!$user->isLoggedIn()) {
                                             <th class="mobile-hidden">Name</th>
                                             <th class="mobile-hidden">Email</th>
                                             <th>Status</th>
-                                            <th>Action</th>
+                                            <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -386,7 +386,7 @@ if (!$user->isLoggedIn()) {
                                             <th class="mobile-hidden">Email</th>
                                             <th>Grade</th>
                                             <th>IFC Username</th>
-                                            <th>Action</th>
+                                            <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -424,7 +424,7 @@ if (!$user->isLoggedIn()) {
                                         <div class="modal-dialog" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title" id="usermodaltitle"></h5>
+                                                    <h5 class="modal-title" id="usermodal-title"></h5>
                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                     <span aria-hidden="true">&times;</span>
                                                     </button>
@@ -467,7 +467,7 @@ if (!$user->isLoggedIn()) {
                                         <div class="modal-dialog" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title" id="usermodaltitle"></h5>
+                                                    <h5 class="modal-title" id="usermodal-title"></h5>
                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                     <span aria-hidden="true">&times;</span>
                                                     </button>
@@ -514,7 +514,7 @@ if (!$user->isLoggedIn()) {
                                                 <th class="mobile-hidden">Departure</th>
                                                 <th class="mobile-hidden">Arrival</th>
                                                 <th class="mobile-hidden">Date</th>
-                                                <th>Action</th>
+                                                <th>Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -560,7 +560,7 @@ if (!$user->isLoggedIn()) {
                                                 <th class="mobile-hidden">Date Posted</th>
                                                 <th class="mobile-hidden">Author</th>
                                                 <th>Content</th>
-                                                <th>Action</th>
+                                                <th>Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -670,7 +670,6 @@ if (!$user->isLoggedIn()) {
                                     </script>
                                     <?php if (Input::get('section') === 'fleet'): ?>
                                         <h3>Fleet</h3>
-                                        <p>Please note that importing from a CSV is not yet supported, and will be coming in a later build.</p>
                                         <br>
                                         <button type="button" class="btn bg-custom mb-2" data-toggle="modal" data-target="#addAircraft">Add Aircraft</button>
                                         <div id="addAircraft" class="modal fade" role="dialog">
@@ -747,7 +746,7 @@ if (!$user->isLoggedIn()) {
                                                     <th>Name</th>
                                                     <th>Livery</th>
                                                     <th>Rank required</th>
-                                                    <th>Action</th>
+                                                    <th>Actions</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -830,7 +829,7 @@ if (!$user->isLoggedIn()) {
                                                     <th>Departure</th>
                                                     <th>Arrival</th>
                                                     <th>Aircraft</th>
-                                                    <th>Action</th>
+                                                    <th>Actions</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -886,6 +885,58 @@ if (!$user->isLoggedIn()) {
                                                 </div>
                                             </div>
                                         </div>
+
+                                        <table class="table table-striped">
+                                            <thead class="bg-custom">
+                                                <tr>
+                                                    <th>Name</th>
+                                                    <th>Min. Hours</th>
+                                                    <th>Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php 
+                                                $all = Rank::fetchAllNames();
+                                                $x = 0;
+
+                                                while ($all->count() > $x) {
+                                                    echo '<tr><td class="align-middle">';
+                                                    echo $all->results()[$x]->name;
+                                                    echo '</td><td class="align-middle">';
+                                                    echo Time::secsToString($all->results()[$x]->timereq);
+                                                    echo '</td><td class="align-middle">';
+                                                    echo '<button class="btn btn-primary text-light" data-toggle="modal" data-target="#rankmodal" data-id="'.$all->results()[$x]->id.'" data-name="'.$all->results()[$x]->name.'" data-minhrs="'.($all->results()[$x]->timereq / 3600).'"><i class="fa fa-edit"></i></button>';
+                                                    echo '</td></tr>';
+                                                    $x++;
+                                                }
+                                                ?>
+                                            </tbody>
+                                        </table>
+                                        <div id="rankmodal" class="modal fade" role="dialog">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h4 class="modal-title" id="rankmodal-title"></h4>
+                                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form action="update.php" method="post">
+                                                            <input hidden name="action" value="editrank">
+                                                            <input hidden name="id" id="rankmodal-id">
+                                                            <div class="form-group">
+                                                                <label for="name">Name</label>
+                                                                <input type="text" name="name" class="form-control" id="rankmodal-name" required>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="time">Flight Time Required (<b>in hours</b>)</label>
+                                                                <input type="number" name="time" class="form-control" id="rankmodal-hours" required>
+                                                            </div>
+                                                            <input type="submit" class="btn bg-custom" value="Add rank">
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     <?php endif; ?>
                                 <?php endif; ?>
                             <?php endif; ?>
@@ -909,25 +960,29 @@ if (!$user->isLoggedIn()) {
             });
         });
     </script>
-    <!-- Populate user modal fields -->
+    <!-- Populate modal fields -->
     <script>
         $(document).ready(function() {
             $('#usermodal').on('show.bs.modal', function(e) {
-                var userCallsign = $(e.relatedTarget).data('callsign')
-                var userName = $(e.relatedTarget).data('name')
-                var userEmail = $(e.relatedTarget).data('email')
-                var userIfc = $(e.relatedTarget).data('ifc')
-                var userJoined = $(e.relatedTarget).data('joined')
-                var userStatus = $(e.relatedTarget).data('status')
-                var userId = $(e.relatedTarget).data('id')
-                $('#usermodaltitle').text('Edit User - ' + userCallsign)
-                $('#usermodal-callsign').val(userCallsign);
-                $('#usermodal-name').val(userName);
-                $('#usermodal-email').val(userEmail);
-                $('#usermodal-ifc').val(userIfc);
-                $('#usermodal-joined').val(userJoined);
-                $('#usermodal-status').val(userStatus);
-                $('#usermodal-id').val(userId);
+                var userCallsign = $(e.relatedTarget).data('callsign');
+                var userName = $(e.relatedTarget).data('name');
+                var userEmail = $(e.relatedTarget).data('email');
+                var userIfc = $(e.relatedTarget).data('ifc');
+                var userJoined = $(e.relatedTarget).data('joined');
+                var userStatus = $(e.relatedTarget).data('status');
+                var userId = $(e.relatedTarget).data('id');
+                $('#usermodal-title').text('Edit User - ' + userCallsign);
+                $('#usermodal-name').val(userCallsign);
+                $('#usermodal-hours').val(userName);
+            });
+            $('#rankmodal').on('show.bs.modal', function(e) {
+                var rankId = $(e.relatedTarget).data('id');
+                var rankName = $(e.relatedTarget).data('name');
+                var rankHrs = $(e.relatedTarget).data('minhrs');
+                $('#rankmodal-title').text('Edit Rank - ' + rankName);
+                $('#rankmodal-id').val(rankId);
+                $('#rankmodal-name').val(rankName);
+                $('#rankmodal-hours').val(rankHrs);
             });
         });
     </script>
