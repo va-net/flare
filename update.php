@@ -77,22 +77,20 @@ if (Input::get('action') === 'editprofile') {
         'flighttime' => Time::strToSecs(Input::get('ftime')),
         'pilotid' => $user->data()->id,
         'date' => Input::get('date'),
-        'fuel' => Input::get('fuel'),
         'aircraftid' => Aircraft::getId(Input::get('aircraft')),
         'multi' => $multi
     ))) {
         Session::flash('error', 'There was an Error Filing the PIREP.');
-        Redirect::to('pireps.php?page=new');
+        Redirect::to('pireps.php?page=recents');
     } else {
         Session::flash('success', 'PIREP Filed Successfully!');
-        Redirect::to('pireps.php?page=new');
+        Redirect::to('pireps.php?page=recents');
     }
 } elseif (Input::get('action') === 'editpirep') {
     if (!Pirep::update(Input::get('id'), array(
         'flightnum' => Input::get('fnum'),
         'departure' => Input::get('dep'),
         'arrival' => Input::get('arr'),
-        'flighttime' => Time::strToSecs(Input::get('ftime')),
         'pilotid' => $user->data()->id,
         'date' => Input::get('date'),
         'aircraftid' => Aircraft::getId(Input::get('aircraft')),
