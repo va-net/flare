@@ -32,25 +32,19 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
             <a class="nav-link" href="logout.php"><i class="fa fa-sign-out-alt"></i>&nbsp;Log Out</a>
         </li>
         <li class="nav-item desktop-hidden">
-            <a href="#home" id="homelink" data-toggle="tab" class="panel-link"><i class="fa fa-home"></i>&nbsp;Pilot Home</a>
+            <a href="home.php" id="homelink" class="panel-link"><i class="fa fa-home"></i>&nbsp;Pilot Home</a>
         </li>
         <li class="nav-item desktop-hidden">
-            <a href="#filepirep" id="filepireplink" data-toggle="tab" class="panel-link"><i class="fa fa-plane"></i>&nbsp;File PIREP</a>
+            <a href="pireps.php?page=new" id="filepireplink" class="panel-link"><i class="fa fa-plane"></i>&nbsp;File PIREP</a>
         </li>
         <li class="nav-item desktop-hidden">
-            <a href="#mypireps" id="mypirepslink" data-toggle="tab" class="panel-link"><i class="fa fa-folder"></i>&nbsp;My PIREPs</a>
+            <a href="pireps.php?page=recents" id="mypirepslink" class="panel-link"><i class="fa fa-folder"></i>&nbsp;My PIREPs</a>
         </li>
         <li class="nav-item desktop-hidden">
-            <a href="#routedb" id="routeslink" data-toggle="tab" class="panel-link"><i class="fa fa-database"></i>&nbsp;Route Database</a>
+            <a href="routes.php" id="routeslink" class="panel-link"><i class="fa fa-database"></i>&nbsp;Route Database</a>
         </li>
         <li class="nav-item desktop-hidden">
-            <a href="#featured" id="featuredlink" data-toggle="tab" class="panel-link"><i class="fa fa-map-marked-alt"></i>&nbsp;Featured Routes</a>
-        </li>
-        <li class="nav-item desktop-hidden">
-            <a href="#events" id="eventslink" data-toggle="tab" class="panel-link"><i class="fa fa-calendar"></i>&nbsp;Events</a>
-        </li>
-        <li class="nav-item desktop-hidden">
-            <a href="#acars" id="acarslink" data-toggle="tab" class="panel-link"><i class="fa fa-sync"></i>&nbsp;ACARS</a>
+            <a href="acars.php" id="acarslink" class="panel-link"><i class="fa fa-sync"></i>&nbsp;ACARS</a>
         </li>
         <?php 
         $permissions = Permissions::getAll();
