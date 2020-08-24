@@ -66,8 +66,8 @@ if (!$user->isLoggedIn()) {
                         if ($user->hasPermission($permission)) {
                             if ($permission == 'opsmanage') {
                                 echo '
-                                <a href="#" data-toggle="collapse" data-target="#demo" class="panel-link"><i class="fa fa-caret-down"></i>&nbsp;Operations Management</a><br>
-                                <div id="demo" class="collapse">
+                                <a href="#" data-toggle="collapse" data-target="#opsCollapse" class="panel-link"><i class="fa fa-caret-down"></i>&nbsp;Operations Management</a><br>
+                                <div id="opsCollapse" class="collapse">
                                 &nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-medal"></i>&nbsp;<a href="./admin.php?page=opsmanage&section=ranks" class="panel-link">Manage Ranks</a><br>
                                 &nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-plane"></i>&nbsp;<a href="./admin.php?page=opsmanage&section=fleet" class="panel-link">Manage Fleet</a><br>
                                 &nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-plane-departure"></i>&nbsp;<a href="./admin.php?page=opsmanage&section=routes" class="panel-link">Manage Routes</a><br>
@@ -117,7 +117,7 @@ if (!$user->isLoggedIn()) {
                                             <th class="mobile-hidden">Name</th>
                                             <th class="mobile-hidden">Email</th>
                                             <th>Status</th>
-                                            <th>Action</th>
+                                            <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -134,7 +134,7 @@ if (!$user->isLoggedIn()) {
                                             echo '</td><td class="align-middle">';
                                             echo $user["status"];
                                             echo '</td><td class="align-middle">';
-                                            echo '<button class="btn btn-success text-light" data-toggle="modal" data-target="#usermodal" data-callsign="'.$user['callsign'].'" data-name="'.$user['name'].'" data-email="'.$user['email'].'" data-ifc="'.$user['ifc'].'" data-joined="'.date_format(date_create($user['joined']), 'Y-m-d').'" data-status="'.$user['status'].'" data-id="'.$user['id'].'"><i class="fa fa-edit"></i></button>';
+                                            echo '<button class="btn btn-primary text-light" data-toggle="modal" data-target="#usermodal" data-callsign="'.$user['callsign'].'" data-name="'.$user['name'].'" data-email="'.$user['email'].'" data-ifc="'.$user['ifc'].'" data-joined="'.date_format(date_create($user['joined']), 'Y-m-d').'" data-status="'.$user['status'].'" data-id="'.$user['id'].'"><i class="fa fa-edit"></i></button>';
                                             echo '&nbsp;<button id="delconfirmbtn" class="btn text-light btn-danger" data-toggle="modal" data-target="#delconfirmmodal" data-callsign="'.$user['callsign'].'"><i class="fa fa-trash"></i></button>';
                                             echo '</td>';
                                             $x++;
@@ -155,8 +155,8 @@ if (!$user->isLoggedIn()) {
                                                 <p id="delconfirmmessage"></p>
                                                 <form action="update.php" method="post">
                                                     <input hidden name="action" value="deluser">
-                                                    <input type="hidden" value="" name="id" id="delconfirmuserid">
-                                                    <input type="submit" class="btn bg-custom" value="Mark as inactive">
+                                                    <input hidden value="" name="id" id="delconfirmuserid">
+                                                    <input type="submit" class="btn bg-custom" value="Mark as Inactive">
                                                 </form>
                                             </div>
                                         </div>
@@ -166,7 +166,7 @@ if (!$user->isLoggedIn()) {
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title" id="usermodaltitle"></h5>
+                                                <h5 class="modal-title" id="usermodal-title"></h5>
                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                                 </button>
@@ -219,7 +219,7 @@ if (!$user->isLoggedIn()) {
                                             <th class="mobile-hidden">Name</th>
                                             <th class="mobile-hidden">Email</th>
                                             <th>Status</th>
-                                            <th>Action</th>
+                                            <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -374,7 +374,7 @@ if (!$user->isLoggedIn()) {
                                 <?php if (!$user->hasPermission('usermanage')): ?>
                                     <div class="alert alert-danger text-center">Whoops! You don't have the necessary permissions to access this.</div>
                                 <?php else: ?>
-                                    <p>Here you can manage any pending applications</p>
+                                    <p>Here you can manage any Pending Applications</p>
                                     <form id="accept" action="update.php" method="post">
                                         <input hidden name="action" value="acceptapplication">
                                     </form>
@@ -386,7 +386,7 @@ if (!$user->isLoggedIn()) {
                                             <th class="mobile-hidden">Email</th>
                                             <th>Grade</th>
                                             <th>IFC Username</th>
-                                            <th>Action</th>
+                                            <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -424,7 +424,7 @@ if (!$user->isLoggedIn()) {
                                         <div class="modal-dialog" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title" id="usermodaltitle"></h5>
+                                                    <h5 class="modal-title" id="usermodal-title"></h5>
                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                     <span aria-hidden="true">&times;</span>
                                                     </button>
@@ -467,7 +467,7 @@ if (!$user->isLoggedIn()) {
                                         <div class="modal-dialog" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title" id="usermodaltitle"></h5>
+                                                    <h5 class="modal-title" id="usermodal-title"></h5>
                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                     <span aria-hidden="true">&times;</span>
                                                     </button>
@@ -514,7 +514,7 @@ if (!$user->isLoggedIn()) {
                                                 <th class="mobile-hidden">Departure</th>
                                                 <th class="mobile-hidden">Arrival</th>
                                                 <th class="mobile-hidden">Date</th>
-                                                <th>Action</th>
+                                                <th>Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -560,7 +560,7 @@ if (!$user->isLoggedIn()) {
                                                 <th class="mobile-hidden">Date Posted</th>
                                                 <th class="mobile-hidden">Author</th>
                                                 <th>Content</th>
-                                                <th>Action</th>
+                                                <th>Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -653,19 +653,29 @@ if (!$user->isLoggedIn()) {
                                 </form>
                                 <?php endif; ?>
                                 <?php elseif (Input::get('page') === 'statsviewing'): ?>
-                                    <h3>Your VA's Stats</h3>
+                                    <h3>VA Statistics</h3>
+                                    <table class="table">
+                                        <tr><td><b>Total Hours</b></td><td><?php echo Time::secsToString(Stats::totalHours()); ?></td></tr>
+                                        <tr><td><b>Total Flights</b></td><td><?php echo Stats::totalFlights(); ?></td></tr>
+                                        <tr><td><b>Total Pilots</b></td><td><?php echo Stats::numPilots(); ?></td></tr>
+                                        <tr><td><b>Total Routes</b></td><td><?php echo Stats::numRoutes(); ?></td></tr>
+                                    </table>
                                     <?php if (!VANet::isGold()): ?>
-                                        <p>Hmm, you need to signup to VANet Gold in order to get access to statistics.</p>
+                                        <p>Sign Up to VANet Gold in order to get access to Finance Stats.</p>
                                     <?php else: ?>
-                                        <p>Coming soon...</p>
+                                        <p>Finance Stats Coming Soon...</p>
                                     <?php endif; ?>
                             <?php elseif (Input::get('page') === 'opsmanage'): ?>
                                 <?php if (!$user->hasPermission('usermanage')): ?>
                                     <div class="alert alert-danger text-center">Whoops! You don't have the necessary permissions to access this.</div>
                                 <?php else: ?>
+                                    <script>
+                                        $(document).ready(function() {
+                                            $("#opsCollapse").collapse('show');
+                                        });
+                                    </script>
                                     <?php if (Input::get('section') === 'fleet'): ?>
                                         <h3>Fleet</h3>
-                                        <p>Please note that importing from a CSV is not yet supported, and will be coming in a later build.</p>
                                         <br>
                                         <button type="button" class="btn bg-custom mb-2" data-toggle="modal" data-target="#addAircraft">Add Aircraft</button>
                                         <div id="addAircraft" class="modal fade" role="dialog">
@@ -681,7 +691,7 @@ if (!$user->isLoggedIn()) {
                                                             <div class="form-group">
                                                                 <label for="aircraft">Type</label>
                                                                 <select class="form-control" name="aircraftselect" id="aircraftselect" required>
-                                                                    <option>Select</option>
+                                                                    <option value>Select</option>
                                                                     <?php
                                                                     $all = Aircraft::fetchAllAircraft();
                                                                     $x = 0;
@@ -695,7 +705,7 @@ if (!$user->isLoggedIn()) {
                                                             <div class="form-group">
                                                                 <label for="rank">Livery</label>
                                                                 <select class="form-control" name="livery" id="liveriesselect" required>
-                                                                    <option>Select</option>
+                                                                    <option disabled>Loading...</option>
                                                                 </select>
                                                             </div>
                                                             <script>
@@ -715,7 +725,7 @@ if (!$user->isLoggedIn()) {
                                                             <div class="form-group">
                                                                 <label for="rank">Rank required</label>
                                                                 <select class="form-control" name="rank" required>
-                                                                    <option>Select</option>
+                                                                    <option value>Select</option>
                                                                     <?php
                                                                     $all = Rank::fetchAllNames();
                                                                     $x = 0;
@@ -726,7 +736,7 @@ if (!$user->isLoggedIn()) {
                                                                     ?>
                                                                 </select>
                                                             </div>
-                                                            <input type="submit" class="btn bg-custom" value="Add aircraft">
+                                                            <input type="submit" class="btn bg-custom" value="Add Aircraft">
                                                         </form>
                                                     </div>
                                                 </div>
@@ -742,7 +752,7 @@ if (!$user->isLoggedIn()) {
                                                     <th>Name</th>
                                                     <th>Livery</th>
                                                     <th>Rank required</th>
-                                                    <th>Action</th>
+                                                    <th>Actions</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -767,8 +777,7 @@ if (!$user->isLoggedIn()) {
                                         </table>
                                     <?php elseif (Input::get('section') === 'routes'): ?>
                                         <h3>Route Management</h3>
-                                        <p>Here you can manage your VA's routes, please note that importing from CSV is not yet available.</p>
-                                        <br>
+                                        <p>Here you can Manage your VA's Routes.</p>
                                         <button type="button" class="btn bg-custom mb-2" data-toggle="modal" data-target="#addRoute">Add Route</button>
                                         <div id="addRoute" class="modal fade" role="dialog">
                                             <div class="modal-dialog">
@@ -782,24 +791,58 @@ if (!$user->isLoggedIn()) {
                                                             <input hidden name="action" value="addroute">
                                                             <div class="form-group">
                                                                 <label for="aircraft">Departure Airport</label>
-                                                                <input type="text" name="dep" class="form-control" placeholder="ICAO" required>
+                                                                <input type="text" name="dep" class="form-control" placeholder="ICAO" required />
                                                             </div>
                                                             <div class="form-group">
                                                                 <label for="aircraft">Arrival Airport</label>
-                                                                <input type="text" name="arr" class="form-control" placeholder="ICAO" required>
+                                                                <input type="text" name="arr" class="form-control" placeholder="ICAO" required />
                                                             </div>
                                                             <div class="form-group">
                                                                 <label for="aircraft">Flight Number</label>
-                                                                <input type="number" name="fltnum" class="form-control" required>
+                                                                <input min="1" type="number" name="fltnum" class="form-control" required />
                                                             </div>
                                                             <div class="form-group">
                                                                 <label for="aircraft">Flight Duration</label>
-                                                                <input type="time" name="duration" class="form-control" required>
+                                                                <div class="row">
+                                                                    <div class="col-sm-6">
+                                                                        <input required type="number" min="0" id="flightTimeHrs" class="form-control" placeholder="Hours" />
+                                                                    </div>
+                                                                    <div class="col-sm-6">
+                                                                        <input required type="number" min="1" id="flightTimeMins" class="form-control" placeholder="Minutes" />
+                                                                    </div>
+                                                                </div>
+                                                                <input hidden name="duration" id="flightTimeFormatted" class="form-control" required />
+                                                                <script>
+                                                                    function formatFlightTime() {
+                                                                        var hrs = $("#flightTimeHrs").val();
+                                                                        var mins = $("#flightTimeMins").val();
+                                                                        $("#flightTimeFormatted").val(hrs + ":" + mins);
+                                                                    }
+
+                                                                    function reverseFormatFlightTime() {
+                                                                        var formatted = $("#flightTimeFormatted").val();
+                                                                        var split = formatted.split(":");
+                                                                        var hrs = split[0];
+                                                                        var mins = split[1];
+                                                                        $("#flightTimeHrs").val(hrs);
+                                                                        $("#flightTimeMins").val(mins);
+                                                                    }
+
+                                                                    $(document).ready(function() {
+                                                                        $("#flightTimeHrs").keyup(function() {
+                                                                            formatFlightTime();
+                                                                        });
+                                                                        $("#flightTimeMins").keyup(function() {
+                                                                            formatFlightTime();
+                                                                        });
+                                                                        reverseFormatFlightTime();
+                                                                    });
+                                                                </script>
                                                             </div>
                                                             <div class="form-group">
                                                                 <label for="aircraft">Aircraft</label>
                                                                 <select class="form-control" name="aircraft" required>
-                                                                    <option>Select</option>
+                                                                    <option value>Select</option>
                                                                     <?php
                                                                     $all = Aircraft::fetchActiveAircraft();
 
@@ -812,7 +855,7 @@ if (!$user->isLoggedIn()) {
                                                                     ?>
                                                                 </select>
                                                             </div>
-                                                            <input type="submit" class="btn bg-custom" value="Add route">
+                                                            <input type="submit" class="btn bg-custom" value="Add Route" />
                                                         </form>
                                                     </div>
                                                 </div>
@@ -825,25 +868,27 @@ if (!$user->isLoggedIn()) {
                                                     <th>Departure</th>
                                                     <th>Arrival</th>
                                                     <th>Aircraft</th>
-                                                    <th>Action</th>
+                                                    <th>Actions</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <?php 
                                                 $all = Route::fetchAll();
+                                                $count = $all->count();
+                                                $results = $all->results();
                                                 $x = 0;
 
-                                                while ($all->count() > $x) {
+                                                while ($count > $x) {
                                                     echo '<tr><td class="align-middle">';
-                                                    echo $all->results()[$x]->fltnum;
+                                                    echo $results[$x]->fltnum;
                                                     echo '</td><td class="align-middle">';
-                                                    echo $all->results()[$x]->dep;
+                                                    echo $results[$x]->dep;
                                                     echo '</td><td class="align-middle">';
-                                                    echo $all->results()[$x]->arr;
+                                                    echo $results[$x]->arr;
                                                     echo '</td><td class="align-middle">';
-                                                    echo Aircraft::idToName($all->results()[$x]->aircraftid);
+                                                    echo Aircraft::idToName($results[$x]->aircraftid);
                                                     echo '</td><td class="align-middle">';
-                                                    echo '&nbsp;<button value="'.$all->results()[$x]->id.'" form="deleteroute" type="submit" class="btn btn-danger text-light" name="delete"><i class="fa fa-trash"></i></button>';
+                                                    echo '&nbsp;<button value="'.$results[$x]->id.'" form="deleteroute" type="submit" class="btn btn-danger text-light" name="delete"><i class="fa fa-trash"></i></button>';
                                                     echo '</td></tr>';
                                                     $x++;
                                                 }
@@ -855,7 +900,7 @@ if (!$user->isLoggedIn()) {
                                         </form>
                                     <?php elseif (Input::get('section') === 'ranks'): ?>
                                         <h3>Manage Ranks</h3>
-                                        <p>Here you can add ranks that your pilots will be awarded.</p>
+                                        <p>Here you can Manage the Ranks that your pilots can be Awarded.</p>
                                         <button type="button" class="btn bg-custom mb-2" data-toggle="modal" data-target="#addRank">Add Rank</button>
                                         <div id="addRank" class="modal fade" role="dialog">
                                             <div class="modal-dialog">
@@ -875,7 +920,59 @@ if (!$user->isLoggedIn()) {
                                                                 <label for="time">Flight time required (<b>in hours</b>)</label>
                                                                 <input type="number" name="time" class="form-control" placeholder="50" required>
                                                             </div>
-                                                            <input type="submit" class="btn bg-custom" value="Add rank">
+                                                            <input type="submit" class="btn bg-custom" value="Add Rank">
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <table class="table table-striped">
+                                            <thead class="bg-custom">
+                                                <tr>
+                                                    <th>Name</th>
+                                                    <th>Min. Hours</th>
+                                                    <th>Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php 
+                                                $all = Rank::fetchAllNames();
+                                                $x = 0;
+
+                                                while ($all->count() > $x) {
+                                                    echo '<tr><td class="align-middle">';
+                                                    echo $all->results()[$x]->name;
+                                                    echo '</td><td class="align-middle">';
+                                                    echo Time::secsToString($all->results()[$x]->timereq);
+                                                    echo '</td><td class="align-middle">';
+                                                    echo '<button class="btn btn-primary text-light" data-toggle="modal" data-target="#rankmodal" data-id="'.$all->results()[$x]->id.'" data-name="'.$all->results()[$x]->name.'" data-minhrs="'.($all->results()[$x]->timereq / 3600).'"><i class="fa fa-edit"></i></button>';
+                                                    echo '</td></tr>';
+                                                    $x++;
+                                                }
+                                                ?>
+                                            </tbody>
+                                        </table>
+                                        <div id="rankmodal" class="modal fade" role="dialog">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h4 class="modal-title" id="rankmodal-title"></h4>
+                                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form action="update.php" method="post">
+                                                            <input hidden name="action" value="editrank">
+                                                            <input hidden name="id" id="rankmodal-id">
+                                                            <div class="form-group">
+                                                                <label for="name">Name</label>
+                                                                <input type="text" name="name" class="form-control" id="rankmodal-name" required>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="time">Flight Time Required (<b>in hours</b>)</label>
+                                                                <input type="number" name="time" class="form-control" id="rankmodal-hours" required>
+                                                            </div>
+                                                            <input type="submit" class="btn bg-custom" value="Save">
                                                         </form>
                                                     </div>
                                                 </div>
@@ -904,25 +1001,29 @@ if (!$user->isLoggedIn()) {
             });
         });
     </script>
-    <!-- Populate user modal fields -->
+    <!-- Populate modal fields -->
     <script>
         $(document).ready(function() {
             $('#usermodal').on('show.bs.modal', function(e) {
-                var userCallsign = $(e.relatedTarget).data('callsign')
-                var userName = $(e.relatedTarget).data('name')
-                var userEmail = $(e.relatedTarget).data('email')
-                var userIfc = $(e.relatedTarget).data('ifc')
-                var userJoined = $(e.relatedTarget).data('joined')
-                var userStatus = $(e.relatedTarget).data('status')
-                var userId = $(e.relatedTarget).data('id')
-                $('#usermodaltitle').text('Edit User - ' + userCallsign)
-                $('#usermodal-callsign').val(userCallsign);
-                $('#usermodal-name').val(userName);
-                $('#usermodal-email').val(userEmail);
-                $('#usermodal-ifc').val(userIfc);
-                $('#usermodal-joined').val(userJoined);
-                $('#usermodal-status').val(userStatus);
-                $('#usermodal-id').val(userId);
+                var userCallsign = $(e.relatedTarget).data('callsign');
+                var userName = $(e.relatedTarget).data('name');
+                var userEmail = $(e.relatedTarget).data('email');
+                var userIfc = $(e.relatedTarget).data('ifc');
+                var userJoined = $(e.relatedTarget).data('joined');
+                var userStatus = $(e.relatedTarget).data('status');
+                var userId = $(e.relatedTarget).data('id');
+                $('#usermodal-title').text('Edit User - ' + userCallsign);
+                $('#usermodal-name').val(userCallsign);
+                $('#usermodal-hours').val(userName);
+            });
+            $('#rankmodal').on('show.bs.modal', function(e) {
+                var rankId = $(e.relatedTarget).data('id');
+                var rankName = $(e.relatedTarget).data('name');
+                var rankHrs = $(e.relatedTarget).data('minhrs');
+                $('#rankmodal-title').text('Edit Rank - ' + rankName);
+                $('#rankmodal-id').val(rankId);
+                $('#rankmodal-name').val(rankName);
+                $('#rankmodal-hours').val(rankHrs);
             });
         });
     </script>

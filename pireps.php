@@ -95,7 +95,7 @@ if (!$user->isLoggedIn()) {
                             <?php if (Input::get('page') === 'recents'): ?>
                                 <section id="recents">
                                     <h3>My Recent PIREPs</h3>
-                                    <p>Showing your 30 most recent PIREPs</p>
+                                    <p>Showing your 30 Most Recent PIREPs</p>
                                     <br>
                                     <?php
                                     $pireps = $user->recentPireps($user->data()->id, 30);
@@ -128,7 +128,7 @@ if (!$user->isLoggedIn()) {
                                                 echo '</td><td class="align-middle">';
                                                 echo $pirep["status"];
                                                 echo '</td><td class="align-middle">';
-                                                echo '<button class="btn text-light btn-success" data-toggle="modal" data-target="#pirep'.$x.'"><i class="fa fa-edit"></i></button>';
+                                                echo '<button class="btn text-light btn-primary" data-toggle="modal" data-target="#pirep'.$x.'"><i class="fa fa-edit"></i></button>';
                                                 echo '</td></tr>';
                                                 $x++;
                                             }
@@ -160,7 +160,7 @@ if (!$user->isLoggedIn()) {
                                                             </div>
                                                             <div class="form-group">
                                                                 <label for="fnum">Flight Number</label>
-                                                                <input type="number" min="1" class="form-control" name="fnum" value="'.$pirep['number'].'">
+                                                                <input required type="number" min="1" class="form-control" name="fnum" value="'.$pirep['number'].'">
                                                             </div>
                                                             <div class="form-group">
                                                                 <label for="dep">Departure</label>
@@ -169,10 +169,6 @@ if (!$user->isLoggedIn()) {
                                                             <div class="form-group">
                                                                 <label for="arr">Arrival</label>
                                                                 <input required maxlength="4" minlength="4" type="text" value="'.$pirep['arrival'].'" class="form-control" name="arr">
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label for="hrs">Flight Time</label>
-                                                                <input type="time" class="form-control" name="ftime" value="'.Time::secsToString($pirep['flighttime']).'">
                                                             </div>
                                                             <div class="form-group">
                                                                 <label for="aircraft">Aircraft</label>
@@ -192,7 +188,7 @@ if (!$user->isLoggedIn()) {
                                                             </div>
                                                             <div class="form-group">
                                                                 <label for="multi">Multiplier number (if applicable)</label>
-                                                                <input type="number" class="form-control" maxlength="6" minlength="6" id="multi" name="multi" value="'.$pirep['multi'].'">
+                                                                <input required type="number" class="form-control" maxlength="6" minlength="6" id="multi" name="multi" value="'.$pirep['multi'].'">
                                                             </div>
                                                             <input type="submit" class="btn bg-virgin" value="Save">    
                                                         </form>                                      
@@ -231,7 +227,41 @@ if (!$user->isLoggedIn()) {
                                         </div>
                                         <div class="form-group">
                                             <label for="hrs">Flight Time</label>
-                                            <input type="time" class="form-control" name="ftime" value="<?= escape(Input::get('ftime')) ?>">
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <input required type="number" min="0" id="flightTimeHrs" class="form-control" placeholder="Hours" />
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <input required type="number" min="1" id="flightTimeMins" class="form-control" placeholder="Minutes" />
+                                                </div>
+                                            </div>
+                                            <input hidden name="ftime" id="flightTimeFormatted" class="form-control" value="<?= escape(Input::get('ftime')) ?>" required />
+                                            <script>
+                                                function formatFlightTime() {
+                                                    var hrs = $("#flightTimeHrs").val();
+                                                    var mins = $("#flightTimeMins").val();
+                                                    $("#flightTimeFormatted").val(hrs + ":" + mins);
+                                                }
+
+                                                function reverseFormatFlightTime() {
+                                                    var formatted = $("#flightTimeFormatted").val();
+                                                    var split = formatted.split(":");
+                                                    var hrs = split[0];
+                                                    var mins = split[1];
+                                                    $("#flightTimeHrs").val(hrs);
+                                                    $("#flightTimeMins").val(mins);
+                                                }
+
+                                                $(document).ready(function() {
+                                                    $("#flightTimeHrs").keyup(function() {
+                                                        formatFlightTime();
+                                                    });
+                                                    $("#flightTimeMins").keyup(function() {
+                                                        formatFlightTime();
+                                                    });
+                                                    reverseFormatFlightTime();
+                                                });
+                                            </script>
                                         </div>
                                         <div class="form-group">
                                             <label for="fuel">Fuel Used in Kilograms (Kg)</label>
@@ -259,7 +289,7 @@ if (!$user->isLoggedIn()) {
                                             </select>
                                         </div>
                                         <div class="form-group">
-                                            <label for="multi">Multiplier number (if applicable)</label>
+                                            <label for="multi">Multiplier Number (if applicable)</label>
                                             <input type="number" class="form-control" maxlength="6" minlength="6" id="multi" name="multi" value="0">
                                         </div>
                                         <input type="submit" class="btn text-light bg-custom" value="Submit">

@@ -38,7 +38,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                     <div class="tab-content" id="tc">
                         <div class="tab-pane container active" id="home" style="display: none;">
                             <h3>Welcome to the Flare installation process.</h3>
-                            <p>Please read all steps carefully, as they may not be able to be changed later on.</p>
+                            <p>Please read all steps carefully, as they may not be changable later on.</p>
                             <br>
                             <h3>VA Details</h3>
                             <br>

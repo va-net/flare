@@ -20,7 +20,7 @@ switch (Input::get('page')) {
         break;
     case 'va-details-complete':
         if (!VANet::isVeKey(Input::get('vanet-api'))) {
-            Session::flash('error', 'Hmm, that seems to be a personal VANet API Key. Ensure you are using your VA/VO one, you can find it <a href="https://vanet.app/airline/profile" target="_blank">here</a>.');
+            Session::flash('error', 'Hmm, that seems to be a Personal VANet API Key. Ensure you are using your VA/VO one, you can find it <a href="https://vanet.app/airline/profile" target="_blank">here</a>.');
             Redirect::to('?page=va-details');
             die();
         }

@@ -75,7 +75,6 @@ INSERT INTO `ranks` (`name`, `timereq`) VALUES
 DROP TABLE IF EXISTS `routes`;
 CREATE TABLE IF NOT EXISTS `routes` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `typecode` varchar(4) NOT NULL,
   `fltnum` int(11) NOT NULL,
   `dep` varchar(4) NOT NULL,
   `arr` varchar(4) NOT NULL,

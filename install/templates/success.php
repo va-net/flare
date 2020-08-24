@@ -38,9 +38,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                     <div class="tab-content" id="tc">
                         <div class="tab-pane container active" id="home" style="display: none;">
                             <h3>Success!</h3>
-                            <p>Yay! Flare has been setup correctly. You may now <a href="../index.php">login</a> with the credentials you entered earlier, to setup your staff members, permissions, and other handy features that Flare has to offer. Good luck!</p>
+                            <p>Yay! Flare has been setup correctly. You may now <a href="../index.php">login</a> with the credentials you entered earlier to setup your staff members, permissions, and other handy features that Flare has to offer. Good luck!</p>
                             <br>
-                            <p>If you need any help with anything, be sure to visit the docs.</p>
+                            <p>If you need any help with anything, be sure to visit the <a href="https://vanet.app/tutorials">tutorials</a>.</p>
                         </div>
                     </div>
                 </div>

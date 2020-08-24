@@ -86,7 +86,7 @@ if (!$user->isLoggedIn()) {
                     <div class="tab-content" id="tc">
                         <div class="tab-pane container active" id="home" style="display: none;">
                             <h3>Pilot Home</h3>
-                            <p>Welcome to the <?= escape(Config::get('va/name')) ?> crew center, <?= escape($user->data()->name) ?>!</p>
+                            <p>Welcome to the <?= escape(Config::get('va/name')) ?> Crew Center, <?= escape($user->data()->name) ?>!</p>
                             <?php
                             if (Session::exists('errormain')) {
                                 echo '<div class="alert alert-danger text-center">Error: '.Session::flash('errormain').'</div>';
@@ -158,7 +158,7 @@ if (!$user->isLoggedIn()) {
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="newpass">New Password</label>
-                                                        <input type="password" minlenght="8" name="newpass" id="newpass" class="form-control" required>
+                                                        <input type="password" minlengh="8" name="newpass" id="newpass" class="form-control" required>
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="confpass">Confirm New Password</label>

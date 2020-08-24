@@ -71,11 +71,11 @@ class Rank
 
     }
 
-    public static function removeRank($name) 
+    public static function update($id, $fields = array()) 
     {
-
-        self::$_db->delete('ranks', array('name', '=', $name));
-
+        if (!self::$_db->update('ranks', $id, 'id', $fields)) {
+            throw new Exception('There was a problem updating the user.');
+        }
     }
 
     public static function getFirstRank()

@@ -41,7 +41,7 @@ require_once '../core/init.php';
                     <div class="tab-content" id="tc">
                         <div class="tab-pane container active" id="home" style="display: none;">
                             <h3>Admin User Setup</h3>
-                            <p>This user will be the first administrator account on the crew center.</p>
+                            <p>This user will be the first administrator account on Flare.</p>
                             <?php
                             if (Session::exists('error')) {
                                 echo '<div class="alert alert-danger text-center">Error: '.Session::flash('error').'</div>';
