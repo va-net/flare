@@ -155,7 +155,7 @@ if (!$user->isLoggedIn()) {
                                                 <p id="delconfirmmessage"></p>
                                                 <form action="update.php" method="post">
                                                     <input hidden name="action" value="deluser">
-                                                    <input type="hidden" value="" name="id" id="delconfirmuserid">
+                                                    <input hidden value="" name="id" id="delconfirmuserid">
                                                     <input type="submit" class="btn bg-custom" value="Mark as Inactive">
                                                 </form>
                                             </div>

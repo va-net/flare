@@ -158,7 +158,7 @@ if (!$user->isLoggedIn()) {
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="newpass">New Password</label>
-                                                        <input type="password" minlenght="8" name="newpass" id="newpass" class="form-control" required>
+                                                        <input type="password" minlengh="8" name="newpass" id="newpass" class="form-control" required>
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="confpass">Confirm New Password</label>

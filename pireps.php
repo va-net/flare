@@ -160,7 +160,7 @@ if (!$user->isLoggedIn()) {
                                                             </div>
                                                             <div class="form-group">
                                                                 <label for="fnum">Flight Number</label>
-                                                                <input type="number" min="1" class="form-control" name="fnum" value="'.$pirep['number'].'">
+                                                                <input required type="number" min="1" class="form-control" name="fnum" value="'.$pirep['number'].'">
                                                             </div>
                                                             <div class="form-group">
                                                                 <label for="dep">Departure</label>
@@ -172,7 +172,7 @@ if (!$user->isLoggedIn()) {
                                                             </div>
                                                             <div class="form-group">
                                                                 <label for="hrs">Flight Time</label>
-                                                                <input type="time" class="form-control" name="ftime" value="'.Time::secsToString($pirep['flighttime']).'">
+                                                                <input required type="time" class="form-control" name="ftime" value="'.Time::secsToString($pirep['flighttime']).'">
                                                             </div>
                                                             <div class="form-group">
                                                                 <label for="aircraft">Aircraft</label>
@@ -192,7 +192,7 @@ if (!$user->isLoggedIn()) {
                                                             </div>
                                                             <div class="form-group">
                                                                 <label for="multi">Multiplier number (if applicable)</label>
-                                                                <input type="number" class="form-control" maxlength="6" minlength="6" id="multi" name="multi" value="'.$pirep['multi'].'">
+                                                                <input required type="number" class="form-control" maxlength="6" minlength="6" id="multi" name="multi" value="'.$pirep['multi'].'">
                                                             </div>
                                                             <input type="submit" class="btn bg-virgin" value="Save">    
                                                         </form>                                      
