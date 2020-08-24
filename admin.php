@@ -700,7 +700,6 @@ if (!$user->isLoggedIn()) {
                                                             <div class="form-group">
                                                                 <label for="rank">Livery</label>
                                                                 <select class="form-control" name="livery" id="liveriesselect" required>
-                                                                    <option>Select</option>
                                                                     <option disabled>Loading...</option>
                                                                 </select>
                                                             </div>
