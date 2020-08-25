@@ -11,7 +11,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 class Hash {
 
     public static function make($string) {
-        return password_hash($string, PASSWORD_ARGON2ID);
+        return password_hash($string, PASSWORD_DEFAULT);
     }
 
     public static function check($noHash, $hashed) {
