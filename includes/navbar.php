@@ -49,24 +49,64 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
         <?php 
         $permissions = Permissions::getAll();
         if ($user->hasPermission('admin')) {
+            $userpages = [];
+            $opspages = [];
+            $miscpages = [];
+
             foreach ($permissions as $permission => $data) {
                 if ($user->hasPermission($permission)) {
-                    echo '<li class="nav-item desktop-hidden">';
-                    if ($permission == 'opsmanage') {
-                        echo '
-                        <a href="#" data-toggle="collapse" data-target="#demo" class="panel-link"><i class="fa fa-caret-down"></i>&nbsp;Operations Management</a>
-                        <div id="demo" class="collapse">
-                        &nbsp;<i class="fa fa-plane"></i>&nbsp;<a href="./admin.php?page=opsmanage&section=fleet" class="panel-link">Manage Fleet</a>
-                        &nbsp;<i class="fa fa-plane-departure"></i>&nbsp;<a href="./admin.php?page=opsmanage&section=routes" class="panel-link">Manage Routes</a>
-                        &nbsp;<i class="fa fa-globe"></i>&nbsp;<a href="./admin.php?page=site" class="panel-link">Manage Site</a>
-                        </div>
-                        ';
+                    if ($permission == "usermanage" || $permission == "staffmanage" || $permission == "recruitment") {
+                        $userpages[$permission] = $data;
+                    } elseif ($permission == "pirepmanage" || $permission == "opsmanage") {
+                        $opspages["ranks"] = [
+                            "icon" => "fa-medal",
+                            "name" => "Manage Ranks",
+                        ];
+                        $opspages["fleet"] = [
+                            "icon" => "fa-plane",
+                            "name" => "Manage Fleet",
+                        ];
+                        $opspages["routes"] = [
+                            "icon" => "fa-plane-departure",
+                            "name" => "Manage Routes",
+                        ];
+                        $miscpages["site"] = [
+                            "icon" => "fa-globe",
+                            "name" => "Manage Site",
+                        ];
                     } else {
-                        echo '<a href="admin.php?page='.$permission.'" id="userslink" class="panel-link"><i class="fa '.$data['icon'].'"></i>&nbsp;'.$data['name'].'</a>';
+                        $miscpages[$permission] = $data;
                     }
-                    echo '</li>';
                 }
             }
+
+            echo '<li class="nav-item desktop-hidden">';
+            if ($userpages != []) {
+                echo '<a href="#" data-toggle="collapse" data-target="#usrCollapse" class="panel-link"><i class="fa fa-caret-down"></i>&nbsp;User Management</a>';
+                echo '<div id="usrCollapse" class="collapse">';
+                foreach ($userpages as $slug => $info) {
+                    echo '<a href="admin.php?page='.$slug.'" class="panel-link">
+                    <i class="fa '.$info["icon"].'"></i>&nbsp;'.$info["name"].'
+                    </a>';
+                }
+                echo '</div>';
+            }
+            if ($opspages != []) {
+                echo '<a href="#" data-toggle="collapse" data-target="#opsCollapse" class="panel-link"><i class="fa fa-caret-down"></i>&nbsp;Operations Management</a>';
+                echo '<div id="opsCollapse" class="collapse">';
+                foreach ($opspages as $slug => $info) {
+                    echo '<a href="admin.php?page=opsmanage&section='.$slug.'" class="panel-link">
+                    <i class="fa '.$info["icon"].'"></i>&nbsp;'.$info["name"].'
+                    </a>';
+                }
+                echo '</div>';
+            }
+            if ($miscpages != []) {
+                foreach ($miscpages as $slug => $info) {
+                    echo '<a href="admin.php?page='.$slug.'" id="userslink" class="panel-link"><i class="fa '.$info['icon'].'"></i>&nbsp;'.$info['name'].'</a>';
+                }
+            }
+            echo '</li>';
         }
         ?>
         <li class="nav-item desktop-hidden">

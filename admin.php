@@ -69,6 +69,11 @@ if (!$user->isLoggedIn()) {
                                 <p>Looks like no page was specified. Make sure you use the buttons in the navbar/sidebar!</p>
                             <?php endif; ?>
                             <?php if (Input::get('page') === 'usermanage'): ?>
+                                <script>
+                                    $(document).ready(function() {
+                                        $("#usrCollapse").collapse('show');
+                                    });
+                                </script>
                                 <h3>Manage Users</h3>
                                 <?php if (!$user->hasPermission('usermanage')): ?>
                                     <div class="alert alert-danger text-center">Whoops! You don't have the necessary permissions to access this.</div>
@@ -171,6 +176,11 @@ if (!$user->isLoggedIn()) {
                                 </div>
                                 <?php endif; ?>
                             <?php elseif (Input::get('page') === 'staffmanage'): ?>
+                                <script>
+                                    $(document).ready(function() {
+                                        $("#usrCollapse").collapse('show');
+                                    });
+                                </script>
                                 <h3>Manage Staff</h3>
                                 <?php if (!$user->hasPermission('usermanage')): ?>
                                     <div class="alert alert-danger text-center">Whoops! You don't have the necessary permissions to access this.</div>
@@ -334,6 +344,11 @@ if (!$user->isLoggedIn()) {
                                     <input type="submit" class="btn bg-custom" value="Save">
                                 </form>
                             <?php elseif (Input::get('page') === 'recruitment'): ?>
+                                <script>
+                                    $(document).ready(function() {
+                                        $("#usrCollapse").collapse('show');
+                                    });
+                                </script>
                                 <h3>Recruitment</h3>
                                 <?php if (!$user->hasPermission('usermanage')): ?>
                                     <div class="alert alert-danger text-center">Whoops! You don't have the necessary permissions to access this.</div>

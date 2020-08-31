@@ -10,24 +10,65 @@
     $permissions = Permissions::getAll();
 
     if ($user->hasPermission('admin')) {
-        echo '<br>';
-        echo '<h3>Admin Panel</h3>';
-        echo '<hr class="mt-0 divider">';
+        $userpages = [];
+        $opspages = [];
+        $miscpages = [];
+
         foreach ($permissions as $permission => $data) {
             if ($user->hasPermission($permission)) {
-                if ($permission == 'opsmanage') {
-                    echo '
-                    <a href="#" data-toggle="collapse" data-target="#demo" class="panel-link"><i class="fa fa-caret-down"></i>&nbsp;Operations Management</a><br>
-                    <div id="demo" class="collapse">
-                    &nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-medal"></i>&nbsp;<a href="./admin.php?page=opsmanage&section=ranks" class="panel-link">Manage Ranks</a><br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-plane"></i>&nbsp;<a href="./admin.php?page=opsmanage&section=fleet" class="panel-link">Manage Fleet</a><br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-plane-departure"></i>&nbsp;<a href="./admin.php?page=opsmanage&section=routes" class="panel-link">Manage Routes</a><br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-globe"></i>&nbsp;<a href="./admin.php?page=site" class="panel-link">Manage Site</a><br>
-                    </div>
-                    ';
+                if ($permission == "usermanage" || $permission == "staffmanage" || $permission == "recruitment") {
+                    $userpages[$permission] = $data;
+                } elseif ($permission == "pirepmanage" || $permission == "opsmanage") {
+                    $opspages["ranks"] = [
+                        "icon" => "fa-medal",
+                        "name" => "Manage Ranks",
+                    ];
+                    $opspages["fleet"] = [
+                        "icon" => "fa-plane",
+                        "name" => "Manage Fleet",
+                    ];
+                    $opspages["routes"] = [
+                        "icon" => "fa-plane-departure",
+                        "name" => "Manage Routes",
+                    ];
+                    $miscpages["site"] = [
+                        "icon" => "fa-globe",
+                        "name" => "Manage Site",
+                    ];
                 } else {
-                    echo '<a href="admin.php?page='.$permission.'" id="userslink" class="panel-link"><i class="fa '.$data['icon'].'"></i>&nbsp;'.$data['name'].'</a><br>';
+                    $miscpages[$permission] = $data;
                 }
+            }
+        }
+
+        echo '<br />';
+        echo '<h3>Administration</h3>';
+        echo '<hr class="mt-0 divider">';
+        if ($userpages != []) {
+            echo '<a href="#" data-toggle="collapse" data-target="#usrCollapse" class="panel-link"><i class="fa fa-caret-down"></i>&nbsp;User Management</a><br />';
+            echo '<div id="usrCollapse" class="collapse">';
+            foreach ($userpages as $slug => $info) {
+                echo '&nbsp;&nbsp;&nbsp;&nbsp;
+                <a href="admin.php?page='.$slug.'" class="panel-link">
+                  <i class="fa '.$info["icon"].'"></i>&nbsp;'.$info["name"].'
+                </a><br />';
+            }
+            echo '</div>';
+        }
+        if ($opspages != []) {
+            echo '<a href="#" data-toggle="collapse" data-target="#opsCollapse" class="panel-link"><i class="fa fa-caret-down"></i>&nbsp;Operations Management</a><br />';
+            echo '<div id="opsCollapse" class="collapse">';
+            foreach ($opspages as $slug => $info) {
+                echo '&nbsp;&nbsp;&nbsp;&nbsp;
+                <a href="admin.php?page=opsmanage&section='.$slug.'" class="panel-link">
+                  <i class="fa '.$info["icon"].'"></i>&nbsp;'.$info["name"].'
+                </a><br />';
+            }
+            echo '</div>';
+        }
+        if ($miscpages != []) {
+            foreach ($miscpages as $slug => $info) {
+                echo '<a href="admin.php?page='.$slug.'" id="userslink" class="panel-link"><i class="fa '.$info['icon'].'"></i>&nbsp;'.$info['name'].'</a><br />';
             }
         }
     }
