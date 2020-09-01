@@ -18,30 +18,23 @@
             if ($user->hasPermission($permission)) {
                 if ($permission == "usermanage" || $permission == "staffmanage" || $permission == "recruitment") {
                     $userpages[$permission] = $data;
-                } elseif ($permission == "pirepmanage" || $permission == "opsmanage") {
-                    if ($permission == "opsmanage") {
-                        $opspages["ranks"] = [
-                            "icon" => "fa-medal",
-                            "name" => "Manage Ranks",
-                        ];
-                        $opspages["fleet"] = [
-                            "icon" => "fa-plane",
-                            "name" => "Manage Fleet",
-                        ];
-                        $opspages["routes"] = [
-                            "icon" => "fa-plane-departure",
-                            "name" => "Manage Routes",
-                        ];
-                        $miscpages["site"] = [
-                            "icon" => "fa-globe",
-                            "name" => "Manage Site",
-                        ];
-                    } else {
-                        $miscpages["pirepmanage"] = [
-                            "icon" => "fa-folder",
-                            "name" => "Manage PIREPs",
-                        ];
-                    }
+                } elseif ($permission == "opsmanage") {
+                    $opspages["ranks"] = [
+                        "icon" => "fa-medal",
+                        "name" => "Manage Ranks",
+                    ];
+                    $opspages["fleet"] = [
+                        "icon" => "fa-plane",
+                        "name" => "Manage Fleet",
+                    ];
+                    $opspages["routes"] = [
+                        "icon" => "fa-plane-departure",
+                        "name" => "Manage Routes",
+                    ];
+                    $miscpages["site"] = [
+                        "icon" => "fa-globe",
+                        "name" => "Manage Site",
+                    ];
                 } else {
                     $miscpages[$permission] = $data;
                 }
