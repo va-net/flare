@@ -965,11 +965,11 @@ if (!$user->isLoggedIn()) {
                                                     echo '<tr><td class="align-middle">';
                                                     echo $all->results()[$x]->name;
                                                     echo '</td><td class="align-middle">';
-                                                    echo Time::secsToString($all->results()[$x]->timereq);
+                                                    echo $all->results()[$x]->timereq;
                                                     echo '</td><td class="align-middle">';
                                                     echo '<button class="btn btn-primary text-light editRank" 
                                                     data-id="'.$all->results()[$x]->id.'" data-name="'.$all->results()[$x]->name.'" 
-                                                    data-minhrs="'.($all->results()[$x]->timereq / 3600).'">
+                                                    data-minhrs="'.$all->results()[$x]->timereq.'">
                                                     <i class="fa fa-edit"></i></button>';
                                                     echo '</td></tr>';
                                                     $x++;

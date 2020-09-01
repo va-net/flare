@@ -242,7 +242,7 @@ if (Input::get('action') === 'editprofile') {
         Redirect::to('admin.php?page=opsmanage&section=ranks');
     }
     Session::flash('success', 'Rank Edited Successfully!');
-    Redirect::to('admin.php?page=usermanage');
+    Redirect::to('admin.php?page=opsmanage&section=ranks');
 } elseif (Input::get('action') == 'getliveriesforaircraft') {
     $all = Aircraft::fetchLiveryIdsForAircraft(Aircraft::nameToAircraftId(Input::get('aircraft')));
     foreach ($all as $name => $id) {
