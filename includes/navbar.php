@@ -58,22 +58,29 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                     if ($permission == "usermanage" || $permission == "staffmanage" || $permission == "recruitment") {
                         $userpages[$permission] = $data;
                     } elseif ($permission == "pirepmanage" || $permission == "opsmanage") {
-                        $opspages["ranks"] = [
-                            "icon" => "fa-medal",
-                            "name" => "Manage Ranks",
-                        ];
-                        $opspages["fleet"] = [
-                            "icon" => "fa-plane",
-                            "name" => "Manage Fleet",
-                        ];
-                        $opspages["routes"] = [
-                            "icon" => "fa-plane-departure",
-                            "name" => "Manage Routes",
-                        ];
-                        $miscpages["site"] = [
-                            "icon" => "fa-globe",
-                            "name" => "Manage Site",
-                        ];
+                        if ($permission == "opsmanage") {
+                            $opspages["ranks"] = [
+                                "icon" => "fa-medal",
+                                "name" => "Manage Ranks",
+                            ];
+                            $opspages["fleet"] = [
+                                "icon" => "fa-plane",
+                                "name" => "Manage Fleet",
+                            ];
+                            $opspages["routes"] = [
+                                "icon" => "fa-plane-departure",
+                                "name" => "Manage Routes",
+                            ];
+                            $miscpages["site"] = [
+                                "icon" => "fa-globe",
+                                "name" => "Manage Site",
+                            ];
+                        } else {
+                            $miscpages["pirepmanage"] = [
+                                "icon" => "fa-folder",
+                                "name" => "Manage PIREPs",
+                            ];
+                        }
                     } else {
                         $miscpages[$permission] = $data;
                     }
