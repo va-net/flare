@@ -199,6 +199,7 @@ if (!$user->isLoggedIn()) {
                                             $("#usermodal-joined").val(userJoined);
                                             $("#usermodal-status").val(userStatus);
                                             $("#usermodal-id").val(userId);
+                                            $("#usermodal-title").text("Edit User - " + userCallsign);
 
                                             $("#usermodal").modal("show");
                                         });
@@ -215,7 +216,7 @@ if (!$user->isLoggedIn()) {
                                         });
                                     });
                                 </script>
-                            <?php endif; ?>
+                                <?php endif; ?>
                             <?php elseif (Input::get('page') === 'staffmanage'): ?>
                                 <script>
                                     $(document).ready(function() {
@@ -966,9 +967,9 @@ if (!$user->isLoggedIn()) {
                                                     echo '</td><td class="align-middle">';
                                                     echo Time::secsToString($all->results()[$x]->timereq);
                                                     echo '</td><td class="align-middle">';
-                                                    echo '<button class="btn btn-primary text-light" data-toggle="modal" 
-                                                    data-target="#rankmodal" data-id="'.$all->results()[$x]->id.'" 
-                                                    data-name="'.$all->results()[$x]->name.'" data-minhrs="'.($all->results()[$x]->timereq / 3600).'">
+                                                    echo '<button class="btn btn-primary text-light editRank" 
+                                                    data-id="'.$all->results()[$x]->id.'" data-name="'.$all->results()[$x]->name.'" 
+                                                    data-minhrs="'.($all->results()[$x]->timereq / 3600).'">
                                                     <i class="fa fa-edit"></i></button>';
                                                     echo '</td></tr>';
                                                     $x++;
@@ -993,7 +994,7 @@ if (!$user->isLoggedIn()) {
                                                             </div>
                                                             <div class="form-group">
                                                                 <label for="time">Flight Time Required (<b>in hours</b>)</label>
-                                                                <input type="number" name="time" class="form-control" id="rankmodal-hours" required>
+                                                                <input type="number" min="0" name="time" class="form-control" id="rankmodal-hours" required>
                                                             </div>
                                                             <input type="submit" class="btn bg-custom" value="Save">
                                                         </form>
@@ -1003,14 +1004,17 @@ if (!$user->isLoggedIn()) {
                                         </div>
                                         <script>
                                             $(document).ready(function() {
-                                                $('#rankmodal').on('show.bs.modal', function(e) {
-                                                    var rankId = $(e.relatedTarget).data('id');
-                                                    var rankName = $(e.relatedTarget).data('name');
-                                                    var rankHrs = $(e.relatedTarget).data('minhrs');
-                                                    $('#rankmodal-title').text('Edit Rank - ' + rankName);
-                                                    $('#rankmodal-id').val(rankId);
-                                                    $('#rankmodal-name').val(rankName);
-                                                    $('#rankmodal-hours').val(rankHrs);
+                                                $('.editRank').click(function(e) {
+                                                    var rankId = $(this).data("id");
+                                                    var rankName = $(this).data("name");
+                                                    var rankHrs = $(this).data("minhrs");
+
+                                                    $("#rankmodal-id").val(rankId);
+                                                    $("#rankmodal-name").val(rankName);
+                                                    $("#rankmodal-hours").val(rankHrs);
+                                                    $("#rankmodal-title").text("Edit Rank - " + rankName);
+
+                                                    $("#rankmodal").modal("show");
                                                 });
                                             });
                                         </script>
