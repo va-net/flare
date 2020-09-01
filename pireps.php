@@ -64,7 +64,7 @@ if (!$user->isLoggedIn()) {
                                     <?php
                                     $pireps = $user->recentPireps($user->data()->id, 30);
                                     if (!$pireps) {
-                                        echo '<h5><b>No recent PIREPS<b></h5>';
+                                        echo '<h5><b>No recent PIREPs<b></h5>';
                                     } else { ?>
                                         <table class="table table-striped">
                                         <thead class="bg-virgin">

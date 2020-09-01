@@ -517,7 +517,7 @@ if (!$user->isLoggedIn()) {
                                 ?>
                                 <?php endif; ?>
                             <?php elseif (Input::get('page') === 'pirepmanage'): ?>
-                                <h3>Manage PIREPS</h3>
+                                <h3>Manage PIREPs</h3>
                                 <?php if (!$user->hasPermission('usermanage')): ?>
                                     <div class="alert alert-danger text-center">Whoops! You don't have the necessary permissions to access this.</div>
                                 <?php else: ?>
