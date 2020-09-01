@@ -156,7 +156,7 @@ if (!$user->isLoggedIn()) {
                                     </tr>
                                     <tr>
                                         <td class="align-middle"><b>Flight Time</b></td>
-                                        <td class="align-middle"><?= escape($user->getFlightTime()) ?></td>
+                                        <td class="align-middle"><?= escape(Time::secsToString($user->getFlightTime())) ?></td>
                                     </tr>
                                     <tr>
                                         <td class="align-middle"><b>Rank</b></td>
