@@ -103,18 +103,14 @@ if (Input::get('action') === 'editprofile') {
         Redirect::to('pireps.php');
     }
 } elseif (Input::get('action') === 'edituser') {
-
-    try {
-        $user->update(array(
-            'callsign' => Input::get('callsign'),
-            'name' => Input::get('name'),
-            'email' => Input::get('email'),
-            'ifc' => Input::get('ifc')
-        ), Input::get('id'));
-    } catch (Exception $e) {
-        Session::flash('error', 'There was an Error Editing the User.');
-        Redirect::to('admin.php?page=usermanage');
-    }
+    $user->update(array(
+        'callsign' => Input::get('callsign'),
+        'name' => Input::get('name'),
+        'email' => Input::get('email'),
+        'ifc' => Input::get('ifc'),
+        'transhours' => Time::strToSecs(Input::get('transhours')),
+        'transflights' => Input::get('transflights')
+    ), Input::get('id'));
     Session::flash('success', 'User Edited Successfully!');
     Redirect::to('admin.php?page=usermanage');
 } elseif (Input::get('action') === 'deluser') {

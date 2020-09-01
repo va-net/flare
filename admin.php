@@ -80,16 +80,16 @@ if (!$user->isLoggedIn()) {
                                 <?php else: ?>
                                     <p>Here you can view all users, active and inactive. Click on a user to view/edit the information.</p>
                                     <table class="table table-striped">
-                                    <thead class="bg-custom">
-                                        <tr>
-                                            <th>Callsign</th>
-                                            <th class="mobile-hidden">Name</th>
-                                            <th class="mobile-hidden">Email</th>
-                                            <th>Status</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
+                                        <thead class="bg-custom">
+                                            <tr>
+                                                <th>Callsign</th>
+                                                <th class="mobile-hidden">Name</th>
+                                                <th class="mobile-hidden">Email</th>
+                                                <th>Status</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
                                         <?php
                                         $users = $user->getAllUsers();
                                         $x = 0;
@@ -106,7 +106,7 @@ if (!$user->isLoggedIn()) {
                                             echo '<button class="btn btn-primary text-light userEdit" data-callsign="'.$user['callsign'].'" 
                                             data-name="'.$user['name'].'" data-email="'.$user['email'].'" data-ifc="'.$user['ifc'].'" 
                                             data-joined="'.date_format(date_create($user['joined']), 'Y-m-d').'" data-status="'.$user['status'].'" 
-                                            data-id="'.$user['id'].'"><i class="fa fa-edit"></i>
+                                            data-id="'.$user['id'].'" data-thrs="'.Time::secsToString($user["transhours"]).'" data-tflts="'.$user["transflights"].'"><i class="fa fa-edit"></i>
                                             </button>';
                                             echo '&nbsp;<button id="delconfirmbtn" class="btn text-light btn-danger" 
                                             data-toggle="modal" data-target="#delconfirmmodal" data-callsign="'.$user['callsign'].'">
@@ -163,8 +163,52 @@ if (!$user->isLoggedIn()) {
                                                         <input required type="text" value="" class="form-control" name="email" id="usermodal-email">
                                                     </div>
                                                     <div class="form-group">
-                                                        <label for="usermodal-ifc">IFC Username</label>
-                                                        <input required type="text" value="" class="form-control" name="ifc" id="usermodal-ifc">
+                                                        <label for="usermodal-ifc">IFC Profile URL</label>
+                                                        <input required type="url" value="" class="form-control" name="ifc" id="usermodal-ifc">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="usermodal-thrs">Transfer Flight Time</label>
+                                                        <div class="row">
+                                                            <div class="col-sm-6">
+                                                                <input required type="number" min="0" id="flightTimeHrs" class="form-control" placeholder="Hours" />
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <input required type="number" min="0" id="flightTimeMins" class="form-control" placeholder="Minutes" />
+                                                            </div>
+                                                        </div>
+                                                        <input hidden name="transhours" id="usermodal-thrs" class="form-control" value="<?= escape(Input::get('ftime')) ?>" required />
+                                                        <script>
+                                                            function formatFlightTime() {
+                                                                var hrs = $("#flightTimeHrs").val();
+                                                                var mins = $("#flightTimeMins").val();
+                                                                $("#usermodal-thrs").val(hrs + ":" + mins);
+                                                            }
+
+                                                            function reverseFormatFlightTime() {
+                                                                var formatted = $("#usermodal-thrs").val();
+                                                                if (formatted != '') {
+                                                                    var split = formatted.split(":");
+                                                                    var hrs = split[0];
+                                                                    var mins = split[1];
+                                                                    $("#flightTimeHrs").val(hrs);
+                                                                    $("#flightTimeMins").val(mins);
+                                                                }
+                                                            }
+
+                                                            $(document).ready(function() {
+                                                                $("#flightTimeHrs").keyup(function() {
+                                                                    formatFlightTime();
+                                                                });
+                                                                $("#flightTimeMins").keyup(function() {
+                                                                    formatFlightTime();
+                                                                });
+                                                                reverseFormatFlightTime();
+                                                            });
+                                                        </script>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="usermodal-tflts"># Transfer Flights</label>
+                                                        <input required type="number" min="0" value="" class="form-control" name="transflights" id="usermodal-tflts">
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="usermodal-joined">Join date</label>
@@ -190,6 +234,8 @@ if (!$user->isLoggedIn()) {
                                             var userIfc = $(this).data("ifc");
                                             var userJoined = $(this).data("joined");
                                             var userStatus = $(this).data("status");
+                                            var userThrs = $(this).data("thrs");
+                                            var userTflts = $(this).data("tflts");
                                             var userId = $(this).data("id");
 
                                             $("#usermodal-callsign").val(userCallsign);
@@ -198,6 +244,9 @@ if (!$user->isLoggedIn()) {
                                             $("#usermodal-ifc").val(userIfc);
                                             $("#usermodal-joined").val(userJoined);
                                             $("#usermodal-status").val(userStatus);
+                                            $("#usermodal-thrs").val(userThrs);
+                                            $("#usermodal-tflts").val(userTflts);
+                                            reverseFormatFlightTime();
                                             $("#usermodal-id").val(userId);
                                             $("#usermodal-title").text("Edit User - " + userCallsign);
 
@@ -829,7 +878,7 @@ if (!$user->isLoggedIn()) {
                                                                         <input required type="number" min="0" id="flightTimeHrs" class="form-control" placeholder="Hours" />
                                                                     </div>
                                                                     <div class="col-sm-6">
-                                                                        <input required type="number" min="1" id="flightTimeMins" class="form-control" placeholder="Minutes" />
+                                                                        <input required type="number" min="0" id="flightTimeMins" class="form-control" placeholder="Minutes" />
                                                                     </div>
                                                                 </div>
                                                                 <input hidden name="duration" id="flightTimeFormatted" class="form-control" required />

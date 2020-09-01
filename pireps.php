@@ -196,7 +196,7 @@ if (!$user->isLoggedIn()) {
                                                     <input required type="number" min="0" id="flightTimeHrs" class="form-control" placeholder="Hours" />
                                                 </div>
                                                 <div class="col-sm-6">
-                                                    <input required type="number" min="1" id="flightTimeMins" class="form-control" placeholder="Minutes" />
+                                                    <input required type="number" min="0" id="flightTimeMins" class="form-control" placeholder="Minutes" />
                                                 </div>
                                             </div>
                                             <input hidden name="ftime" id="flightTimeFormatted" class="form-control" value="<?= escape(Input::get('ftime')) ?>" required />

@@ -410,7 +410,9 @@ class User
                 'rank' => $this->rank($results->results()[$x]->id),
                 'status' => $statuses[$results->results()[$x]->status],
                 'joined' => $results->results()[$x]->joined,
-                'permissions' => $results->results()[$x]->permissions
+                'permissions' => $results->results()[$x]->permissions,
+                'transhours' => $results->results()[$x]->transhours,
+                'transflights' => $results->results()[$x]->transflights
             );
             $usersarray[$x] = $newdata;
             $x++;
