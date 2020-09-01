@@ -174,7 +174,35 @@ if (!$user->isLoggedIn()) {
                                         </div>
                                     </div>
                                 </div>
-                                <?php endif; ?>
+                                <!-- Populate modal fields -->
+                                <script>
+                                    $(document).ready(function() {
+                                        $('#usermodal').on('show.bs.modal', function(e) {
+                                            var userCallsign = $(e.relatedTarget).data('callsign');
+                                            var userName = $(e.relatedTarget).data('name');
+                                            var userEmail = $(e.relatedTarget).data('email');
+                                            var userIfc = $(e.relatedTarget).data('ifc');
+                                            var userJoined = $(e.relatedTarget).data('joined');
+                                            var userStatus = $(e.relatedTarget).data('status');
+                                            var userId = $(e.relatedTarget).data('id');
+                                            $('#usermodal-title').text('Edit User - ' + userCallsign);
+                                            $('#usermodal-name').val(userCallsign);
+                                            $('#usermodal-hours').val(userName);
+                                        });
+                                    });
+                                </script>
+                                <!-- Confirm delete modal -->
+                                <script>
+                                    $(document).ready(function() {
+                                        $('#delconfirmmodal').on('show.bs.modal', function(e) {
+                                            var userCallsign = $(e.relatedTarget).data('callsign')
+                                            var message = 'Are you sure you want to mark the user ' + userCallsign + ' as inactive?'
+                                            $("#delconfirmmessage").text(message);
+                                            $("#delconfirmuserid").val(userCallsign);
+                                        });
+                                    });
+                                </script>
+                            <?php endif; ?>
                             <?php elseif (Input::get('page') === 'staffmanage'): ?>
                                 <script>
                                     $(document).ready(function() {
@@ -645,7 +673,7 @@ if (!$user->isLoggedIn()) {
                                         <p>Finance Stats Coming Soon...</p>
                                     <?php endif; ?>
                             <?php elseif (Input::get('page') === 'opsmanage'): ?>
-                                <?php if (!$user->hasPermission('usermanage')): ?>
+                                <?php if (!$user->hasPermission('opsmanage')): ?>
                                     <div class="alert alert-danger text-center">Whoops! You don't have the necessary permissions to access this.</div>
                                 <?php else: ?>
                                     <script>
@@ -957,6 +985,19 @@ if (!$user->isLoggedIn()) {
                                                 </div>
                                             </div>
                                         </div>
+                                        <script>
+                                            $(document).ready(function() {
+                                                $('#rankmodal').on('show.bs.modal', function(e) {
+                                                    var rankId = $(e.relatedTarget).data('id');
+                                                    var rankName = $(e.relatedTarget).data('name');
+                                                    var rankHrs = $(e.relatedTarget).data('minhrs');
+                                                    $('#rankmodal-title').text('Edit Rank - ' + rankName);
+                                                    $('#rankmodal-id').val(rankId);
+                                                    $('#rankmodal-name').val(rankName);
+                                                    $('#rankmodal-hours').val(rankHrs);
+                                                });
+                                            });
+                                        </script>
                                     <?php endif; ?>
                                 <?php endif; ?>
                             <?php endif; ?>
@@ -969,42 +1010,5 @@ if (!$user->isLoggedIn()) {
             </footer>
         </div>
     </div>
-    <!-- Confirm delete modal -->
-    <script>
-        $(document).ready(function() {
-            $('#delconfirmmodal').on('show.bs.modal', function(e) {
-                var userCallsign = $(e.relatedTarget).data('callsign')
-                var message = 'Are you sure you want to mark the user ' + userCallsign + ' as inactive?'
-                $("#delconfirmmessage").text(message);
-                $("#delconfirmuserid").val(userCallsign);
-            });
-        });
-    </script>
-    <!-- Populate modal fields -->
-    <script>
-        $(document).ready(function() {
-            $('#usermodal').on('show.bs.modal', function(e) {
-                var userCallsign = $(e.relatedTarget).data('callsign');
-                var userName = $(e.relatedTarget).data('name');
-                var userEmail = $(e.relatedTarget).data('email');
-                var userIfc = $(e.relatedTarget).data('ifc');
-                var userJoined = $(e.relatedTarget).data('joined');
-                var userStatus = $(e.relatedTarget).data('status');
-                var userId = $(e.relatedTarget).data('id');
-                $('#usermodal-title').text('Edit User - ' + userCallsign);
-                $('#usermodal-name').val(userCallsign);
-                $('#usermodal-hours').val(userName);
-            });
-            $('#rankmodal').on('show.bs.modal', function(e) {
-                var rankId = $(e.relatedTarget).data('id');
-                var rankName = $(e.relatedTarget).data('name');
-                var rankHrs = $(e.relatedTarget).data('minhrs');
-                $('#rankmodal-title').text('Edit Rank - ' + rankName);
-                $('#rankmodal-id').val(rankId);
-                $('#rankmodal-name').val(rankName);
-                $('#rankmodal-hours').val(rankHrs);
-            });
-        });
-    </script>
 </body>
 </html>
