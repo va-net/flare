@@ -67,7 +67,7 @@ if (!$user->isLoggedIn()) {
                                         echo '<h5><b>No recent PIREPs<b></h5>';
                                     } else { ?>
                                         <table class="table table-striped">
-                                        <thead class="bg-virgin">
+                                        <thead class="bg-custom">
                                             <tr>
                                                 <th class="mobile-hidden">Flight Number</th>
                                                 <th>Route</th>
@@ -139,6 +139,7 @@ if (!$user->isLoggedIn()) {
                                                                 <select class="form-control" name="aircraft" required>
                                                                     <option value>Select</option>
                                                                     ';
+                                                                    var_dump($pirep);
                                                                     $aircraftlist = $user->getAvailableAircraft();
                                                                     foreach($aircraftlist as $aircraft) {
                                                                         if ($aircraft['name'] === $pirep['aircraft']) {
@@ -154,7 +155,7 @@ if (!$user->isLoggedIn()) {
                                                                 <label for="multi">Multiplier number (if applicable)</label>
                                                                 <input required type="number" class="form-control" maxlength="6" minlength="6" id="multi" name="multi" value="'.$pirep['multi'].'">
                                                             </div>
-                                                            <input type="submit" class="btn bg-virgin" value="Save">    
+                                                            <input type="submit" class="btn bg-custom" value="Save">    
                                                         </form>                                      
                                                     </div>
                                                 </div>

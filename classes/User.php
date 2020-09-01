@@ -343,6 +343,7 @@ class User
                 'date' => $results->results()[$x]->date,
                 'status' => $statuses[$results->results()[$x]->status],
                 'flighttime' => $results->results()[$x]->flighttime,
+                'multi' => $results->results()[$x]->multi,
                 'aircraft' => Aircraft::getAircraftName($results->results()[$x]->aircraftid),
             );
             $pireps[$x] = $newdata;
