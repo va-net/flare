@@ -54,7 +54,7 @@ if (!$user->isLoggedIn()) {
                         <div class="tab-pane container active" id="home" style="display: none;">
                             <?php
                             if (file_exists('./install/install.php')) {
-                                Session::flash('error', 'The install folder still exists! Please delete this immediately, as this poses a severe security risk!');
+                                Session::flash('error', '<b>The Install Folder still exists! Please delete this <u>immediately</u>, as this poses a Severe Security Risk!');
                             }
                             if (Session::exists('error')) {
                                 echo '<div class="alert alert-danger text-center">Error: '.Session::flash('error').'</div>';
