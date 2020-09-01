@@ -966,7 +966,10 @@ if (!$user->isLoggedIn()) {
                                                     echo '</td><td class="align-middle">';
                                                     echo Time::secsToString($all->results()[$x]->timereq);
                                                     echo '</td><td class="align-middle">';
-                                                    echo '<button class="btn btn-primary text-light" data-toggle="modal" data-target="#rankmodal" data-id="'.$all->results()[$x]->id.'" data-name="'.$all->results()[$x]->name.'" data-minhrs="'.($all->results()[$x]->timereq / 3600).'"><i class="fa fa-edit"></i></button>';
+                                                    echo '<button class="btn btn-primary text-light" data-toggle="modal" 
+                                                    data-target="#rankmodal" data-id="'.$all->results()[$x]->id.'" 
+                                                    data-name="'.$all->results()[$x]->name.'" data-minhrs="'.($all->results()[$x]->timereq / 3600).'">
+                                                    <i class="fa fa-edit"></i></button>';
                                                     echo '</td></tr>';
                                                     $x++;
                                                 }
