@@ -103,8 +103,14 @@ if (!$user->isLoggedIn()) {
                                             echo '</td><td class="align-middle">';
                                             echo $user["status"];
                                             echo '</td><td class="align-middle">';
-                                            echo '<button class="btn btn-primary text-light" data-toggle="modal" data-target="#usermodal" data-callsign="'.$user['callsign'].'" data-name="'.$user['name'].'" data-email="'.$user['email'].'" data-ifc="'.$user['ifc'].'" data-joined="'.date_format(date_create($user['joined']), 'Y-m-d').'" data-status="'.$user['status'].'" data-id="'.$user['id'].'"><i class="fa fa-edit"></i></button>';
-                                            echo '&nbsp;<button id="delconfirmbtn" class="btn text-light btn-danger" data-toggle="modal" data-target="#delconfirmmodal" data-callsign="'.$user['callsign'].'"><i class="fa fa-trash"></i></button>';
+                                            echo '<button class="btn btn-primary text-light userEdit" data-callsign="'.$user['callsign'].'" 
+                                            data-name="'.$user['name'].'" data-email="'.$user['email'].'" data-ifc="'.$user['ifc'].'" 
+                                            data-joined="'.date_format(date_create($user['joined']), 'Y-m-d').'" data-status="'.$user['status'].'" 
+                                            data-id="'.$user['id'].'"><i class="fa fa-edit"></i>
+                                            </button>';
+                                            echo '&nbsp;<button id="delconfirmbtn" class="btn text-light btn-danger" 
+                                            data-toggle="modal" data-target="#delconfirmmodal" data-callsign="'.$user['callsign'].'">
+                                            <i class="fa fa-trash"></i></button>';
                                             echo '</td>';
                                             $x++;
                                         }
@@ -177,17 +183,24 @@ if (!$user->isLoggedIn()) {
                                 <!-- Populate modal fields -->
                                 <script>
                                     $(document).ready(function() {
-                                        $('#usermodal').on('show.bs.modal', function(e) {
-                                            var userCallsign = $(e.relatedTarget).data('callsign');
-                                            var userName = $(e.relatedTarget).data('name');
-                                            var userEmail = $(e.relatedTarget).data('email');
-                                            var userIfc = $(e.relatedTarget).data('ifc');
-                                            var userJoined = $(e.relatedTarget).data('joined');
-                                            var userStatus = $(e.relatedTarget).data('status');
-                                            var userId = $(e.relatedTarget).data('id');
-                                            $('#usermodal-title').text('Edit User - ' + userCallsign);
-                                            $('#usermodal-name').val(userCallsign);
-                                            $('#usermodal-hours').val(userName);
+                                        $('.userEdit').click(function(e) {
+                                            var userCallsign = $(this).data("callsign");
+                                            var userName = $(this).data("name");
+                                            var userEmail = $(this).data("email");
+                                            var userIfc = $(this).data("ifc");
+                                            var userJoined = $(this).data("joined");
+                                            var userStatus = $(this).data("status");
+                                            var userId = $(this).data("id");
+
+                                            $("#usermodal-callsign").val(userCallsign);
+                                            $("#usermodal-name").val(userName);
+                                            $("#usermodal-email").val(userEmail);
+                                            $("#usermodal-ifc").val(userIfc);
+                                            $("#usermodal-joined").val(userJoined);
+                                            $("#usermodal-status").val(userStatus);
+                                            $("#usermodal-id").val(userId);
+
+                                            $("#usermodal").modal("show");
                                         });
                                     });
                                 </script>
