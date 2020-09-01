@@ -209,11 +209,13 @@ if (!$user->isLoggedIn()) {
 
                                                 function reverseFormatFlightTime() {
                                                     var formatted = $("#flightTimeFormatted").val();
-                                                    var split = formatted.split(":");
-                                                    var hrs = split[0];
-                                                    var mins = split[1];
-                                                    $("#flightTimeHrs").val(hrs);
-                                                    $("#flightTimeMins").val(mins);
+                                                    if (formatted != '') {
+                                                        var split = formatted.split(":");
+                                                        var hrs = split[0];
+                                                        var mins = split[1];
+                                                        $("#flightTimeHrs").val(hrs);
+                                                        $("#flightTimeMins").val(mins);
+                                                    }
                                                 }
 
                                                 $(document).ready(function() {
@@ -254,7 +256,7 @@ if (!$user->isLoggedIn()) {
                                         </div>
                                         <div class="form-group">
                                             <label for="multi">Multiplier Number (if applicable)</label>
-                                            <input type="number" class="form-control" maxlength="6" minlength="6" id="multi" name="multi" value="0">
+                                            <input type="number" class="form-control" maxlength="6" minlength="6" id="multi" name="multi">
                                         </div>
                                         <input type="submit" class="btn text-light bg-custom" value="Submit">
                                     </form>
