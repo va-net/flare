@@ -274,10 +274,8 @@ class User
 
         if ($pireps->count() != 0) {
             foreach (range(0, $pireps->count() - 1) as $i) {
-                $time = $time + $pireps->results()[$i]->flighttime;
+                $time += $pireps->results()[$i]->flighttime;
             }
-        } else {
-            $time = 0;
         }
 
         return $time;
