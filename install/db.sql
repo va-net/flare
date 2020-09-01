@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS `news` (
 
 CREATE TABLE IF NOT EXISTS `pilots` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `callsign` varchar(8) NOT NULL,
+  `callsign` varchar(120) NOT NULL,
   `name` text NOT NULL,
   `ifc` text NOT NULL,
   `ifuserid` varchar(36) DEFAULT NULL,
@@ -32,7 +32,6 @@ CREATE TABLE IF NOT EXISTS `pilots` (
   `violand` double DEFAULT NULL,
   `grade` int(11) DEFAULT NULL,
   `notes` varchar(1200) NOT NULL DEFAULT '',
-  `darkmode` tinyint(1) NOT NULL DEFAULT '0',
   `permissions` text NOT NULL,
   `status` int(3) NOT NULL DEFAULT '0',
   `joined` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
