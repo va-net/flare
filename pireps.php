@@ -231,7 +231,7 @@ if (!$user->isLoggedIn()) {
                                             </script>
                                         </div>
                                         <div class="form-group">
-                                            <label for="fuel">Fuel Used in Kilograms (Kg)</label>
+                                            <label for="fuel">Fuel Used (kg)</label>
                                             <input required type="number" class="form-control" name="fuel" value="<?= escape(Input::get('fuel')) ?>">
                                         </div>
                                         <div class="form-group">
