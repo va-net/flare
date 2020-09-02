@@ -52,8 +52,8 @@ if (!$user->isLoggedIn()) {
                                         }
                                     } else {
                                         echo 'Nice! We\'ve found you. 
-                                        Make sure you\'ve finished your flight (don\'t leave this page open, you\'ll need
-                                        to refresh it) then go ahead and fill out these details.';
+                                        <b>Make sure you\'ve finished your flight (don\'t leave this page open, you\'ll need
+                                        to refresh it) then go ahead and fill out these details.</b>';
 
                                         $aircraft = Aircraft::fetchAircraftFromVANet($response["aircraft"], "LiveryID");
                                         if (count($aircraft) == 0) {
