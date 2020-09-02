@@ -54,16 +54,13 @@ if (Input::get('action') === 'editprofile') {
 
     $user = new User();
     $allowedaircraft = $user->getAvailableAircraft();
-    $filedaircraft = Aircraft::getId(Input::get('aircraft'));
-    $suitableaircraft = false;
-    // Check the user can access the aircraft they are filing for. Mainly used for ACARS.
+    $allowed = false;
     foreach ($allowedaircraft as $a) {
-        if ($filedaircraft == $a["name"]) {
-            $suitableaircraft = true;
-            break;
+        if ($a["name"] == Input::get('aircraft')) {
+            $allowed = true;
         }
     }
-    if (!$suitableaircraft) {
+    if (!$allowed) {
         Session::flash('error', 'You are not of a high enough rank to fly that aircraft. Your PIREP has not been filed.');
         Redirect::to('pireps.php?page=new');
     }
