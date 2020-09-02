@@ -177,7 +177,7 @@ if (!$user->isLoggedIn()) {
                                 $news = News::get();
 
                                 if ($news === array()) {
-                                    echo 'No news';
+                                    echo 'No News';
                                 } else {
                                     foreach ($news as $article) {
                                         echo '<div class="card mb-3">';
@@ -228,7 +228,7 @@ if (!$user->isLoggedIn()) {
                                         </tbody>
                                     </table>
                                 <?php else: ?>
-                                    <?= 'No recent PIREPs' ?>
+                                    <?= 'No Recent PIREPs' ?>
                                 <?php endif; ?>
                             </section>
                         </div>
