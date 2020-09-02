@@ -28,6 +28,7 @@ if (!$user->isLoggedIn()) {
     </nav>
     <div class="container-fluid">
         <div class="container-fluid mt-4 text-center" style="overflow: auto;">
+            <div class="row">
             <?php include './includes/sidebar.php'; ?>
             <div class="col-lg-9 p-3 main-content">
                 <div id="loader" class="spinner-border spinner-border-sm spinner-custom"></div>
@@ -67,6 +68,7 @@ if (!$user->isLoggedIn()) {
                         </div>
                     </div>
                 </div>
+            </div>
             </div>
             <footer class="container-fluid text-center">
                 <?php include './includes/footer.php'; ?>
