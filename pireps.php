@@ -11,7 +11,7 @@ require_once './core/init.php';
 
 $user = new User();
 
-Page::setTitle('My PIREPs - ' . Config::get('va/name'));
+Page::setTitle('PIREPs - ' . Config::get('va/name'));
 
 if (!$user->isLoggedIn()) {
     Redirect::to('index.php');
