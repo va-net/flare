@@ -46,7 +46,6 @@ if (!$user->isLoggedIn()) {
                                         'apikey' => Config::get('vanet/api_key')
                                     ));
                                     $response = Json::decode($request->body);
-                                    $response["aircraft"] = "a7c375a0-f126-49af-bb18-72ffe13b0f87";
                                     if (array_key_exists('status', $response)) {
                                         if ($response['status'] == 404 || $response['status'] == 409) {
                                             echo 'Hmm, looks like we couldn\'t find you on the server. Ensure that you have filed a flight plan, and are still connected to Infinite Flight. Then, refresh the page.';
