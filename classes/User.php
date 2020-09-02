@@ -323,17 +323,18 @@ class User
             return false;
         }
 
-        while ($x < $results->count()) {
+        $myPireps = $results->results();
+        foreach ($myPireps as $pirep) {
             $newdata = array(
-                'id' => $results->results()[$x]->id,
-                'number' => $results->results()[$x]->flightnum,
-                'departure' => $results->results()[$x]->departure,
-                'arrival' => $results->results()[$x]->arrival,
-                'date' => $results->results()[$x]->date,
-                'status' => $statuses[$results->results()[$x]->status],
-                'flighttime' => $results->results()[$x]->flighttime,
-                'multi' => $results->results()[$x]->multi,
-                'aircraft' => Aircraft::getAircraftName($results->results()[$x]->aircraftid),
+                'id' => $pirep->id,
+                'number' => $pirep->flightnum,
+                'departure' => $pirep->departure,
+                'arrival' => $pirep->arrival,
+                'date' => $pirep->date,
+                'status' => $statuses[$pirep->status],
+                'flighttime' => $pirep->flighttime,
+                'multi' => $pirep->multi,
+                'aircraft' => Aircraft::getAircraftName($pirep->aircraftid),
             );
             $pireps[$x] = $newdata;
             $counter++;
