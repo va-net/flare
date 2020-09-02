@@ -201,4 +201,11 @@ class Aircraft
 
     }
 
+    public static function exists($liveryId) {
+
+        self::init();
+        $result = self::$_db->get('aircraft', array('ifliveryid', '=', $liveryId));
+        return !($result->count() == 0);
+    }
+
 }

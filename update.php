@@ -52,6 +52,22 @@ if (Input::get('action') === 'editprofile') {
         $multi = Input::get('multi');
     }
 
+    $user = new User();
+    $allowedaircraft = $user->getAvailableAircraft();
+    $filedaircraft = Aircraft::getId(Input::get('aircraft'));
+    $suitableaircraft = false;
+    // Check the user can access the aircraft they are filing for. Mainly used for ACARS.
+    foreach ($allowedaircraft as $a) {
+        if ($filedaircraft == $a["name"]) {
+            $suitableaircraft = true;
+            break;
+        }
+    }
+    if (!$suitableaircraft) {
+        Session::flash('error', 'You are not of a high enough rank to fly that aircraft. Your PIREP has not been filed.');
+        Redirect::to('pireps.php?page=new');
+    }
+
     $curl = new Curl;
 
     $response = $curl->post(Config::get('vanet/base_url').'/api/flights/new?apikey='.Config::get('vanet/api_key'), array(
