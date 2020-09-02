@@ -25,19 +25,17 @@ class Rank
 
         self::init();
 
-        $finalRank = self::$_db->get('ranks', array('id', '>', '0'), array('timereq', 'desc'));
+        $ranks = self::$_db->get('ranks', array('id', '>', '0'), array('timereq', 'desc'))->results();
 
-        if ($hours >= $finalRank->first()->timereq) {
-            return $finalRank->first()->name;
+        foreach ($ranks as $item) {
+            if ($item->timereq * 3600 <= $hours) {
+                if ($returnid) {
+                    return $item->id;
+                } else {
+                    return $item->name;
+                }
+            }
         }
-
-        $rank = self::$_db->get('ranks', array('timereq', '<=', $hours), array('timereq', 'desc'));
-
-        if ($returnid) {
-            return $rank->first()->id;
-        }
-        
-        return $rank->first()->name;
 
     }
 
