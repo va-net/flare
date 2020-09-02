@@ -217,18 +217,7 @@ class User
             $id = $this->data()->id;
         }
 
-        $result = $this->_db->get('pilots', array('id', '=', $id));
-        $time = $result->first()->transhours;
-
-        $pireps = $this->fetchApprovedPireps();
-
-        if ($pireps->count() != 0) {
-            foreach (range(0, $pireps->count() - 1) as $i) {
-                $time = $time + $pireps->results()[$i]->flighttime;
-            }
-        } else {
-            $time = 0;
-        }
+        $time = $this->getFlightTime($id);
 
         if ($returnid) {
             return Rank::getId($time);
