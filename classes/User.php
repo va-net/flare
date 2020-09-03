@@ -71,10 +71,11 @@ class User
         
         if (!$username && !$password && $this->exists()) {
             Session::create($this->_sessionName, $this->data()->id);
-        } else {    
+        } else {
             $user = $this->find($username);    
 
             if ($user) {
+                var_dump(Hash::check($password, $this->data()->password));
                 if(Hash::check($password, $this->data()->password)) {
                     Session::create($this->_sessionName, $this->data()->id);
 
