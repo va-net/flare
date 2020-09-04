@@ -722,7 +722,10 @@ if (!$user->isLoggedIn()) {
                                     <input type="submit" class="btn bg-custom" value="Save">
                                 </form>
                                 <?php endif; ?>
-                                <?php elseif (Input::get('page') === 'statsviewing'): ?>
+                            <?php elseif (Input::get('page') === 'statsviewing'): ?>
+                                <?php if (!$user->hasPermission('statsviewing')): ?>
+                                    <div class="alert alert-danger text-center">Whoops! You don't have the necessary permissions to access this.</div>
+                                <?php else: ?>
                                     <h3>VA Statistics</h3>
                                     <table class="table">
                                         <tr><td><b>Total Hours</b></td><td><?php echo Time::secsToString(Stats::totalHours()); ?></td></tr>
@@ -735,6 +738,7 @@ if (!$user->isLoggedIn()) {
                                     <?php else: ?>
                                         <p>Finance Stats Coming Soon...</p>
                                     <?php endif; ?>
+                                <?php endif; ?>
                             <?php elseif (Input::get('page') === 'opsmanage'): ?>
                                 <?php if (!$user->hasPermission('opsmanage')): ?>
                                     <div class="alert alert-danger text-center">Whoops! You don't have the necessary permissions to access this.</div>
