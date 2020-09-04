@@ -202,7 +202,11 @@ class DB
     public function first()
     {
 
-        return $this->results()[0];
+        if ($this->count() > 0) {
+            return $this->results()[0];
+        }
+
+        return false;
 
     }
 
