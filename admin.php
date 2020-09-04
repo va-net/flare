@@ -258,7 +258,7 @@ if (!$user->isLoggedIn()) {
                                             $("#usermodal-tflts").val(userTflts);
                                             $("#usermodal-id").val(userId);
                                             $("#usermodal-admin-" + userAdmin).attr("selected", true);
-                                            
+
                                             $("#usermodal-title").text("Edit User - " + userCallsign);
                                             reverseFormatFlightTime();
 
@@ -285,7 +285,7 @@ if (!$user->isLoggedIn()) {
                                     });
                                 </script>
                                 <h3>Manage Staff</h3>
-                                <?php if (!$user->hasPermission('usermanage')): ?>
+                                <?php if (!$user->hasPermission('staffmanage')): ?>
                                     <div class="alert alert-danger text-center">Whoops! You don't have the necessary permissions to access this.</div>
                                 <?php else: ?>
                                     <p>Here you can manage staff members, and their permissions. Be sure to select the correct permissions, as setting the wrong permissions can give them access to sensitive information!</p>
