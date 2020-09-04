@@ -116,13 +116,17 @@ if (Input::get('action') === 'editprofile') {
         Redirect::to('pireps.php');
     }
 } elseif (Input::get('action') === 'edituser') {
+    $perms = Json::decode($user->getUser(Input::get('id'))["permissions"]);
+    $perms["admin"] = Input::get("admin");
+
     $user->update(array(
         'callsign' => Input::get('callsign'),
         'name' => Input::get('name'),
         'email' => Input::get('email'),
         'ifc' => Input::get('ifc'),
         'transhours' => Time::strToSecs(Input::get('transhours')),
-        'transflights' => Input::get('transflights')
+        'transflights' => Input::get('transflights'),
+        'permissions' => Json::encode($perms),
     ), Input::get('id'));
     Session::flash('success', 'User Edited Successfully!');
     Redirect::to('admin.php?page=usermanage');

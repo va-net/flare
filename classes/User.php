@@ -403,7 +403,8 @@ class User
                 'joined' => $results->results()[$x]->joined,
                 'permissions' => $results->results()[$x]->permissions,
                 'transhours' => $results->results()[$x]->transhours,
-                'transflights' => $results->results()[$x]->transflights
+                'transflights' => $results->results()[$x]->transflights,
+                'isAdmin' => Json::decode($results->results()[$x]->permissions)["admin"],
             );
             $usersarray[$x] = $newdata;
             $x++;
@@ -484,6 +485,12 @@ class User
         $result =  $result->first();
         return $result->callsign;
 
+    }
+
+    public function getUser($id) {
+        $this->_db->get('pilots', array('id', '=', $id))->first();
+
+        return $ret;
     }
 
 }

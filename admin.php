@@ -106,7 +106,8 @@ if (!$user->isLoggedIn()) {
                                             echo '<button class="btn btn-primary text-light userEdit" data-callsign="'.$user['callsign'].'" 
                                             data-name="'.$user['name'].'" data-email="'.$user['email'].'" data-ifc="'.$user['ifc'].'" 
                                             data-joined="'.date_format(date_create($user['joined']), 'Y-m-d').'" data-status="'.$user['status'].'" 
-                                            data-id="'.$user['id'].'" data-thrs="'.Time::secsToString($user["transhours"]).'" data-tflts="'.$user["transflights"].'"><i class="fa fa-edit"></i>
+                                            data-id="'.$user['id'].'" data-thrs="'.Time::secsToString($user["transhours"]).'" 
+                                            data-admin="'.$user['isAdmin'].'" data-tflts="'.$user["transflights"].'"><i class="fa fa-edit"></i>
                                             </button>';
                                             echo '&nbsp;<button id="delconfirmbtn" class="btn text-light btn-danger" 
                                             data-toggle="modal" data-target="#delconfirmmodal" data-callsign="'.$user['callsign'].'">
@@ -218,6 +219,14 @@ if (!$user->isLoggedIn()) {
                                                         <label for="usermodal-status">Status</label>
                                                         <input readonly type="text" value="" class="form-control" name="status" id="usermodal-status">
                                                     </div>
+                                                    <div class="form-group">
+                                                        <label for="usermodal-admin">Admin Status</label>
+                                                        <select required class="form-control" name="admin" id="usermodal-admin">
+                                                            <option value>Select</option>
+                                                            <option value="0" id="usermodal-admin-0">Pilot</option>
+                                                            <option value="1" id="usermodal-admin-1">Staff Member</option>
+                                                        </select>
+                                                    </div>
                                                     <input type="submit" class="btn bg-custom" value="Save">
                                                 </form>
                                             </div>
@@ -237,6 +246,7 @@ if (!$user->isLoggedIn()) {
                                             var userThrs = $(this).data("thrs");
                                             var userTflts = $(this).data("tflts");
                                             var userId = $(this).data("id");
+                                            var userAdmin = $(this).data("admin");
 
                                             $("#usermodal-callsign").val(userCallsign);
                                             $("#usermodal-name").val(userName);
@@ -248,6 +258,7 @@ if (!$user->isLoggedIn()) {
                                             $("#usermodal-tflts").val(userTflts);
                                             reverseFormatFlightTime();
                                             $("#usermodal-id").val(userId);
+                                            $("#usermodal-admin-" + userAdmin).attr("selected", true);
                                             $("#usermodal-title").text("Edit User - " + userCallsign);
 
                                             $("#usermodal").modal("show");
