@@ -256,10 +256,11 @@ if (!$user->isLoggedIn()) {
                                             $("#usermodal-status").val(userStatus);
                                             $("#usermodal-thrs").val(userThrs);
                                             $("#usermodal-tflts").val(userTflts);
-                                            reverseFormatFlightTime();
                                             $("#usermodal-id").val(userId);
                                             $("#usermodal-admin-" + userAdmin).attr("selected", true);
+                                            
                                             $("#usermodal-title").text("Edit User - " + userCallsign);
+                                            reverseFormatFlightTime();
 
                                             $("#usermodal").modal("show");
                                         });
