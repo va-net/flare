@@ -70,7 +70,6 @@ class VANet
         $request = $curl->get(Config::get('vanet/base_url') . "/api/airline", array(
             "apikey" => $key,
         ));
-        var_dump($request);
         return Json::decode($request->body);
     }
 }

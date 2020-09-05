@@ -757,7 +757,6 @@ if (!$user->isLoggedIn()) {
                                     <?php else: ?>
                                         <h4>VANet Statistics</h4>
                                         <?php $stats = VANet::getStats(); ?>
-                                        <?php var_dump($stats); ?>
                                         <table class="table">
                                             <tr><td><b>Total Distance</b></td><td><?php echo $stats["totalDistance"]; ?>NM</td></tr>
                                             <tr><td><b>Total Revenue</b></td><td>$<?php echo $stats["totalRevenue"]; ?></td></tr>
