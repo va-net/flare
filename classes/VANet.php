@@ -56,4 +56,21 @@ class VANet
 
     }
 
+    public static function getStats($key = null) 
+    {
+        if ($key == null) {
+            $key = Config::get('vanet/api_key');
+        }
+
+        if (!self::isGold($key)) {
+            return false;
+        }
+
+        $curl = new Curl;
+        $request = $curl->get(Config::get('vanet/base_url') . "/api/airline", array(
+            "apikey" => $key,
+        ));
+        var_dump($request);
+        return Json::decode($request->body);
+    }
 }
