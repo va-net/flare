@@ -21,4 +21,4 @@ It's a lot of hard work for a teenager to maintain Flare, so I'd very much appre
 
 &copy; 2020, Lucas Rebato
 
-Flare is licensed under the GNU General Public License. A copy of the license is available [here](../LICENSE), and [here](https://www.gnu.org/licenses/gpl-3.0.txt).
+Flare is licensed under the GNU General Public License. A copy of the license is available [here](../master/LICENSE), and [here](https://www.gnu.org/licenses/gpl-3.0.txt).
