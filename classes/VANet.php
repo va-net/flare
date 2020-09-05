@@ -11,8 +11,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 class VANet
 {
 
-    public static function myInfo($key)
+    public static function myInfo($key = null)
     {
+        if ($key == null) {
+            $key = Config::get('vanet/api_key');
+        }
 
         $curl = new Curl;
         $curl->options['CURLOPT_FRESH_CONNECT'] = true;
@@ -20,7 +23,6 @@ class VANet
             'apikey' => $key
         ));
         return Json::decode($response->body);
-
     }
 
     public static function isGold($key = null) 
