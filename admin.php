@@ -779,7 +779,6 @@ if (!$user->isLoggedIn()) {
                                     </script>
                                     <?php if (Input::get('section') === 'fleet'): ?>
                                         <h3>Fleet</h3>
-                                        <br>
                                         <button type="button" class="btn bg-custom mb-2" data-toggle="modal" data-target="#addAircraft">Add Aircraft</button>
                                         <div id="addAircraft" class="modal fade" role="dialog">
                                             <div class="modal-dialog">
@@ -848,7 +847,6 @@ if (!$user->isLoggedIn()) {
                                         <form id="deleteaircraft" method="post" action="update.php">
                                             <input hidden value="deleteaircraft" name="action">
                                         </form>
-                                        <br>
                                         <table class="table table-striped">
                                             <thead class="bg-custom">
                                                 <tr>
@@ -872,12 +870,59 @@ if (!$user->isLoggedIn()) {
                                                     echo Rank::idToName($all->results()[$x]->rankreq);
                                                     echo '</td><td class="align-middle">';
                                                     echo '&nbsp;<button value="'.$all->results()[$x]->id.'" form="deleteaircraft" type="submit" class="btn btn-danger text-light" name="delete"><i class="fa fa-trash"></i></button>';
+                                                    echo '&nbsp;<button class="btn btn-primary editFleet" data-acName="'.$all->results()[$x]->name.' ('.$all->results()[$x]->liveryname.')'.'" 
+                                                    data-rankReq="'.$all->results()[$x]->rankreq.'" data-id="'.$all->results()[$x]->id.'"><i class="fa fa-edit"></i></button>';
                                                     echo '</td>';
                                                     $x++;
                                                 }
                                                 ?>
                                             </tbody>
                                         </table>
+
+                                        <div class="modal" id="fleetedit">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title" id="fleetedit-title"></h4>
+                                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form action="update.php" method="post">
+                                                        <input hidden name="action" value="editfleet" />
+                                                        <input hidden name="id" id="fleetedit-id" />
+                                                        <div class="form-group">
+                                                            <label for="fleetedit-rank">Minimum Rank</label>
+                                                            <select class="form-control" name="rank" id="fleetedit-rank">
+                                                                <?php
+                                                                    $ranks = Rank::fetchAllNames()->results();
+                                                                    foreach ($ranks as $r) {
+                                                                        echo '<option id="fleetedot-rank-'.$r->id.'" value="'.$r->id.'">'.$r->name.'</option>';
+                                                                    }
+                                                                ?>
+                                                            </select>
+                                                        </div>
+                                                        <input type="submit" class="btn bg-custom" value="Save" />
+                                                    </form>
+                                                </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <script>
+                                            $(document).ready(function() {
+                                                $(".editFleet").click(function() {
+                                                    var acName = $(this).data('acname');
+                                                    var acRank = $(this).data('rankreq');
+                                                    var acId = $(this).data('id');
+                                                    
+                                                    $("#fleetedit-title").text("Edit Aircraft: " + acName);
+                                                    $("#fleetedit-id").val(acId);
+                                                    $("#fleetedit-rank-" + acRank).attr('selected', true);
+
+                                                    $("#fleetedit").modal('show');
+                                                });
+                                            });
+                                        </script>
                                     <?php elseif (Input::get('section') === 'routes'): ?>
                                         <h3>Route Management</h3>
                                         <p>Here you can Manage your VA's Routes.</p>

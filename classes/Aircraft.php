@@ -163,6 +163,18 @@ class Aircraft
 
     }
 
+    public static function updateRank($rankId, $aircraftId) {
+        self::init();
+        
+        $fields = array(
+            'rankreq' => $rankId,
+        );
+
+        if (!self::$_db->update('aircraft', $aircraftId, 'id', $fields)) {
+            throw new Exception('There was a problem updating the user.');
+        }
+    }
+
     public static function nameToId($name)
     {
 

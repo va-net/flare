@@ -284,6 +284,15 @@ if (Input::get('action') === 'editprofile') {
     Aircraft::add(Input::get('aircraftselect'), Rank::nameToId(Input::get('rank')), Input::get('livery'));
     Session::flash('success', 'Aircraft Added Successfully! ');
     Redirect::to('admin.php?page=opsmanage&section=fleet');
+} elseif (Input::get('action') == 'editfleet') {
+    if (!$user->hasPermission('opsmanage')) {
+        Redirect::to('home.php');
+        die();
+    }
+    
+    Aircraft::updateRank(Input::get('rank'), Input::get('id'));
+    Session::flash('success', 'Aircraft Updated Successfully!');
+    Redirect::to('admin.php?page=opsmanage&section=fleet');
 } elseif (Input::get('action') === 'setuppireps') {
     if (!Pirep::setup(Input::get('callsign'), $user->data()->id)) {
         Session::flash('errorrecent', 'There was an Error Connecting to Infinite Flight. Ensure you are spawned in on the <b>Casual Server, and have set your callsign to \''.$user->data()->callsign.'\'</b>!');
