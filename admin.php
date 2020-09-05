@@ -71,7 +71,9 @@ if (!$user->isLoggedIn()) {
                             <?php if (Input::get('page') === 'usermanage'): ?>
                                 <script>
                                     $(document).ready(function() {
-                                        $("#usrCollapse").collapse('show');
+                                        $(".usrCollapse").each(function() {
+                                            $(this).collapse("show");
+                                        });
                                     });
                                 </script>
                                 <h3>Manage Users</h3>
@@ -106,7 +108,8 @@ if (!$user->isLoggedIn()) {
                                             echo '<button class="btn btn-primary text-light userEdit" data-callsign="'.$user['callsign'].'" 
                                             data-name="'.$user['name'].'" data-email="'.$user['email'].'" data-ifc="'.$user['ifc'].'" 
                                             data-joined="'.date_format(date_create($user['joined']), 'Y-m-d').'" data-status="'.$user['status'].'" 
-                                            data-id="'.$user['id'].'" data-thrs="'.Time::secsToString($user["transhours"]).'" data-tflts="'.$user["transflights"].'"><i class="fa fa-edit"></i>
+                                            data-id="'.$user['id'].'" data-thrs="'.Time::secsToString($user["transhours"]).'" 
+                                            data-admin="'.$user['isAdmin'].'" data-tflts="'.$user["transflights"].'"><i class="fa fa-edit"></i>
                                             </button>';
                                             echo '&nbsp;<button id="delconfirmbtn" class="btn text-light btn-danger" 
                                             data-toggle="modal" data-target="#delconfirmmodal" data-callsign="'.$user['callsign'].'">
@@ -218,6 +221,14 @@ if (!$user->isLoggedIn()) {
                                                         <label for="usermodal-status">Status</label>
                                                         <input readonly type="text" value="" class="form-control" name="status" id="usermodal-status">
                                                     </div>
+                                                    <div class="form-group">
+                                                        <label for="usermodal-admin">Admin Status</label>
+                                                        <select required class="form-control" name="admin" id="usermodal-admin">
+                                                            <option value>Select</option>
+                                                            <option value="0" id="usermodal-admin-0">Pilot</option>
+                                                            <option value="1" id="usermodal-admin-1">Staff Member</option>
+                                                        </select>
+                                                    </div>
                                                     <input type="submit" class="btn bg-custom" value="Save">
                                                 </form>
                                             </div>
@@ -237,6 +248,7 @@ if (!$user->isLoggedIn()) {
                                             var userThrs = $(this).data("thrs");
                                             var userTflts = $(this).data("tflts");
                                             var userId = $(this).data("id");
+                                            var userAdmin = $(this).data("admin");
 
                                             $("#usermodal-callsign").val(userCallsign);
                                             $("#usermodal-name").val(userName);
@@ -246,9 +258,11 @@ if (!$user->isLoggedIn()) {
                                             $("#usermodal-status").val(userStatus);
                                             $("#usermodal-thrs").val(userThrs);
                                             $("#usermodal-tflts").val(userTflts);
-                                            reverseFormatFlightTime();
                                             $("#usermodal-id").val(userId);
+                                            $("#usermodal-admin-" + userAdmin).attr("selected", true);
+
                                             $("#usermodal-title").text("Edit User - " + userCallsign);
+                                            reverseFormatFlightTime();
 
                                             $("#usermodal").modal("show");
                                         });
@@ -269,11 +283,13 @@ if (!$user->isLoggedIn()) {
                             <?php elseif (Input::get('page') === 'staffmanage'): ?>
                                 <script>
                                     $(document).ready(function() {
-                                        $("#usrCollapse").collapse('show');
+                                        $(".usrCollapse").each(function() {
+                                            $(this).collapse("show");
+                                        });
                                     });
                                 </script>
                                 <h3>Manage Staff</h3>
-                                <?php if (!$user->hasPermission('usermanage')): ?>
+                                <?php if (!$user->hasPermission('staffmanage')): ?>
                                     <div class="alert alert-danger text-center">Whoops! You don't have the necessary permissions to access this.</div>
                                 <?php else: ?>
                                     <p>Here you can manage staff members, and their permissions. Be sure to select the correct permissions, as setting the wrong permissions can give them access to sensitive information!</p>
@@ -437,7 +453,9 @@ if (!$user->isLoggedIn()) {
                             <?php elseif (Input::get('page') === 'recruitment'): ?>
                                 <script>
                                     $(document).ready(function() {
-                                        $("#usrCollapse").collapse('show');
+                                        $(".usrCollapse").each(function() {
+                                            $(this).collapse("show");
+                                        });
                                     });
                                 </script>
                                 <h3>Recruitment</h3>
@@ -722,7 +740,10 @@ if (!$user->isLoggedIn()) {
                                     <input type="submit" class="btn bg-custom" value="Save">
                                 </form>
                                 <?php endif; ?>
-                                <?php elseif (Input::get('page') === 'statsviewing'): ?>
+                            <?php elseif (Input::get('page') === 'statsviewing'): ?>
+                                <?php if (!$user->hasPermission('statsviewing')): ?>
+                                    <div class="alert alert-danger text-center">Whoops! You don't have the necessary permissions to access this.</div>
+                                <?php else: ?>
                                     <h3>VA Statistics</h3>
                                     <table class="table">
                                         <tr><td><b>Total Hours</b></td><td><?php echo Time::secsToString(Stats::totalHours()); ?></td></tr>
@@ -735,13 +756,16 @@ if (!$user->isLoggedIn()) {
                                     <?php else: ?>
                                         <p>Finance Stats Coming Soon...</p>
                                     <?php endif; ?>
+                                <?php endif; ?>
                             <?php elseif (Input::get('page') === 'opsmanage'): ?>
                                 <?php if (!$user->hasPermission('opsmanage')): ?>
                                     <div class="alert alert-danger text-center">Whoops! You don't have the necessary permissions to access this.</div>
                                 <?php else: ?>
                                     <script>
                                         $(document).ready(function() {
-                                            $("#opsCollapse").collapse('show');
+                                            $(".opsCollapse").each(function() {
+                                                $(this).collapse("show");
+                                            });
                                         });
                                     </script>
                                     <?php if (Input::get('section') === 'fleet'): ?>

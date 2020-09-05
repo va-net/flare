@@ -83,7 +83,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
             echo '<li class="nav-item desktop-hidden">';
             if ($userpages != []) {
                 echo '<a href="#" data-toggle="collapse" data-target="#usrCollapse" class="panel-link"><i class="fa fa-caret-down"></i>&nbsp;User Management</a>';
-                echo '<div id="usrCollapse" class="collapse">';
+                echo '<div id="usrCollapse" class="collapse usrCollapse">';
                 foreach ($userpages as $slug => $info) {
                     echo '<a href="admin.php?page='.$slug.'" class="panel-link">
                     <i class="fa '.$info["icon"].'"></i>&nbsp;'.$info["name"].'
@@ -93,7 +93,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
             }
             if ($opspages != []) {
                 echo '<a href="#" data-toggle="collapse" data-target="#opsCollapse" class="panel-link"><i class="fa fa-caret-down"></i>&nbsp;Operations Management</a>';
-                echo '<div id="opsCollapse" class="collapse">';
+                echo '<div id="opsCollapse" class="collapse opsCollapse">';
                 foreach ($opspages as $slug => $info) {
                     echo '<a href="admin.php?page=opsmanage&section='.$slug.'" class="panel-link">
                     <i class="fa '.$info["icon"].'"></i>&nbsp;'.$info["name"].'

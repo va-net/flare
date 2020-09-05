@@ -73,7 +73,7 @@ if (Input::exists()) {
             } catch(Exception $e) {
                 die($e->getMessage());
             }
-            Session::flash('success', 'Your application has been submitted, you can now login!');
+            Session::flash('success', 'Your application has been submitted! You will be contacted by a staff member in the coming weeks regarding the status of your application.');
             Redirect::to('index.php');
         } else {
             foreach ($validate->errors() as $error) {

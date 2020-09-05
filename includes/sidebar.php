@@ -46,7 +46,7 @@
         echo '<hr class="mt-0 divider">';
         if ($userpages != []) {
             echo '<a href="#" data-toggle="collapse" data-target="#usrCollapse" class="panel-link"><i class="fa fa-caret-down"></i>&nbsp;User Management</a><br />';
-            echo '<div id="usrCollapse" class="collapse">';
+            echo '<div id="usrCollapse" class="collapse usrCollapse">';
             foreach ($userpages as $slug => $info) {
                 echo '&nbsp;&nbsp;&nbsp;&nbsp;
                 <a href="admin.php?page='.$slug.'" class="panel-link">
@@ -57,7 +57,7 @@
         }
         if ($opspages != []) {
             echo '<a href="#" data-toggle="collapse" data-target="#opsCollapse" class="panel-link"><i class="fa fa-caret-down"></i>&nbsp;Operations Management</a><br />';
-            echo '<div id="opsCollapse" class="collapse">';
+            echo '<div id="opsCollapse" class="collapse opsCollapse">';
             foreach ($opspages as $slug => $info) {
                 echo '&nbsp;&nbsp;&nbsp;&nbsp;
                 <a href="admin.php?page=opsmanage&section='.$slug.'" class="panel-link">
@@ -73,6 +73,6 @@
         }
     }
     ?>
-    <br>
+    <br />
     <a href="logout.php" class="panel-link"><i class="fa fa-sign-out-alt"></i>&nbsp;Log Out</a>
 </div>
