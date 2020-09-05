@@ -71,7 +71,9 @@ if (!$user->isLoggedIn()) {
                             <?php if (Input::get('page') === 'usermanage'): ?>
                                 <script>
                                     $(document).ready(function() {
-                                        $("#usrCollapse").collapse('show');
+                                        $(".usrCollapse").each(function() {
+                                            $(this).collapse("show");
+                                        });
                                     });
                                 </script>
                                 <h3>Manage Users</h3>
@@ -281,7 +283,9 @@ if (!$user->isLoggedIn()) {
                             <?php elseif (Input::get('page') === 'staffmanage'): ?>
                                 <script>
                                     $(document).ready(function() {
-                                        $("#usrCollapse").collapse('show');
+                                        $(".usrCollapse").each(function() {
+                                            $(this).collapse("show");
+                                        });
                                     });
                                 </script>
                                 <h3>Manage Staff</h3>
@@ -449,7 +453,9 @@ if (!$user->isLoggedIn()) {
                             <?php elseif (Input::get('page') === 'recruitment'): ?>
                                 <script>
                                     $(document).ready(function() {
-                                        $("#usrCollapse").collapse('show');
+                                        $(".usrCollapse").each(function() {
+                                            $(this).collapse("show");
+                                        });
                                     });
                                 </script>
                                 <h3>Recruitment</h3>
@@ -757,7 +763,9 @@ if (!$user->isLoggedIn()) {
                                 <?php else: ?>
                                     <script>
                                         $(document).ready(function() {
-                                            $("#opsCollapse").collapse('show');
+                                            $(".opsCollapse").each(function() {
+                                                $(this).collapse("show");
+                                            });
                                         });
                                     </script>
                                     <?php if (Input::get('section') === 'fleet'): ?>
