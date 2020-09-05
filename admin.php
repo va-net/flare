@@ -751,10 +751,16 @@ if (!$user->isLoggedIn()) {
                                         <tr><td><b>Total Pilots</b></td><td><?php echo Stats::numPilots(); ?></td></tr>
                                         <tr><td><b>Total Routes</b></td><td><?php echo Stats::numRoutes(); ?></td></tr>
                                     </table>
+                                    <hr />
                                     <?php if (!VANet::isGold()): ?>
-                                        <p>Sign Up to VANet Gold in order to get access to Finance Stats.</p>
+                                        <p>Sign Up to VANet Gold in order to get access to VANet Stats.</p>
                                     <?php else: ?>
-                                        <p>Finance Stats Coming Soon...</p>
+                                        <h4>VANet Statistics</h4>
+                                        <?php $stats = VANet::getStats(); ?>
+                                        <table class="table">
+                                            <tr><td><b>Total Distance</b></td><td><?php echo $stats["totalDistance"]; ?>NM</td></tr>
+                                            <tr><td><b>Total Revenue</b></td><td>$<?php echo $stats["totalRevenue"]; ?></td></tr>
+                                        </table>
                                     <?php endif; ?>
                                 <?php endif; ?>
                             <?php elseif (Input::get('page') === 'opsmanage'): ?>

@@ -7,7 +7,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 ?>
-<p><small class="d-block mb-3 text-muted"><br />&copy; Lucas Rebato <?php echo date("Y"); ?>. All Rights Reserved.</small></p>
+<p><small class="d-block mb-3 text-muted"><br />&copy; <?php echo Config::get('va/name')." ".date("Y"); ?>. Flare Crew Center by Lucas Rebato and VANet.</small></p>
 <script>
     $(document).ready(function() {
         $("#loader").fadeOut(500, function() {
