@@ -112,7 +112,8 @@ if (!$user->isLoggedIn()) {
                                             data-admin="'.$user['isAdmin'].'" data-tflts="'.$user["transflights"].'"><i class="fa fa-edit"></i>
                                             </button>';
                                             echo '&nbsp;<button id="delconfirmbtn" class="btn text-light btn-danger" 
-                                            data-toggle="modal" data-target="#delconfirmmodal" data-callsign="'.$user['callsign'].'">
+                                            data-toggle="modal" data-target="#delconfirmmodal" 
+                                            data-callsign="'.$user['callsign'].'" data-id="'.$user['id'].'">
                                             <i class="fa fa-trash"></i></button>';
                                             echo '</td>';
                                             $x++;
@@ -134,7 +135,7 @@ if (!$user->isLoggedIn()) {
                                                 <form action="update.php" method="post">
                                                     <input hidden name="action" value="deluser">
                                                     <input hidden value="" name="id" id="delconfirmuserid">
-                                                    <input type="submit" class="btn bg-custom" value="Mark as Inactive">
+                                                    <input type="submit" class="btn bg-danger text-light" value="Mark as Inactive">
                                                 </form>
                                             </div>
                                         </div>
@@ -272,10 +273,12 @@ if (!$user->isLoggedIn()) {
                                 <script>
                                     $(document).ready(function() {
                                         $('#delconfirmmodal').on('show.bs.modal', function(e) {
-                                            var userCallsign = $(e.relatedTarget).data('callsign')
+                                            var userCallsign = $(e.relatedTarget).data('callsign');
+                                            var userId = $(e.relatedTarget).data('id');
+
                                             var message = 'Are you sure you want to mark the user ' + userCallsign + ' as inactive?'
                                             $("#delconfirmmessage").text(message);
-                                            $("#delconfirmuserid").val(userCallsign);
+                                            $("#delconfirmuserid").val(userId);
                                         });
                                     });
                                 </script>
