@@ -1,0 +1,8 @@
+{
+    "tag": "v1.0.0-beta2.1",
+    "name": "Public Beta 2.1",
+    "prerelease": true,
+    "config": {
+        "check_prerelease": true
+    }
+}
