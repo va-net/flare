@@ -3,6 +3,6 @@
     "name": "Public Beta 2.1",
     "prerelease": true,
     "config": {
-        "check_prerelease": true
+        "check_prerelease": false
     }
 }
