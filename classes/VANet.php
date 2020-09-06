@@ -72,4 +72,9 @@ class VANet
         ));
         return Json::decode($request->body);
     }
+
+    public static function sendPirep($fields) {
+        $curl = new Curl;
+        return $curl->post(Config::get('vanet/base_url').'/api/flights/new?apikey='.Config::get('vanet/api_key'), $fields);
+    }
 }
