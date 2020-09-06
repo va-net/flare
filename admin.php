@@ -416,43 +416,70 @@ if (!$user->isLoggedIn()) {
                             <?php elseif (Input::get('page') === 'site'): ?>
                                 <h3>Configure Flare</h3>
                                 <p>Here you may configure Flare to be your own.</p>
-                                <br>
-                                <br>
-                                <h4>Colour Theme</h4>
-                                <form action="update.php" method="post">
-                                    <input hidden name="action" value="setcolour">
-                                    <div class="form-group">
-                                        <label for="">Main Colour (hex, without #)</label>
-                                        <input required type="text" class="form-control" name="hexcol" value="<?= str_replace('#', '', Config::get('site/colour_main_hex')) ?>">
+                                <ul class="nav nav-tabs nav-dark justify-content-center">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" data-toggle="tab" href="#colors">Color Theme</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#settings">VA Settings</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#vanet">VANet Settings</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#updates">Updates</a>
+                                    </li>
+                                </ul>
+
+                                <div class="tab-content">
+                                    <div id="colors" class="tab-pane container-fluid p-3 active">
+                                        <h4>Colour Theme</h4>
+                                        <form action="update.php" method="post">
+                                            <input hidden name="action" value="setcolour">
+                                            <div class="form-group">
+                                                <label for="">Main Colour (hex, without #)</label>
+                                                <input required type="text" class="form-control" name="hexcol" value="<?= str_replace('#', '', Config::get('site/colour_main_hex')) ?>">
+                                            </div>
+                                            <input type="submit" class="btn bg-custom" value="Save">
+                                        </form>
                                     </div>
-                                    <input type="submit" class="btn bg-custom" value="Save">
-                                </form>
-                                <br>
-                                <br>
-                                <h4>VA Settings</h4>
-                                <form action="update.php" method="post">
-                                    <input hidden name="action" value="vasettingsupdate">
-                                    <div class="form-group">
-                                        <label for="">VA Full Name</label>
-                                        <input required type="text" class="form-control" name="vaname" value="<?= Config::get('va/name') ?>">
+                                    <div id="settings" class="tab-pane container-fluid p-3 fade">
+                                        <h4>VA Settings</h4>
+                                        <form action="update.php" method="post">
+                                            <input hidden name="action" value="vasettingsupdate">
+                                            <div class="form-group">
+                                                <label for="">VA Full Name</label>
+                                                <input required type="text" class="form-control" name="vaname" value="<?= Config::get('va/name') ?>">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="">VA Callsign Identifier</label>
+                                                <input required type="text" class="form-control" name="vaident" value="<?= Config::get('va/identifier') ?>">
+                                            </div>
+                                            <input type="submit" class="btn bg-custom" value="Save">
+                                        </form>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="">VA Callsign Identifier</label>
-                                        <input required type="text" class="form-control" name="vaident" value="<?= Config::get('va/identifier') ?>">
+                                    <div id="vanet" class="tab-pane container-fluid p-3 fade">
+                                        <h4>VANet Settings</h4>
+                                        <form action="update.php" method="post">
+                                            <input hidden name="action" value="vanetupdate">
+                                            <div class="form-group">
+                                                <label for="">VANet API Key</label>
+                                                <input required type="text" class="form-control" name="vanetkey" value="<?= Config::get('vanet/api_key') ?>">
+                                            </div>
+                                            <input type="submit" class="btn bg-custom" value="Save">
+                                        </form>
                                     </div>
-                                    <input type="submit" class="btn bg-custom" value="Save">
-                                </form>
-                                <br>
-                                <br>
-                                <h4>VANet</h4>
-                                <form action="update.php" method="post">
-                                    <input hidden name="action" value="vanetupdate">
-                                    <div class="form-group">
-                                        <label for="">VANet API Key</label>
-                                        <input required type="text" class="form-control" name="vanetkey" value="<?= Config::get('vanet/api_key') ?>">
+                                    <div id="updates" class="tab-pane container-fluid p-3 fade">
+                                        <h4>Flare Updates</h4>
+                                        <p>Coming Soon!</p>
                                     </div>
-                                    <input type="submit" class="btn bg-custom" value="Save">
-                                </form>
+                                </div>
+
+                                <style>
+                                    .nav-tabs .nav-link {
+                                        color: #000!important;
+                                    }
+                                </style>
                             <?php elseif (Input::get('page') === 'recruitment'): ?>
                                 <script>
                                     $(document).ready(function() {
