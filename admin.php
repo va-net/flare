@@ -677,7 +677,6 @@ if (!$user->isLoggedIn()) {
                                                 <th>Title</th>
                                                 <th class="mobile-hidden">Date Posted</th>
                                                 <th class="mobile-hidden">Author</th>
-                                                <th>Content</th>
                                                 <th>Actions</th>
                                             </tr>
                                         </thead>
@@ -688,12 +687,10 @@ if (!$user->isLoggedIn()) {
                                             foreach ($news as $article) {
                                                 echo '<tr><td class="align-middle">';
                                                 echo $article['title'];
-                                                echo '</td><td class="align-middle">';
+                                                echo '</td><td class="align-middle mobile-hidden">';
                                                 echo $article['dateposted'];
                                                 echo '</td><td class="align-middle mobile-hidden">';
                                                 echo $article['author'];
-                                                echo '</td><td class="align-middle mobile-hidden">';
-                                                echo trim(substr($article['content'], 0, 25)).'...';
                                                 echo '</td><td class="align-middle">';
                                                 echo '&nbsp;<button value="'.$article['id'].'" id="articleedit" data-toggle="modal" data-target="#article'.$x.'editmodal" class="btn btn-primary text-light" name="edit"><i class="fa fa-edit"></i></button>';
                                                 echo '&nbsp;<button value="'.$article['id'].'" form="deletearticle" type="submit" class="btn btn-danger text-light" name="delete"><i class="fa fa-trash"></i></button>';
@@ -752,7 +749,7 @@ if (!$user->isLoggedIn()) {
 
                                 ?>
                                 <br>
-                                <h4>New article</h4>
+                                <h4>New Article</h4>
                                 <form action="update.php" method="post">
                                     <input hidden name="action" value="newarticle">
                                     <div class="form-group">
