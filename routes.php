@@ -39,29 +39,26 @@ if (!$user->isLoggedIn()) {
                             <table class="table table-striped">
                                 <thead class="bg-custom">
                                     <tr>
-                                        <th>Flight Number</th>
+                                        <th class="mobile-hidden">Flight Number</th>
                                         <th>Departure</th>
                                         <th>Arrival</th>
-                                        <th>Aircraft</th>
+                                        <th class="mobile-hidden">Aircraft</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php 
-                                    $all = Route::fetchAll();
-                                    $x = 0;
-
-                                    while ($all->count() > $x) {
-                                        echo '<tr><td class="align-middle">';
-                                        echo $all->results()[$x]->fltnum;
-                                        echo '</td><td class="align-middle">';
-                                        echo $all->results()[$x]->dep;
-                                        echo '</td><td class="align-middle">';
-                                        echo $all->results()[$x]->arr;
-                                        echo '</td><td class="align-middle">';
-                                        echo Aircraft::idToName($all->results()[$x]->aircraftid);
-                                        echo '</td></tr>';
-                                        $x++;
-                                    }
+                                        $all = Route::fetchAll()->results();
+                                        foreach ($all as $route) {
+                                            echo '<tr><td class="align-middle mobile-hidden">';
+                                            echo $route->fltnum;
+                                            echo '</td><td class="align-middle">';
+                                            echo $route->dep;
+                                            echo '</td><td class="align-middle">';
+                                            echo $route->arr;
+                                            echo '</td><td class="align-middle mobile-hidden">';
+                                            echo Aircraft::idToName($route->aircraftid);
+                                            echo '</td></tr>';
+                                        }
                                     ?>
                                 </tbody>
                             </table>

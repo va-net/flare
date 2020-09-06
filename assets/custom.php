@@ -19,6 +19,7 @@ header("Content-type: text/css; charset: UTF-8");
     }
     .main-content {
         width: 100%!important;
+        min-height: 80vh;
     }
     .ck-editor__editable_inline {
         min-height: 200px;

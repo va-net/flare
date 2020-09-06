@@ -1,12 +1,12 @@
 [
     {
-        "tag": "v1.3.0-beta",
-        "name": "Public Beta 1.3.0",
+        "tag": "v1.0.0-beta4",
+        "name": "Public Beta 4",
         "date": "2020-09-06",
-        "notes": "Adds Updates System",
+        "notes": "TODO",
         "prerelease": true,
         "files": [
-            "version.json"
+            "TODO"
         ],
         "queries": []
     }
