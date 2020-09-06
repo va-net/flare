@@ -414,6 +414,12 @@ if (!$user->isLoggedIn()) {
                                 ?>
                                 <?php endif; ?>
                             <?php elseif (Input::get('page') === 'site'): ?>
+                                <?php
+                                    if (!$user->hasPermission('opsmanage')) {
+                                        Redirect::to('home.php');
+                                        die();
+                                    }
+                                ?>
                                 <h3>Configure Flare</h3>
                                 <p>Here you may configure Flare to be your own.</p>
                                 <ul class="nav nav-tabs nav-dark justify-content-center">
@@ -471,7 +477,18 @@ if (!$user->isLoggedIn()) {
                                     </div>
                                     <div id="updates" class="tab-pane container-fluid p-3 fade">
                                         <h4>Flare Updates</h4>
-                                        <p>Coming Soon!</p>
+                                        <p>
+                                            <b>You are on Flare <?php echo Updater::getVersion()["tag"]; ?></b>
+                                            <br />
+                                            <?php
+                                                $update = Updater::checkUpdate();
+                                                if (!$update) {
+                                                    echo "Flare is Up-to-Date!";
+                                                } else {
+                                                    echo "An update to Flare ".$update["tag"]." is available";
+                                                }
+                                            ?>
+                                        </p>
                                     </div>
                                 </div>
 
