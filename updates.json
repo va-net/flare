@@ -6,8 +6,16 @@
         "notes": "TODO",
         "prerelease": true,
         "files": [
-            "TODO"
+            "classes/VANet.php",
+            "update.php",
+            "apply.php",
+            "classes/Validate.php",
+            "admin.php",
+            "assets/custom.php",
+            "pireps.php",
+            "routes/php"
         ],
+        "deletedFiles": [],
         "queries": []
     }
 ]
