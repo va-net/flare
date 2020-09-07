@@ -90,6 +90,7 @@ if (!$user->isLoggedIn()) {
                                             <th>Departure</th>
                                             <th>Arrival</th>
                                             <th class="mobile-hidden">Aircraft</th>
+                                            <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -151,6 +152,9 @@ if (!$user->isLoggedIn()) {
                                                 echo $route->arr;
                                                 echo '</td><td class="align-middle mobile-hidden">';
                                                 echo $route->aircraft;
+                                                echo '</td><td class="align-middle">';
+                                                $link = "pireps.php?page=new&fnum={$route->fltnum}&dep={$route->dep}&arr={$route->arr}&aircraft={$route->aircraft}";
+                                                echo '<a href="'.$link.'" class="btn bg-custom"><i class="fa fa-plane"></i></a>';
                                                 echo '</td></tr>';
                                             }
                                         ?>

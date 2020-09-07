@@ -171,7 +171,7 @@ if (!$user->isLoggedIn()) {
                                 <br>
                                 <section id="filepirep">
                                     <h3>File PIREP</h3>
-                                    <br>
+                                    <br />
                                     <?php
                                     if (Session::exists('error')) {
                                         echo '<div class="alert alert-danger text-center">Error: '.Session::flash('error').'</div>';
@@ -250,7 +250,11 @@ if (!$user->isLoggedIn()) {
                                                 $aircraftlist = $user->getAvailableAircraft();
 
                                                 foreach($aircraftlist as $aircraft) {
-                                                    echo '<option>'.$aircraft['name'].'</option>';
+                                                    if ($aircraft["name"] == Input::get("aircraft")) {
+                                                        echo '<option selected>'.$aircraft['name'].'</option>';
+                                                    } else {
+                                                        echo '<option>'.$aircraft['name'].'</option>';
+                                                    }
                                                 }
                                                 ?>
                                             </select>
