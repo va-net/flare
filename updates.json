@@ -18,5 +18,17 @@
         ],
         "deletedFiles": [],
         "queries": []
+    },
+    {
+        "tag": "v1.0.0-beta5",
+        "name": "Public Beta 5",
+        "date": "2020-09-07",
+        "notes": "Added Updater",
+        "prerelease": true,
+        "files": [
+            "TODO"
+        ],
+        "deletedFiles": [],
+        "queries": []
     }
 ]
