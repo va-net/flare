@@ -53,6 +53,10 @@ header("Content-type: text/css; charset: UTF-8");
     text-decoration: none;
 }
 
+#desktopMenu .panel-link:hover {
+    text-decoration: underline;
+}
+
 .mobile-hidden .panel-link-dark, .mobile-hidden .panel-link-dark:hover {
     color: #f8f9fa!important;
     text-decoration: none;
