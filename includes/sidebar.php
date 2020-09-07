@@ -5,6 +5,7 @@
     <a href="pireps.php?page=new" id="filepireplink" class="panel-link"><i class="fa fa-plane"></i>&nbsp;File PIREP</a><br />
     <a href="pireps.php?page=recents" id="mypirepslink" class="panel-link"><i class="fa fa-folder"></i>&nbsp;My PIREPs</a><br />
     <a href="routes.php" id="routeslink" class="panel-link"><i class="fa fa-database"></i>&nbsp;Route Database</a><br />
+    <a href="map.php" id="maplink" class="panel-link"><i class="fa fa-map"></i>&nbsp;Live Map</a><br />
     <?php
         if (VANet::isGold()) {
             echo '<a href="acars.php" id="acarslink" class="panel-link"><i class="fa fa-sync"></i>&nbsp;ACARS</a><br />';

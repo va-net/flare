@@ -43,6 +43,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
         <li class="nav-item desktop-hidden">
             <a href="routes.php" id="routeslink" class="panel-link"><i class="fa fa-database"></i>&nbsp;Route Database</a>
         </li>
+        <li class="nav-item desktop-hidden">
+            <a href="map.php" id="maplink" class="panel-link"><i class="fa fa-map"></i>&nbsp;Live Map</a>
+        </li>
         <?php 
         if (VANet::isGold()) {
             echo '<li class="nav-item desktop-hidden">
