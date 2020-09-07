@@ -34,34 +34,129 @@ if (!$user->isLoggedIn()) {
                 <div id="loader" class="spinner-border spinner-border-sm spinner-custom"></div>
                     <div class="tab-content" id="tc">
                         <div class="tab-pane container active" id="home" style="display: none;">
-                            <h3>Route Database</h3>
-                            <p>Please note that importing from a CSV is not yet supported, and will be coming in a later build.</p>
-                            <table class="table table-striped">
-                                <thead class="bg-custom">
-                                    <tr>
-                                        <th class="mobile-hidden">Flight Number</th>
-                                        <th>Departure</th>
-                                        <th>Arrival</th>
-                                        <th class="mobile-hidden">Aircraft</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php 
-                                        $all = Route::fetchAll()->results();
-                                        foreach ($all as $route) {
-                                            echo '<tr><td class="align-middle mobile-hidden">';
-                                            echo $route->fltnum;
-                                            echo '</td><td class="align-middle">';
-                                            echo $route->dep;
-                                            echo '</td><td class="align-middle">';
-                                            echo $route->arr;
-                                            echo '</td><td class="align-middle mobile-hidden">';
-                                            echo Aircraft::idToName($route->aircraftid);
-                                            echo '</td></tr>';
-                                        }
-                                    ?>
-                                </tbody>
-                            </table>
+                            <h3>Route Search</h3>
+                            <?php if (empty(Input::get('action'))): ?>
+                                <form method="get">
+                                    <input hidden name="action" value="search" />
+                                    <div class="form-group">
+                                        <label for="dep">Departure ICAO</label>
+                                        <input type="text" class="form-control" name="dep" id="dep" placeholder="Leave Blank for Any" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="arr">Arrival ICAO</label>
+                                        <input type="text" class="form-control" name="arr" id="arr" placeholder="Leave Blank for Any" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="fltnum">Flight Num</label>
+                                        <input type="text" class="form-control" name="fltnum" id="fltnum" placeholder="Leave Blank for Any" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="aircraft">Aircraft</label>
+                                        <select class="form-control" name="aircraft" id="aircraft">
+                                            <option value="">Any Aircraft</option>
+                                            <?php
+                                                $aircraft = Aircraft::getAvailableAircraft($user->rank(null, true))->results();
+                                                foreach ($aircraft as $ac) {
+                                                    echo '<option value="'.$ac->id.'">'.$ac->name.'</option>';
+                                                }
+                                            ?>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="duration">Flight Time</label>
+                                        <select class="form-control" name="duration" id="duration">
+                                            <option value="">Any Flight Time</option>
+                                            <option value="0">&lt; 1hr</option>
+                                            <option value="1">1-2hrs</option>
+                                            <option value="2">2-3hrs</option>
+                                            <option value="3">3-4hrs</option>
+                                            <option value="4">4-5hrs</option>
+                                            <option value="5">5-6hrs</option>
+                                            <option value="6">6-7hrs</option>
+                                            <option value="7">7-8hrs</option>
+                                            <option value="9">8-9hrs</option>
+                                            <option value="9">9-10hrs</option>
+                                            <option value="10">10hrs+</option>
+                                        </select>
+                                    </div>
+                                    <input type="submit" class="btn bg-custom" value="Search" />
+                                </form>
+                            <?php else: ?>
+                                <a href="routes.php" class="btn bg-custom mb-2">New Search</a>
+                                <table class="table table-striped">
+                                    <thead class="bg-custom">
+                                        <tr>
+                                            <th class="mobile-hidden">Flight Number</th>
+                                            <th>Departure</th>
+                                            <th>Arrival</th>
+                                            <th class="mobile-hidden">Aircraft</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                            $searchwhere = array();
+                                            $stmts = array();
+                                            if (!empty(Input::get('dep'))) {
+                                                array_push($searchwhere, 'dep = ?');
+                                                array_push($stmts, Input::get('dep'));
+                                            }
+                                            if (!empty(Input::get('arr'))) {
+                                                array_push($searchwhere, 'arr = ?');
+                                                array_push($stmts, Input::get('arr'));
+                                            }
+                                            if (!empty(Input::get('fltnum'))) {
+                                                array_push($searchwhere, 'fltnum = ?');
+                                                array_push($stmts, Input::get('fltnum'));
+                                            }
+                                            if (!empty(Input::get('aircraft'))) {
+                                                array_push($searchwhere, 'aircraftid = ?');
+                                                array_push($stmts, Input::get('aircraft'));
+                                            }
+                                            if (!empty(Input::get('duration'))) {
+                                                if (Input::get('duration') == 0) {
+                                                    array_push($searchwhere, 'duration <= ?');
+                                                    array_push($stmts, 3600);
+                                                } elseif (Input::get('duration') == 10) {
+                                                    array_push($searchwhere, 'duration >= ?');
+                                                    array_push($stmts, 36000);
+                                                } elseif (is_numeric(Input::get('duration'))) {
+                                                    array_push($searchwhere, 'duration >= ?');
+                                                    array_push($stmts, Input::get('duration') * 3600);
+
+                                                    array_push($searchwhere, 'duration < ?');
+                                                    array_push($stmts, (Input::get('duration') + 1) * 3600);
+                                                }
+                                            }
+
+                                            $query = 'SELECT routes.fltnum, routes.dep, routes.arr, routes.duration, routes.id, routes.aircraftid, 
+                                            aircraft.name AS aircraft FROM routes INNER JOIN aircraft ON aircraft.id = routes.aircraftid';
+                                            $i = 0;
+                                            foreach ($searchwhere as $cond) {
+                                                if ($i == 0) {
+                                                    $query = $query . ' WHERE ' . $cond;
+                                                } else {
+                                                    $query = $query . ' AND ' . $cond;
+                                                }
+                                                $i++;
+                                            }
+
+                                            $db = DB::getInstance();
+                                            $all = $db->query($query, $stmts)->results();
+                                            foreach ($all as $route) {
+                                                echo '<tr><td class="align-middle mobile-hidden">';
+                                                echo $route->fltnum;
+                                                echo '</td><td class="align-middle">';
+                                                echo $route->dep;
+                                                echo '</td><td class="align-middle">';
+                                                echo $route->arr;
+                                                echo '</td><td class="align-middle mobile-hidden">';
+                                                echo $route->aircraft;
+                                                echo '</td></tr>';
+                                            }
+                                        ?>
+                                    </tbody>
+                                </table>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
