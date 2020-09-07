@@ -9,8 +9,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 require_once './core/init.php';
 
-Session::create('darkmode', false);
-
 $user = new User();
 if ($user->isLoggedIn()) {
     Redirect::to('home.php');
@@ -77,7 +75,7 @@ if (Input::exists()) {
             Redirect::to('index.php');
         } else {
             foreach ($validate->errors() as $error) {
-                echo '<div class="alert alert-danger text-center">Error: '.$error.'</div>';
+                Session::flash('error', $error);
             }
         }
     }

@@ -269,7 +269,7 @@ if (!$user->isLoggedIn()) {
                                 <form method="post" action="update.php">
                                     <input hidden name="action" value="setuppireps">
                                     <input hidden name="callsign" value="<?= $user->data()->callsign ?>">
-                                    <input type="submit" class="btn text-light bg-custom" value="I have spawned in on the Casual Server">
+                                    <input type="submit" class="btn text-light bg-custom" value="Find Me">
                                 </form>
                             <?php endif; ?>
                         </div>

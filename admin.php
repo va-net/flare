@@ -516,11 +516,11 @@ if (!$user->isLoggedIn()) {
                                     <table class="table table-striped">
                                     <thead class="bg-custom">
                                         <tr>
-                                            <th>Callsign</th>
-                                            <th class="mobile-hidden">Name</th>
+                                            <th class="mobile-hidden">Callsign</th>
+                                            <th>Name</th>
                                             <th class="mobile-hidden">Email</th>
-                                            <th>Grade</th>
-                                            <th>IFC Username</th>
+                                            <th class="mobile-hidden">Grade</th>
+                                            <th class="mobile-hidden">IFC Username</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
@@ -529,15 +529,15 @@ if (!$user->isLoggedIn()) {
                                         $users = $user->getAllPendingUsers();
                                         $x = 0;
                                         foreach ($users as $user) {
-                                            echo '<tr><td class="align-middle">';
+                                            echo '<tr><td class="mobile-hidden align-middle">';
                                             echo $user["callsign"];
-                                            echo '</td><td class="mobile-hidden align-middle">';
+                                            echo '</td><td class="align-middle">';
                                             echo $user["name"];
                                             echo '</td><td class="mobile-hidden align-middle">';
                                             echo $user["email"];
-                                            echo '</td><td class="align-middle">';
+                                            echo '</td><td class="mobile-hidden align-middle">';
                                             echo $user["grade"];
-                                            echo '</td><td class="align-middle">';
+                                            echo '</td><td class="mobile-hidden align-middle">';
                                             $username = explode('/', $user['ifc']);
                                             echo '<a href="'.$user['ifc'].'" target="_blank">'.$username[4].'</a>';
                                             echo '</td><td class="align-middle">';
@@ -694,7 +694,6 @@ if (!$user->isLoggedIn()) {
                                                 <th>Title</th>
                                                 <th class="mobile-hidden">Date Posted</th>
                                                 <th class="mobile-hidden">Author</th>
-                                                <th>Content</th>
                                                 <th>Actions</th>
                                             </tr>
                                         </thead>
@@ -705,12 +704,10 @@ if (!$user->isLoggedIn()) {
                                             foreach ($news as $article) {
                                                 echo '<tr><td class="align-middle">';
                                                 echo $article['title'];
-                                                echo '</td><td class="align-middle">';
+                                                echo '</td><td class="align-middle mobile-hidden">';
                                                 echo $article['dateposted'];
                                                 echo '</td><td class="align-middle mobile-hidden">';
                                                 echo $article['author'];
-                                                echo '</td><td class="align-middle mobile-hidden">';
-                                                echo trim(substr($article['content'], 0, 25)).'...';
                                                 echo '</td><td class="align-middle">';
                                                 echo '&nbsp;<button value="'.$article['id'].'" id="articleedit" data-toggle="modal" data-target="#article'.$x.'editmodal" class="btn btn-primary text-light" name="edit"><i class="fa fa-edit"></i></button>';
                                                 echo '&nbsp;<button value="'.$article['id'].'" form="deletearticle" type="submit" class="btn btn-danger text-light" name="delete"><i class="fa fa-trash"></i></button>';
@@ -769,7 +766,7 @@ if (!$user->isLoggedIn()) {
 
                                 ?>
                                 <br>
-                                <h4>New article</h4>
+                                <h4>New Article</h4>
                                 <form action="update.php" method="post">
                                     <input hidden name="action" value="newarticle">
                                     <div class="form-group">
@@ -895,29 +892,26 @@ if (!$user->isLoggedIn()) {
                                             <thead class="bg-custom">
                                                 <tr>
                                                     <th>Name</th>
-                                                    <th>Livery</th>
-                                                    <th>Rank required</th>
+                                                    <th class="mobile-hidden">Livery</th>
+                                                    <th class="mobile-hidden">Min. Rank</th>
                                                     <th>Actions</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <?php 
-                                                $all = Aircraft::fetchActiveAircraft();
-                                                $x = 0;
-
-                                                while ($all->count() > $x) {
+                                                $all = Aircraft::fetchActiveAircraft()->results();
+                                                foreach ($all as $aircraft) {
                                                     echo '<tr><td class="align-middle">';
-                                                    echo $all->results()[$x]->name;
+                                                    echo $aircraft->name;
+                                                    echo '</td><td class="align-middle mobile-hidden">';
+                                                    echo $aircraft->liveryname;
+                                                    echo '</td><td class="align-middle mobile-hidden">';
+                                                    echo Rank::idToName($aircraft->rankreq);
                                                     echo '</td><td class="align-middle">';
-                                                    echo $all->results()[$x]->liveryname;
-                                                    echo '</td><td class="align-middle">';
-                                                    echo Rank::idToName($all->results()[$x]->rankreq);
-                                                    echo '</td><td class="align-middle">';
-                                                    echo '&nbsp;<button value="'.$all->results()[$x]->id.'" form="deleteaircraft" type="submit" class="btn btn-danger text-light" name="delete"><i class="fa fa-trash"></i></button>';
-                                                    echo '&nbsp;<button class="btn btn-primary editFleet" data-acName="'.$all->results()[$x]->name.' ('.$all->results()[$x]->liveryname.')'.'" 
-                                                    data-rankReq="'.$all->results()[$x]->rankreq.'" data-id="'.$all->results()[$x]->id.'"><i class="fa fa-edit"></i></button>';
+                                                    echo '&nbsp;<button value="'.$aircraft->id.'" form="deleteaircraft" type="submit" class="btn btn-danger text-light" name="delete"><i class="fa fa-trash"></i></button>';
+                                                    echo '&nbsp;<button class="btn btn-primary editFleet" data-acName="'.$aircraft->name.' ('.$aircraft->liveryname.')'.'" 
+                                                    data-rankReq="'.$aircraft->rankreq.'" data-id="'.$aircraft->id.'"><i class="fa fa-edit"></i></button>';
                                                     echo '</td>';
-                                                    $x++;
                                                 }
                                                 ?>
                                             </tbody>
@@ -1013,11 +1007,13 @@ if (!$user->isLoggedIn()) {
 
                                                                     function reverseFormatFlightTime() {
                                                                         var formatted = $("#flightTimeFormatted").val();
-                                                                        var split = formatted.split(":");
-                                                                        var hrs = split[0];
-                                                                        var mins = split[1];
-                                                                        $("#flightTimeHrs").val(hrs);
-                                                                        $("#flightTimeMins").val(mins);
+                                                                        if (formatted != '') {
+                                                                            var split = formatted.split(":");
+                                                                            var hrs = split[0];
+                                                                            var mins = split[1];
+                                                                            $("#flightTimeHrs").val(hrs);
+                                                                            $("#flightTimeMins").val(mins);
+                                                                        }
                                                                     }
 
                                                                     $(document).ready(function() {
@@ -1056,31 +1052,28 @@ if (!$user->isLoggedIn()) {
                                         <table class="table table-striped">
                                             <thead class="bg-custom">
                                                 <tr>
-                                                    <th>Flight Number</th>
+                                                    <th class="mobile-hidden">Flight Number</th>
                                                     <th>Departure</th>
                                                     <th>Arrival</th>
-                                                    <th>Aircraft</th>
+                                                    <th class="mobile-hidden">Aircraft</th>
                                                     <th>Actions</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <?php 
-                                                $all = Route::fetchAll();
-                                                $count = $all->count();
-                                                $results = $all->results();
-                                                $x = 0;
+                                                $all = Route::fetchAll()->results();
 
-                                                while ($count > $x) {
-                                                    echo '<tr><td class="align-middle">';
-                                                    echo $results[$x]->fltnum;
+                                                foreach ($all as $route) {
+                                                    echo '<tr><td class="align-middle mobile-hidden">';
+                                                    echo $route->fltnum;
                                                     echo '</td><td class="align-middle">';
-                                                    echo $results[$x]->dep;
+                                                    echo $route->dep;
                                                     echo '</td><td class="align-middle">';
-                                                    echo $results[$x]->arr;
+                                                    echo $route->arr;
+                                                    echo '</td><td class="align-middle mobile-hidden">';
+                                                    echo Aircraft::idToName($route->aircraftid);
                                                     echo '</td><td class="align-middle">';
-                                                    echo Aircraft::idToName($results[$x]->aircraftid);
-                                                    echo '</td><td class="align-middle">';
-                                                    echo '&nbsp;<button value="'.$results[$x]->id.'" form="deleteroute" type="submit" class="btn btn-danger text-light" name="delete"><i class="fa fa-trash"></i></button>';
+                                                    echo '&nbsp;<button value="'.$route->id.'" form="deleteroute" type="submit" class="btn btn-danger text-light" name="delete"><i class="fa fa-trash"></i></button>';
                                                     echo '</td></tr>';
                                                     $x++;
                                                 }
@@ -1129,21 +1122,18 @@ if (!$user->isLoggedIn()) {
                                             </thead>
                                             <tbody>
                                                 <?php 
-                                                $all = Rank::fetchAllNames();
-                                                $x = 0;
-
-                                                while ($all->count() > $x) {
+                                                $all = Rank::fetchAllNames()->results();
+                                                foreach ($all as $rank) {
                                                     echo '<tr><td class="align-middle">';
-                                                    echo $all->results()[$x]->name;
+                                                    echo $rank->name;
                                                     echo '</td><td class="align-middle">';
-                                                    echo $all->results()[$x]->timereq;
+                                                    echo $rank->timereq;
                                                     echo '</td><td class="align-middle">';
                                                     echo '<button class="btn btn-primary text-light editRank" 
-                                                    data-id="'.$all->results()[$x]->id.'" data-name="'.$all->results()[$x]->name.'" 
-                                                    data-minhrs="'.$all->results()[$x]->timereq.'">
+                                                    data-id="'.$rank->id.'" data-name="'.$rank->name.'" 
+                                                    data-minhrs="'.$rank->timereq.'">
                                                     <i class="fa fa-edit"></i></button>';
                                                     echo '</td></tr>';
-                                                    $x++;
                                                 }
                                                 ?>
                                             </tbody>

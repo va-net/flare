@@ -67,7 +67,7 @@ if (Input::get('action') === 'editprofile') {
 
     $curl = new Curl;
 
-    $response = $curl->post(Config::get('vanet/base_url').'/api/flights/new?apikey='.Config::get('vanet/api_key'), array(
+    $response = VANet::sendPirep(array (
         'AircraftID' => Aircraft::nameToLiveryId(Input::get('aircraft')),
         'Arrival' => Input::get('arr'),
         'DateTime' => Input::get('date'),

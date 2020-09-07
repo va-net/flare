@@ -23,9 +23,9 @@ class Validate {
             foreach ($rules as $rule => $rule_value) {
                 $value = trim($source[$item]);
 
-                if ($rule === 'required' && empty($value)) {
+                if ($rule === 'required' && $value == '') {
                     $this->addError("{$item} is required");
-                } else if (!empty($value)){
+                } else if ($value != ''){
                     switch ($rule) {
                         case 'min':
                             if (strlen($value) < $rule_value) {
