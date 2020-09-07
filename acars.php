@@ -129,7 +129,7 @@ if (!$user->isLoggedIn()) {
                                     <p>Looks like you haven't yet setup PIREPs! Go to <a href="./pireps.php">pireps</a>, set them up, and then come back here and try again.</p>
                                 <?php endif ?> 
                             <?php else: ?>
-                                <p>In order to run ACARS, <?= Config::get('va/name') ?> needs to sign up to VANet Gold. You can take a look at it <a href="https://vanet.app/getstarted" target="_blank">here</a>!</p>
+                                <p>In order to run ACARS, <?= Config::get('va/name') ?> needs to sign up to VANet Gold. You can take a look at it <a href="https://vanet.app/airline/upgrade" target="_blank">here</a>!</p>
                             <?php endif; ?>
                         </div>
                     </div>
