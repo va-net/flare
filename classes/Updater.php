@@ -12,24 +12,10 @@ class Updater
 {
     
     public static function getVersion() {
-        $verinfo = Json::decode(file_get_contents(__DIR__.'/../version.json'));
-        return array(
-            "tag" => $verinfo["tag"],
-            "name" => $verinfo["name"],
-            "prerelease" => $verinfo["prerelease"],
-        );
+        return Json::decode(file_get_contents(__DIR__.'/../version.json'));
     }
 
-    public static function getConfig($key = null) {
-        $verinfo = Json::decode(file_get_contents(__DIR__.'/../version.json'));
-        if ($key == null) {
-            return $verinfo["config"];
-        }
-
-        return $verinfo["config"][$key];
-    }
-
-    public static function checkUpdate() {
+    public static function checkUpdate($prerelease = false) {
         $opts = array(
             'http'=>array(
                 'method'=>"GET",
@@ -42,13 +28,12 @@ class Updater
         $next = null;
         $currentFound = false;
         $current = self::getVersion();
-        $config = self::getConfig();
 
         foreach (array_reverse($releases) as $r) {
             if (!$currentFound && $r["tag_name"] == $current["tag"]) {
                 $currentFound = true;
             } elseif ($currentFound && $next == null) {
-                if ($config["check_prerelease"]) {
+                if ($prerelease) {
                     $next = $r;
                     break;
                 } elseif (!$r["prerelease"]) {
