@@ -118,40 +118,40 @@ if (Input::exists()) {
                     echo '<div class="alert alert-success text-center">'.Session::flash('success').'</div>';
                 }
             ?>
-            <div class="container w-50 justify-content-center">
+            <div class="container-fluid justify-content-center">
                 <form method="post">
                     <input type="hidden" name="token" value="<?= Token::generate() ?>">
                     <div class="form-group text-center">
                     <label for="name">Name</label>
-                    <input required class="form-control" type="text" id="name" name="name" value="<?= escape(Input::get('name')) ?>">
+                    <input required class="form-control publicform" type="text" id="name" name="name" value="<?= escape(Input::get('name')) ?>">
                     </div>
 
                     <div class="form-group text-center">
                     <label for="ifc">Infinite Flight Community Profile URL</label>
-                    <input required class="form-control" type="url" id="ifc" name="ifc" value="<?= escape(Input::get('ifc')) ?>">
+                    <input required class="form-control publicform" type="url" id="ifc" name="ifc" value="<?= escape(Input::get('ifc')) ?>">
                     <small class="form-text text-muted">All pilots are required to have an active Infinite Flight Community Account</small>
                     </div>
                     
                     <div class="form-group text-center">
                     <label for="email">Email Address</label>
-                    <input required class="form-control" type="email" id="email" name="email" value="<?= escape(Input::get('email')) ?>">
+                    <input required class="form-control publicform" type="email" id="email" name="email" value="<?= escape(Input::get('email')) ?>">
                     </div>
 
                     <div class="form-group text-center">
                     <label for="callsign">Callsign</label>
-                    <input required class="form-control" type="text" value="<?= Config::get('va/identifier') ?>" id="callsign" name="callsign" value="<?= escape(Input::get('callsign')) ?>">
+                    <input required class="form-control publicform" type="text" value="<?= Config::get('va/identifier') ?>" id="callsign" name="callsign" value="<?= escape(Input::get('callsign')) ?>">
                     <small class="form-text text-muted">Must begin with <?= Config::get('va/identifier') ?> then have 2-4 numbers, eg <?= Config::get('va/identifier') ?>123</small>
                     </div>
 
                     <div class="form-group text-center">
                     <label for="violand">Violations to Landings Ratio</label>
-                    <input required class="form-control" step="0.01" type="number" id="violand" name="violand" value="<?= escape(Input::get('violand')) ?>">
+                    <input required class="form-control publicform" step="0.01" type="number" id="violand" name="violand" value="<?= escape(Input::get('violand')) ?>">
                     <small class="form-text text-muted">Decimal format, eg 0.35</small>
                     </div>
 
                     <div class="form-group text-center">
                     <label for="violand">Infinite Flight Grade</label>
-                    <select required class="form-control" name="grade">
+                    <select required class="form-control publicform" name="grade">
                         <option value>Select</option>
                         <?php foreach (range(1, 5) as $i) { ?>
                             <option value="<?= $i ?>" <?= (Input::get('grade') == $i) ? 'selected' : '' ?>>Grade <?= $i ?></option>
@@ -161,18 +161,18 @@ if (Input::exists()) {
 
                     <div class="form-group text-center">
                     <label for="comments">Other Comments</label>
-                    <textarea class="form-control" id="comments" name="comments"><?= escape(Input::get('violand')) ?></textarea>
+                    <textarea class="form-control publicform" id="comments" name="comments"><?= escape(Input::get('violand')) ?></textarea>
                     </div>
 
                     <div class="form-group text-center">
                     <label for="pass">Password</label>
-                    <input required class="form-control" type="password" minlength="8" id="pass" name="password">
+                    <input required class="form-control publicform" type="password" minlength="8" id="pass" name="password">
                     <small class="form-text text-muted">Must be at least 8 characters long</small>
                     </div>
 
                     <div class="form-group text-center">
                     <label for="confpass">Password Again</label>
-                    <input required class="form-control" type="password" id="confpass" name="password-repeat">
+                    <input required class="form-control publicform" type="password" id="confpass" name="password-repeat">
                     </div>
 
                     <div class="row">

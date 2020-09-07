@@ -89,7 +89,7 @@ if (Input::exists()) {
         <div class="container-fluid mt-4 text-center" style="overflow: auto;">
             <h1 class="text-center pb-0 mb-0"><?= escape(Config::get('va/name')) ?></h1>
             <h3 class="text-center py-0 my-0">Pilot Login<br><br></h3>
-            <div class="container w-50 justify-content-center">
+            <div class="container-fluid justify-content-center">
                 <?php
                     if (Session::exists('error')) {
                         echo '<div class="alert alert-danger text-center">Error: '.Session::flash('error').'</div>';
@@ -102,12 +102,12 @@ if (Input::exists()) {
                     <input hidden name="action" value="authenticate">
                     <div class="form-group text-center">
                         <label for="email">Email Address</label>
-                        <input class="form-control" type="email" id="email" name="email">
+                        <input class="form-control publicform" type="email" id="email" name="email">
                     </div>
 
                     <div class="form-group text-center">
                         <label for="pass">Password</label>
-                        <input class="form-control" type="password" id="pass" name="password">
+                        <input class="form-control publicform" type="password" id="pass" name="password">
                     </div>
                     <input class="form-control" type="hidden" name="token" value="<?= Token::generate(); ?>">
                     <div class="row">
