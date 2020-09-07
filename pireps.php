@@ -66,7 +66,7 @@ if (!$user->isLoggedIn()) {
                                     if (!$pireps) {
                                         echo '<h5><b>No recent PIREPs<b></h5>';
                                     } else { ?>
-                                        <table class="table table-striped">
+                                        <table class="table table-striped datatable">
                                         <thead class="bg-custom">
                                             <tr>
                                                 <th class="mobile-hidden">Flight Number</th>

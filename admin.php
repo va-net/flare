@@ -81,7 +81,7 @@ if (!$user->isLoggedIn()) {
                                     <div class="alert alert-danger text-center">Whoops! You don't have the necessary permissions to access this.</div>
                                 <?php else: ?>
                                     <p>Here you can view all users, active and inactive. Click on a user to view/edit the information.</p>
-                                    <table class="table table-striped">
+                                    <table class="table table-striped datatable">
                                         <thead class="bg-custom">
                                             <tr>
                                                 <th>Callsign</th>
@@ -296,7 +296,7 @@ if (!$user->isLoggedIn()) {
                                     <div class="alert alert-danger text-center">Whoops! You don't have the necessary permissions to access this.</div>
                                 <?php else: ?>
                                     <p>Here you can manage staff members, and their permissions. Be sure to select the correct permissions, as setting the wrong permissions can give them access to sensitive information!</p>
-                                    <table class="table table-striped">
+                                    <table class="table table-striped datatable">
                                     <thead class="bg-custom">
                                         <tr>
                                             <th>Callsign</th>
@@ -529,7 +529,7 @@ if (!$user->isLoggedIn()) {
                                     <form id="accept" action="update.php" method="post">
                                         <input hidden name="action" value="acceptapplication">
                                     </form>
-                                    <table class="table table-striped">
+                                    <table class="table table-striped datatable">
                                     <thead class="bg-custom">
                                         <tr>
                                             <th class="mobile-hidden">Callsign</th>
@@ -704,7 +704,7 @@ if (!$user->isLoggedIn()) {
                                     <form id="deletearticle" action="update.php" method="post">
                                         <input hidden name="action" value="deletearticle">
                                     </form>
-                                    <table class="table table-striped">
+                                    <table class="table table-striped datatable">
                                         <thead class="bg-custom">
                                             <tr>
                                                 <th>Title</th>
@@ -904,7 +904,7 @@ if (!$user->isLoggedIn()) {
                                         <form id="deleteaircraft" method="post" action="update.php">
                                             <input hidden value="deleteaircraft" name="action">
                                         </form>
-                                        <table class="table table-striped">
+                                        <table class="table table-striped datatable">
                                             <thead class="bg-custom">
                                                 <tr>
                                                     <th>Name</th>
@@ -1065,7 +1065,7 @@ if (!$user->isLoggedIn()) {
                                                 </div>
                                             </div>
                                         </div>
-                                        <table class="table table-striped">
+                                        <table class="table table-striped datatable">
                                             <thead class="bg-custom">
                                                 <tr>
                                                     <th class="mobile-hidden">Flight Number</th>
@@ -1128,7 +1128,7 @@ if (!$user->isLoggedIn()) {
                                             </div>
                                         </div>
 
-                                        <table class="table table-striped">
+                                        <table class="table table-striped datatable">
                                             <thead class="bg-custom">
                                                 <tr>
                                                     <th>Name</th>
