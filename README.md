@@ -11,6 +11,9 @@ Installation is easy - download the latest [release](https://github.com/va-net/F
 
 For all instructions on how to use and configure Flare, please visit the [community tutorials](https://vanet.app/tutorials).
 
+## Contributing
+Thanks for your interest in helping make Flare better! If you wish to contribute, fork the `dev` branch, make your changes then open a Pull Request.
+
 ## Patreon
 
 Want extra features? Custom plugins? Your very own theme? Consider subscribing to one of Flare's Patreon tiers [here](https://www.patreon.com/rebal15)
