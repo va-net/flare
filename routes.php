@@ -47,7 +47,7 @@ if (!$user->isLoggedIn()) {
                                         <input type="text" class="form-control" name="arr" id="arr" placeholder="Leave Blank for Any" />
                                     </div>
                                     <div class="form-group">
-                                        <label for="fltnum">Flight Num</label>
+                                        <label for="fltnum">Flight Number</label>
                                         <input type="text" class="form-control" name="fltnum" id="fltnum" placeholder="Leave Blank for Any" />
                                     </div>
                                     <div class="form-group">
