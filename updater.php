@@ -65,11 +65,12 @@ foreach ($tags as $t) {
 
 // Get the updates.json file
 $updateData = @file_get_contents("https://raw.githubusercontent.com/va-net/flare/".urlencode($nextTag["commit"]["sha"])."/updates.json");
+// Check Release is Compatible
 if ($updateData === FALSE) {
     echo "This Version of Flare does not support the Updater.";
     die();
 }
-
+// Process updates.json File
 $updateData = Json::decode($updateData);
 $nextUpdate = null;
 foreach ($updateData as $upd) {
@@ -78,11 +79,13 @@ foreach ($updateData as $upd) {
     }
 }
 
+// Somethin' strange goin on?
 if ($nextUpdate == null) {
     echo "There was an Error Updating Flare";
     die();
 }
 
+// Update Files
 foreach ($nextUpdate["files"] as $file) {
     $fileData = file_get_contents("https://raw.githubusercontent.com/va-net/flare/".urlencode($nextTag["commit"]["sha"])."/" + urlencode($file));
     if (file_put_contents(__DIR__.$file, $fileData) == FALSE) {
@@ -92,6 +95,7 @@ foreach ($nextUpdate["files"] as $file) {
 }
 echo "Updated Files Successfully<br />";
 
+// Delete Files to Delete
 foreach ($nextUpdate["deletedFiles"] as $delFile) {
     if (!unlink(__DIR__.$delFile)) {
         echo "There was an error deleting ".$delFile;
@@ -99,6 +103,7 @@ foreach ($nextUpdate["deletedFiles"] as $delFile) {
 }
 echo "Deleted Removed Files Successfully<br />";
 
+// Run DB Queries
 if (count($nextUpdate["queries"]) != 0) {
     $db = DB::getInstance();
     foreach ($nextUpdate["queries"] as $q) {
