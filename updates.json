@@ -3,7 +3,7 @@
         "tag": "v1.0.0-beta4",
         "name": "Public Beta 4",
         "date": "2020-09-06",
-        "notes": "TODO",
+        "notes": "Redid VANet Integration, Updated Application Form, Fixed Design Issues on Mobile",
         "prerelease": true,
         "files": [
             "classes/VANet.php",
