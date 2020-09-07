@@ -13,7 +13,7 @@ if (!file_exists('./core/config.php')) {
     Redirect::to('./install/install.php');
 }
 
-Session::create('darkmode', false);
+Page::setTitle('Login - '.Config::get('va/name'));
 
 $user = new User();
 if ($user->isLoggedIn()) {

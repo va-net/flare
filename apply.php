@@ -9,6 +9,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 require_once './core/init.php';
 
+Page::setTitle('Apply - '.Config::get('va/name'));
+
 $user = new User();
 if ($user->isLoggedIn()) {
     Redirect::to('home.php');
