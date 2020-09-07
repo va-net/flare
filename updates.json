@@ -13,7 +13,8 @@
             "admin.php",
             "assets/custom.php",
             "pireps.php",
-            "routes/php"
+            "routes/php",
+            "version.json"
         ],
         "deletedFiles": [],
         "queries": []

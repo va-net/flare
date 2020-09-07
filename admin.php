@@ -478,17 +478,33 @@ if (!$user->isLoggedIn()) {
                                     <div id="updates" class="tab-pane container-fluid p-3 fade">
                                         <h4>Flare Updates</h4>
                                         <p>
-                                            <b>You are on Flare <?php echo Updater::getVersion()["tag"]; ?></b>
+                                            <?php $ver = Updater::getVersion(); ?>
+                                            <b>You are on Flare <?php echo $ver["tag"]; ?></b>
                                             <br />
                                             <?php
                                                 $update = Updater::checkUpdate();
+                                                if ($ver["prerelease"]) {
+                                                    $update = Updater::checkUpdate(true);
+                                                }
                                                 if (!$update) {
                                                     echo "Flare is Up-to-Date!";
                                                 } else {
-                                                    echo "An update to Flare ".$update["tag"]." is available";
+                                                    echo "An update to Flare ".$update["tag"]." is available<br />";
+                                                    echo '<button class="btn bg-custom" id="updateNow">Update Now</button>';
+                                                    echo '<p id="updateResult"></p>';
                                                 }
                                             ?>
                                         </p>
+                                        <script>
+                                            $(document).ready(function() {
+                                                $("#updateNow").click(function() {
+                                                    $("#updateResult").html('<div class="spinner-grow spinner-custom"></div>');
+                                                    $.get("updater.php", function(data, status) {
+                                                        $("#updateResult").html(data);
+                                                    });
+                                                });
+                                            });
+                                        </script>
                                     </div>
                                 </div>
 
