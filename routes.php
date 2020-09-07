@@ -142,8 +142,8 @@ if (!$user->isLoggedIn()) {
                                             }
 
                                             $db = DB::getInstance();
-                                            $all = $db->query($query, $stmts)->results();
-                                            foreach ($all as $route) {
+                                            $routes = $db->query($query, $stmts)->results();
+                                            foreach ($routes as $route) {
                                                 echo '<tr><td class="align-middle mobile-hidden">';
                                                 echo $route->fltnum;
                                                 echo '</td><td class="align-middle">';
