@@ -948,7 +948,7 @@ if (!$user->isLoggedIn()) {
                                                             type: "POST",
                                                             data: { action: "getliveriesforaircraft", aircraft: $(this).val() },
                                                             success: function(html){
-                                                                $("#liveriesselect").empty()
+                                                                $("#liveriesselect").empty();
                                                                 $("#liveriesselect").append("<option>Select</option>");
                                                                 $("#liveriesselect").append(html);
                                                             }
