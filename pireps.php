@@ -137,14 +137,13 @@ if (!$user->isLoggedIn()) {
                                                             <select class="form-control" name="aircraft" required>
                                                                 <option value>Select</option>
                                                                 ';
-                                                                var_dump($pirep);
                                                                 $aircraftlist = $user->getAvailableAircraft();
                                                                 foreach($aircraftlist as $aircraft) {
                                                                     if ($aircraft['name'] === $pirep['aircraft']) {
-                                                                        echo '<option selected="selected">'.$aircraft['name'].'</option>';
+                                                                        echo '<option value="'.$aircraft['id'].'" selected>'.$aircraft['name'].'</option>';
                                                                         continue;
                                                                     }
-                                                                    echo '<option>'.$aircraft['name'].'</option>';
+                                                                    echo '<option value="'.$aircraft['id'].'">'.$aircraft['name'].'</option>';
                                                                 }
                                                                 echo '
                                                             </select>
@@ -249,9 +248,9 @@ if (!$user->isLoggedIn()) {
 
                                             foreach($aircraftlist as $aircraft) {
                                                 if ($aircraft["name"] == Input::get("aircraft")) {
-                                                    echo '<option selected>'.$aircraft['name'].'</option>';
+                                                    echo '<option value="'.$aircraft['id'].'" selected>'.$aircraft['name'].'</option>';
                                                 } else {
-                                                    echo '<option>'.$aircraft['name'].'</option>';
+                                                    echo '<option value="'.$aircraft['id'].'">'.$aircraft['name'].'</option>';
                                                 }
                                             }
                                             ?>

@@ -65,7 +65,7 @@ if (Input::get('action') === 'editprofile') {
     $allowedaircraft = $user->getAvailableAircraft();
     $allowed = false;
     foreach ($allowedaircraft as $a) {
-        if ($a["name"] == Input::get('aircraft')) {
+        if ($a["id"] == Input::get('aircraft')) {
             $allowed = true;
         }
     }
@@ -100,7 +100,7 @@ if (Input::get('action') === 'editprofile') {
         'flighttime' => $finalFTime,
         'pilotid' => $user->data()->id,
         'date' => Input::get('date'),
-        'aircraftid' => Aircraft::getId(Input::get('aircraft')),
+        'aircraftid' => Input::get('aircraft'),
         'multi' => $multi
     ))) {
         Session::flash('error', 'There was an Error Filing the PIREP.');
@@ -116,7 +116,7 @@ if (Input::get('action') === 'editprofile') {
         'arrival' => Input::get('arr'),
         'pilotid' => $user->data()->id,
         'date' => Input::get('date'),
-        'aircraftid' => Aircraft::getId(Input::get('aircraft')),
+        'aircraftid' => Input::get('aircraft'),
         'multi' => Input::get('multi')
     ))) {
         Session::flash('errorrecent', 'There was an Error Editing the PIREP.');
@@ -313,10 +313,10 @@ if (Input::get('action') === 'editprofile') {
         die();
     }
 
-    Aircraft::add(Input::get('aircraftselect'), Rank::nameToId(Input::get('rank')), Input::get('livery'));
+    Aircraft::add(Input::get('aircraftselect'), Input::get('rank'), Input::get('livery'));
     Session::flash('success', 'Aircraft Added Successfully! ');
     Redirect::to('admin.php?page=opsmanage&section=fleet');
-} elseif (Input::get('action') == 'editfleet') {
+} elseif (Input::get('action') === 'editfleet') {
     if (!$user->hasPermission('opsmanage')) {
         Redirect::to('home.php');
         die();
@@ -338,7 +338,7 @@ if (Input::get('action') === 'editprofile') {
         die();
     }
 
-    Route::add(array(Input::get('fltnum'), Input::get('dep'), Input::get('arr'), Time::strToSecs(Input::get('duration')), Aircraft::nameToId(Input::get('aircraft'))));
+    Route::add(array(Input::get('fltnum'), Input::get('dep'), Input::get('arr'), Time::strToSecs(Input::get('duration')), Input::get('aircraft')));
     Session::flash('success', 'Route Added Successfully!');
     Redirect::to('admin.php?page=opsmanage&section=routes');
 } elseif (Input::get('action') === 'deleteroute') {
