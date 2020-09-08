@@ -258,8 +258,8 @@ if (!$user->isLoggedIn()) {
                                         </select>
                                     </div>
                                     <div class="form-group">
-                                        <label for="multi">Multiplier Number (if applicable)</label>
-                                        <input type="number" class="form-control" maxlength="6" minlength="6" id="multi" name="multi">
+                                        <label for="multi">Multiplier Code (if applicable)</label>
+                                        <input type="text" class="form-control" maxlength="6" minlength="6" id="multi" name="multi" />
                                     </div>
                                     <input type="submit" class="btn text-light bg-custom" value="Submit">
                                 </form>

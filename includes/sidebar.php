@@ -40,6 +40,12 @@
                         "icon" => "fa-globe",
                         "name" => "Manage Site",
                     ];
+                } elseif ($permission == "pirepmanage") {
+                    $miscpages[$permission] = $data;
+                    $miscpages["multimanage"] = [
+                        "icon" => "fa-calculator",
+                        "name" => "Multipliers",
+                    ];
                 } else {
                     $miscpages[$permission] = $data;
                 }
