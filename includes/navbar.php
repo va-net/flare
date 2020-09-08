@@ -79,6 +79,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                             "icon" => "fa-globe",
                             "name" => "Manage Site",
                         ];
+                    } elseif ($permission == "pirepmanage") {
+                        $miscpages[$permission] = $data;
+                        $miscpages["multimanage"] = [
+                            "icon" => "fa-calculator",
+                            "name" => "Multipliers",
+                        ]; 
                     } else {
                         $miscpages[$permission] = $data;
                     }
