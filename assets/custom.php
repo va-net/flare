@@ -48,6 +48,10 @@ header("Content-type: text/css; charset: UTF-8");
     color: white!important;
 }
 
+.main-content {
+    display: none;
+}
+
 .mobile-hidden .panel-link, .mobile-hidden .panel-link:hover {
     color: black!important;
     text-decoration: none;

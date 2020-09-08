@@ -11,7 +11,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 <script>
     $(document).ready(function() {
         $("#loader").fadeOut(500, function() {
-            $("#home").fadeIn(400);
+            $(".main-content").fadeIn(400);
         });
     });
 </script>
