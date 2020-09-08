@@ -534,12 +534,24 @@ if (!$user->isLoggedIn()) {
                                 <th>Name</th>
                                 <th class="mobile-hidden">Email</th>
                                 <th class="mobile-hidden">Grade</th>
-                                <th class="mobile-hidden">IFC Username</th>
+                                <th class="mobile-hidden">IFC</th>
+                                <th>Flags</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php
+                            $lists = Json::decode(file_get_contents("https://ifvarb.com/watchlist_api.php?apikey=a5f2963d-29b1-40e4-8867-a4fbb384002c"));
+                            $watchlist = array();
+                            $blacklist = array();
+                            foreach ($lists as $l) {
+                                if ($l["type"] == "Watchlist") {
+                                    array_push($watchlist, strtolower($l["ifc"]));
+                                } else {
+                                    array_push($blacklist, strtolower($l["ifc"]));
+                                }
+                            }
+
                             $users = $user->getAllPendingUsers();
                             $x = 0;
                             foreach ($users as $user) {
@@ -552,8 +564,16 @@ if (!$user->isLoggedIn()) {
                                 echo '</td><td class="mobile-hidden align-middle">';
                                 echo $user["grade"];
                                 echo '</td><td class="mobile-hidden align-middle">';
-                                $username = explode('/', $user['ifc']);
-                                echo '<a href="'.$user['ifc'].'" target="_blank">'.$username[4].'</a>';
+                                $username = explode('/', $user['ifc'])[4];
+                                echo '<a href="'.$user['ifc'].'" target="_blank">'.$username.'</a>';
+                                echo '</td><td class="align-middle">';
+                                if (in_array(strtolower($username), $watchlist)) {
+                                    echo '<span class="badge badge-warning">Watchlisted</span>';
+                                } elseif (in_array(strtolower($username), $blacklist)) {
+                                    echo '<span class="badge badge-danger">Blacklisted</span>';
+                                } else {
+                                    echo '<span class="badge badge-success">None</span>';
+                                }
                                 echo '</td><td class="align-middle">';
                                 echo '<button class="btn btn-success text-light" value="'.$user['id'].'" form="accept" type="submit" name="accept"><i class="fa fa-check"></i></button>';
                                 echo '&nbsp;<button value="'.$user['id'].'" id="delconfirmbtn" data-toggle="modal" data-target="#user'.$x.'declinemodal" class="btn btn-danger text-light" name="decline"><i class="fa fa-times"></i></button>';
