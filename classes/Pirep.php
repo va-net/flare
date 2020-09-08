@@ -153,4 +153,53 @@ class Pirep
 
     }
 
+    public static function fetchMultipliers() 
+    {
+        self::init();
+
+        return self::$_db->getAll('multipliers')->results();
+    }
+
+    public static function generateMultiCode($multis = null) 
+    {
+        if ($multis == null) {
+            $multis = self::fetchMultipliers();
+        }
+        $codes = array();
+        foreach ($multis as $m) {
+            array_push($codes, $m->code);
+        }
+
+        $code = mt_rand(111111, 999999);
+        while (in_array($code, $codes)) {
+            $code = mt_rand(111111, 999999);
+        }
+
+        return $code;
+    }
+
+    public static function deleteMultiplier($id) 
+    {
+        self::init();
+
+        self::$_db->delete('multipliers', array('id', '=', $id));
+    }
+
+    public static function addMultiplier($fields = array()) 
+    {
+        self::init();
+
+        self::$_db->insert('multipliers', $fields);
+    }
+
+    public static function findMultiplier($code) 
+    {
+        self::init();
+        $ret = self::$_db->get('multipliers', array('code', '=', $code));
+        if ($ret->count() == 0) {
+            return false;
+        }
+
+        return $ret->first();
+    }
 }

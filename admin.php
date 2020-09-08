@@ -666,7 +666,7 @@ if (!$user->isLoggedIn()) {
                     <?php endif; ?>
                 <?php elseif (Input::get('page') === 'pirepmanage'): ?>
                     <h3>Manage PIREPs</h3>
-                    <?php if (!$user->hasPermission('usermanage')): ?>
+                    <?php if (!$user->hasPermission('pirepmanage')): ?>
                         <div class="alert alert-danger text-center">Whoops! You don't have the necessary permissions to access this.</div>
                     <?php else: ?>
                         <form id="acceptpirep" action="update.php" method="post">
@@ -678,11 +678,12 @@ if (!$user->isLoggedIn()) {
                         <table class="table table-striped">
                             <thead class="bg-custom">
                                 <tr>
-                                    <th>Callsign</th>
-                                    <th>Flight Number</th>
-                                    <th class="mobile-hidden">Departure</th>
-                                    <th class="mobile-hidden">Arrival</th>
-                                    <th class="mobile-hidden">Date</th>
+                                    <th class="mobile-hidden">Callsign</th>
+                                    <th class="mobile-hidden">Flight Number</th>
+                                    <th>Dep<span class="mobile-hidden">arture</span></th>
+                                    <th>Arr<span class="mobile-hidden">ival</span></th>
+                                    <th>Flight Time</th>
+                                    <th class="mobile-hidden">Multiplier</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -691,17 +692,19 @@ if (!$user->isLoggedIn()) {
                                 $x = 0;
                                 $pireps = Pirep::fetchPending();
                                 foreach ($pireps as $pirep) {
-                                    echo '<tr><td class="align-middle">';
+                                    echo '<tr><td class="align-middle mobile-hidden">';
                                     $callsign = $user->idToCallsign($pirep['pilotid']);
                                     echo $callsign;
-                                    echo '</td><td class="align-middle">';
+                                    echo '</td><td class="align-middle mobile-hidden">';
                                     echo $pirep['flightnum'];
-                                    echo '</td><td class="align-middle mobile-hidden">';
+                                    echo '</td><td class="align-middle">';
                                     echo $pirep['departure'];
-                                    echo '</td><td class="align-middle mobile-hidden">';
+                                    echo '</td><td class="align-middle">';
                                     echo $pirep['arrival'];
+                                    echo '</td><td class="align-middle">';
+                                    echo Time::secsToString($pirep["flighttime"]);
                                     echo '</td><td class="align-middle mobile-hidden">';
-                                    echo $pirep['date'];
+                                    echo $pirep["multi"];
                                     echo '</td><td class="align-middle">';
                                     echo '<button class="btn btn-success text-light" value="'.$pirep['id'].'" form="acceptpirep" type="submit" name="accept"><i class="fa fa-check"></i></button>';
                                     echo '&nbsp;<button value="'.$pirep['id'].'" form="declinepirep" type="submit" class="btn btn-danger text-light" name="decline"><i class="fa fa-times"></i></button>';
@@ -711,6 +714,60 @@ if (!$user->isLoggedIn()) {
                                 ?>
                             </tbody>
                         </table>
+                    <?php endif; ?>
+                <?php elseif (Input::get('page') === 'multimanage'): ?>
+                    <h3>Manage Multipliers</h3>
+                    <?php if (!$user->hasPermission('pirepmanage')): ?>
+                        <div class="alert alert-danger text-center">Whoops! You don't have the necessary permissions to access this.</div>
+                    <?php else: ?>
+                        <p>
+                            Multiplier codes allow your pilots to gain multiplied flight time easily. They can simply enter their real flight time
+                            when filing their PIREP, enter a multiplier code, and their flight time multiplier will be applied automatically.
+                        </p>
+                        <h4>Active Multipliers</h4>
+                        <form id="multiarticle" action="update.php" method="post">
+                            <input hidden name="action" value="deletemulti">
+                        </form>
+                        <table class="table table-striped">
+                            <thead class="bg-custom">
+                                <tr>
+                                    <th>Code</th>
+                                    <th>Name</th>
+                                    <th>Multiplication</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                    $multis = Pirep::fetchMultipliers();
+                                    foreach ($multis as $m) {
+                                        echo '<tr><td class="align-middle">';
+                                        echo $m->code;
+                                        echo '</td><td class="align-middle">';
+                                        echo $m->name;
+                                        echo '</td><td class="align-middle">';
+                                        echo $m->multiplier.'x';
+                                        echo '</td><td class="align-middle">';
+                                        echo '<button value="'.$m->id.'" form="multiarticle" type="submit" class="btn btn-danger text-light" name="delete"><i class="fa fa-trash"></i></button>';
+                                        echo '</td></tr>';
+                                    }
+                                ?>
+                            </tbody>
+                        </table>
+                        <br />
+                        <h4>Add Multiplier</h4>
+                        <form action="update.php" method="post">
+                            <input hidden name="action" value="addmulti" />
+                            <div class="form-group">
+                                <label for="multi-name">Name</label>
+                                <input required type="text" maxlength="120" class="form-control" name="name" id="multi-name" />
+                            </div>
+                            <div class="form-group">
+                                <label for="multi-multi">Multiplication</label>
+                                <input required type="number" step="0.1" class="form-control" name="multi" id="multi-multi" />
+                            </div>
+                            <input type="submit" class="btn bg-custom" value="Save" />
+                        </form>
                     <?php endif; ?>
                 <?php elseif (Input::get('page') === 'newsmanage'): ?>
                     <h3>Manage News</h3>
@@ -752,71 +809,70 @@ if (!$user->isLoggedIn()) {
                             </tbody>
                         </table>
                         <?php
-                    $x = 0;
-                    foreach ($news as $article) {
-                        echo 
-                        '
-                        <div class="modal fade" id="article'.$x.'editmodal" tabindex="-1" role="dialog" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title">Edit News Article</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form action="update.php" method="post">
-                                            <input hidden name="action" value="editarticle">
-                                            <input hidden name="id" value="'.$article['id'].'">
-                                            <div class="form-group">
-                                                <label>Title</label>
-                                                <input type="text" value="'.$article["title"].'" class="form-control" name="title">
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Content</label>
-                                                <textarea class="form-control" name="content">'.$article["content"].'</textarea>
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Author</label>
-                                                <input readonly type="text" value="'.$article["author"].'" class="form-control" name="author">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="usermodal-ifc">Date Posted</label>
-                                                <input readonly type="text" value="'.$article["dateposted"].'" class="form-control" name="dateposted">
-                                            </div>
-                                            <input type="submit" class="btn bg-success" value="Save">
-                                        </form>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn bg-danger" data-dismiss="modal">Close</button>
+                        $x = 0;
+                        foreach ($news as $article) {
+                            echo 
+                            '
+                            <div class="modal fade" id="article'.$x.'editmodal" tabindex="-1" role="dialog" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Edit News Article</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form action="update.php" method="post">
+                                                <input hidden name="action" value="editarticle">
+                                                <input hidden name="id" value="'.$article['id'].'">
+                                                <div class="form-group">
+                                                    <label>Title</label>
+                                                    <input type="text" value="'.$article["title"].'" class="form-control" name="title">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Content</label>
+                                                    <textarea class="form-control" name="content">'.$article["content"].'</textarea>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Author</label>
+                                                    <input readonly type="text" value="'.$article["author"].'" class="form-control" name="author">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="usermodal-ifc">Date Posted</label>
+                                                    <input readonly type="text" value="'.$article["dateposted"].'" class="form-control" name="dateposted">
+                                                </div>
+                                                <input type="submit" class="btn bg-success" value="Save">
+                                            </form>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn bg-danger" data-dismiss="modal">Close</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        ';
-                        $x++;
-                    }
-
-                    ?>
-                    <br>
-                    <h4>New Article</h4>
-                    <form action="update.php" method="post">
-                        <input hidden name="action" value="newarticle">
-                        <div class="form-group">
-                            <label>Title</label>
-                            <input type="text" class="form-control" name="title">
-                        </div>
-                        <div class="form-group">
-                            <label>Content</label>
-                            <textarea class="form-control" name="content"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label>Author</label>
-                            <input readonly type="text" value="<?= escape($user->data()->name) ?>" class="form-control" name="author">
-                        </div>
-                        <input type="submit" class="btn bg-custom" value="Save">
-                    </form>
+                            ';
+                            $x++;
+                        }
+                        ?>
+                        <br />
+                        <h4>New Article</h4>
+                        <form action="update.php" method="post">
+                            <input hidden name="action" value="newarticle">
+                            <div class="form-group">
+                                <label>Title</label>
+                                <input type="text" class="form-control" name="title">
+                            </div>
+                            <div class="form-group">
+                                <label>Content</label>
+                                <textarea class="form-control" name="content"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Author</label>
+                                <input readonly type="text" value="<?= escape($user->data()->name) ?>" class="form-control" name="author">
+                            </div>
+                            <input type="submit" class="btn bg-custom" value="Save">
+                        </form>
                     <?php endif; ?>
                 <?php elseif (Input::get('page') === 'statsviewing'): ?>
                     <?php if (!$user->hasPermission('statsviewing')): ?>
