@@ -79,6 +79,15 @@ class Aircraft
 
     }
 
+    public static function fetchAllAircraft()
+    {
+
+        self::init();
+
+        return self::$_db->get('aircraft', array('status', '<', 3), array('name', 'ASC'));
+
+    }
+
     public static function getAvailableAircraft($rankid)
     {
 
@@ -136,20 +145,22 @@ class Aircraft
 
     }
 
-    public static function add($liveryId, $rankId) 
+    public static function add($aircraft, $rank, $livery) 
     {
 
         self::init();
 
-        $fullaircraft = self::fetchAircraftFromVANet($liveryId, "LiveryID")[0];
-        self::$_db->insert('aircraft', array(
-            "name" => $fullaircraft["aircraftName"],
-            "ifaircraftid" => $fullaircraft["aircraftID"],
-            "liveryname" => $fullaircraft["liveryName"],
-            "ifliveryid" => $fullaircraft["liveryID"],
-            "rankreq" => $rankId,
-            "status" => 1 // TODO: Remove This
+        $liveryId = self::liveryNameToId($livery, $aircraft);
+
+        $id = self::nameToId($aircraft);
+
+        self::$_db->update('aircraft', $id, 'id', array(
+            'status' => 1,
+            'rankreq' => $rank,
+            'ifliveryid' => $liveryId,
+            'liveryname' => $livery
         ));
+
     }
 
     public static function updateRank($rankId, $aircraftId) {
@@ -160,7 +171,7 @@ class Aircraft
         );
 
         if (!self::$_db->update('aircraft', $aircraftId, 'id', $fields)) {
-            throw new Exception('There was a problem updating the rank.');
+            throw new Exception('There was a problem updating the user.');
         }
     }
 

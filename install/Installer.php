@@ -80,12 +80,21 @@ class Installer
 
     public static function setupDb()
     {
+
         $sql = file_get_contents(__DIR__.'/db.sql');
         $db = DB::getInstance();
         if (!$db->query($sql)) {
             return false;
         }
+        $all = Aircraft::fetchAllAircraftFromVANet();
+        foreach ($all as $id => $name) {
+            $db->insert('aircraft', array(
+                'ifaircraftid' => $id,
+                'name' => $name
+            ));
+        }
         return true;
+
     }
 
 }

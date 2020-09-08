@@ -926,11 +926,11 @@ if (!$user->isLoggedIn()) {
                                                     <select class="form-control" name="aircraftselect" id="aircraftselect" required>
                                                         <option value>Select</option>
                                                         <?php
-                                                        $all = Aircraft::fetchAllAircraftFromVANet();
+                                                        $all = Aircraft::fetchAllAircraft();
                                                         $x = 0;
-                                                        foreach ($all as $id => $name) {
-                                                            var_dump($ac);
-                                                            echo '<option value="'.$id.'">'.$name.'</option>';
+                                                        while ($all->count() > $x) {
+                                                            echo '<option>'.$all->results()[$x]->name.'</option>';
+                                                            $x++;
                                                         }
                                                         ?>
                                                     </select>
@@ -938,12 +938,11 @@ if (!$user->isLoggedIn()) {
                                                 <div class="form-group">
                                                     <label for="rank">Livery</label>
                                                     <select class="form-control" name="livery" id="liveriesselect" required>
-                                                        <option disabled>Select a Type First</option>
+                                                        <option disabled>Loading...</option>
                                                     </select>
                                                 </div>
                                                 <script>
                                                     $("#aircraftselect").change(function() {
-                                                        $("#liveriesselect").html('<option disabled>Loading...</option>')
                                                         $.ajax({
                                                             url: "update.php",
                                                             type: "POST",
@@ -957,14 +956,14 @@ if (!$user->isLoggedIn()) {
                                                         });
                                                 </script>
                                                 <div class="form-group">
-                                                    <label for="rank">Minimum Rank</label>
+                                                    <label for="rank">Rank required</label>
                                                     <select class="form-control" name="rank" required>
                                                         <option value>Select</option>
                                                         <?php
-                                                        $ranks = Rank::fetchAllNames()->results();
-
-                                                        foreach ($ranks as $rank) {
-                                                            echo '<option value="'.$rank->id.'">'.$rank->name.'</option>';
+                                                        $all = Rank::fetchAllNames();
+                                                        $x = 0;
+                                                        while ($all->count() > $x) {
+                                                            echo '<option>'.$all->results()[$x]->name.'</option>';
                                                             $x++;
                                                         }
                                                         ?>
