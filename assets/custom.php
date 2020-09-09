@@ -48,7 +48,7 @@ header("Content-type: text/css; charset: UTF-8");
     color: white!important;
 }
 
-.main-content {
+.loaded {
     display: none;
 }
 
@@ -97,6 +97,12 @@ header("Content-type: text/css; charset: UTF-8");
     margin: -75px 0 0 -75px;
     width: 120px;
     height: 120px;
+}
+
+#loader-wrapper {
+    width: 100%;
+    min-height: 80vh;
+    background-color: #fff;
 }
 
 .spinner-custom {
