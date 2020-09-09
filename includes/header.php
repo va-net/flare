@@ -27,6 +27,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
       "info": true,
       "pageLength": 10
     });
+    $(".datatable-nosearch").dataTable({
+      "paging": true,
+      "ordering": true,
+      "searching": false,
+      "info": false,
+      "pageLength": 10,
+      "lengthChange": false,
+    });
   });
 </script>
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
