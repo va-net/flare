@@ -58,7 +58,7 @@ header("Content-type: text/css; charset: UTF-8");
 }
 
 #desktopMenu .panel-link:hover {
-    text-decoration: underline;
+    font-weight: bolder;
 }
 
 .mobile-hidden .panel-link-dark, .mobile-hidden .panel-link-dark:hover {
