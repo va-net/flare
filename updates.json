@@ -44,7 +44,8 @@
             "map.php",
             "classes/DB.php",
             "classes/User.php",
-            "update.php"
+            "update.php",
+            "version.json"
         ],
         "deletedFiles": [],
         "queries": []
