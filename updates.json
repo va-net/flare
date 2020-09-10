@@ -49,5 +49,21 @@
         ],
         "deletedFiles": [],
         "queries": []
+    },
+    {
+        "tag": "v1.0.0-beta6",
+        "name": "Public Beta 6",
+        "date": "2020-09-07",
+        "notes": "TODO",
+        "prerelease": true,
+        "useUpdater": true,
+        "files": [
+            "TODO"
+        ],
+        "deletedFiles": [],
+        "queries": [
+            "CREATE TABLE IF NOT EXISTS `options` ( `name` varchar(120) NOT NULL, `value` text NOT NULL, PRIMARY KEY (`name`)) ENGINE=InnoDB DEFAULT CHARSET=latin1;",
+            "TODO"
+        ]
     }
 ]
