@@ -131,6 +131,7 @@ if (!$user->isLoggedIn()) {
                                             <tbody>
                                                 <?php
                                                     $signedUp = VANet::isSignedUp($user->data()->ifuserid, Input::get('event'));
+                                                    
                                                     foreach ($event["signups"] as $gate) {
                                                         echo '<tr><td class="align-middle">';
                                                         echo $gate["gate"];
