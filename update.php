@@ -389,11 +389,11 @@ if (Input::get('action') === 'editprofile') {
 
     if (!Config::replaceColour(Input::get('hexcol'))) {
         Session::flash('error', 'There was an Error Updating the Colour Theme!');
-        Redirect::to('admin.php?page=site');
+        Redirect::to('admin.php?page=site&tab=colors');
         die();
     }
     Session::flash('success', 'Colour Theme Updated Successfully! You may need to reload the page or clear your cache in order for it to show.');
-    Redirect::to('admin.php?page=site');
+    Redirect::to('admin.php?page=site&tab=colors');
 } elseif (Input::get('action') === 'vasettingsupdate') {
     if (!$user->hasPermission('opsmanage')) {
         Redirect::to('home.php');
@@ -402,11 +402,11 @@ if (Input::get('action') === 'editprofile') {
 
     if (!Config::replace('name', Input::get('vaname')) || !Config::replace('identifier', Input::get('vaident'))) {
         Session::flash('error', 'There was an error updating the Config File!');
-        Redirect::to('admin.php?page=site');
+        Redirect::to('admin.php?page=site&tab=settings');
         die();
     }
-    Session::flash('success', 'VA Details Changed Successfully. You may need to reload the page a few times or clear your cache in order for it to show.');
-    Redirect::to('admin.php?page=site');
+    Session::flash('success', 'VA Settings Changed Successfully!');
+    Redirect::to('admin.php?page=site&tab=settings');
 } elseif (Input::get('action') === 'vanetupdate') {
     if (!$user->hasPermission('opsmanage')) {
         Redirect::to('home.php');
@@ -415,11 +415,11 @@ if (Input::get('action') === 'editprofile') {
     
     if (!Config::replace('api_key', Input::get('vanetkey'))) {
         Session::flash('error', 'There was an error updating the config file!');
-        Redirect::to('admin.php?page=site');
+        Redirect::to('admin.php?page=site&tab=vanet');
         die();
     }
     Session::flash('success', 'VANet API Key changed Successfully.');
-    Redirect::to('admin.php?page=site');
+    Redirect::to('admin.php?page=site&tab=vanet');
 } elseif (Input::get('action') === 'addevent') {
     if (!$user->hasPermission('opsmanage')) {
         Redirect::to('home.php');

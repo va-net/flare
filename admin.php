@@ -460,6 +460,21 @@ if (!$user->isLoggedIn()) {
                                         <label for="">VA Callsign Identifier</label>
                                         <input required type="text" class="form-control" name="vaident" value="<?= Config::get('va/identifier') ?>">
                                     </div>
+                                    <div class="form-group">
+                                        <label for="">Force Live Server</label>
+                                        <select required class="form-control" name="forceserv" id="forceserv">
+                                            <option value="0">Don't Force Server</option>
+                                            <option value="casual">Force Casual Server</option>
+                                            <option value="training">Force Training Server</option>
+                                            <option value="expert">Force Expert Server</option>
+                                        </select>
+                                        <script>
+                                            $(document).ready(function() {
+                                                $("#forceserv").val("<?= Config::get('FORCE_SERVER'); ?>")
+                                            });
+                                        </script>
+                                        <small class="text-muted">This will force all operations (PIREP lookups, ACARS, etc) to be on this server. If turned off, pilots will be able to choose.</small>
+                                    </div>
                                     <input type="submit" class="btn bg-custom" value="Save">
                                 </form>
                             </div>
