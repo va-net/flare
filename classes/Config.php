@@ -26,7 +26,12 @@ class Config
             // Check if the Key was Invalid. If so, fall back on the Database
             if ($config === $GLOBALS['config']) {
                 $db = DB::getInstance();
-                return $db->get('options', array('name', '=', $path[0]))->first()->value;
+                $ret = $db->get('options', array('name', '=', $path[0]));
+                if ($ret->count() === 0) {
+                    return false;
+                }
+
+                return $ret->first()->value;
             }
 
             return $config;
