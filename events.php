@@ -97,7 +97,7 @@ if (!$user->isLoggedIn()) {
                                             <b>Departure:</b> <?= $event["departureAirport"]; ?><br />
                                             <b>Arrival:</b> <?= $event["arrivalAirport"]; ?><br />
                                             <b>Aircraft:</b> <?= $event["aircraft"]["aircraftName"].' ('.$event["aircraft"]["liveryName"].')'; ?><br />
-                                            <b>Arrival:</b> <?= ucfirst($event["server"]); ?><br />
+                                            <b>Server:</b> <?= ucfirst($event["server"]); ?><br />
                                         </p>
                                         <h4 class="text-left">Aircraft Specifications</h4>
                                         <p class="text-left">
@@ -125,7 +125,7 @@ if (!$user->isLoggedIn()) {
                                                 <tr>
                                                     <th>Gate</th>
                                                     <th>Pilot</th>
-                                                    <th>Sign Up</th>
+                                                    <th>Actions</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
