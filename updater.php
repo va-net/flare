@@ -85,6 +85,13 @@ if ($nextUpdate == null) {
     die();
 }
 
+// Check it can be updated with the updater
+if (!$nextUpdate["useUpdater"]) {
+    echo "This version contains changes that cannot be installed with the updater. ";
+    echo "Please update manually using the instructions available on <a href=\"{$next['html_url']}\" target=\"_blank\">GitHub</a>.";
+    die();
+}
+
 // Update Files
 foreach ($nextUpdate["files"] as $file) {
     $fileData = file_get_contents("https://raw.githubusercontent.com/va-net/flare/".urlencode($nextTag["commit"]["sha"])."/" + urlencode($file));
