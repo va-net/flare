@@ -49,6 +49,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
         <?php 
         if (VANet::isGold()) {
             echo '<li class="nav-item desktop-hidden">
+                <a href="events.php" id="eventslink" class="panel-link"><i class="fa fa-calendar"></i>&nbsp;Events</a>
+            </li>';
+            echo '<li class="nav-item desktop-hidden">
                 <a href="acars.php" id="acarslink" class="panel-link"><i class="fa fa-sync"></i>&nbsp;ACARS</a>
             </li>';
         }
