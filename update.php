@@ -400,7 +400,7 @@ if (Input::get('action') === 'editprofile') {
         die();
     }
 
-    if (!Config::replace('name', Input::get('vaname')) || !Config::replace('identifier', Input::get('vaident'))) {
+    if (!Config::replace('name', Input::get('vaname')) || !Config::replace('identifier', Input::get('vaident')) || !Config::replace("FORCE_SERVER", Input::get('forceserv'))) {
         Session::flash('error', 'There was an error updating the Config File!');
         Redirect::to('admin.php?page=site&tab=settings');
         die();

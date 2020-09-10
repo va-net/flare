@@ -418,26 +418,36 @@ if (!$user->isLoggedIn()) {
                                 Redirect::to('home.php');
                                 die();
                             }
+
+                            $tab = "colors";
+                            if (!empty(Input::get('tab'))) {
+                                $tab = Input::get('tab');
+                            }
                         ?>
+                        <script>
+                            $(document).ready(function() {
+                                $("#<?= $tab; ?>link").click();
+                            });
+                        </script>
                         <h3>Configure Flare</h3>
                         <p>Here you may configure Flare to be your own.</p>
                         <ul class="nav nav-tabs nav-dark justify-content-center">
                             <li class="nav-item">
-                                <a class="nav-link active" data-toggle="tab" href="#colors">Color Theme</a>
+                                <a class="nav-link" id="colorslink" data-toggle="tab" href="#colors">Color Theme</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" data-toggle="tab" href="#settings">VA Settings</a>
+                                <a class="nav-link" id="settingslink" data-toggle="tab" href="#settings">VA Settings</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" data-toggle="tab" href="#vanet">VANet Settings</a>
+                                <a class="nav-link" id="vanetlink" data-toggle="tab" href="#vanet">VANet Settings</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" data-toggle="tab" href="#updates">Updates</a>
+                                <a class="nav-link" id="updateslink" data-toggle="tab" href="#updates">Updates</a>
                             </li>
                         </ul>
 
                         <div class="tab-content">
-                            <div id="colors" class="tab-pane container-fluid p-3 active">
+                            <div id="colors" class="tab-pane container-fluid p-3 fade">
                                 <h4>Colour Theme</h4>
                                 <form action="update.php" method="post">
                                     <input hidden name="action" value="setcolour">
