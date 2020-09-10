@@ -420,4 +420,125 @@ if (Input::get('action') === 'editprofile') {
     }
     Session::flash('success', 'VANet API Key changed Successfully.');
     Redirect::to('admin.php?page=site');
+} elseif (Input::get('action') === 'addevent') {
+    if (!$user->hasPermission('opsmanage')) {
+        Redirect::to('home.php');
+        die();
+    }
+
+    $sentGates = explode(",", Input::get('gates'));
+    $gates = array();
+    foreach ($sentGates as $g) {
+        array_push($gates, trim($g));
+    }
+
+    $vis = 'true';
+    if (Input::get('visible') == 0) {
+        $vis = 'false';
+    }
+
+    $datetime = Input::get('date').' '.substr(Input::get('time'), 0, 2).':'.substr(Input::get('time'), 2, 2);
+
+    try {
+        VANet::createEvent(array(
+            "Name" => Input::get('name'),
+            "Description" => Input::get('description'),
+            "EventTypeID" => "1",
+            "DateTime" => $datetime,
+            "DepartureAirport" => Input::get('dep'),
+            "ArrivalAirport" => Input::get('arr'),
+            "Visible" => $vis,
+            "Aircraft" => Input::get('aircraft'),
+            "Server" => Input::get('server'),
+            "Gates" => $gates
+        ));
+        Session::flash('success', 'Event Added Successfully!');
+    } catch (Exception $e) {
+        Session::flash('error', 'Error Creating Event');
+    } finally {
+        Redirect::to('admin.php?page=events');
+    }
+} elseif (Input::get('action') === 'eventsignup') {
+    $uData = $user->data();
+    if (VANet::isSignedUp($uData->ifuserid, Input::get('event')) != false) {
+        Redirect::to('events.php?page=view&event='.urlencode(Input::get('event')));
+        die();
+    }
+
+    $ret = VANet::eventSignUp($uData->ifuserid, Input::get('gate'));
+    if ($ret === 400) {
+        Session::flash("error", "Event is Corrupted. Please contact your VA.");
+        Redirect::to('events.php?page=view&event='.urlencode(Input::get('event')));
+        die();
+    } elseif ($ret === 404) {
+        Session::flash('error', 'Slot Not Found. Are you messing with us? :/');
+        Redirect::to('events.php?page=view&event='.urlencode(Input::get('event')));
+        die();
+    } elseif ($ret === 409) {
+        Session::flash("error", "Rats! Someone got to that gate before you. Please try again.");
+        Redirect::to('events.php');
+        die();
+    } elseif ($ret === true) {
+        Session::flash('success', 'Gate Reserved Successfully!');
+        Redirect::to('events.php?page=view&event='.urlencode(Input::get('event')));
+        die();
+    }
+} elseif (Input::get('action') === 'vacateslot') {
+    $uData = $user->data();
+
+    $ret = VANet::eventPullOut(Input::get('gate'), Input::get('event'), $uData->ifuserid);
+
+    if ($ret === 400) {
+        Redirect::to('events.php?page=view&event='.urlencode(Input::get('event')));
+        die();
+    } elseif ($ret === 404) {
+        Session::flash('error', 'Slot Not Found. Are you messing with us? :/');
+        Redirect::to('events.php?page=view&event='.urlencode(Input::get('event')));
+        die();
+    } elseif ($ret === 409) {
+        Session::flash("error", "Event is Corrupted. Please contact your VA.");
+        Redirect::to('events.php');
+        die();
+    } elseif ($ret === true) {
+        Session::flash('success', 'Slot Vacated Successfully!');
+        Redirect::to('events.php?page=view&event='.urlencode(Input::get('event')));
+        die();
+    }
+} elseif (Input::get('action') === 'deleteevent') {
+    if (!$user->hasPermission('opsmanage')) {
+        Redirect::to('home.php');
+        die();
+    }
+
+    VANet::deleteEvent(Input::get('delete'));
+    Session::flash('success', 'Event Deleted Successfully');
+    Redirect::to('admin.php?page=events');
+} elseif (Input::get('action') === 'editevent') {
+    if (!$user->hasPermission('opsmanage')) {
+        Redirect::to('home.php');
+        die();
+    }
+
+    $vis = 'true';
+    if (Input::get('visible') == 0) {
+        $vis = 'false';
+    }
+    $ret = VANet::editEvent(Input::get('id'), array(
+        "Name" => Input::get('name'),
+        "Description" => Input::get('description'),
+        "EventTypeID" => 1,
+        "DepartureAirport" => Input::get('dep'),
+        "ArrivalAirport" => Input::get('arr'),
+        "Visible" => $vis,
+        "AircraftID" => Input::get('aircraft'),
+        "Server" => Input::get('server')
+    ));
+
+    if (!$ret) {
+        Session::flash('error', "Error Updating Event");
+        Redirect::to('admin.php?page=events');
+    } else {
+        Session::flash('success', "Event Updated Successfully");
+        Redirect::to('admin.php?page=events');
+    }
 }
