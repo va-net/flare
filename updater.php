@@ -85,10 +85,22 @@ if ($nextUpdate == null) {
     die();
 }
 
+// Check it can be updated with the updater
+if (!$nextUpdate["useUpdater"]) {
+    echo "This version contains changes that cannot be installed with the updater. ";
+    echo "Please update manually using the instructions available on <a href=\"{$next['html_url']}\" target=\"_blank\">GitHub</a>.";
+    die();
+}
+
 // Update Files
 foreach ($nextUpdate["files"] as $file) {
-    $fileData = file_get_contents("https://raw.githubusercontent.com/va-net/flare/".urlencode($nextTag["commit"]["sha"])."/" + urlencode($file));
-    if (file_put_contents(__DIR__.$file, $fileData) == FALSE) {
+    $fileData = file_get_contents("https://raw.githubusercontent.com/va-net/flare/".urlencode($nextTag["commit"]["sha"])."/".urlencode($file));
+    $slash = "/";
+    if (strpos(strtolower(php_uname('s')), "window") !== FALSE) {
+        $file = str_replace("/", "\\", $file); 
+        $slash = "\\";
+    }
+    if ($fileData === FALSE || file_put_contents(__DIR__.$slash.$file, $fileData) === FALSE) {
         echo "Error Updating File ".$file;
         die();
     }
