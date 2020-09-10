@@ -5,6 +5,7 @@
         "date": "2020-09-06",
         "notes": "Redid VANet Integration, Updated Application Form, Fixed Design Issues on Mobile",
         "prerelease": true,
+        "useUpdater": true,
         "files": [
             "classes/VANet.php",
             "update.php",
@@ -25,8 +26,26 @@
         "date": "2020-09-07",
         "notes": "Added Updater",
         "prerelease": true,
+        "useUpdater": true,
         "files": [
-            "TODO"
+            "assets/custom.php",
+            "includes/footer.php",
+            "index.php",
+            "apply.php",
+            "routes.php",
+            "classes/Route.php",
+            "pireps.php",
+            "includes/header.php",
+            "admin.php",
+            "acars.php",
+            "includes/navbar.php",
+            "includes/sidebar.php",
+            "home.php",
+            "map.php",
+            "classes/DB.php",
+            "classes/User.php",
+            "update.php",
+            "version.json"
         ],
         "deletedFiles": [],
         "queries": []

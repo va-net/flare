@@ -20,7 +20,7 @@ $GLOBALS['config'] = array(
         'password' => 'DB_PASS',
         'db' => 'DB_NAME',
         'port' => 'DB_PORT'
-        ),
+    ),
     'remember' => array(
         'cookie_name' => 'remember',
         'cookie_expiry' => 604800

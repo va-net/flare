@@ -48,9 +48,17 @@ header("Content-type: text/css; charset: UTF-8");
     color: white!important;
 }
 
+.loaded {
+    display: none;
+}
+
 .mobile-hidden .panel-link, .mobile-hidden .panel-link:hover {
     color: black!important;
     text-decoration: none;
+}
+
+#desktopMenu .panel-link:hover {
+    text-decoration: underline;
 }
 
 .mobile-hidden .panel-link-dark, .mobile-hidden .panel-link-dark:hover {
@@ -89,6 +97,12 @@ header("Content-type: text/css; charset: UTF-8");
     margin: -75px 0 0 -75px;
     width: 120px;
     height: 120px;
+}
+
+#loader-wrapper {
+    width: 100%;
+    min-height: 80vh;
+    background-color: #fff;
 }
 
 .spinner-custom {

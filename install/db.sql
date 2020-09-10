@@ -19,6 +19,9 @@ CREATE TABLE IF NOT EXISTS `news` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
+INSERT INTO `news` (`subject`, `content`, `author`) VALUES
+('Welcome to Flare!', 'Thank You for installing Flare, the Crew Center made for Infinite Flight and integrated with VANet. Before you get your pilots set up with Flare, here are some things to keep in mind.\r\n\r\nFirst of all, if it\'s you\'re not a fan of the orange (kudos if you get the reference), you can change the color theme in site settings.\r\nNext, it\'s worth keeping in mind you can add transfer hours and transfer flights to your pilots. This means you can bring over hours and the number of PIREPs a pilot has filed from another Crew Center. This can be done in the admin panel.\r\nFinally, if you\'re confused with Flare at all check out the tutorials available at https://vanet.app/tutorials.\r\n\r\nEnjoy!', 'Flare Installer');
+
 CREATE TABLE IF NOT EXISTS `pilots` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `callsign` varchar(120) NOT NULL,

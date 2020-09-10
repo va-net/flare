@@ -43,10 +43,9 @@ if (!$user->isLoggedIn()) {
         <div class="container-fluid mt-4 text-center" style="overflow: auto;">
             <div class="row m-0 p-0">
                 <?php include './includes/sidebar.php'; ?>
-                <div class="col-lg-9 p-3 main-content">
-                    <div id="loader" class="spinner-border spinner-border-sm spinner-custom"></div>
-                    <div class="tab-content" id="tc">
-                        <div class="tab-pane container active" id="home" style="display: none;">
+                <div class="col-lg-9 main-content">
+                    <div id="loader-wrapper"><div id="loader" class="spinner-border spinner-border-sm spinner-custom"></div></div>
+                    <div class="loaded">
                         <?php
                         if (Session::exists('errorrecent')) {
                             echo '<div class="alert alert-danger text-center">Error: '.Session::flash('errorrecent').'</div>';
@@ -66,7 +65,7 @@ if (!$user->isLoggedIn()) {
                                     if (!$pireps) {
                                         echo '<h5><b>No recent PIREPs<b></h5>';
                                     } else { ?>
-                                        <table class="table table-striped">
+                                        <table class="table table-striped datatable">
                                         <thead class="bg-custom">
                                             <tr>
                                                 <th class="mobile-hidden">Flight Number</th>
@@ -260,23 +259,22 @@ if (!$user->isLoggedIn()) {
                                             </select>
                                         </div>
                                         <div class="form-group">
-                                            <label for="multi">Multiplier Number (if applicable)</label>
-                                            <input type="number" class="form-control" maxlength="6" minlength="6" id="multi" name="multi">
+                                            <label for="multi">Multiplier Code (if applicable)</label>
+                                            <input type="text" class="form-control" maxlength="6" minlength="6" id="multi" name="multi" />
                                         </div>
                                         <input type="submit" class="btn text-light bg-custom" value="Submit">
                                     </form>
                                 </section>
                             <?php endif; ?>
-                            <?php else: ?>
-                                <h3>Setup PIREPs</h3>
-                                <p>Before you can start filing PIREPs, we need to grab a bit of data from Infinite Flight. Please spawn in on the Casual Server, and ensure that you <b>set your callsign to your assigned one (<?= $user->data()->callsign ?>, if you've forgotten!).</b> Then, click the button below.</p>
-                                <form method="post" action="update.php">
-                                    <input hidden name="action" value="setuppireps">
-                                    <input hidden name="callsign" value="<?= $user->data()->callsign ?>">
-                                    <input type="submit" class="btn text-light bg-custom" value="Find Me">
-                                </form>
-                            <?php endif; ?>
-                        </div>
+                        <?php else: ?>
+                            <h3>Setup PIREPs</h3>
+                            <p>Before you can start filing PIREPs, we need to grab a bit of data from Infinite Flight. Please spawn in on the Casual Server, and ensure that you <b>set your callsign to your assigned one (<?= $user->data()->callsign ?>, if you've forgotten!).</b> Then, click the button below.</p>
+                            <form method="post" action="update.php">
+                                <input hidden name="action" value="setuppireps">
+                                <input hidden name="callsign" value="<?= $user->data()->callsign ?>">
+                                <input type="submit" class="btn text-light bg-custom" value="Find Me">
+                            </form>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>

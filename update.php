@@ -46,17 +46,26 @@ if (Input::get('action') === 'editprofile') {
         Redirect::to('home.php');
     }
 } elseif (Input::get('action') === 'filepirep') {
-    $multi = 0;
+    $multi = "None";
+    $finalFTime = Time::strToSecs(Input::get('ftime'));
 
-    if (Input::get('multi') != 0) {
-        $multi = Input::get('multi');
+    if (!empty(Input::get('multi'))) {
+        $multiplier = Pirep::findMultiplier(Input::get('multi'));
+        if (!$multiplier) {
+            Session::flash('error', 'Invalid Multiplier Code');
+            Redirect::to('pireps.php?page=new');
+            die();
+        }
+
+        $multi = $multiplier->name;
+        $finalFTime *= $multiplier->multiplier;
     }
 
     $user = new User();
     $allowedaircraft = $user->getAvailableAircraft();
     $allowed = false;
     foreach ($allowedaircraft as $a) {
-        if ($a["name"] == Input::get('aircraft')) {
+        if ($a["id"] == Input::get('aircraft')) {
             $allowed = true;
         }
     }
@@ -81,16 +90,17 @@ if (Input::get('action') === 'editprofile') {
     if ($response['success'] != true) {
         Session::flash('error', 'There was an Error Connecting to VANet.');
         Redirect::to('pireps.php?page=new');
+        die();
     }
 
     if (!Pirep::file(array(
         'flightnum' => Input::get('fnum'),
         'departure' => Input::get('dep'),
         'arrival' => Input::get('arr'),
-        'flighttime' => Time::strToSecs(Input::get('ftime')),
+        'flighttime' => $finalFTime,
         'pilotid' => $user->data()->id,
         'date' => Input::get('date'),
-        'aircraftid' => Aircraft::getId(Input::get('aircraft')),
+        'aircraftid' => Input::get('aircraft'),
         'multi' => $multi
     ))) {
         Session::flash('error', 'There was an Error Filing the PIREP.');
@@ -106,7 +116,7 @@ if (Input::get('action') === 'editprofile') {
         'arrival' => Input::get('arr'),
         'pilotid' => $user->data()->id,
         'date' => Input::get('date'),
-        'aircraftid' => Aircraft::getId(Input::get('aircraft')),
+        'aircraftid' => Input::get('aircraft'),
         'multi' => Input::get('multi')
     ))) {
         Session::flash('errorrecent', 'There was an Error Editing the PIREP.');
@@ -232,6 +242,28 @@ if (Input::get('action') === 'editprofile') {
     Pirep::decline(Input::get('decline'));
     Session::flash('success', 'PIREP Declined Successfully');
     Redirect::to('admin.php?page=pirepmanage');
+} elseif (Input::get('action') === 'deletemulti') {
+    if (!$user->hasPermission('pirepmanage')) {
+        Redirect::to('home.php');
+        die();
+    }
+
+    Pirep::deleteMultiplier(Input::get('delete'));
+    Session::flash('success', 'Multiplier Deleted Successfully!');
+    Redirect::to('admin.php?page=multimanage');
+} elseif (Input::get('action') === 'addmulti') {
+    if (!$user->hasPermission('pirepmanage')) {
+        Redirect::to('home.php');
+        die();
+    }
+
+    Pirep::addMultiplier(array(
+        "code" => Pirep::generateMultiCode(),
+        "name" => Input::get("name"),
+        "multiplier" => Input::get("multi")
+    ));
+    Session::flash('success', 'Multiplier Added Successfully!');
+    Redirect::to('admin.php?page=multimanage');
 } elseif (Input::get('action') === 'deletearticle') {
     if (!$user->hasPermission('newsmanage')) {
         Redirect::to('home.php');
@@ -281,10 +313,10 @@ if (Input::get('action') === 'editprofile') {
         die();
     }
 
-    Aircraft::add(Input::get('aircraftselect'), Rank::nameToId(Input::get('rank')), Input::get('livery'));
+    Aircraft::add(Input::get('aircraftselect'), Input::get('rank'), Input::get('livery'));
     Session::flash('success', 'Aircraft Added Successfully! ');
     Redirect::to('admin.php?page=opsmanage&section=fleet');
-} elseif (Input::get('action') == 'editfleet') {
+} elseif (Input::get('action') === 'editfleet') {
     if (!$user->hasPermission('opsmanage')) {
         Redirect::to('home.php');
         die();
@@ -306,7 +338,7 @@ if (Input::get('action') === 'editprofile') {
         die();
     }
 
-    Route::add(array(Input::get('fltnum'), Input::get('dep'), Input::get('arr'), Time::strToSecs(Input::get('duration')), Aircraft::nameToId(Input::get('aircraft'))));
+    Route::add(array(Input::get('fltnum'), Input::get('dep'), Input::get('arr'), Time::strToSecs(Input::get('duration')), Input::get('aircraft')));
     Session::flash('success', 'Route Added Successfully!');
     Redirect::to('admin.php?page=opsmanage&section=routes');
 } elseif (Input::get('action') === 'deleteroute') {

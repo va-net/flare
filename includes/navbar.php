@@ -44,9 +44,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
             <a href="routes.php" id="routeslink" class="panel-link"><i class="fa fa-database"></i>&nbsp;Route Database</a>
         </li>
         <li class="nav-item desktop-hidden">
-            <a href="acars.php" id="acarslink" class="panel-link"><i class="fa fa-sync"></i>&nbsp;ACARS</a>
+            <a href="map.php" id="maplink" class="panel-link"><i class="fa fa-map"></i>&nbsp;Live Map</a>
         </li>
         <?php 
+        if (VANet::isGold()) {
+            echo '<li class="nav-item desktop-hidden">
+                <a href="acars.php" id="acarslink" class="panel-link"><i class="fa fa-sync"></i>&nbsp;ACARS</a>
+            </li>';
+        }
         $permissions = Permissions::getAll();
         if ($user->hasPermission('admin')) {
             $userpages = [];
@@ -74,6 +79,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                             "icon" => "fa-globe",
                             "name" => "Manage Site",
                         ];
+                    } elseif ($permission == "pirepmanage") {
+                        $miscpages[$permission] = $data;
+                        $miscpages["multimanage"] = [
+                            "icon" => "fa-calculator",
+                            "name" => "Multipliers",
+                        ]; 
                     } else {
                         $miscpages[$permission] = $data;
                     }

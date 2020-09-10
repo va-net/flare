@@ -10,8 +10,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 <p><small class="d-block mb-3 text-muted"><br />&copy; <?php echo Config::get('va/name')." ".date("Y"); ?>. Flare Crew Center by Lucas Rebato and VANet.</small></p>
 <script>
     $(document).ready(function() {
-        $("#loader").fadeOut(500, function() {
-            $("#home").fadeIn(400);
+        $("#loader-wrapper").fadeOut(500, function() {
+            $(".loaded").fadeIn(400);
         });
     });
 </script>
