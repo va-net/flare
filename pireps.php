@@ -138,7 +138,6 @@ if (!$user->isLoggedIn()) {
                                                                 <select class="form-control" name="aircraft" required>
                                                                     <option value>Select</option>
                                                                     ';
-                                                                    var_dump($pirep);
                                                                     $aircraftlist = $user->getAvailableAircraft();
                                                                     foreach($aircraftlist as $aircraft) {
                                                                         if ($aircraft['name'] === $pirep['aircraft']) {
