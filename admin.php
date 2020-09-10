@@ -1288,7 +1288,7 @@ if (!$user->isLoggedIn()) {
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="aircraft">Flight Number</label>
-                                                        <input min="1" type="number" name="fltnum" class="form-control" required />
+                                                        <input maxlength="10" type="text" name="fltnum" class="form-control" required />
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="aircraft">Flight Duration</label>

@@ -186,7 +186,7 @@ if (!$user->isLoggedIn()) {
                                         </div>
                                         <div class="form-group">
                                             <label for="fnum">Flight Number</label>
-                                            <input type="number" min="1" class="form-control" name="fnum" value="<?= escape(Input::get('fnum')) ?>">
+                                            <input requried type="text" class="form-control" name="fnum" value="<?= escape(Input::get('fnum')) ?>">
                                         </div>
                                         <div class="form-group">
                                             <label for="hrs">Flight Time</label>
