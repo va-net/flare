@@ -927,11 +927,9 @@ if (!$user->isLoggedIn()) {
                                                         <select class="form-control" name="aircraftselect" id="aircraftselect" required>
                                                             <option value>Select</option>
                                                             <?php
-                                                            $all = Aircraft::fetchAllAircraft();
-                                                            $x = 0;
-                                                            while ($all->count() > $x) {
-                                                                echo '<option>'.$all->results()[$x]->name.'</option>';
-                                                                $x++;
+                                                            $allac = Aircraft::fetchAllAircraftFromVANet();
+                                                            foreach ($allac as $id => $name) {
+                                                                echo '<option value="'.$id.'">'.$name.'</option>';
                                                             }
                                                             ?>
                                                         </select>
@@ -961,11 +959,10 @@ if (!$user->isLoggedIn()) {
                                                         <select class="form-control" name="rank" required>
                                                             <option value>Select</option>
                                                             <?php
-                                                            $all = Rank::fetchAllNames();
-                                                            $x = 0;
-                                                            while ($all->count() > $x) {
-                                                                echo '<option>'.$all->results()[$x]->name.'</option>';
-                                                                $x++;
+                                                            $ranks = Rank::fetchAllNames()->results();
+
+                                                            foreach ($ranks as $rank) {
+                                                                echo '<option value="'.$rank->id.'">'.$rank->name.'</option>';
                                                             }
                                                             ?>
                                                         </select>

@@ -313,7 +313,7 @@ if (Input::get('action') === 'editprofile') {
         die();
     }
 
-    Aircraft::add(Input::get('aircraftselect'), Input::get('rank'), Input::get('livery'));
+    Aircraft::add(Input::get('livery'), Input::get('rank'));
     Session::flash('success', 'Aircraft Added Successfully! ');
     Redirect::to('admin.php?page=opsmanage&section=fleet');
 } elseif (Input::get('action') === 'editfleet') {
@@ -377,9 +377,9 @@ if (Input::get('action') === 'editprofile') {
     Session::flash('success', 'Rank Edited Successfully!');
     Redirect::to('admin.php?page=opsmanage&section=ranks');
 } elseif (Input::get('action') == 'getliveriesforaircraft') {
-    $all = Aircraft::fetchLiveryIdsForAircraft(Aircraft::nameToAircraftId(Input::get('aircraft')));
+    $all = Aircraft::fetchLiveryIdsForAircraft(Input::get('aircraft'));
     foreach ($all as $name => $id) {
-        echo '<option>'.$name.'</option>';
+        echo '<option value="'.$id.'">'.$name.'</option>';
     }
 } elseif (Input::get('action') === 'setcolour') {
     if (!$user->hasPermission('opsmanage')) {
