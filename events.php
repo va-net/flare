@@ -56,23 +56,17 @@ if (!$user->isLoggedIn()) {
                                             <th>View</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <?php
-                                            $all = VANet::getEvents();
-                                            foreach ($all as $event) {
-                                                if ($event["visible"]) {
-                                                    echo '<tr><td class="align-middle">';
-                                                    echo $event["name"];
-                                                    echo '</td><td class="align-middle">';
-                                                    echo $event["departureAirport"];
-                                                    echo '</td><td class="align-middle">';
-                                                    echo '<a href="events.php?page=view&event='.urlencode($event["id"]).'" class="btn bg-custom">View</button>';
-                                                    echo '</td></tr>';
-                                                }
-                                            }
-                                        ?>
+                                    <tbody id="events-table">
+                                        <tr><td colspan="3">Loading...</td></tr>
                                     </tbody>
                                 </table>
+                                <script>
+                                    $.post("vanet.php", {
+                                        "method": "events-table"
+                                    }, function (data, status) {
+                                        $("#events-table").html(data);
+                                    });
+                                </script>
                             <?php elseif (Input::get('page') === 'view' && !empty(Input::get('event'))): ?>
                                 <?php $event = VANet::findEvent(Input::get('event')); ?>
                                 <h3><?= $event["name"]; ?></h3>
