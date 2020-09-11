@@ -8,6 +8,7 @@
     <a href="map.php" id="maplink" class="panel-link"><i class="fa fa-map"></i>&nbsp;Live Map</a><br />
     <?php
         if (VANet::isGold()) {
+            echo '<a href="events.php" id="eventslink" class="panel-link"><i class="fa fa-calendar"></i>&nbsp;Events</a><br />';
             echo '<a href="acars.php" id="acarslink" class="panel-link"><i class="fa fa-sync"></i>&nbsp;ACARS</a><br />';
         }
     ?>
@@ -39,6 +40,10 @@
                     $miscpages["site"] = [
                         "icon" => "fa-globe",
                         "name" => "Manage Site",
+                    ];
+                    $miscpages["events"] = [
+                        "icon" => "fa-plane-departure",
+                        "name" => "Manage Events",
                     ];
                 } elseif ($permission == "pirepmanage") {
                     $miscpages[$permission] = $data;

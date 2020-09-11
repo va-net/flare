@@ -327,7 +327,9 @@ if (Input::get('action') === 'editprofile') {
     Redirect::to('admin.php?page=opsmanage&section=fleet');
 } elseif (Input::get('action') === 'setuppireps') {
     if (!Pirep::setup(Input::get('callsign'), $user->data()->id)) {
-        Session::flash('errorrecent', 'There was an Error Connecting to Infinite Flight. Ensure you are spawned in on the <b>Casual Server, and have set your callsign to \''.$user->data()->callsign.'\'</b>!');
+        $server = 'casual';
+        if ($force !== 0 && $force !== 'casual') $server = $force;
+        Session::flash('errorrecent', 'There was an Error Connecting to Infinite Flight. Ensure you are spawned in on the <b>'.ucfirst($server).' Server, and have set your callsign to \''.$user->data()->callsign.'\'</b>!');
         Redirect::to('pireps.php?page=new');
     }
     Session::flash('successrecent', 'PIREPs Setup Successfully! You can now File PIREPs.');
@@ -389,24 +391,24 @@ if (Input::get('action') === 'editprofile') {
 
     if (!Config::replaceColour(Input::get('hexcol'))) {
         Session::flash('error', 'There was an Error Updating the Colour Theme!');
-        Redirect::to('admin.php?page=site');
+        Redirect::to('admin.php?page=site&tab=colors');
         die();
     }
     Session::flash('success', 'Colour Theme Updated Successfully! You may need to reload the page or clear your cache in order for it to show.');
-    Redirect::to('admin.php?page=site');
+    Redirect::to('admin.php?page=site&tab=colors');
 } elseif (Input::get('action') === 'vasettingsupdate') {
     if (!$user->hasPermission('opsmanage')) {
         Redirect::to('home.php');
         die();
     }
 
-    if (!Config::replace('name', Input::get('vaname')) || !Config::replace('identifier', Input::get('vaident'))) {
+    if (!Config::replace('name', Input::get('vaname')) || !Config::replace('identifier', Input::get('vaident')) || !Config::replace("FORCE_SERVER", Input::get('forceserv'))) {
         Session::flash('error', 'There was an error updating the Config File!');
-        Redirect::to('admin.php?page=site');
+        Redirect::to('admin.php?page=site&tab=settings');
         die();
     }
-    Session::flash('success', 'VA Details Changed Successfully. You may need to reload the page a few times or clear your cache in order for it to show.');
-    Redirect::to('admin.php?page=site');
+    Session::flash('success', 'VA Settings Changed Successfully!');
+    Redirect::to('admin.php?page=site&tab=settings');
 } elseif (Input::get('action') === 'vanetupdate') {
     if (!$user->hasPermission('opsmanage')) {
         Redirect::to('home.php');
@@ -415,9 +417,203 @@ if (Input::get('action') === 'editprofile') {
     
     if (!Config::replace('api_key', Input::get('vanetkey'))) {
         Session::flash('error', 'There was an error updating the config file!');
-        Redirect::to('admin.php?page=site');
+        Redirect::to('admin.php?page=site&tab=vanet');
         die();
     }
     Session::flash('success', 'VANet API Key changed Successfully.');
-    Redirect::to('admin.php?page=site');
+    Redirect::to('admin.php?page=site&tab=vanet');
+} elseif (Input::get('action') === 'addevent') {
+    if (!$user->hasPermission('opsmanage')) {
+        Redirect::to('home.php');
+        die();
+    }
+
+    $sentGates = explode(",", Input::get('gates'));
+    $gates = array();
+    foreach ($sentGates as $g) {
+        array_push($gates, trim($g));
+    }
+
+    $vis = 'true';
+    if (Input::get('visible') == 0) {
+        $vis = 'false';
+    }
+
+    $datetime = Input::get('date').' '.substr(Input::get('time'), 0, 2).':'.substr(Input::get('time'), 2, 2);
+
+    try {
+        VANet::createEvent(array(
+            "Name" => Input::get('name'),
+            "Description" => Input::get('description'),
+            "EventTypeID" => "1",
+            "DateTime" => $datetime,
+            "DepartureAirport" => Input::get('dep'),
+            "ArrivalAirport" => Input::get('arr'),
+            "Visible" => $vis,
+            "Aircraft" => Input::get('aircraft'),
+            "Server" => Input::get('server'),
+            "Gates" => $gates
+        ));
+        Session::flash('success', 'Event Added Successfully!');
+    } catch (Exception $e) {
+        Session::flash('error', 'Error Creating Event');
+    } finally {
+        Redirect::to('admin.php?page=events');
+    }
+} elseif (Input::get('action') === 'eventsignup') {
+    $uData = $user->data();
+    if (VANet::isSignedUp($uData->ifuserid, Input::get('event')) != false) {
+        Redirect::to('events.php?page=view&event='.urlencode(Input::get('event')));
+        die();
+    }
+
+    $ret = VANet::eventSignUp($uData->ifuserid, Input::get('gate'));
+    if ($ret === 400) {
+        Session::flash("error", "Event is Corrupted. Please contact your VA.");
+        Redirect::to('events.php?page=view&event='.urlencode(Input::get('event')));
+        die();
+    } elseif ($ret === 404) {
+        Session::flash('error', 'Slot Not Found. Are you messing with us? :/');
+        Redirect::to('events.php?page=view&event='.urlencode(Input::get('event')));
+        die();
+    } elseif ($ret === 409) {
+        Session::flash("error", "Rats! Someone got to that gate before you. Please try again.");
+        Redirect::to('events.php');
+        die();
+    } elseif ($ret === true) {
+        Session::flash('success', 'Gate Reserved Successfully!');
+        Redirect::to('events.php?page=view&event='.urlencode(Input::get('event')));
+        die();
+    }
+} elseif (Input::get('action') === 'vacateslot') {
+    $uData = $user->data();
+
+    $ret = VANet::eventPullOut(Input::get('gate'), Input::get('event'), $uData->ifuserid);
+
+    if ($ret === 400) {
+        Redirect::to('events.php?page=view&event='.urlencode(Input::get('event')));
+        die();
+    } elseif ($ret === 404) {
+        Session::flash('error', 'Slot Not Found. Are you messing with us? :/');
+        Redirect::to('events.php?page=view&event='.urlencode(Input::get('event')));
+        die();
+    } elseif ($ret === 409) {
+        Session::flash("error", "Event is Corrupted. Please contact your VA.");
+        Redirect::to('events.php');
+        die();
+    } elseif ($ret === true) {
+        Session::flash('success', 'Slot Vacated Successfully!');
+        Redirect::to('events.php?page=view&event='.urlencode(Input::get('event')));
+        die();
+    }
+} elseif (Input::get('action') === 'deleteevent') {
+    if (!$user->hasPermission('opsmanage')) {
+        Redirect::to('home.php');
+        die();
+    }
+
+    VANet::deleteEvent(Input::get('delete'));
+    Session::flash('success', 'Event Deleted Successfully');
+    Redirect::to('admin.php?page=events');
+} elseif (Input::get('action') === 'editevent') {
+    if (!$user->hasPermission('opsmanage')) {
+        Redirect::to('home.php');
+        die();
+    }
+
+    $vis = 'true';
+    if (Input::get('visible') == 0) {
+        $vis = 'false';
+    }
+    $ret = VANet::editEvent(Input::get('id'), array(
+        "Name" => Input::get('name'),
+        "Description" => Input::get('description'),
+        "EventTypeID" => 1,
+        "DepartureAirport" => Input::get('dep'),
+        "ArrivalAirport" => Input::get('arr'),
+        "Visible" => $vis,
+        "AircraftID" => Input::get('aircraft'),
+        "Server" => Input::get('server')
+    ));
+
+    if (!$ret) {
+        Session::flash('error', "Error Updating Event");
+        Redirect::to('admin.php?page=events');
+    } else {
+        Session::flash('success', "Event Updated Successfully");
+        Redirect::to('admin.php?page=events');
+    }
+} elseif (Input::get('action') === 'acars') {
+    $response = VANet::runAcars(Input::get('server'));
+    if (array_key_exists('status', $response)) {
+        if ($response['status'] == 404 || $response['status'] == 409) {
+            echo '<div class="alert alert-warning">We couldn\'t find you on the server. Ensure that you have filed a flight plan, 
+            and are still connected to Infinite Flight. Then, reload the page and hit that button again.</div>';
+            die();
+        }
+    }
+    echo '<p>Nice! We\'ve found you. If you\'ve finished your flight and at the gate, go ahead and fill out the details below. 
+    If not, reload the page once you\'re done and click that button again.</p>';
+
+    
+    $aircraft = Aircraft::findAircraft($response["aircraft"]);
+    if (!$aircraft) {
+        echo '<div class="alert alert-warning">You\'re Flying an Aircraft that isn\'t in this VA\'s Fleet!</div>';
+        die();
+    }
+    echo '<hr />';
+    echo '<form action="update.php" method="post">';
+    echo '
+    <input hidden value="filepirep" name="action" />
+    <input hidden value="'.date("Y-m-d").'" name="date" />
+    <input hidden value="'.Time::secsToString($response["flightTime"]).'" name="ftime" />
+    <input hidden value="'.$aircraft->id.'" name="aircraft" />
+    ';
+
+    // Check VANet was able to determine departure ICAO
+    if ($response["departure"] != null) {
+        echo '<input hidden value="'.$response["departure"].'" name="dep" />';
+    } else {
+        // ICAO could not be determined. Show UI for input
+        echo '
+        <div class="form-group">
+            <label for="dep">Departure</label>
+            <input requried class="form-control" type="text" minlength="4" maxlength="4" name="dep" id="dep" placeholder="ICAO" />
+        </div>
+        ';
+    }
+
+    // Check VANet was able to determine arrival ICAO
+    if ($response["arrival"] != null) {
+        echo '<input hidden value="'.$response["arrival"].'" name="arr" />';
+    } else {
+        // ICAO could not be determined. Show UI for input
+        echo '
+        <div class="form-group">
+            <label for="arr">Arrival</label>
+            <input requried class="form-control" type="text" minlength="4" maxlength="4" name="arr" id="arr" placeholder="ICAO" />
+        </div>
+        ';
+    }
+
+    echo '
+    <div class="form-group">
+        <label for="fnum">Flight Number</label>
+        <input required type="number" min="1" class="form-control" name="fnum" />
+    </div>
+
+    <div class="form-group">
+        <label for="fuel">Fuel Used (kg)</label>
+        <input required type="number" class="form-control" name="fuel" />
+    </div>
+
+    <div class="form-group">
+        <label for="multi">Multiplier Number (if applicable)</label>
+        <input type="number" class="form-control" maxlength="6" minlength="6" id="multi" name="multi">
+    </div>
+
+    <input type="submit" class="btn bg-custom" value="File PIREP" />
+    ';
+
+    echo '</form>';
 }

@@ -23,6 +23,17 @@ class Config
                 }
             }
 
+            // Check if the Key was Invalid. If so, fall back on the Database
+            if ($config === $GLOBALS['config']) {
+                $db = DB::getInstance();
+                $ret = $db->get('options', array('name', '=', $path[0]));
+                if ($ret->count() === 0) {
+                    return false;
+                }
+
+                return $ret->first()->value;
+            }
+
             return $config;
 
         }
@@ -58,6 +69,14 @@ class Config
         $regex = '/\''.$where.'\' => .*/m';
         preg_match($regex, $currentConfFile, $matches);
 
+        if (count($matches) === 0) {
+            $db = DB::getInstance();
+            $ret = $db->update('options', '\''.$where.'\'', 'name', array(
+                'value' => $new
+            ));
+            return !($ret->error());
+        }
+
         $currentVal = explode('=>', $matches[0]);
         $currentVal = trim(str_replace("'", "", $currentVal[1]));
         $currentVal = trim(str_replace(",", "", $currentVal));
@@ -75,6 +94,16 @@ class Config
 
         return true;
 
+    }
+
+    public static function add($key, $value) {
+        $db = DB::getInstance();
+        $ret = $db->insert('options', array(
+            'name' => $key,
+            'value' => $value
+        ));
+
+        return !($ret->error());
     }
 
 }

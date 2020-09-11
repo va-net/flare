@@ -79,6 +79,14 @@ class Aircraft
 
     }
 
+    public static function findAircraft($liveryId)
+    {
+        self::init();
+        $result = self::$_db->get('aircraft', array('ifliveryid', '=', $liveryId));
+        if ($result->count() === 0) return false;
+        return $result->first();
+    }
+
     public static function fetchAllAircraft()
     {
 
@@ -162,7 +170,8 @@ class Aircraft
         ));
     }
 
-    public static function updateRank($rankId, $aircraftId) {
+    public static function updateRank($rankId, $aircraftId) 
+    {
         self::init();
         
         $fields = array(
@@ -212,7 +221,8 @@ class Aircraft
 
     }
 
-    public static function exists($liveryId) {
+    public static function exists($liveryId) 
+    {
 
         self::init();
         $result = self::$_db->get('aircraft', array('ifliveryid', '=', $liveryId));
