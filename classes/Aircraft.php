@@ -145,22 +145,21 @@ class Aircraft
 
     }
 
-    public static function add($aircraft, $rank, $livery) 
+    public static function add($liveryId, $rank) 
     {
 
         self::init();
+        
+        $details = self::fetchAircraftFromVANet($liveryId, 'LiveryID')[0];
 
-        $liveryId = self::liveryNameToId($livery, $aircraft);
-
-        $id = self::nameToId($aircraft);
-
-        self::$_db->update('aircraft', $id, 'id', array(
+        $x = self::$_db->insert('aircraft', array(
             'status' => 1,
             'rankreq' => $rank,
             'ifliveryid' => $liveryId,
-            'liveryname' => $livery
+            'liveryname' => $details["liveryName"],
+            'name' => $details["aircraftName"],
+            'ifaircraftid' => $details["aircraftID"]
         ));
-
     }
 
     public static function updateRank($rankId, $aircraftId) {
