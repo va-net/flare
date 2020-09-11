@@ -1237,6 +1237,8 @@ if (!$user->isLoggedIn()) {
                                     </tbody>
                                 </table>
 
+                                <a href="?page=opsmanage&section=export">Export Aircraft</a> | <a href="?page=opsmanage&section=import">Import Aircraft</a>
+
                                 <div class="modal fade" id="fleetedit">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
@@ -1400,6 +1402,7 @@ if (!$user->isLoggedIn()) {
                                         ?>
                                     </tbody>
                                 </table>
+                                <a href="?page=opsmanage&section=export">Export Routes</a> | <a href="?page=opsmanage&section=import">Import Routes</a>
                                 <form id="deleteroute" method="post" action="update.php">
                                     <input hidden value="deleteroute" name="action">
                                 </form>
@@ -1499,6 +1502,78 @@ if (!$user->isLoggedIn()) {
                                         });
                                     });
                                 </script>
+                            <?php elseif (Input::get('section') === 'import'): ?>
+                                <h3>Import Operations Files</h3>
+                                <p>
+                                    Here, you can import either Flare JSON Files containg routes and aircraft into your database.
+                                    Please note when you are importing aircraft from phpVMS, they will all be set to the default rank.
+                                    If you wish to import your files from phpVMS 5, please use the Flare Exporter phpVMS Plugin (WIP).
+                                </p>
+
+                                <ul class="nav nav-tabs nav-dark justify-content-center">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" id="importrouteslink" data-toggle="tab" href="#routes">Import Routes</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="importaircraftlink" data-toggle="tab" href="#aircraft">Import Aircraft</a>
+                                    </li>
+                                </ul>
+
+                                <div class="tab-content">
+                                    <div id="routes" class="tab-pane container-fluid p-3 active">
+                                        <h4>Import Routes</h4>
+                                        <form action="update.php" method="post" enctype="multipart/form-data">
+                                            <input hidden name="action" value="importroutes" />
+                                            <div class="custom-file mb-2">
+                                                <input required type="file" class="custom-file-input" name="upload" accept=".json" id="importroutes-upload">
+                                                <label class="custom-file-label" id="importroutes-upload-label" for="importroutes-upload">Choose File</label>
+                                            </div>
+                                            <input type="submit" class="btn bg-custom" value="Import" />
+                                        </form>
+                                    </div>
+                                    <div id="aircraft" class="tab-pane container-fluid p-3 fade">
+                                        <h4>Import Aircraft</h4>
+                                        <form action="update.php" method="post" enctype="multipart/form-data">
+                                            <input hidden name="action" value="importaircraft" />
+                                            <div class="custom-file mb-2">
+                                                <input required type="file" class="custom-file-input" name="upload" accept=".json" id="importaircraft-upload">
+                                                <label class="custom-file-label" id="importaircraft-upload-label" for="importaircraft-upload">Choose File</label>
+                                            </div>
+                                            <input type="submit" class="btn bg-custom" value="Import" />
+                                        </form>
+                                    </div>
+                                </div>
+
+                                <style>
+                                    .nav-tabs .nav-link {
+                                        color: #000!important;
+                                    }
+                                </style>
+                                <script>
+                                    $("#importroutes-upload").on("change", function() {
+                                        var fileName = $(this).val().split("\\").pop();
+                                        $(this).siblings("#importroutes-upload-label").addClass("selected").html(fileName);
+                                    });
+
+                                    $("#importaircraft-upload").on("change", function() {
+                                        var fileName = $(this).val().split("\\").pop();
+                                        $(this).siblings("#importaircraft-upload-label").addClass("selected").html(fileName);
+                                    });
+                                </script>
+                            <?php elseif (Input::get('section') === 'export'): ?>
+                                <h3>Export Operations Files</h3>
+                                <p>
+                                    Here, you can export your aircraft and routes to Flare JSON files.
+                                    These are useful for backups.
+                                </p>
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <a href="update.php?action=exportroutes" download="routes.json" class="btn bg-custom">Export Routes</a>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <a href="update.php?action=exportaircraft" download="aircraft.json" class="btn bg-custom">Export Aircraft</a>
+                                    </div>
+                                </div>
                             <?php endif; ?>
                         <?php endif; ?>
                     <?php endif; ?>

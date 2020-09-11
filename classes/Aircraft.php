@@ -41,6 +41,17 @@ class Aircraft
 
     }
 
+    public static function fetchAllLiveriesFromVANet()
+    {
+
+        $curl = new Curl;
+        $response = $curl->get(Config::get('vanet/base_url').'/api/aircraft', array(
+            'apikey' => Config::get('vanet/api_key')
+        ));
+        return Json::decode($response->body);
+
+    }
+
     public static function fetchLiveryIdsForAircraft($aircraftid)
     {
 

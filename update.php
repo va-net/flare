@@ -538,4 +538,166 @@ if (Input::get('action') === 'editprofile') {
         Session::flash('success', "Event Updated Successfully");
         Redirect::to('admin.php?page=events');
     }
+} elseif (Input::get('action') === 'importroutes') {
+    $file = Input::getFile('upload');
+
+    $fileName = explode(".", $file["name"]);
+    if ($fileName[count($fileName) - 1] != "json") {
+        Session::flash('error', 'You Uploaded an Invalid File Type');
+        Redirect::to('admin.php?page=opsmanage&section=import');
+        die();
+    }
+
+    $data = Json::decode(file_get_contents($file["tmp_name"]));
+    $db = DB::getInstance();
+
+    $sql = "INSERT INTO routes (fltnum, dep, arr, duration, aircraftid) VALUES\n";
+    $params = array();
+    $i = 0;
+
+    $allaircraft = Aircraft::fetchAllLiveriesFromVANet();
+
+    foreach ($data as $item) {
+        if ($i % 50 == 0 && $i != 0) {
+            $sql = trim($sql, ',');
+            $ret = $db->query($sql, $params);
+            if ($ret->error()) {
+                Session::flash('error', "Error Importing Routes");
+                Redirect::to('admin.php?page=opsmanage&section=import');
+                die();
+            }
+            $sql = "INSERT INTO routes (fltnum, dep, arr, duration, aircraftid) VALUES";
+            $params = array();
+        }
+
+        $aircraft = null;
+        foreach ($allaircraft as $ac) {
+            if ($ac["liveryID"] == $item["aircraftid"]) {
+                $aircraft = $ac;
+            }
+        }
+
+        $acId = $db->query("SELECT * FROM aircraft WHERE ifliveryid= ?", array($aircraft["liveryID"]));
+        if ($acId->count() === 0) {
+            $rank = $db->query("SELECT * FROM ranks ORDER BY timereq ASC")->first();
+            Aircraft::add($aircraft["liveryID"], $rank->id);
+            $acId = $db->query("SELECT * FROM aircraft WHERE ifliveryid= ?", array($aircraft["liveryID"]))->first()->id;
+        } else {
+            $acId = $acId->first()->id;
+        }
+
+        $sql .= "\n(?, ?, ?, ?, ?),";
+        array_push($params, $item["fltnum"]);
+        array_push($params, $item["dep"]);
+        array_push($params, $item["arr"]);
+        array_push($params, $item["duration"]);
+        array_push($params, $acId);
+        
+        $i++;
+    }
+
+    $sql = trim($sql, ',');
+    $ret = $db->query($sql, $params);
+    if ($ret->error()) {
+        Session::flash('error', "Error Importing Routes");
+        Redirect::to('admin.php?page=opsmanage&section=import');
+        die();
+    }
+    Session::flash('success', "Routes Imported Successfully!");
+    Redirect::to('admin.php?page=opsmanage&section=routes');
+} elseif (Input::get('action') === 'importaircraft') {
+    $file = Input::getFile('upload');
+
+    $fileName = explode(".", $file["name"]);
+    if ($fileName[count($fileName) - 1] != "json") {
+        Session::flash('error', 'You Uploaded an Invalid File Type');
+        Redirect::to('admin.php?page=opsmanage&section=import');
+        die();
+    }
+
+    $data = Json::decode(file_get_contents($file["tmp_name"]));
+    $db = DB::getInstance();
+
+    $minrank = $db->query("SELECT * FROM ranks ORDER BY timereq ASC")->first()->id;
+
+    $sql = "INSERT INTO aircraft (name, ifaircraftid, liveryname, ifliveryid, rankreq, status) VALUES\n";
+    $params = array();
+    $i = 0;
+
+    $allaircraft = Aircraft::fetchAllLiveriesFromVANet();
+
+    foreach ($data as $item) {
+        if ($i % 20 == 0 && $i != 0) {
+            $sql = trim($sql, ',');
+            $ret = $db->query($sql, $params);
+            if ($ret->error()) {
+                Session::flash('error', "Error Importing Aircraft");
+                throw new Exception($sql);
+                Redirect::to('admin.php?page=opsmanage&section=import');
+                die();
+            }
+            $sql = "INSERT INTO aircraft (name, ifaircraftid, liveryname, ifliveryid, rankreq, status) VALUES\n";
+            $params = array();
+        }
+
+        $aircraft = null;
+        foreach ($allaircraft as $ac) {
+            if ($ac["liveryID"] == $item) {
+                $aircraft = $ac;
+            }
+        }
+
+        if ($aircraft == null) {
+            Session::flash('error', "Could Not Find Aircraft with ID ".$item);
+            Redirect::to('admin.php?page=opsmanage&section=import');
+            die();
+        }
+
+        $sql .= "\n(?, ?, ?, ?, ?, ?),";
+        array_push($params, $aircraft["aircraftName"]);
+        array_push($params, $aircraft["aircraftID"]);
+        array_push($params, $aircraft["liveryName"]);
+        array_push($params, $aircraft["liveryID"]);
+        array_push($params, $minrank);
+        array_push($params, 1);
+        
+        $i++;
+    }
+
+    $sql = trim($sql, ',');
+    $ret = $db->query($sql, $params);
+    if ($ret->error()) {
+        Session::flash('error', "Error Importing Aircraft");
+        throw new Exception($sql);
+        Redirect::to('admin.php?page=opsmanage&section=import');
+        die();
+    }
+    Session::flash('success', "Aircraft Imported Successfully!");
+    Redirect::to('admin.php?page=opsmanage&section=fleet');
+} elseif (Input::get('action') === 'exportroutes') {
+    header('Content-Type: application/json');
+
+    $routes = Route::fetchAll()->results();
+    $ret = array();
+    foreach ($routes as $r) {
+        array_push($ret, array(
+            "fltnum" => $r->fltnum,
+            "dep" => $r->dep,
+            "arr" => $r->arr,
+            "duration" => $r->duration,
+            "aircraftid" => $r->liveryid
+        ));
+    }
+
+    echo Json::encode($ret);
+} elseif (Input::get('action') === 'exportaircraft') {
+    header('Content-Type: application/json');
+
+    $aircraft = Aircraft::fetchActiveAircraft()->results();
+    $ret = array();
+    foreach ($aircraft as $a) {
+        array_push($ret, $a->ifliveryid);
+    }
+
+    echo Json::encode($ret);
 }
