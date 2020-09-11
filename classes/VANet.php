@@ -237,7 +237,8 @@ class VANet
         $curl->delete(Config::get('vanet/base_url').'/api/events/delete/'.urlencode($eventId).'?apikey='.urlencode($key));
     }
 
-    public static function editEvent($id, $fields, $key = null) {
+    public static function editEvent($id, $fields, $key = null) 
+    {
         if ($key == null) {
             $key = Config::get('vanet/api_key');
         }
@@ -252,5 +253,24 @@ class VANet
         }
 
         return true;
+    }
+
+    public static function runAcars($server, $callsign = null, $uid = null, $key = null) {
+        if (!self::isGold()) return false;
+        
+        $user = new User();
+
+        if ($callsign == null) $callsign = $user->data()->callsign;
+        if ($uid == null) $uid = $user->data()->ifuserid;
+        if ($key == null) $key = Config::get('vanet/api_key');
+
+        $curl = new Curl;
+        $request = $curl->get(Config::get('vanet/base_url').'/api/acars', array(
+            'callsign' => $callsign,
+            'userid' => $uid,
+            'server' => $server,
+            'apikey' => $key
+        ));
+        return Json::decode($request->body);
     }
 }

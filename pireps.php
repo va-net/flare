@@ -267,7 +267,12 @@ if (!$user->isLoggedIn()) {
                             <?php endif; ?>
                         <?php else: ?>
                             <h3>Setup PIREPs</h3>
-                            <p>Before you can start filing PIREPs, we need to grab a bit of data from Infinite Flight. Please spawn in on the Casual Server, and ensure that you <b>set your callsign to your assigned one (<?= $user->data()->callsign ?>, if you've forgotten!).</b> Then, click the button below.</p>
+                            <?php
+                                $server = 'casual';
+                                $force = Config::get('FORCE_SERVER');
+                                if ($force != 0 && $force != 'casual') $server = $force;
+                            ?>
+                            <p>Before you can start filing PIREPs, we need to grab a bit of data from Infinite Flight. Please spawn in on the <?= ucfirst($server); ?> Server, and ensure that you <b>set your callsign to your assigned one (<?= $user->data()->callsign ?>, if you've forgotten!).</b> Then, click the button below.</p>
                             <form method="post" action="update.php">
                                 <input hidden name="action" value="setuppireps">
                                 <input hidden name="callsign" value="<?= $user->data()->callsign ?>">
