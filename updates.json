@@ -71,12 +71,27 @@
     {
         "tag": "v1.0.0-beta6",
         "name": "Public Beta 6",
-        "date": "TODO",
-        "notes": "TODO",
+        "date": "2020-09-12",
+        "notes": "Added Option to Force Server for Live Operations, Redid VANet Integration, Major Optimizations, Fixed Tables Issue, Added More Config Functions, Added Events, Added Import/Export Functionality, Added Delete Confirmation Modals",
         "prerelease": true,
         "useUpdater": true,
         "files": [
-            "TODO"
+            "version.json",
+            "acars.php",
+            "classes/Aircraft.php",
+            "classes/Pirep.php",
+            "classes/User.php",
+            "pireps.php",
+            "update.php",
+            "vanet.php",
+            "admin.php",
+            "events.php",
+            "includes/navbar.php",
+            "includes/sidebar.php",
+            "classes/Route.php",
+            "assets/custom.php",
+            "classes/VANet.php",
+            "includes/header.php"
         ],
         "deletedFiles": [],
         "queries": [
@@ -84,8 +99,7 @@
             "ALTER TABLE `pireps` CHANGE `flightnum` `flightnum` VARCHAR(10) NOT NULL;",
             "ALTER TABLE `routes` CHANGE `fltnum` `fltnum` VARCHAR(10) NOT NULL;",
             "ALTER TABLE `routes` CHANGE `fltnum` `fltnum` VARCHAR(10) NOT NULL;",
-            "INSERT INTO `options` (`name`, `value`) VALUES ('FORCE_SERVER', '0');",
-            "TODO"
+            "INSERT INTO `options` (`name`, `value`) VALUES ('FORCE_SERVER', '0');"
         ]
     }
 ]

@@ -38,7 +38,7 @@ if (Input::get('method') === 'events-table') {
         echo '<button class="btn btn-primary editEvent" data-name="'.$event["name"].'" data-desc="'.str_replace('"', '', $event["description"]).'" 
         data-dep="'.$event["departureAirport"].'" data-arr="'.$event["arrivalAirport"].'" data-aircraft="'.$event["aircraft"]["liveryID"].'" 
         data-vis="'.$event["visible"].'" data-server="'.$event["server"].'" data-id="'.$event["id"].'"><i class="fa fa-edit"></i></button>';
-        echo '&nbsp;<button value="'.$event['id'].'" form="deleteevent" type="submit" class="btn btn-danger text-light" name="delete"><i class="fa fa-trash"></i></button>';
+        echo '&nbsp;<button data-id="'.$event['id'].'" class="btn btn-danger text-light deleteEvent"><i class="fa fa-trash"></i></button>';
         echo '</td></tr>';
     }
 } elseif (Input::get('method') === 'event' && !empty(Input::get('data'))) {

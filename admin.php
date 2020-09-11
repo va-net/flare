@@ -802,9 +802,31 @@ if (!$user->isLoggedIn()) {
                             <div class="alert alert-danger text-center">Whoops! You don't have the necessary permissions to access this.</div>
                         <?php else: ?>
                             <h4>Active News Articles</h4>
-                            <form id="deletearticle" action="update.php" method="post">
-                                <input hidden name="action" value="deletearticle" />
-                            </form>
+                            <div class="modal fade" id="confirmNewsDelete">
+                            <div class="modal-dialog modal-sm">
+                                <div class="modal-content">
+
+                                <div class="modal-header">
+                                    <h4 class="modal-title">Are You Sure?</h4>
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                </div>
+
+                                <div class="modal-body">
+                                    Are you sure you want to delete this News Item?
+                                    <form id="deletearticle" action="update.php" method="post">
+                                        <input hidden name="action" value="deletearticle" />
+                                        <input hidden name="delete" id="confirmNewsDelete-id" />
+                                        <input type="submit" class="btn btn-danger" value="Delete" />
+                                    </form>
+                                </div>
+
+                                <div class="modal-footer text-center justify-content-center">
+                                    <button type="button" class="btn bg-custom" data-dismiss="modal">Cancel</button>
+                                </div>
+
+                                </div>
+                            </div>
+                            </div>
                             <table class="table table-striped datatable">
                                 <thead class="bg-custom">
                                     <tr>
@@ -827,7 +849,7 @@ if (!$user->isLoggedIn()) {
                                         echo $article['author'];
                                         echo '</td><td class="align-middle">';
                                         echo '&nbsp;<button value="'.$article['id'].'" id="articleedit" data-toggle="modal" data-target="#article'.$x.'editmodal" class="btn btn-primary text-light" name="edit"><i class="fa fa-edit"></i></button>';
-                                        echo '&nbsp;<button value="'.$article['id'].'" form="deletearticle" type="submit" class="btn btn-danger text-light" name="delete"><i class="fa fa-trash"></i></button>';
+                                        echo '&nbsp;<button data-id="'.$article['id'].'" class="btn btn-danger text-light deleteArticle"><i class="fa fa-trash"></i></button>';
                                         echo '</td>';
                                         $x++;
                                     }
@@ -899,6 +921,16 @@ if (!$user->isLoggedIn()) {
                                 </div>
                                 <input type="submit" class="btn bg-custom" value="Save">
                             </form>
+
+                            <script>
+                                $(document).ready(function() {
+                                    $(".deleteArticle").click(function() {
+                                        var id = $(this).data('id');
+                                        $("#confirmNewsDelete-id").val(id);
+                                        $("#confirmNewsDelete").modal('show');
+                                    });
+                                });
+                            </script>
                         <?php endif; ?>
                     <?php elseif (Input::get('page') === 'events'): ?>
                         <?php if (!$user->hasPermission('opsmanage')): ?>
@@ -907,9 +939,31 @@ if (!$user->isLoggedIn()) {
                             <h3>Manage Events</h3>
                             <button type="button" class="btn bg-custom mb-2" data-toggle="modal" data-target="#newevent">New Event</button>
 
-                            <form id="deleteevent" action="update.php" method="post">
-                                <input hidden name="action" value="deleteevent" />
-                            </form>
+                            <div class="modal fade" id="confirmEventDelete">
+                            <div class="modal-dialog modal-sm">
+                                <div class="modal-content">
+
+                                <div class="modal-header">
+                                    <h4 class="modal-title">Are You Sure?</h4>
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                </div>
+
+                                <div class="modal-body">
+                                    Are you sure you want to delete this Event?
+                                    <form id="deleteevent" action="update.php" method="post">
+                                        <input hidden name="action" value="deleteevent" />
+                                        <input hidden name="delete" id="confirmEventDelete-id" />
+                                        <input type="submit" class="btn btn-danger" value="Delete" />
+                                    </form>
+                                </div>
+
+                                <div class="modal-footer text-center justify-content-center">
+                                    <button type="button" class="btn bg-custom" data-dismiss="modal">Cancel</button>
+                                </div>
+
+                                </div>
+                            </div>
+                            </div>
 
                             <!-- Add Event Modal -->
                             <div class="modal fade" id="newevent">
@@ -1015,6 +1069,11 @@ if (!$user->isLoggedIn()) {
                                     "method": "events-admin"
                                 }, function (data, status) {
                                     $("#events-table").html(data);
+                                    $(".deleteEvent").click(function() {
+                                        var id = $(this).data('id');
+                                        $("#confirmEventDelete-id").val(id);
+                                        $("#confirmEventDelete").modal('show');
+                                    });
                                 });
 
                                 $(document).ready(function() {
@@ -1205,6 +1264,31 @@ if (!$user->isLoggedIn()) {
                                         </div>
                                     </div>
                                 </div>
+                                <div class="modal fade" id="confirmFleetDelete">
+                                <div class="modal-dialog modal-sm">
+                                    <div class="modal-content">
+
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Are You Sure?</h4>
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    </div>
+
+                                    <div class="modal-body">
+                                        Are you sure you want to delete this Aircraft?
+                                        <form id="deleteaircraft" action="update.php" method="post">
+                                            <input hidden name="action" value="deleteaircraft" />
+                                            <input hidden name="delete" id="confirmFleetDelete-id" />
+                                            <input type="submit" class="btn btn-danger" value="Delete" />
+                                        </form>
+                                    </div>
+
+                                    <div class="modal-footer text-center justify-content-center">
+                                        <button type="button" class="btn bg-custom" data-dismiss="modal">Cancel</button>
+                                    </div>
+
+                                    </div>
+                                </div>
+                                </div>
                                 <form id="deleteaircraft" method="post" action="update.php">
                                     <input hidden value="deleteaircraft" name="action">
                                 </form>
@@ -1228,7 +1312,7 @@ if (!$user->isLoggedIn()) {
                                             echo '</td><td class="align-middle mobile-hidden">';
                                             echo $aircraft->rank;
                                             echo '</td><td class="align-middle">';
-                                            echo '&nbsp;<button value="'.$aircraft->id.'" form="deleteaircraft" type="submit" class="btn btn-danger text-light" name="delete"><i class="fa fa-trash"></i></button>';
+                                            echo '&nbsp;<button data-id="'.$aircraft->id.'" class="btn btn-danger text-light deleteFleet"><i class="fa fa-trash"></i></button>';
                                             echo '&nbsp;<button class="btn btn-primary editFleet" data-acName="'.$aircraft->name.' ('.$aircraft->liveryname.')'.'" 
                                             data-rankReq="'.$aircraft->rankreq.'" data-id="'.$aircraft->id.'"><i class="fa fa-edit"></i></button>';
                                             echo '</td>';
@@ -1236,6 +1320,16 @@ if (!$user->isLoggedIn()) {
                                         ?>
                                     </tbody>
                                 </table>
+
+                                <script>
+                                    $(document).ready(function() {
+                                        $(".deleteFleet").click(function() {
+                                            var id = $(this).data('id');
+                                            $("#confirmFleetDelete-id").val(id);
+                                            $("#confirmFleetDelete").modal('show');
+                                        });
+                                    });
+                                </script>
 
                                 <a href="?page=opsmanage&section=export">Export Aircraft</a> | <a href="?page=opsmanage&section=import">Import Aircraft</a>
 
