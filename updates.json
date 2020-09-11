@@ -67,5 +67,25 @@
         "queries": [
             "DELETE FROM aircraft WHERE status != 1;"
         ]
+    },
+    {
+        "tag": "v1.0.0-beta6",
+        "name": "Public Beta 6",
+        "date": "TODO",
+        "notes": "TODO",
+        "prerelease": true,
+        "useUpdater": true,
+        "files": [
+            "TODO"
+        ],
+        "deletedFiles": [],
+        "queries": [
+            "CREATE TABLE IF NOT EXISTS `options` ( `name` varchar(120) NOT NULL, `value` text NOT NULL, PRIMARY KEY (`name`)) ENGINE=InnoDB DEFAULT CHARSET=latin1;",
+            "ALTER TABLE `pireps` CHANGE `flightnum` `flightnum` VARCHAR(10) NOT NULL;",
+            "ALTER TABLE `routes` CHANGE `fltnum` `fltnum` VARCHAR(10) NOT NULL;",
+            "ALTER TABLE `routes` CHANGE `fltnum` `fltnum` VARCHAR(10) NOT NULL;",
+            "INSERT INTO `options` (`name`, `value`) VALUES ('FORCE_SERVER', '0');",
+            "TODO"
+        ]
     }
 ]
