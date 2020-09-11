@@ -1226,7 +1226,7 @@ if (!$user->isLoggedIn()) {
                                             echo '</td><td class="align-middle mobile-hidden">';
                                             echo $aircraft->liveryname;
                                             echo '</td><td class="align-middle mobile-hidden">';
-                                            echo Rank::idToName($aircraft->rankreq);
+                                            echo $aircraft->rank;
                                             echo '</td><td class="align-middle">';
                                             echo '&nbsp;<button value="'.$aircraft->id.'" form="deleteaircraft" type="submit" class="btn btn-danger text-light" name="delete"><i class="fa fa-trash"></i></button>';
                                             echo '&nbsp;<button class="btn btn-primary editFleet" data-acName="'.$aircraft->name.' ('.$aircraft->liveryname.')'.'" 
@@ -1391,7 +1391,7 @@ if (!$user->isLoggedIn()) {
                                             echo '</td><td class="align-middle">';
                                             echo $route->arr;
                                             echo '</td><td class="align-middle mobile-hidden">';
-                                            echo Aircraft::idToName($route->aircraftid);
+                                            echo $route->aircraft;
                                             echo '</td><td class="align-middle">';
                                             echo '&nbsp;<button value="'.$route->id.'" form="deleteroute" type="submit" class="btn btn-danger text-light" name="delete"><i class="fa fa-trash"></i></button>';
                                             echo '</td></tr>';

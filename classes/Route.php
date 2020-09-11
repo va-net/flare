@@ -40,7 +40,7 @@ class Route
 
         self::init();
 
-        return self::$_db->getAll('routes');
+        return self::$_db->query("SELECT routes.*, aircraft.name AS aircraft FROM routes INNER JOIN aircraft ON routes.aircraftid=aircraft.id;");
 
     }
 
