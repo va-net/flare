@@ -901,217 +901,212 @@ if (!$user->isLoggedIn()) {
                             </form>
                         <?php endif; ?>
                     <?php elseif (Input::get('page') === 'events'): ?>
-                        <h3>Manage Events</h3>
-                        <button type="button" class="btn bg-custom mb-2" data-toggle="modal" data-target="#newevent">New Event</button>
+                        <?php if (!$user->hasPermission('opsmanage')): ?>
+                            <div class="alert alert-danger text-center">Whoops! You don't have the necessary permissions to access this.</div>
+                        <?php else: ?>
+                            <h3>Manage Events</h3>
+                            <button type="button" class="btn bg-custom mb-2" data-toggle="modal" data-target="#newevent">New Event</button>
 
-                        <form id="deleteevent" action="update.php" method="post">
-                            <input hidden name="action" value="deleteevent" />
-                        </form>
+                            <form id="deleteevent" action="update.php" method="post">
+                                <input hidden name="action" value="deleteevent" />
+                            </form>
 
-                        <!-- Add Event Modal -->
-                        <div class="modal fade" id="newevent">
-                        <div class="modal-dialog modal-lg">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h4 class="modal-title">Add Event</h4>
-                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                </div>
+                            <!-- Add Event Modal -->
+                            <div class="modal fade" id="newevent">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Add Event</h4>
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    </div>
 
-                                <div class="modal-body">
-                                    <form action="update.php" method="post">
-                                        <input hidden name="action" value="addevent" />
-                                        <div class="form-group">
-                                            <label for="event-name">Event Name</label>
-                                            <input required type="text" class="form-control" name="name" id="event-name" />
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="event-description">Event Description</label>
-                                            <textarea required class="form-control" name="description" id="event-description"></textarea>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="event-date">Event Date</label>
-                                            <input required type="date" class="form-control" name="date" id="event-date" min="<?= date("Y-m-d"); ?>" />
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="event-time">Event Time</label>
-                                            <select required class="form-control" name="time" id="event-time">
-                                                <option value>Select</option>
-                                                <?php
-                                                    $times = ["00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", 
-                                                    "18", "19", "20", "21", "22", "23"];
-                                                    foreach ($times as $t) {
-                                                        echo '<option value="'.$t.'00'.'">'.$t.'00Z</option>';
-                                                        echo '<option value="'.$t.'30'.'">'.$t.'30Z</option>';
-                                                    }
-                                                ?>
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="event-dep">Departure ICAO</label>
-                                            <input required type="text" class="form-control" name="dep" id="event-dep" />
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="event-arr">Arrival ICAO</label>
-                                            <input required type="text" class="form-control" name="arr" id="event-arr" />
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="event-aircraft">Aircraft</label>
-                                            <select required class="form-control" name="aircraft" id="event-aircraft">
-                                                <option value>Select</option>
-                                                <?php
-                                                    $activeAircraft = Aircraft::fetchActiveAircraft()->results();
-                                                    foreach ($activeAircraft as $aircraft) {
-                                                        echo '<option value="'.$aircraft->ifliveryid.'">'.$aircraft->name.' ('.$aircraft->liveryname.')</option>';
-                                                    }
-                                                ?>
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="event-vis">Visible to Pilots?</label>
-                                            <select required class="form-control" name="visible" id="event-vis">
-                                                <option value="1">Yes</option>
-                                                <option value="0">No</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="event-serv">Event Server</label>
-                                            <select required class="form-control" name="server" id="event-serv">
-                                                <option value>Select</option>
-                                                <option value="casual">Casual Server</option>
-                                                <option value="training">Training Server</option>
-                                                <option value="expert">Expert Server</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="event-gates">Gate Names</label>
-                                            <input required type="text" class="form-control" name="gates" id="event-gates" />
-                                            <small class="text-muted">Comma-Separated List of Gate Names</small>
-                                        </div>
-                                        
-                                        <input type="submit" class="btn bg-custom" value="Add Event" />
-                                    </form>
+                                    <div class="modal-body">
+                                        <form action="update.php" method="post">
+                                            <input hidden name="action" value="addevent" />
+                                            <div class="form-group">
+                                                <label for="event-name">Event Name</label>
+                                                <input required type="text" class="form-control" name="name" id="event-name" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="event-description">Event Description</label>
+                                                <textarea required class="form-control" name="description" id="event-description"></textarea>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="event-date">Event Date</label>
+                                                <input required type="date" class="form-control" name="date" id="event-date" min="<?= date("Y-m-d"); ?>" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="event-time">Event Time</label>
+                                                <select required class="form-control" name="time" id="event-time">
+                                                    <option value>Select</option>
+                                                    <?php
+                                                        $times = ["00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", 
+                                                        "18", "19", "20", "21", "22", "23"];
+                                                        foreach ($times as $t) {
+                                                            echo '<option value="'.$t.'00'.'">'.$t.'00Z</option>';
+                                                            echo '<option value="'.$t.'30'.'">'.$t.'30Z</option>';
+                                                        }
+                                                    ?>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="event-dep">Departure ICAO</label>
+                                                <input required type="text" class="form-control" name="dep" id="event-dep" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="event-arr">Arrival ICAO</label>
+                                                <input required type="text" class="form-control" name="arr" id="event-arr" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="event-aircraft">Aircraft</label>
+                                                <select required class="form-control" name="aircraft" id="event-aircraft">
+                                                    <option value>Select</option>
+                                                    <?php
+                                                        $activeAircraft = Aircraft::fetchActiveAircraft()->results();
+                                                        foreach ($activeAircraft as $aircraft) {
+                                                            echo '<option value="'.$aircraft->ifliveryid.'">'.$aircraft->name.' ('.$aircraft->liveryname.')</option>';
+                                                        }
+                                                    ?>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="event-vis">Visible to Pilots?</label>
+                                                <select required class="form-control" name="visible" id="event-vis">
+                                                    <option value="1">Yes</option>
+                                                    <option value="0">No</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="event-serv">Event Server</label>
+                                                <select required class="form-control" name="server" id="event-serv">
+                                                    <option value>Select</option>
+                                                    <option value="casual">Casual Server</option>
+                                                    <option value="training">Training Server</option>
+                                                    <option value="expert">Expert Server</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="event-gates">Gate Names</label>
+                                                <input required type="text" class="form-control" name="gates" id="event-gates" />
+                                                <small class="text-muted">Comma-Separated List of Gate Names</small>
+                                            </div>
+                                            
+                                            <input type="submit" class="btn bg-custom" value="Add Event" />
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        </div>
+                            </div>
 
-                        <table class="table table-striped">
-                            <thead class="bg-custom text-center">
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Airport</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php
-                                    $all = VANet::getEvents();
-                                    foreach ($all as $event) {
-                                        echo '<tr><td class="align-middle">';
-                                        echo $event["name"];
-                                        echo '</td><td class="align-middle">';
-                                        echo $event["departureAirport"];
-                                        echo '</td><td class="align-middle">';
-                                        echo '<button class="btn btn-primary editEvent" data-name="'.$event["name"].'" data-desc="'.str_replace('"', '', $event["description"]).'" 
-                                        data-dep="'.$event["departureAirport"].'" data-arr="'.$event["arrivalAirport"].'" data-aircraft="'.$event["aircraft"]["liveryID"].'" 
-                                        data-vis="'.$event["visible"].'" data-server="'.$event["server"].'" data-id="'.$event["id"].'"><i class="fa fa-edit"></i></button>';
-                                        echo '&nbsp;<button value="'.$event['id'].'" form="deleteevent" type="submit" class="btn btn-danger text-light" name="delete"><i class="fa fa-trash"></i></button>';
-                                        echo '</td></tr>';
-                                    }
-                                ?>
-                            </tbody>
-                        </table>
-
-                        <script>
-                            $(document).ready(function() {
-                                $(".editEvent").click(function() {
-                                    var eventName = $(this).data('name');
-                                    var eventDesc = $(this).data('desc');
-                                    var eventDep = $(this).data('dep');
-                                    var eventArr = $(this).data('arr');
-                                    var eventAircraft = $(this).data('aircraft');
-                                    var eventVis = $(this).data('vis');
-                                    var eventServer = $(this).data('server');
-                                    var eventId = $(this).data('id');
-
-                                    $("#editevent-name").val(eventName);
-                                    $("#editevent-description").val(eventDesc);
-                                    $("#editevent-dep").val(eventDep);
-                                    $("#editevent-arr").val(eventArr);
-                                    $("#editevent-aircraft").val(eventAircraft);
-                                    $("#editevent-vis").val(eventVis);
-                                    $("#editevent-serv").val(eventServer);
-                                    $("#editevent-id").val(eventId);
-
-                                    $("#editevent").modal('show');
+                            <table class="table table-striped">
+                                <thead class="bg-custom text-center">
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Airport</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="events-table">
+                                    <tr><td colspan="3">Loading...</td></tr>
+                                </tbody>
+                            </table>
+                            <script>
+                                $.post("vanet.php", {
+                                    "method": "events-admin"
+                                }, function (data, status) {
+                                    $("#events-table").html(data);
                                 });
-                            });
-                        </script>
 
-                        <!-- Edit Event Modal -->
-                        <div class="modal fade" id="editevent">
-                        <div class="modal-dialog modal-lg">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h4 class="modal-title" id="editevent-title">Edit Event</h4>
-                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                </div>
+                                $(document).ready(function() {
+                                    $(".editEvent").click(function() {
+                                        var eventName = $(this).data('name');
+                                        var eventDesc = $(this).data('desc');
+                                        var eventDep = $(this).data('dep');
+                                        var eventArr = $(this).data('arr');
+                                        var eventAircraft = $(this).data('aircraft');
+                                        var eventVis = $(this).data('vis');
+                                        var eventServer = $(this).data('server');
+                                        var eventId = $(this).data('id');
 
-                                <div class="modal-body">
-                                    <form action="update.php" method="post">
-                                        <input hidden name="action" value="editevent" />
-                                        <input hidden name="id" id="editevent-id" />
-                                        <div class="form-group">
-                                            <label for="editevent-name">Event Name</label>
-                                            <input required type="text" class="form-control" name="name" id="editevent-name" />
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="editevent-description">Event Description</label>
-                                            <textarea required class="form-control" name="description" id="editevent-description"></textarea>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="editevent-dep">Departure ICAO</label>
-                                            <input required type="text" class="form-control" name="dep" id="editevent-dep" />
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="editevent-arr">Arrival ICAO</label>
-                                            <input required type="text" class="form-control" name="arr" id="editevent-arr" />
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="editevent-aircraft">Aircraft</label>
-                                            <select required class="form-control" name="aircraft" id="editevent-aircraft">
-                                                <option value>Select</option>
-                                                <?php
-                                                    $activeAircraft = Aircraft::fetchActiveAircraft()->results();
-                                                    foreach ($activeAircraft as $aircraft) {
-                                                        echo '<option value="'.$aircraft->ifliveryid.'">'.$aircraft->name.' ('.$aircraft->liveryname.')</option>';
-                                                    }
-                                                ?>
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="editevent-vis">Visible to Pilots?</label>
-                                            <select required class="form-control" name="visible" id="editevent-vis">
-                                                <option value="1">Yes</option>
-                                                <option value="0">No</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="editevent-serv">Event Server</label>
-                                            <select required class="form-control" name="server" id="editevent-serv">
-                                                <option value>Select</option>
-                                                <option value="casual">Casual Server</option>
-                                                <option value="training">Training Server</option>
-                                                <option value="expert">Expert Server</option>
-                                            </select>
-                                        </div>
-                                        
-                                        <input type="submit" class="btn bg-custom" value="Save" />
-                                    </form>
+                                        $("#editevent-name").val(eventName);
+                                        $("#editevent-description").val(eventDesc);
+                                        $("#editevent-dep").val(eventDep);
+                                        $("#editevent-arr").val(eventArr);
+                                        $("#editevent-aircraft").val(eventAircraft);
+                                        $("#editevent-vis").val(eventVis);
+                                        $("#editevent-serv").val(eventServer);
+                                        $("#editevent-id").val(eventId);
+
+                                        $("#editevent").modal('show');
+                                    });
+                                });
+                            </script>
+
+                            <!-- Edit Event Modal -->
+                            <div class="modal fade" id="editevent">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title" id="editevent-title">Edit Event</h4>
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    </div>
+
+                                    <div class="modal-body">
+                                        <form action="update.php" method="post">
+                                            <input hidden name="action" value="editevent" />
+                                            <input hidden name="id" id="editevent-id" />
+                                            <div class="form-group">
+                                                <label for="editevent-name">Event Name</label>
+                                                <input required type="text" class="form-control" name="name" id="editevent-name" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="editevent-description">Event Description</label>
+                                                <textarea required class="form-control" name="description" id="editevent-description"></textarea>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="editevent-dep">Departure ICAO</label>
+                                                <input required type="text" class="form-control" name="dep" id="editevent-dep" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="editevent-arr">Arrival ICAO</label>
+                                                <input required type="text" class="form-control" name="arr" id="editevent-arr" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="editevent-aircraft">Aircraft</label>
+                                                <select required class="form-control" name="aircraft" id="editevent-aircraft">
+                                                    <option value>Select</option>
+                                                    <?php
+                                                        $activeAircraft = Aircraft::fetchActiveAircraft()->results();
+                                                        foreach ($activeAircraft as $aircraft) {
+                                                            echo '<option value="'.$aircraft->ifliveryid.'">'.$aircraft->name.' ('.$aircraft->liveryname.')</option>';
+                                                        }
+                                                    ?>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="editevent-vis">Visible to Pilots?</label>
+                                                <select required class="form-control" name="visible" id="editevent-vis">
+                                                    <option value="1">Yes</option>
+                                                    <option value="0">No</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="editevent-serv">Event Server</label>
+                                                <select required class="form-control" name="server" id="editevent-serv">
+                                                    <option value>Select</option>
+                                                    <option value="casual">Casual Server</option>
+                                                    <option value="training">Training Server</option>
+                                                    <option value="expert">Expert Server</option>
+                                                </select>
+                                            </div>
+                                            
+                                            <input type="submit" class="btn bg-custom" value="Save" />
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        </div>
+                            </div>
+                        <?php endif; ?>
                     <?php elseif (Input::get('page') === 'statsviewing'): ?>
                         <?php if (!$user->hasPermission('statsviewing')): ?>
                             <div class="alert alert-danger text-center">Whoops! You don't have the necessary permissions to access this.</div>
@@ -1180,9 +1175,9 @@ if (!$user->isLoggedIn()) {
                                                     <script>
                                                         $("#aircraftselect").change(function() {
                                                             $.ajax({
-                                                                url: "update.php",
+                                                                url: "vanet.php",
                                                                 type: "POST",
-                                                                data: { action: "getliveriesforaircraft", aircraft: $(this).val() },
+                                                                data: { method: "liveriesforaircraft", data: $(this).val() },
                                                                 success: function(html){
                                                                     $("#liveriesselect").empty();
                                                                     $("#liveriesselect").append("<option>Select</option>");
@@ -1231,7 +1226,7 @@ if (!$user->isLoggedIn()) {
                                             echo '</td><td class="align-middle mobile-hidden">';
                                             echo $aircraft->liveryname;
                                             echo '</td><td class="align-middle mobile-hidden">';
-                                            echo Rank::idToName($aircraft->rankreq);
+                                            echo $aircraft->rank;
                                             echo '</td><td class="align-middle">';
                                             echo '&nbsp;<button value="'.$aircraft->id.'" form="deleteaircraft" type="submit" class="btn btn-danger text-light" name="delete"><i class="fa fa-trash"></i></button>';
                                             echo '&nbsp;<button class="btn btn-primary editFleet" data-acName="'.$aircraft->name.' ('.$aircraft->liveryname.')'.'" 
@@ -1241,6 +1236,8 @@ if (!$user->isLoggedIn()) {
                                         ?>
                                     </tbody>
                                 </table>
+
+                                <a href="?page=opsmanage&section=export">Export Aircraft</a> | <a href="?page=opsmanage&section=import">Import Aircraft</a>
 
                                 <div class="modal fade" id="fleetedit">
                                     <div class="modal-dialog">
@@ -1396,7 +1393,7 @@ if (!$user->isLoggedIn()) {
                                             echo '</td><td class="align-middle">';
                                             echo $route->arr;
                                             echo '</td><td class="align-middle mobile-hidden">';
-                                            echo Aircraft::idToName($route->aircraftid);
+                                            echo $route->aircraft;
                                             echo '</td><td class="align-middle">';
                                             echo '&nbsp;<button value="'.$route->id.'" form="deleteroute" type="submit" class="btn btn-danger text-light" name="delete"><i class="fa fa-trash"></i></button>';
                                             echo '</td></tr>';
@@ -1405,6 +1402,7 @@ if (!$user->isLoggedIn()) {
                                         ?>
                                     </tbody>
                                 </table>
+                                <a href="?page=opsmanage&section=export">Export Routes</a> | <a href="?page=opsmanage&section=import">Import Routes</a>
                                 <form id="deleteroute" method="post" action="update.php">
                                     <input hidden value="deleteroute" name="action">
                                 </form>
@@ -1504,6 +1502,78 @@ if (!$user->isLoggedIn()) {
                                         });
                                     });
                                 </script>
+                            <?php elseif (Input::get('section') === 'import'): ?>
+                                <h3>Import Operations Files</h3>
+                                <p>
+                                    Here, you can import either Flare JSON Files containg routes and aircraft into your database.
+                                    Please note when you are importing aircraft from phpVMS, they will all be set to the default rank.
+                                    If you wish to import your files from phpVMS 5, please use the Flare Exporter phpVMS Plugin (WIP).
+                                </p>
+
+                                <ul class="nav nav-tabs nav-dark justify-content-center">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" id="importrouteslink" data-toggle="tab" href="#routes">Import Routes</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="importaircraftlink" data-toggle="tab" href="#aircraft">Import Aircraft</a>
+                                    </li>
+                                </ul>
+
+                                <div class="tab-content">
+                                    <div id="routes" class="tab-pane container-fluid p-3 active">
+                                        <h4>Import Routes</h4>
+                                        <form action="update.php" method="post" enctype="multipart/form-data">
+                                            <input hidden name="action" value="importroutes" />
+                                            <div class="custom-file mb-2">
+                                                <input required type="file" class="custom-file-input" name="upload" accept=".json" id="importroutes-upload">
+                                                <label class="custom-file-label" id="importroutes-upload-label" for="importroutes-upload">Choose File</label>
+                                            </div>
+                                            <input type="submit" class="btn bg-custom" value="Import" />
+                                        </form>
+                                    </div>
+                                    <div id="aircraft" class="tab-pane container-fluid p-3 fade">
+                                        <h4>Import Aircraft</h4>
+                                        <form action="update.php" method="post" enctype="multipart/form-data">
+                                            <input hidden name="action" value="importaircraft" />
+                                            <div class="custom-file mb-2">
+                                                <input required type="file" class="custom-file-input" name="upload" accept=".json" id="importaircraft-upload">
+                                                <label class="custom-file-label" id="importaircraft-upload-label" for="importaircraft-upload">Choose File</label>
+                                            </div>
+                                            <input type="submit" class="btn bg-custom" value="Import" />
+                                        </form>
+                                    </div>
+                                </div>
+
+                                <style>
+                                    .nav-tabs .nav-link {
+                                        color: #000!important;
+                                    }
+                                </style>
+                                <script>
+                                    $("#importroutes-upload").on("change", function() {
+                                        var fileName = $(this).val().split("\\").pop();
+                                        $(this).siblings("#importroutes-upload-label").addClass("selected").html(fileName);
+                                    });
+
+                                    $("#importaircraft-upload").on("change", function() {
+                                        var fileName = $(this).val().split("\\").pop();
+                                        $(this).siblings("#importaircraft-upload-label").addClass("selected").html(fileName);
+                                    });
+                                </script>
+                            <?php elseif (Input::get('section') === 'export'): ?>
+                                <h3>Export Operations Files</h3>
+                                <p>
+                                    Here, you can export your aircraft and routes to Flare JSON files.
+                                    These are useful for backups.
+                                </p>
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <a href="update.php?action=exportroutes" download="routes.json" class="btn bg-custom">Export Routes</a>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <a href="update.php?action=exportaircraft" download="aircraft.json" class="btn bg-custom">Export Aircraft</a>
+                                    </div>
+                                </div>
                             <?php endif; ?>
                         <?php endif; ?>
                     <?php endif; ?>

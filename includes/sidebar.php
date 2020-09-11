@@ -41,10 +41,12 @@
                         "icon" => "fa-globe",
                         "name" => "Manage Site",
                     ];
-                    $miscpages["events"] = [
-                        "icon" => "fa-plane-departure",
-                        "name" => "Manage Events",
-                    ];
+                    if (VANet::isGold()) {
+                        $miscpages["events"] = [
+                            "icon" => "fa-plane-departure",
+                            "name" => "Manage Events",
+                        ];
+                    }
                 } elseif ($permission == "pirepmanage") {
                     $miscpages[$permission] = $data;
                     $miscpages["multimanage"] = [

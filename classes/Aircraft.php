@@ -41,6 +41,17 @@ class Aircraft
 
     }
 
+    public static function fetchAllLiveriesFromVANet()
+    {
+
+        $curl = new Curl;
+        $response = $curl->get(Config::get('vanet/base_url').'/api/aircraft', array(
+            'apikey' => Config::get('vanet/api_key')
+        ));
+        return Json::decode($response->body);
+
+    }
+
     public static function fetchLiveryIdsForAircraft($aircraftid)
     {
 
@@ -75,7 +86,7 @@ class Aircraft
 
         self::init();
 
-        return self::$_db->get('aircraft', array('status', '=', 1), array('name', 'ASC'));
+        return self::$_db->query("SELECT aircraft.*, ranks.name AS rank FROM aircraft INNER JOIN ranks ON aircraft.rankreq=ranks.id WHERE status=1 ORDER BY aircraft.name ASC;");
 
     }
 

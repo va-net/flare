@@ -70,11 +70,11 @@ if (!$user->isLoggedIn()) {
                                         $("#acarsBtn").click(function() {
                                             $(".loaded").hide();
                                             $("#loader-wrapper").show();
-                                            $.post("update.php", {
+                                            $.post("vanet.php", {
                                                 "server": $("#acars-server").val(),
-                                                "action": "acars"
+                                                "method": "acars"
                                             }, function (data, status) {
-                                                //$("#preRun").hide();
+                                                $("#preRun").hide();
                                                 $("#loader-wrapper").hide();
                                                 $(".loaded").show();
                                                 $("#postRun").html(data);

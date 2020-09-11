@@ -152,10 +152,14 @@ class User
         if (!$id && $this->isLoggedIn()) {
             $id = $this->data()->id;
         }
-        
-        $user = $this->_db->get('pilots', array('id', '=', $id));
 
-        $permissions = json_decode($user->first()->permissions, true);
+        $permissions = [];
+        if ($id == $this->data()->id) {
+            $permissions = Json::decode($this->data()->permissions);
+        } else {
+            $user = $this->_db->get('pilots', array('id', '=', $id));
+            $permissions = json_decode($user->first()->permissions, true);
+        }
         
         if (array_key_exists($key, $permissions)) {
             if ($permissions[$key] == true) {
@@ -258,8 +262,14 @@ class User
             $id = $this->data()->id;
         }
 
-        $result = $this->_db->get('pilots', array('id', '=', $id));
-        $time = $result->first()->transhours;
+        $time = 0;
+        if ($id == $this->data()->id) {
+            $time = $this->data()->transhours;
+        } else {
+            $result = $this->_db->get('pilots', array('id', '=', $id));
+            $time = $result->first()->transhours;
+        }
+
         $pireps = $this->fetchApprovedPireps();
 
         if ($pireps->count() != 0) {
@@ -280,18 +290,18 @@ class User
         }
 
         $result = $this->_db->query('SELECT id FROM pireps WHERE status = 1 AND pilotid = ?', array($id));
-        $count = $result->count();
-        $user = $this->_db->get('pilots', array('id', '=', $id));
-        $total = $user->first()->transflights;
+        $filed = $result->count();
 
-        $x = 0;
-
-        while ($x < $count) {
-            $total++;
-            $x++;
+        $trans = 0;
+        if ($id == $this->data()->id) {
+            $trans = $this->data()->transflights;
+        } else {
+            $user = $this->_db->get('pilots', array('id', '=', $id));
+            $trans = $result->first()->transflights;
         }
+        
+        $total = $trans + $filed;
         return $total;
-
     }
 
 
@@ -302,7 +312,8 @@ class User
             $id = $this->data()->id;
         }
 
-        return $this->_db->get('pireps', array('pilotid', '=', $id), array('date', 'DESC'));
+        return $this->_db->query('SELECT pireps.*, aircraft.name AS aircraft FROM pireps INNER JOIN aircraft ON pireps.aircraftid=aircraft.id WHERE pilotid = ? ORDER BY date DESC', array($id));
+        //return $this->_db->get('pireps', array('pilotid', '=', $id), array('date', 'DESC'));
 
     }
     
@@ -335,7 +346,7 @@ class User
                 'status' => $statuses[$pirep->status],
                 'flighttime' => $pirep->flighttime,
                 'multi' => $pirep->multi,
-                'aircraft' => Aircraft::getAircraftName($pirep->aircraftid),
+                'aircraft' => $pirep->aircraft,
             );
             $pireps[$x] = $newdata;
             $counter++;

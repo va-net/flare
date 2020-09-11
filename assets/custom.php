@@ -40,6 +40,10 @@ header("Content-type: text/css; charset: UTF-8");
     }
 }
 
+table {
+    text-align: center;
+}
+
 * {
     font-family: 'Rubik', sans-serif;
 }
