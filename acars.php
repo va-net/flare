@@ -37,10 +37,16 @@ if (!$user->isLoggedIn()) {
                         <?php if (VANet::isGold()): ?>
                             <?php if ($user->data()->ifuserid != null): ?>
                                 <div id="preRun">
+                                <button data-toggle="collapse" data-target="#howtouseacars" class="btn btn-light w-100 mb-2 collapsed" aria-expanded="false">How to Use ACARS&nbsp;&nbsp;<i class="fa fa-caret-down" aria-hidden="true"></i></button>
+                                <p id="howtouseacars" class="text-left collapse" style="">
+                                    1. First, fly your flight under your <?= Config::get('va/name') ?> Callsign - <?= $user->data()->callsign ?>.<br />
+                                    2. Then, once you're at the gate but not despawned, come here and click the button below.<br />
+                                    3. The System will automatically grab your flight details, validate them, and File the PIREP.
+                                </p>
                                     <?php
                                         $server = Config::get('FORCE_SERVER');
 
-                                        if ($server == 0) {
+                                        if ($server === 0) {
                                             echo '<div class="form-group">';
                                             echo '<label for="acars-server">Select Server</label>';
                                             echo '<select class="form-control" id="acars-server">';

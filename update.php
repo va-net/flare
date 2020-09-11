@@ -327,7 +327,9 @@ if (Input::get('action') === 'editprofile') {
     Redirect::to('admin.php?page=opsmanage&section=fleet');
 } elseif (Input::get('action') === 'setuppireps') {
     if (!Pirep::setup(Input::get('callsign'), $user->data()->id)) {
-        Session::flash('errorrecent', 'There was an Error Connecting to Infinite Flight. Ensure you are spawned in on the <b>Casual Server, and have set your callsign to \''.$user->data()->callsign.'\'</b>!');
+        $server = 'casual';
+        if ($force !== 0 && $force !== 'casual') $server = $force;
+        Session::flash('errorrecent', 'There was an Error Connecting to Infinite Flight. Ensure you are spawned in on the <b>'.ucfirst($server).' Server, and have set your callsign to \''.$user->data()->callsign.'\'</b>!');
         Redirect::to('pireps.php?page=new');
     }
     Session::flash('successrecent', 'PIREPs Setup Successfully! You can now File PIREPs.');
@@ -543,7 +545,6 @@ if (Input::get('action') === 'editprofile') {
     }
 } elseif (Input::get('action') === 'acars') {
     $response = VANet::runAcars(Input::get('server'));
-    var_dump($response);
     if (array_key_exists('status', $response)) {
         if ($response['status'] == 404 || $response['status'] == 409) {
             echo '<div class="alert alert-warning">We couldn\'t find you on the server. Ensure that you have filed a flight plan, 
@@ -551,17 +552,12 @@ if (Input::get('action') === 'editprofile') {
             die();
         }
     }
-    echo 'Nice! We\'ve found you. If you\'ve finished your flight and at the gate, go ahead and fill out the details below. 
-    If not, reload the page once you\'re done and click that button again.';
+    echo '<p>Nice! We\'ve found you. If you\'ve finished your flight and at the gate, go ahead and fill out the details below. 
+    If not, reload the page once you\'re done and click that button again.</p>';
 
-    $aircraft = Aircraft::fetchAircraftFromVANet($response["aircraft"], "LiveryID");
-    if (count($aircraft) == 0) {
-        echo '
-        <div class="alert alert-warning">Are you a beta tester? Because we can\'t tell what aircraft you\'re flying. Try a manual PIREP instead.</div>';
-        die();
-    }
-    $aircraft = $aircraft[0];
-    if (!Aircraft::exists($aircraft["liveryID"])) {
+    
+    $aircraft = Aircraft::findAircraft($response["aircraft"]);
+    if (!$aircraft) {
         echo '<div class="alert alert-warning">You\'re Flying an Aircraft that isn\'t in this VA\'s Fleet!</div>';
         die();
     }
@@ -571,7 +567,7 @@ if (Input::get('action') === 'editprofile') {
     <input hidden value="filepirep" name="action" />
     <input hidden value="'.date("Y-m-d").'" name="date" />
     <input hidden value="'.Time::secsToString($response["flightTime"]).'" name="ftime" />
-    <input hidden value="'.$aircraft["aircraftName"].'" name="aircraft" />
+    <input hidden value="'.$aircraft->id.'" name="aircraft" />
     ';
 
     // Check VANet was able to determine departure ICAO
