@@ -51,21 +51,21 @@
         "queries": []
     },
     {
-        "tag": "v1.0.0-beta6",
-        "name": "Public Beta 6",
-        "date": "2020-09-07",
-        "notes": "TODO",
+        "tag": "v1.0.0-beta5.1",
+        "name": "Public Beta 5.1",
+        "date": "2020-09-11",
+        "notes": "Fixed Issue with Adding Aircraft",
         "prerelease": true,
         "useUpdater": true,
         "files": [
-            "TODO"
+            "admin.php",
+            "classes/Aircraft.php",
+            "update.php",
+            "version.json"
         ],
         "deletedFiles": [],
         "queries": [
-            "CREATE TABLE IF NOT EXISTS `options` ( `name` varchar(120) NOT NULL, `value` text NOT NULL, PRIMARY KEY (`name`)) ENGINE=InnoDB DEFAULT CHARSET=latin1;",
-            "ALTER TABLE `pireps` CHANGE `flightnum` `flightnum` VARCHAR(10) NOT NULL;",
-            "ALTER TABLE `routes` CHANGE `fltnum` `fltnum` VARCHAR(10) NOT NULL;",
-            "INSERT INTO `options` (`name`, `value`) VALUES ('FORCE_SERVER', '0');"
+            "DELETE FROM aircraft WHERE status != 1;"
         ]
     }
 ]
