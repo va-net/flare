@@ -116,5 +116,28 @@
         ],
         "deletedFiles": [],
         "queries": []
+    },
+    {
+        "tag": "v1.0.0-beta7",
+        "name": "Public Beta 7",
+        "date": "2020-09-13",
+        "notes": "TODO",
+        "prerelease": true,
+        "useUpdater": true,
+        "files": [
+            "version.json",
+            "includes/navbar.php",
+            "admin.php",
+            "classes/VANet.php",
+            "update.php",
+            "includes/sidebar.php",
+            "vanet.php",
+            "core/init.php",
+            "includes/menus.php",
+            "classes/Rank.php",
+            "updater-alternate.php"
+        ],
+        "deletedFiles": [],
+        "queries": []
     }
 ]
