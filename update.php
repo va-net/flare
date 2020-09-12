@@ -131,7 +131,7 @@ if (Input::get('action') === 'editprofile') {
         die();
     }
 
-    $perms = Json::decode($user->getUser(Input::get('id'))["permissions"]);
+    $perms = Json::decode($user->getUser(Input::get('id'))->permissions);
     $perms["admin"] = Input::get("admin");
 
     $user->update(array(
