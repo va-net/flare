@@ -1542,6 +1542,10 @@ if (!$user->isLoggedIn()) {
                                     </div>
                                 </div>
 
+                                <form id="delrank" action="update.php" method="post">
+                                    <input hidden name="action" value="delrank" />
+                                </form>
+
                                 <table class="table table-striped datatable">
                                     <thead class="bg-custom">
                                         <tr>
@@ -1563,6 +1567,9 @@ if (!$user->isLoggedIn()) {
                                             data-id="'.$rank->id.'" data-name="'.$rank->name.'" 
                                             data-minhrs="'.$rank->timereq.'">
                                             <i class="fa fa-edit"></i></button>';
+                                            echo '&nbsp;<button class="btn btn-danger text-light" 
+                                            value="'.$rank->id.'" form="delrank" name="delete">
+                                            <i class="fa fa-trash"></i></button>';
                                             echo '</td></tr>';
                                         }
                                         ?>

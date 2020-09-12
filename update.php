@@ -378,6 +378,20 @@ if (Input::get('action') === 'editprofile') {
     }
     Session::flash('success', 'Rank Edited Successfully!');
     Redirect::to('admin.php?page=opsmanage&section=ranks');
+} elseif (Input::get('action') === 'delrank') {
+    if (!$user->hasPermission('opsmanage')) {
+        Redirect::to('home.php');
+        die();
+    }
+
+    $ret = Rank::delete(Input::get('delete'));
+    if (!$ret) {
+        Session::flash('error', 'There was an Error Deleting the Rank.');
+        Redirect::to('admin.php?page=opsmanage&section=ranks');
+    } else {
+        Session::flash('success', 'Rank Deleted Successfully!');
+    Redirect::to('admin.php?page=opsmanage&section=ranks');
+    }
 } elseif (Input::get('action') === 'setcolour') {
     if (!$user->hasPermission('opsmanage')) {
         Redirect::to('home.php');
