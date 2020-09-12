@@ -500,7 +500,7 @@ class User
     }
 
     public function getUser($id) {
-        $this->_db->get('pilots', array('id', '=', $id))->first();
+        $ret = $this->_db->get('pilots', array('id', '=', $id))->first();
 
         return $ret;
     }
