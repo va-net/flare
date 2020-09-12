@@ -26,6 +26,7 @@ if (file_exists(__DIR__.'/config.php')) {
 }
 
 require_once __DIR__.'/../functions/escape.php';
+require_once __DIR__.'/../includes/menus.php';
 
 if (file_exists('./config.php') && Config::get('mysql/host') != 'DB_HOST' && Cookie::exists(Config::get('remember/cookie_name')) && !Session::exists(Config::get('session/session_name'))) {
     $hash = Cookie::get(Config::get('remember/cookie_name'));

@@ -57,80 +57,38 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
         }
         $permissions = Permissions::getAll();
         if ($user->hasPermission('admin')) {
-            $userpages = [];
-            $opspages = [];
-            $miscpages = [];
-
-            foreach ($permissions as $permission => $data) {
-                if ($user->hasPermission($permission)) {
-                    if ($permission == "usermanage" || $permission == "staffmanage" || $permission == "recruitment") {
-                        $userpages[$permission] = $data;
-                    } elseif ($permission == "opsmanage") {
-                        $opspages["ranks"] = [
-                            "icon" => "fa-medal",
-                            "name" => "Manage Ranks",
-                        ];
-                        $opspages["fleet"] = [
-                            "icon" => "fa-plane",
-                            "name" => "Manage Fleet",
-                        ];
-                        $opspages["routes"] = [
-                            "icon" => "fa-plane-departure",
-                            "name" => "Manage Routes",
-                        ];
-                        $miscpages["codeshares"] = [
-                            "icon" => "fa-handshake",
-                            "name" => "Manage Codeshares",
-                        ];
-                        $miscpages["site"] = [
-                            "icon" => "fa-globe",
-                            "name" => "Manage Site",
-                        ];
-                        if (VANet::isGold()) {
-                            $miscpages["events"] = [
-                                "icon" => "fa-plane-departure",
-                                "name" => "Manage Events",
-                            ];
-                        }
-                    } elseif ($permission == "pirepmanage") {
-                        $miscpages[$permission] = $data;
-                        $miscpages["multimanage"] = [
-                            "icon" => "fa-calculator",
-                            "name" => "Multipliers",
-                        ]; 
-                    } else {
-                        $miscpages[$permission] = $data;
+            $localmenu = array();
+            foreach ($GLOBALS['admin-menu'] as $name => $data) {
+                $hasAnyPerms = false;
+                foreach ($data as $key => $item) {
+                    if ($user->hasPermission($item['permission'])) {
+                        $hasAnyPerms = true;
                     }
                 }
-            }
 
-            echo '<li class="nav-item desktop-hidden">';
-            if ($userpages != []) {
-                echo '<a href="#" data-toggle="collapse" data-target="#usrCollapse" class="panel-link"><i class="fa fa-caret-down"></i>&nbsp;User Management</a>';
-                echo '<div id="usrCollapse" class="collapse usrCollapse">';
-                foreach ($userpages as $slug => $info) {
-                    echo '<a href="admin.php?page='.$slug.'" class="panel-link">
-                    <i class="fa '.$info["icon"].'"></i>&nbsp;'.$info["name"].'
-                    </a>';
+                if ($hasAnyPerms) {
+                    $localmenu[$name] = $data;
+                }
+            }
+            $i = 0;
+            $gold = VANet::isGold();
+            foreach ($localmenu as $category => $items) {
+                
+                echo '<li class="nav-item desktop-hidden">';
+                echo '<a href="#" data-toggle="collapse" data-target="#collapse'.$i.'" class="panel-link"><i class="fa fa-caret-down"></i>&nbsp;'.$category.'</a>';
+                echo '<div id="collapse'.$i.'" class="collapse '.strtolower(str_replace(" ", "-", $category)).'">';
+                
+                foreach ($items as $label => $data) {
+                    if ($user->hasPermission($data["permission"])) {
+                        if (($gold && $data["needsGold"]) || !$data["needsGold"]) {
+                            echo '<a href="'.$data["link"].'" class="panel-link"><i class="fa '.$data['icon'].'"></i>&nbsp;'.$label.'</a>';
+                        }
+                    }
                 }
                 echo '</div>';
+                echo '</li>';
+                $i++;
             }
-            if ($opspages != []) {
-                echo '<a href="#" data-toggle="collapse" data-target="#opsCollapse" class="panel-link"><i class="fa fa-caret-down"></i>&nbsp;Operations Management</a>';
-                echo '<div id="opsCollapse" class="collapse opsCollapse">';
-                foreach ($opspages as $slug => $info) {
-                    echo '<a href="admin.php?page=opsmanage&section='.$slug.'" class="panel-link">
-                    <i class="fa '.$info["icon"].'"></i>&nbsp;'.$info["name"].'
-                    </a>';
-                }
-                echo '</div>';
-            }
-            if ($miscpages != []) {
-                foreach ($miscpages as $slug => $info) {
-                    echo '<a href="admin.php?page='.$slug.'" id="userslink" class="panel-link"><i class="fa '.$info['icon'].'"></i>&nbsp;'.$info['name'].'</a>';
-                }
-            }
-            echo '</li>';
         }
         ?>
         <li class="nav-item desktop-hidden">

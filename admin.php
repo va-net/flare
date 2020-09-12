@@ -61,6 +61,8 @@ if (!$user->isLoggedIn()) {
                     if (Session::exists('success')) {
                         echo '<div class="alert alert-success text-center">'.Session::flash('success').'</div>';
                     }
+
+                    $ACTIVE_CATEGORY = null;
                     ?>
                     <?php if (Input::get('page') == ''): ?>
                         <h3>Admin Panel</h3>
@@ -68,13 +70,7 @@ if (!$user->isLoggedIn()) {
                         <p>Looks like no page was specified. Make sure you use the buttons in the navbar/sidebar!</p>
                     <?php endif; ?>
                     <?php if (Input::get('page') === 'usermanage'): ?>
-                        <script>
-                            $(document).ready(function() {
-                                $(".usrCollapse").each(function() {
-                                    $(this).collapse("show");
-                                });
-                            });
-                        </script>
+                        <?php $ACTIVE_CATEGORY = 'user-management'; ?>
                         <h3>Manage Users</h3>
                         <?php if (!$user->hasPermission('usermanage')): ?>
                             <div class="alert alert-danger text-center">Whoops! You don't have the necessary permissions to access this.</div>
@@ -283,13 +279,7 @@ if (!$user->isLoggedIn()) {
                         </script>
                         <?php endif; ?>
                     <?php elseif (Input::get('page') === 'staffmanage'): ?>
-                        <script>
-                            $(document).ready(function() {
-                                $(".usrCollapse").each(function() {
-                                    $(this).collapse("show");
-                                });
-                            });
-                        </script>
+                        <?php $ACTIVE_CATEGORY = 'user-management'; ?>
                         <h3>Manage Staff</h3>
                         <?php if (!$user->hasPermission('staffmanage')): ?>
                             <div class="alert alert-danger text-center">Whoops! You don't have the necessary permissions to access this.</div>
@@ -423,13 +413,9 @@ if (!$user->isLoggedIn()) {
                             if (!empty(Input::get('tab'))) {
                                 $tab = Input::get('tab');
                             }
+                            $ACTIVE_CATEGORY = 'site-management'; 
                         ?>
-                        <script>
-                            $(document).ready(function() {
-                                $("#<?= $tab; ?>link").click();
-                            });
-                        </script>
-                        <h3>Configure Flare</h3>
+                        <h3>Flare Settings</h3>
                         <p>Here you may configure Flare to be your own.</p>
                         <ul class="nav nav-tabs nav-dark justify-content-center">
                             <li class="nav-item">
@@ -576,13 +562,7 @@ if (!$user->isLoggedIn()) {
                             }
                         </style>
                     <?php elseif (Input::get('page') === 'recruitment'): ?>
-                        <script>
-                            $(document).ready(function() {
-                                $(".usrCollapse").each(function() {
-                                    $(this).collapse("show");
-                                });
-                            });
-                        </script>
+                        <?php $ACTIVE_CATEGORY = 'user-management'; ?>
                         <h3>Recruitment</h3>
                         <?php if (!$user->hasPermission('usermanage')): ?>
                             <div class="alert alert-danger text-center">Whoops! You don't have the necessary permissions to access this.</div>
@@ -730,6 +710,7 @@ if (!$user->isLoggedIn()) {
                         <?php endif; ?>
                     <?php elseif (Input::get('page') === 'pirepmanage'): ?>
                         <h3>Manage PIREPs</h3>
+                        <?php $ACTIVE_CATEGORY = 'pirep-management'; ?>
                         <?php if (!$user->hasPermission('pirepmanage')): ?>
                             <div class="alert alert-danger text-center">Whoops! You don't have the necessary permissions to access this.</div>
                         <?php else: ?>
@@ -781,6 +762,7 @@ if (!$user->isLoggedIn()) {
                         <?php endif; ?>
                     <?php elseif (Input::get('page') === 'multimanage'): ?>
                         <h3>Manage Multipliers</h3>
+                        <?php $ACTIVE_CATEGORY = 'pirep-management'; ?>
                         <?php if (!$user->hasPermission('pirepmanage')): ?>
                             <div class="alert alert-danger text-center">Whoops! You don't have the necessary permissions to access this.</div>
                         <?php else: ?>
@@ -835,7 +817,7 @@ if (!$user->isLoggedIn()) {
                         <?php endif; ?>
                     <?php elseif (Input::get('page') === 'newsmanage'): ?>
                         <h3>Manage News</h3>
-                        <br>
+                        <?php $ACTIVE_CATEGORY = 'site-management'; ?>
                         <?php if (!$user->hasPermission('usermanage')): ?>
                             <div class="alert alert-danger text-center">Whoops! You don't have the necessary permissions to access this.</div>
                         <?php else: ?>
@@ -971,6 +953,7 @@ if (!$user->isLoggedIn()) {
                             </script>
                         <?php endif; ?>
                     <?php elseif (Input::get('page') === 'events'): ?>
+                        <?php $ACTIVE_CATEGORY = 'operations-management'; ?>
                         <?php if (!$user->hasPermission('opsmanage')): ?>
                             <div class="alert alert-danger text-center">Whoops! You don't have the necessary permissions to access this.</div>
                         <?php else: ?>
@@ -1202,6 +1185,7 @@ if (!$user->isLoggedIn()) {
                             </div>
                         <?php endif; ?>
                     <?php elseif (Input::get('page') === 'statsviewing'): ?>
+                        <?php $ACTIVE_CATEGORY = 'pirep-management'; ?>
                         <?php if (!$user->hasPermission('statsviewing')): ?>
                             <div class="alert alert-danger text-center">Whoops! You don't have the necessary permissions to access this.</div>
                         <?php else: ?>
@@ -1225,6 +1209,7 @@ if (!$user->isLoggedIn()) {
                             <?php endif; ?>
                         <?php endif; ?>
                     <?php elseif (Input::get('page') === 'opsmanage'): ?>
+                        <?php $ACTIVE_CATEGORY = 'operations-management'; ?>
                         <?php if (!$user->hasPermission('opsmanage')): ?>
                             <div class="alert alert-danger text-center">Whoops! You don't have the necessary permissions to access this.</div>
                         <?php else: ?>
@@ -1706,6 +1691,7 @@ if (!$user->isLoggedIn()) {
                             <?php endif; ?>
                         <?php endif; ?>
                     <?php elseif (Input::get('page') === 'codeshares'): ?>
+                        <?php $ACTIVE_CATEGORY = 'operations-management'; ?>
                         <?php if (!$user->hasPermission('opsmanage')): ?>
                             <div class="alert alert-danger text-center">Whoops! You don't have the necessary permissions to access this.</div>
                         <?php else: ?>
@@ -1795,6 +1781,11 @@ if (!$user->isLoggedIn()) {
                 </div>
             </div>
             </div>
+            <script>
+                $(document).ready(function() {
+                    $(".<?= $ACTIVE_CATEGORY ?>").collapse('show');
+                });
+            </script>
             <footer class="container-fluid text-center">
                 <?php include './includes/footer.php'; ?>
             </footer>
