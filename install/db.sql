@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS `pilots` (
 
 CREATE TABLE IF NOT EXISTS `pireps` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `flightnum` int(11) NOT NULL,
+  `flightnum` varchar(10) NOT NULL,
   `departure` varchar(4) NOT NULL,
   `arrival` varchar(4) NOT NULL,
   `flighttime` int(11) NOT NULL,
@@ -71,7 +71,7 @@ INSERT INTO `ranks` (`name`, `timereq`) VALUES
 
 CREATE TABLE IF NOT EXISTS `routes` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `fltnum` int(11) NOT NULL,
+  `fltnum` varchar(10) NOT NULL,
   `dep` varchar(4) NOT NULL,
   `arr` varchar(4) NOT NULL,
   `duration` int(11) NOT NULL,
@@ -88,3 +88,12 @@ CREATE TABLE IF NOT EXISTS `multipliers` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `code` (`code`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+CREATE TABLE IF NOT EXISTS `options` ( `
+  name` varchar(120) NOT NULL, 
+  `value` text NOT NULL, 
+  PRIMARY KEY (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO `options` (`name`, `value`) VALUES ('FORCE_SERVER', '0');
+
