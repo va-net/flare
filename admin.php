@@ -441,6 +441,11 @@ if (!$user->isLoggedIn()) {
                             <li class="nav-item">
                                 <a class="nav-link" id="vanetlink" data-toggle="tab" href="#vanet">VANet Settings</a>
                             </li>
+                            <?php if (Json::decode(file_get_contents("./version.json"))["prerelease"]) { ?>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="debuglink" data-toggle="tab" href="#debug">Debugging Info</a>
+                                </li>
+                            <?php } ?>
                             <li class="nav-item">
                                 <a class="nav-link" id="updateslink" data-toggle="tab" href="#updates">Updates</a>
                             </li>
@@ -498,6 +503,39 @@ if (!$user->isLoggedIn()) {
                                     </div>
                                     <input type="submit" class="btn bg-custom" value="Save">
                                 </form>
+                            </div>
+                            <div id="debug" class="tab-pane container-fluid p-3 fade">
+                                <h4>Debugging Information</h4>
+                                <p>
+                                    This screen is shown to VAs running a pre-release version of Flare only. It contains information to help the
+                                    Flare developers reproduce any issues you may have.
+                                </p>
+                                <table class="table">
+                                    <tr>
+                                        <th>DB Host</th>
+                                        <td><?= Config::get('mysql/host'); ?></td>
+                                    </tr>
+                                    <tr>
+                                        <th>DB Port</th>
+                                        <td><?= Config::get('mysql/port'); ?></td>
+                                    </tr>
+                                    <tr>
+                                        <th>VANet API Key</th>
+                                        <td><?= Config::get('vanet/api_key'); ?></td>
+                                    </tr>
+                                    <tr>
+                                        <th>Is VANet Gold?</th>
+                                        <td><?= VANet::isGold(); ?></td>
+                                    </tr>
+                                    <tr>
+                                        <th>Force Server</th>
+                                        <td><?= Config::get('FORCE_SERVER'); ?></td>
+                                    </tr>
+                                    <tr>
+                                        <th>Version</th>
+                                        <td><?= Json::decode(file_get_contents("./version.json"))["tag"]; ?></td>
+                                    </tr>
+                                </table>
                             </div>
                             <div id="updates" class="tab-pane container-fluid p-3 fade">
                                 <h4>Flare Updates</h4>
