@@ -78,6 +78,14 @@ class Rank
         }
     }
 
+    public static function delete($id) 
+    {
+        self::init();
+
+        $ret = self::$_db->delete('ranks', array('id', '=', $id));
+        return !($ret->error());
+    }
+
     public static function getFirstRank()
     {
 

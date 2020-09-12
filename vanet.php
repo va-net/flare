@@ -123,4 +123,21 @@ if (Input::get('method') === 'events-table') {
     foreach ($all as $name => $id) {
         echo '<option value="'.$id.'">'.$name.'</option>';
     }
+} elseif (Input::get('method') === 'codeshares' && $user->hasPermission('opsmanage')) {
+    $all = VANet::getCodeshares();
+    $me = VANet::myInfo();
+    foreach ($all as $codeshare) {
+        if ($codeshare["veFrom"]["codeshareId"] == $me["codeshareId"]) {
+            continue;
+        }
+        echo '<tr><td class="align-middle">';
+        echo $codeshare["veFrom"]["code"].' ('.$codeshare["veFrom"]["codeshareId"].')';
+        echo '</td><td class="align-middle mobile-hidden">';
+        echo $codeshare["message"];
+        echo '</td><td class="align-middle">';
+        echo count($codeshare["routes"]);
+        echo '</td><td class="align-middle">';
+        echo '<button value="'.$codeshare['id'].'" form="importcodeshare" type="submit" class="btn bg-custom text-light" name="id"><i class="fa fa-file-download"></i></button>';
+        echo '&nbsp;<button class="btn btn-danger deleteCodeshare" data-id="'.$codeshare["id"].'"><i class="fa fa-trash"></i></button>';
+    }
 }

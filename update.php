@@ -349,7 +349,7 @@ if (Input::get('action') === 'editprofile') {
         die();
     }
 
-    Route::delete(Input::get('deleteroute'));
+    Route::delete(Input::get('delete'));
     Session::flash('success', 'Route Removed Successfully!');
     Redirect::to('admin.php?page=opsmanage&section=routes');
 } elseif (Input::get('action') === 'addrank') {
@@ -378,6 +378,20 @@ if (Input::get('action') === 'editprofile') {
     }
     Session::flash('success', 'Rank Edited Successfully!');
     Redirect::to('admin.php?page=opsmanage&section=ranks');
+} elseif (Input::get('action') === 'delrank') {
+    if (!$user->hasPermission('opsmanage')) {
+        Redirect::to('home.php');
+        die();
+    }
+
+    $ret = Rank::delete(Input::get('delete'));
+    if (!$ret) {
+        Session::flash('error', 'There was an Error Deleting the Rank.');
+        Redirect::to('admin.php?page=opsmanage&section=ranks');
+    } else {
+        Session::flash('success', 'Rank Deleted Successfully!');
+    Redirect::to('admin.php?page=opsmanage&section=ranks');
+    }
 } elseif (Input::get('action') === 'setcolour') {
     if (!$user->hasPermission('opsmanage')) {
         Redirect::to('home.php');
@@ -410,7 +424,7 @@ if (Input::get('action') === 'editprofile') {
         die();
     }
     
-    if (!Config::replace('api_key', Input::get('vanetkey'))) {
+    if (!Config::replace('api_key', trim(Input::get('vanetkey')))) {
         Session::flash('error', 'There was an error updating the config file!');
         Redirect::to('admin.php?page=site&tab=vanet');
         die();
@@ -539,6 +553,10 @@ if (Input::get('action') === 'editprofile') {
         Redirect::to('admin.php?page=events');
     }
 } elseif (Input::get('action') === 'importroutes') {
+    if (!$user->hasPermission('opsmanage')) {
+        Redirect::to('home.php');
+        die();
+    }
     $file = Input::getFile('upload');
 
     $fileName = explode(".", $file["name"]);
@@ -606,6 +624,10 @@ if (Input::get('action') === 'editprofile') {
     Session::flash('success', "Routes Imported Successfully!");
     Redirect::to('admin.php?page=opsmanage&section=routes');
 } elseif (Input::get('action') === 'importaircraft') {
+    if (!$user->hasPermission('opsmanage')) {
+        Redirect::to('home.php');
+        die();
+    }
     $file = Input::getFile('upload');
 
     $fileName = explode(".", $file["name"]);
@@ -700,4 +722,135 @@ if (Input::get('action') === 'editprofile') {
     }
 
     echo Json::encode($ret);
+} elseif (Input::get('action') === 'newcodeshare') {
+    if (!$user->hasPermission('opsmanage')) {
+        Redirect::to('home.php');
+        die();
+    }
+
+    $routes = array();
+    $inputRoutes = explode(",", Input::get('routes'));
+
+    $db = DB::getInstance();
+    foreach ($inputRoutes as $input) {
+        $input = trim($input);
+        $query = $db->query('SELECT routes.*, aircraft.ifliveryid AS liveryid FROM routes INNER JOIN aircraft ON routes.aircraftid=aircraft.id WHERE routes.fltnum=?', array($input));
+        if ($query->count() === 0) {
+            Session::flash('error', 'Could not Find Route '.$input);
+            Redirect::to('admin.php?page=codeshares');
+            die();
+        } elseif ($query->count() > 1) {
+            Session::flash('error', 'There\'s More than One Route with the Flight Number '.$input);
+            Redirect::to('admin.php?page=codeshares');
+            die();
+        }
+
+        $route = $query->first();
+        array_push($routes, array(
+            "flightNum" => $route->fltnum,
+            "departure" => $route->dep,
+            "arrival" => $route->arr,
+            "aircraftID" => $route->liveryid,
+            "flightTime" => $route->duration
+        ));
+    }
+
+    $ret = VANet::sendCodeshare(array(
+        "VEToID" => Input::get('recipient'),
+        "Message" => Input::get('message'),
+        "Routes" => $routes
+    ));
+    if (!$ret) {
+        Session::flash('error', "Error Connnecting to VANet");
+        Redirect::to('admin.php?page=codeshares');
+        die();
+    } else {
+        Session::flash('success', "Codeshare Sent Successfully!");
+        Redirect::to('admin.php?page=codeshares');
+    }
+} elseif (Input::get('action') === 'deletecodeshare') {
+    if (!$user->hasPermission('opsmanage')) {
+        Redirect::to('home.php');
+        die();
+    }
+
+    $ret = VANet::deleteCodeshare(Input::get('delete'));
+    if (!$ret) {
+        Session::flash('error', "Error Connnecting to VANet");
+        Redirect::to('admin.php?page=codeshares');
+        die();
+    } else {
+        Session::flash('success', "Codeshare Deleted Successfully!");
+        Redirect::to('admin.php?page=codeshares');
+    }
+} elseif (Input::get('action') === 'importcodeshare') {
+    if (!$user->hasPermission('opsmanage')) {
+        Redirect::to('home.php');
+        die();
+    }
+
+    $codeshare = VANet::findCodeshare(Input::get('id'));
+    if ($codeshare === FALSE) {
+        Session::flash('error', "Codeshare Not Found");
+        //Redirect::to('admin.php?page=codeshares');
+        die();
+    }
+
+    $db = DB::getInstance();
+    $allaircraft = Aircraft::fetchAllLiveriesFromVANet();
+
+    $sql = "INSERT INTO routes (fltnum, dep, arr, duration, aircraftid) VALUES\n";
+    $params = array();
+    $i = 0;
+
+    foreach ($codeshare["routes"] as $route) {
+        if ($i % 50 == 0 && $i != 0) {
+            $sql = trim($sql, ',');
+            $ret = $db->query($sql, $params);
+            if ($ret->error()) {
+                Session::flash('error', "Error Importing Codeshare Routes");
+                //Redirect::to('admin.php?page=codeshares');
+                die();
+            }
+            $sql = "INSERT INTO routes (fltnum, dep, arr, duration, aircraftid) VALUES";
+            $params = array();
+        }
+
+        $aircraft = null;
+        foreach ($allaircraft as $ac) {
+            if ($ac["liveryID"] == $route["aircraft"]["liveryID"]) {
+                $aircraft = $ac;
+            }
+        }
+
+        $acId = $db->query("SELECT * FROM aircraft WHERE ifliveryid= ?", array($aircraft["liveryID"]));
+        if ($acId->count() === 0) {
+            $rank = $db->query("SELECT * FROM ranks ORDER BY timereq ASC")->first();
+            Aircraft::add($aircraft["liveryID"], $rank->id);
+            $acId = $db->query("SELECT * FROM aircraft WHERE ifliveryid= ?", array($aircraft["liveryID"]))->first()->id;
+        } else {
+            $acId = $acId->first()->id;
+        }
+
+        
+
+        $sql .= "\n(?, ?, ?, ?, ?),";
+        array_push($params, $codeshare["veFrom"]["code"].$route["flightNum"]);
+        array_push($params, $route["departure"]);
+        array_push($params, $route["arrival"]);
+        array_push($params, $route["flightTime"]);
+        array_push($params, $acId);
+        $i++;
+    }
+
+    $sql = trim($sql, ',');
+    $ret = $db->query($sql, $params);
+    if ($ret->error()) {
+        Session::flash('error', "Error Importing Codeshare Routes");
+        //Redirect::to('admin.php?page=codeshares');
+        die();
+    }
+    //VANet::deleteCodeshare($codeshare["id"]);
+    Session::flash('success', "Codeshare Routes Imported Successfully!");
+    //Redirect::to('admin.php?page=opsmanage&section=routes');
 }

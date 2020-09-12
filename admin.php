@@ -61,6 +61,8 @@ if (!$user->isLoggedIn()) {
                     if (Session::exists('success')) {
                         echo '<div class="alert alert-success text-center">'.Session::flash('success').'</div>';
                     }
+
+                    $ACTIVE_CATEGORY = null;
                     ?>
                     <?php if (Input::get('page') == ''): ?>
                         <h3>Admin Panel</h3>
@@ -68,13 +70,7 @@ if (!$user->isLoggedIn()) {
                         <p>Looks like no page was specified. Make sure you use the buttons in the navbar/sidebar!</p>
                     <?php endif; ?>
                     <?php if (Input::get('page') === 'usermanage'): ?>
-                        <script>
-                            $(document).ready(function() {
-                                $(".usrCollapse").each(function() {
-                                    $(this).collapse("show");
-                                });
-                            });
-                        </script>
+                        <?php $ACTIVE_CATEGORY = 'user-management'; ?>
                         <h3>Manage Users</h3>
                         <?php if (!$user->hasPermission('usermanage')): ?>
                             <div class="alert alert-danger text-center">Whoops! You don't have the necessary permissions to access this.</div>
@@ -283,13 +279,7 @@ if (!$user->isLoggedIn()) {
                         </script>
                         <?php endif; ?>
                     <?php elseif (Input::get('page') === 'staffmanage'): ?>
-                        <script>
-                            $(document).ready(function() {
-                                $(".usrCollapse").each(function() {
-                                    $(this).collapse("show");
-                                });
-                            });
-                        </script>
+                        <?php $ACTIVE_CATEGORY = 'user-management'; ?>
                         <h3>Manage Staff</h3>
                         <?php if (!$user->hasPermission('staffmanage')): ?>
                             <div class="alert alert-danger text-center">Whoops! You don't have the necessary permissions to access this.</div>
@@ -423,13 +413,9 @@ if (!$user->isLoggedIn()) {
                             if (!empty(Input::get('tab'))) {
                                 $tab = Input::get('tab');
                             }
+                            $ACTIVE_CATEGORY = 'site-management'; 
                         ?>
-                        <script>
-                            $(document).ready(function() {
-                                $("#<?= $tab; ?>link").click();
-                            });
-                        </script>
-                        <h3>Configure Flare</h3>
+                        <h3>Flare Settings</h3>
                         <p>Here you may configure Flare to be your own.</p>
                         <ul class="nav nav-tabs nav-dark justify-content-center">
                             <li class="nav-item">
@@ -441,6 +427,11 @@ if (!$user->isLoggedIn()) {
                             <li class="nav-item">
                                 <a class="nav-link" id="vanetlink" data-toggle="tab" href="#vanet">VANet Settings</a>
                             </li>
+                            <?php if (Json::decode(file_get_contents("./version.json"))["prerelease"]) { ?>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="debuglink" data-toggle="tab" href="#debug">Debugging Info</a>
+                                </li>
+                            <?php } ?>
                             <li class="nav-item">
                                 <a class="nav-link" id="updateslink" data-toggle="tab" href="#updates">Updates</a>
                             </li>
@@ -499,6 +490,39 @@ if (!$user->isLoggedIn()) {
                                     <input type="submit" class="btn bg-custom" value="Save">
                                 </form>
                             </div>
+                            <div id="debug" class="tab-pane container-fluid p-3 fade">
+                                <h4>Debugging Information</h4>
+                                <p>
+                                    This screen is shown to VAs running a pre-release version of Flare only. It contains information to help the
+                                    Flare developers reproduce any issues you may have.
+                                </p>
+                                <table class="table">
+                                    <tr>
+                                        <th>DB Host</th>
+                                        <td><?= Config::get('mysql/host'); ?></td>
+                                    </tr>
+                                    <tr>
+                                        <th>DB Port</th>
+                                        <td><?= Config::get('mysql/port'); ?></td>
+                                    </tr>
+                                    <tr>
+                                        <th>VANet API Key</th>
+                                        <td><?= Config::get('vanet/api_key'); ?></td>
+                                    </tr>
+                                    <tr>
+                                        <th>Is VANet Gold?</th>
+                                        <td><?= VANet::isGold(); ?></td>
+                                    </tr>
+                                    <tr>
+                                        <th>Force Server</th>
+                                        <td><?= Config::get('FORCE_SERVER'); ?></td>
+                                    </tr>
+                                    <tr>
+                                        <th>Version</th>
+                                        <td><?= Json::decode(file_get_contents("./version.json"))["tag"]; ?></td>
+                                    </tr>
+                                </table>
+                            </div>
                             <div id="updates" class="tab-pane container-fluid p-3 fade">
                                 <h4>Flare Updates</h4>
                                 <p>
@@ -538,13 +562,7 @@ if (!$user->isLoggedIn()) {
                             }
                         </style>
                     <?php elseif (Input::get('page') === 'recruitment'): ?>
-                        <script>
-                            $(document).ready(function() {
-                                $(".usrCollapse").each(function() {
-                                    $(this).collapse("show");
-                                });
-                            });
-                        </script>
+                        <?php $ACTIVE_CATEGORY = 'user-management'; ?>
                         <h3>Recruitment</h3>
                         <?php if (!$user->hasPermission('usermanage')): ?>
                             <div class="alert alert-danger text-center">Whoops! You don't have the necessary permissions to access this.</div>
@@ -692,6 +710,7 @@ if (!$user->isLoggedIn()) {
                         <?php endif; ?>
                     <?php elseif (Input::get('page') === 'pirepmanage'): ?>
                         <h3>Manage PIREPs</h3>
+                        <?php $ACTIVE_CATEGORY = 'pirep-management'; ?>
                         <?php if (!$user->hasPermission('pirepmanage')): ?>
                             <div class="alert alert-danger text-center">Whoops! You don't have the necessary permissions to access this.</div>
                         <?php else: ?>
@@ -743,6 +762,7 @@ if (!$user->isLoggedIn()) {
                         <?php endif; ?>
                     <?php elseif (Input::get('page') === 'multimanage'): ?>
                         <h3>Manage Multipliers</h3>
+                        <?php $ACTIVE_CATEGORY = 'pirep-management'; ?>
                         <?php if (!$user->hasPermission('pirepmanage')): ?>
                             <div class="alert alert-danger text-center">Whoops! You don't have the necessary permissions to access this.</div>
                         <?php else: ?>
@@ -797,7 +817,7 @@ if (!$user->isLoggedIn()) {
                         <?php endif; ?>
                     <?php elseif (Input::get('page') === 'newsmanage'): ?>
                         <h3>Manage News</h3>
-                        <br>
+                        <?php $ACTIVE_CATEGORY = 'site-management'; ?>
                         <?php if (!$user->hasPermission('usermanage')): ?>
                             <div class="alert alert-danger text-center">Whoops! You don't have the necessary permissions to access this.</div>
                         <?php else: ?>
@@ -933,6 +953,7 @@ if (!$user->isLoggedIn()) {
                             </script>
                         <?php endif; ?>
                     <?php elseif (Input::get('page') === 'events'): ?>
+                        <?php $ACTIVE_CATEGORY = 'operations-management'; ?>
                         <?php if (!$user->hasPermission('opsmanage')): ?>
                             <div class="alert alert-danger text-center">Whoops! You don't have the necessary permissions to access this.</div>
                         <?php else: ?>
@@ -1074,9 +1095,6 @@ if (!$user->isLoggedIn()) {
                                         $("#confirmEventDelete-id").val(id);
                                         $("#confirmEventDelete").modal('show');
                                     });
-                                });
-
-                                $(document).ready(function() {
                                     $(".editEvent").click(function() {
                                         var eventName = $(this).data('name');
                                         var eventDesc = $(this).data('desc');
@@ -1167,6 +1185,7 @@ if (!$user->isLoggedIn()) {
                             </div>
                         <?php endif; ?>
                     <?php elseif (Input::get('page') === 'statsviewing'): ?>
+                        <?php $ACTIVE_CATEGORY = 'pirep-management'; ?>
                         <?php if (!$user->hasPermission('statsviewing')): ?>
                             <div class="alert alert-danger text-center">Whoops! You don't have the necessary permissions to access this.</div>
                         <?php else: ?>
@@ -1190,16 +1209,10 @@ if (!$user->isLoggedIn()) {
                             <?php endif; ?>
                         <?php endif; ?>
                     <?php elseif (Input::get('page') === 'opsmanage'): ?>
+                        <?php $ACTIVE_CATEGORY = 'operations-management'; ?>
                         <?php if (!$user->hasPermission('opsmanage')): ?>
                             <div class="alert alert-danger text-center">Whoops! You don't have the necessary permissions to access this.</div>
                         <?php else: ?>
-                            <script>
-                                $(document).ready(function() {
-                                    $(".opsCollapse").each(function() {
-                                        $(this).collapse("show");
-                                    });
-                                });
-                            </script>
                             <?php if (Input::get('section') === 'fleet'): ?>
                                 <h3>Fleet</h3>
                                 <button type="button" class="btn bg-custom mb-2" data-toggle="modal" data-target="#addAircraft">Add Aircraft</button>
@@ -1529,6 +1542,10 @@ if (!$user->isLoggedIn()) {
                                     </div>
                                 </div>
 
+                                <form id="delrank" action="update.php" method="post">
+                                    <input hidden name="action" value="delrank" />
+                                </form>
+
                                 <table class="table table-striped datatable">
                                     <thead class="bg-custom">
                                         <tr>
@@ -1550,6 +1567,9 @@ if (!$user->isLoggedIn()) {
                                             data-id="'.$rank->id.'" data-name="'.$rank->name.'" 
                                             data-minhrs="'.$rank->timereq.'">
                                             <i class="fa fa-edit"></i></button>';
+                                            echo '&nbsp;<button class="btn btn-danger text-light" 
+                                            value="'.$rank->id.'" form="delrank" name="delete">
+                                            <i class="fa fa-trash"></i></button>';
                                             echo '</td></tr>';
                                         }
                                         ?>
@@ -1599,7 +1619,7 @@ if (!$user->isLoggedIn()) {
                             <?php elseif (Input::get('section') === 'import'): ?>
                                 <h3>Import Operations Files</h3>
                                 <p>
-                                    Here, you can import either Flare JSON Files containg routes and aircraft into your database.
+                                    Here, you can import Flare JSON Files containg routes and aircraft into your database.
                                     Please note when you are importing aircraft from phpVMS, they will all be set to the default rank.
                                     If you wish to import your files from phpVMS 5, please use the Flare Exporter phpVMS Plugin (WIP).
                                 </p>
@@ -1670,10 +1690,102 @@ if (!$user->isLoggedIn()) {
                                 </div>
                             <?php endif; ?>
                         <?php endif; ?>
+                    <?php elseif (Input::get('page') === 'codeshares'): ?>
+                        <?php $ACTIVE_CATEGORY = 'operations-management'; ?>
+                        <?php if (!$user->hasPermission('opsmanage')): ?>
+                            <div class="alert alert-danger text-center">Whoops! You don't have the necessary permissions to access this.</div>
+                        <?php else: ?>
+                            <h3>Codeshares Dashboard</h3>
+                            <p>
+                                Here you can see active codeshare requests from other VAs. 
+                                You can also make codeshare requests to share routes with other VAs.
+                            </p>
+                            <!-- Delete Codeshare Confirmation Modal -->
+                            <div class="modal fade" id="confirmShareDelete">
+                            <div class="modal-dialog modal-sm">
+                                <div class="modal-content">
+
+                                <div class="modal-header">
+                                    <h4 class="modal-title">Are You Sure?</h4>
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                </div>
+
+                                <div class="modal-body">
+                                    Are you sure you want to delete (and hence deny) this Codeshare Request?
+                                    <form id="confirmShareDelete" action="update.php" method="post">
+                                        <input hidden name="action" value="deletecodeshare" />
+                                        <input hidden name="delete" id="confirmShareDelete-id" />
+                                        <input type="submit" class="btn btn-danger" value="Delete" />
+                                    </form>
+                                </div>
+
+                                <div class="modal-footer text-center justify-content-center">
+                                    <button type="button" class="btn bg-custom" data-dismiss="modal">Cancel</button>
+                                </div>
+
+                                </div>
+                            </div>
+                            </div>
+
+                            <form id="importcodeshare" action="update.php" method="post">
+                                <input hidden name="action" value="importcodeshare" />
+                            </form>
+
+                            <h4>Pending Codeshare Requests</h4>
+                            <table class="table table-striped">
+                                <thead class="bg-custom">
+                                    <tr>
+                                        <th>Sender</th>
+                                        <th class="mobile-hidden">Message</th>
+                                        <th># Routes</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="codeshares-table">
+                                    <tr><td colspan="4">Loading...</td></tr>
+                                </tbody>
+                            </table>
+                            <script>
+                                $.post("vanet.php", {
+                                    "method": "codeshares"
+                                }, function(data, status) {
+                                    $("#codeshares-table").html(data);
+                                    $(".deleteCodeshare").click(function() {
+                                        var id = $(this).data('id');
+                                        $("#confirmShareDelete-id").val(id);
+                                        $("#confirmShareDelete").modal('show');
+                                    })
+                                });
+                            </script>
+                            <hr />
+                            <h4>Make Codeshare Request</h4>
+                            <form action="update.php" method="post">
+                                <input hidden name="action" value="newcodeshare" />
+                                <div class="form-group">
+                                    <label for="codeshare-recipid">Recipient Codeshare ID</label>
+                                    <input required type="number" class="form-control" min="1" name="recipient" id="codeshare-recipid" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="codeshare-routes">Routes</label>
+                                    <input required type="text" class="form-control" name="routes" id="codeshare-routes" />
+                                    <small class="text-muted">Comma-Separated List of Flight Numbers</small>
+                                </div>
+                                <div class="form-group">
+                                    <label for="codeshare-msg">Optional Message</label>
+                                    <input type="text" class="form-control" name="message" id="codeshare-msg" />
+                                </div>
+                                <input type="submit" class="btn bg-custom" value="Send Request" />
+                            </form>
+                        <?php endif; ?>
                     <?php endif; ?>
                 </div>
             </div>
             </div>
+            <script>
+                $(document).ready(function() {
+                    $(".<?= $ACTIVE_CATEGORY ?>").collapse('show');
+                });
+            </script>
             <footer class="container-fluid text-center">
                 <?php include './includes/footer.php'; ?>
             </footer>
