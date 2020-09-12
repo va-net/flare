@@ -71,7 +71,8 @@ class VANet
         return Json::decode($request->body);
     }
 
-    public static function getAirport($icao) {
+    public static function getAirport($icao) 
+    {
         $key = Config::get('vanet/api_key');
 
         $curl = new Curl;
