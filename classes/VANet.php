@@ -254,4 +254,47 @@ class VANet
         ));
         return Json::decode($request->body);
     }
+
+    public static function getCodeshares() {
+        $curl = new Curl;
+        $response = $curl->get(Config::get('vanet/base_url').'/api/codeshares', array(
+            'apikey' => Config::get('vanet/api_key')
+        ));
+        return Json::decode($response->body);
+    }
+
+    public static function sendCodeshare($fields) {
+        $curl = new Curl;
+        $request = $curl->post(Config::get('vanet/base_url').'/api/codeshares/new?apikey='.urlencode(Config::get('vanet/api_key')), $fields);
+        $response = Json::decode($request->body);
+        if (array_key_exists("status", $response) || !$response["success"]) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public static function deleteCodeshare($id) {
+        $curl = new Curl;
+        $request = $curl->delete(Config::get('vanet/base_url').'/api/codeshares/delete/'.urlencode($id).'?apikey='.urlencode(Config::get('vanet/api_key')));
+        $response = Json::decode($request->body);
+
+        if (array_key_exists("status", $response) || !$response["success"]) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public static function findCodeshare($id) {
+        $curl = new Curl;
+        $request = $curl->get(Config::get('vanet/base_url').'/api/codeshares/'.urlencode($id).'?apikey='.urlencode(Config::get('vanet/api_key')));
+        $response = Json::decode($request->body);
+
+        if (array_key_exists("status", $response)) {
+            return false;
+        }
+
+        return $response;
+    }
 }

@@ -37,6 +37,10 @@
                         "icon" => "fa-plane-departure",
                         "name" => "Manage Routes",
                     ];
+                    $miscpages["codeshares"] = [
+                        "icon" => "fa-handshake",
+                        "name" => "Manage Codeshares",
+                    ];
                     $miscpages["site"] = [
                         "icon" => "fa-globe",
                         "name" => "Manage Site",
