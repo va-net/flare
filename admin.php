@@ -547,7 +547,7 @@ if (!$user->isLoggedIn()) {
                                     $(document).ready(function() {
                                         $("#updateNow").click(function() {
                                             $("#updateResult").html('<div class="spinner-grow spinner-custom"></div>');
-                                            $.get("updater.php", function(data, status) {
+                                            $.get("updater-alternate.php", function(data, status) {
                                                 $("#updateResult").html(data);
                                             });
                                         });
