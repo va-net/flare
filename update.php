@@ -539,6 +539,10 @@ if (Input::get('action') === 'editprofile') {
         Redirect::to('admin.php?page=events');
     }
 } elseif (Input::get('action') === 'importroutes') {
+    if (!$user->hasPermission('opsmanage')) {
+        Redirect::to('home.php');
+        die();
+    }
     $file = Input::getFile('upload');
 
     $fileName = explode(".", $file["name"]);
@@ -606,6 +610,10 @@ if (Input::get('action') === 'editprofile') {
     Session::flash('success', "Routes Imported Successfully!");
     Redirect::to('admin.php?page=opsmanage&section=routes');
 } elseif (Input::get('action') === 'importaircraft') {
+    if (!$user->hasPermission('opsmanage')) {
+        Redirect::to('home.php');
+        die();
+    }
     $file = Input::getFile('upload');
 
     $fileName = explode(".", $file["name"]);
@@ -701,6 +709,11 @@ if (Input::get('action') === 'editprofile') {
 
     echo Json::encode($ret);
 } elseif (Input::get('action') === 'newcodeshare') {
+    if (!$user->hasPermission('opsmanage')) {
+        Redirect::to('home.php');
+        die();
+    }
+
     $routes = array();
     $inputRoutes = explode(",", Input::get('routes'));
 
@@ -742,6 +755,11 @@ if (Input::get('action') === 'editprofile') {
         Redirect::to('admin.php?page=codeshares');
     }
 } elseif (Input::get('action') === 'deletecodeshare') {
+    if (!$user->hasPermission('opsmanage')) {
+        Redirect::to('home.php');
+        die();
+    }
+
     $ret = VANet::deleteCodeshare(Input::get('delete'));
     if (!$ret) {
         Session::flash('error', "Error Connnecting to VANet");
@@ -752,6 +770,11 @@ if (Input::get('action') === 'editprofile') {
         Redirect::to('admin.php?page=codeshares');
     }
 } elseif (Input::get('action') === 'importcodeshare') {
+    if (!$user->hasPermission('opsmanage')) {
+        Redirect::to('home.php');
+        die();
+    }
+
     $codeshare = VANet::findCodeshare(Input::get('id'));
     if ($codeshare === FALSE) {
         Session::flash('error', "Codeshare Not Found");
