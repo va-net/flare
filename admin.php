@@ -1112,9 +1112,6 @@ if (!$user->isLoggedIn()) {
                                         $("#confirmEventDelete-id").val(id);
                                         $("#confirmEventDelete").modal('show');
                                     });
-                                });
-
-                                $(document).ready(function() {
                                     $(".editEvent").click(function() {
                                         var eventName = $(this).data('name');
                                         var eventDesc = $(this).data('desc');
