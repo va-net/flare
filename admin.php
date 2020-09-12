@@ -1634,7 +1634,7 @@ if (!$user->isLoggedIn()) {
                             <?php elseif (Input::get('section') === 'import'): ?>
                                 <h3>Import Operations Files</h3>
                                 <p>
-                                    Here, you can import either Flare JSON Files containg routes and aircraft into your database.
+                                    Here, you can import Flare JSON Files containg routes and aircraft into your database.
                                     Please note when you are importing aircraft from phpVMS, they will all be set to the default rank.
                                     If you wish to import your files from phpVMS 5, please use the Flare Exporter phpVMS Plugin (WIP).
                                 </p>
