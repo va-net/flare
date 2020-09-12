@@ -4,3 +4,5 @@ core/init.php
 permissions.json
 core/config.php
 classes/curl_cookie.txt
+routes.json
+aircraft.json
