@@ -349,7 +349,7 @@ if (Input::get('action') === 'editprofile') {
         die();
     }
 
-    Route::delete(Input::get('deleteroute'));
+    Route::delete(Input::get('delete'));
     Session::flash('success', 'Route Removed Successfully!');
     Redirect::to('admin.php?page=opsmanage&section=routes');
 } elseif (Input::get('action') === 'addrank') {
@@ -410,7 +410,7 @@ if (Input::get('action') === 'editprofile') {
         die();
     }
     
-    if (!Config::replace('api_key', Input::get('vanetkey'))) {
+    if (!Config::replace('api_key', trim(Input::get('vanetkey')))) {
         Session::flash('error', 'There was an error updating the config file!');
         Redirect::to('admin.php?page=site&tab=vanet');
         die();
