@@ -1213,13 +1213,6 @@ if (!$user->isLoggedIn()) {
                         <?php if (!$user->hasPermission('opsmanage')): ?>
                             <div class="alert alert-danger text-center">Whoops! You don't have the necessary permissions to access this.</div>
                         <?php else: ?>
-                            <script>
-                                $(document).ready(function() {
-                                    $(".opsCollapse").each(function() {
-                                        $(this).collapse("show");
-                                    });
-                                });
-                            </script>
                             <?php if (Input::get('section') === 'fleet'): ?>
                                 <h3>Fleet</h3>
                                 <button type="button" class="btn bg-custom mb-2" data-toggle="modal" data-target="#addAircraft">Add Aircraft</button>
