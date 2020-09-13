@@ -121,7 +121,7 @@
         "tag": "v1.0.0-beta7",
         "name": "Public Beta 7",
         "date": "2020-09-13",
-        "notes": "TODO",
+        "notes": "Removed Dark/Light Mode Buttons on Mobile, Added Debugging Page for Beta Users, Added Easy Codeshare Support, Reworked Admin Menu, Added Ability to Delete Ranks",
         "prerelease": true,
         "useUpdater": true,
         "files": [
