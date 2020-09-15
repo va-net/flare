@@ -49,10 +49,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
         <?php 
         if (VANet::isGold()) {
             echo '<li class="nav-item desktop-hidden">
-                <a href="events.php" id="eventslink" class="panel-link" style="color: <?= $textcol ?>!important;"><i class="fa fa-calendar"></i>&nbsp;Events</a>
+                <a href="events.php" id="eventslink" class="panel-link" style="color: '.$textcol.'!important;"><i class="fa fa-calendar"></i>&nbsp;Events</a>
             </li>';
             echo '<li class="nav-item desktop-hidden">
-                <a href="acars.php" id="acarslink" class="panel-link" style="color: <?= $textcol ?>!important;"><i class="fa fa-sync"></i>&nbsp;ACARS</a>
+                <a href="acars.php" id="acarslink" class="panel-link" style="color: '.$textcol.'!important;"><i class="fa fa-sync"></i>&nbsp;ACARS</a>
             </li>';
         }
         $permissions = Permissions::getAll();
@@ -75,13 +75,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
             foreach ($localmenu as $category => $items) {
                 
                 echo '<li class="nav-item desktop-hidden">';
-                echo '<a href="#" data-toggle="collapse" data-target="#collapse'.$i.'" class="panel-link" style="color: <?= $textcol ?>!important;"><i class="fa fa-caret-down"></i>&nbsp;'.$category.'</a>';
+                echo '<a href="#" data-toggle="collapse" data-target="#collapse'.$i.'" class="panel-link" style="color: '.$textcol.'!important;"><i class="fa fa-caret-down"></i>&nbsp;'.$category.'</a>';
                 echo '<div id="collapse'.$i.'" class="collapse '.strtolower(str_replace(" ", "-", $category)).'">';
                 
                 foreach ($items as $label => $data) {
                     if ($user->hasPermission($data["permission"])) {
                         if (($gold && $data["needsGold"]) || !$data["needsGold"]) {
-                            echo '<a href="'.$data["link"].'" class="panel-link" style="color: <?= $textcol ?>!important;"><i class="fa '.$data['icon'].'"></i>&nbsp;'.$label.'</a>';
+                            echo '<a href="'.$data["link"].'" class="panel-link" style="color: '.$textcol.'!important;"><i class="fa '.$data['icon'].'"></i>&nbsp;'.$label.'</a>';
                         }
                     }
                 }

@@ -82,7 +82,7 @@ if (Input::exists()) {
         }
     </style>
 
-    <nav class="navbar navbar-expand-lg bg-custom">
+    <nav class="navbar navbar-dark navbar-expand-lg bg-custom">
         <?php include './includes/navbar.php'; ?>
     </nav>
     <div class="container-fluid">
