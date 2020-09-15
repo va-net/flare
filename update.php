@@ -352,6 +352,28 @@ if (Input::get('action') === 'editprofile') {
     Route::delete(Input::get('delete'));
     Session::flash('success', 'Route Removed Successfully!');
     Redirect::to('admin.php?page=opsmanage&section=routes');
+} elseif (Input::get('action') === 'editroute') {
+    if (!$user->hasPermission('opsmanage')) {
+        Redirect::to('home.php');
+        die();
+    }
+    
+    $ret = Route::update(Input::get('id'), array(
+        "fltnum" => Input::get('fltnum'),
+        "dep" => Input::get('dep'),
+        "arr" => Input::get('arr'),
+        "aircraftid" => Input::get('aircraft'),
+        "duration" => Time::strToSecs(Input::get('duration'))
+    ));
+
+    if ($ret === FALSE) {
+        Session::flash('error', 'Error Updating Route');
+        Redirect::to('admin.php?page=opsmanage&section=routes');
+        die();
+    }
+
+    Session::flash('success', 'Route Updated Successfully!');
+    Redirect::to('admin.php?page=opsmanage&section=routes');
 } elseif (Input::get('action') === 'addrank') {
     if (!$user->hasPermission('opsmanage')) {
         Redirect::to('home.php');
