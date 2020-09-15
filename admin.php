@@ -564,7 +564,7 @@ if (!$user->isLoggedIn()) {
                                             $(".loaded").hide();
                                             $("#loader-wrapper").show();
                                             $("#updateResult").html('<div class="spinner-grow spinner-custom"></div>');
-                                            $.get("updater-alternate.php", function(data, status) {
+                                            $.get("updater.php", function(data, status) {
                                                 $("#updateResult").html(data);
                                                 $(".loaded").show();
                                                 $("#loader-wrapper").hide();
