@@ -398,7 +398,7 @@ if (Input::get('action') === 'editprofile') {
         die();
     }
 
-    if (!Config::replaceColour(Input::get('hexcol'))) {
+    if (!Config::replaceColour(trim(Input::get('hexcol'), "#"))) {
         Session::flash('error', 'There was an Error Updating the Colour Theme!');
         Redirect::to('admin.php?page=site&tab=colors');
         die();
