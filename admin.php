@@ -448,8 +448,12 @@ if (!$user->isLoggedIn()) {
                                 <form action="update.php" method="post">
                                     <input hidden name="action" value="setcolour">
                                     <div class="form-group">
-                                        <label for="">Main Colour (hex, without #)</label>
-                                        <input required type="text" class="form-control" name="hexcol" value="<?= str_replace('#', '', Config::get('site/colour_main_hex')) ?>">
+                                        <label for="">Main Colour (hex)</label>
+                                        <input required type="text" class="form-control" name="hexcol" value="<?= Config::get('site/colour_main_hex') ?>">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="">Text Colour (hex)</label>
+                                        <input required type="text" class="form-control" name="textcol" value="<?= Config::get('TEXT_COLOUR') ?>">
                                     </div>
                                     <input type="submit" class="btn bg-custom" value="Save">
                                 </form>
