@@ -36,7 +36,7 @@ if (!$user->isLoggedIn()) {
             height: 120px;
         }
     </style>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-custom">
+    <nav class="navbar navbar-dark navbar-expand-lg bg-custom">
         <?php include './includes/navbar.php'; ?>
     </nav>
     <div class="container-fluid">

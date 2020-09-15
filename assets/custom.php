@@ -86,9 +86,19 @@ table {
     cursor: pointer;
 }
 
+.navbar-toggler {
+	color: rgba(255,255,255,.5);
+	border-color: rgba(255,255,255,.1);
+}
+
 .bg-custom {
-    background-color: <?= Config::get('site/colour_main_hex') ?>;
-    color: #f8f9fa
+    <?php $textcol = Config::get('TEXT_COLOUR'); ?>
+    background-color: <?= Config::get('site/colour_main_hex') ?>!important;
+    color: <?= $textcol ?>!important;
+}
+
+.navbar-brand {
+    color: <?= $textcol ?>!important;
 }
 
 #loader {

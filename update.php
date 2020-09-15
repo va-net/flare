@@ -352,6 +352,28 @@ if (Input::get('action') === 'editprofile') {
     Route::delete(Input::get('delete'));
     Session::flash('success', 'Route Removed Successfully!');
     Redirect::to('admin.php?page=opsmanage&section=routes');
+} elseif (Input::get('action') === 'editroute') {
+    if (!$user->hasPermission('opsmanage')) {
+        Redirect::to('home.php');
+        die();
+    }
+    
+    $ret = Route::update(Input::get('id'), array(
+        "fltnum" => Input::get('fltnum'),
+        "dep" => Input::get('dep'),
+        "arr" => Input::get('arr'),
+        "aircraftid" => Input::get('aircraft'),
+        "duration" => Time::strToSecs(Input::get('duration'))
+    ));
+
+    if ($ret === FALSE) {
+        Session::flash('error', 'Error Updating Route');
+        Redirect::to('admin.php?page=opsmanage&section=routes');
+        die();
+    }
+
+    Session::flash('success', 'Route Updated Successfully!');
+    Redirect::to('admin.php?page=opsmanage&section=routes');
 } elseif (Input::get('action') === 'addrank') {
     if (!$user->hasPermission('opsmanage')) {
         Redirect::to('home.php');
@@ -370,7 +392,7 @@ if (Input::get('action') === 'editprofile') {
     try {
         Rank::update(Input::get('id'), array(
             'name' => Input::get('name'),
-            'timereq' => Input::get('time')
+            'timereq' => Time::hrsToSecs(Input::get('time'))
         ));
     } catch (Exception $e) {
         Session::flash('error', 'There was an Error Editing the Rank.');
@@ -398,7 +420,7 @@ if (Input::get('action') === 'editprofile') {
         die();
     }
 
-    if (!Config::replaceColour(Input::get('hexcol'))) {
+    if (!Config::replaceColour(trim(Input::get('hexcol'), "#"), trim(Input::get('textcol'), "#"))) {
         Session::flash('error', 'There was an Error Updating the Colour Theme!');
         Redirect::to('admin.php?page=site&tab=colors');
         die();
@@ -411,8 +433,12 @@ if (Input::get('action') === 'editprofile') {
         die();
     }
 
-    if (!Config::replace('name', Input::get('vaname')) || !Config::replace('identifier', Input::get('vaident')) || !Config::replace("FORCE_SERVER", Input::get('forceserv'))) {
-        Session::flash('error', 'There was an error updating the Config File!');
+    if (!Config::replace('name', Input::get('vaname')) 
+        || !Config::replace('identifier', Input::get('vaident')) 
+        || !Config::replace("FORCE_SERVER", Input::get('forceserv'))
+        || !Config::replace("CHECK_PRERELEASE", Input::get('checkpre'))
+        ) {
+        Session::flash('error', 'There was an error updating the Settings');
         Redirect::to('admin.php?page=site&tab=settings');
         die();
     }
@@ -853,4 +879,65 @@ if (Input::get('action') === 'editprofile') {
     //VANet::deleteCodeshare($codeshare["id"]);
     Session::flash('success', "Codeshare Routes Imported Successfully!");
     //Redirect::to('admin.php?page=opsmanage&section=routes');
+} elseif (Input::get('action') === 'phpvms') {
+    $routes = Input::get('rJson');
+    $count = count(Json::decode($routes));
+    $db = DB::getInstance();
+
+    $allaircraft = Aircraft::fetchActiveAircraft()->results();
+    $firstRank = $db->query("SELECT * FROM ranks ORDER BY timereq ASC LIMIT 1")->first()->id;
+
+    for ($i=0; $i<$count; $i++) {
+        $item = Input::get('livery'.$i);
+        $aircraft = false;
+        foreach ($allaircraft as $a) {
+            if ($a->ifliveryid == $item) $aircraft = $a;
+        }
+
+        if ($aircraft === FALSE) {
+            Aircraft::add($item, $firstRank);
+            $aircraft = Aircraft::findAircraft($item);
+        }
+
+        $routes = str_replace(Input::get('rego'.$i), $aircraft->id, $routes);
+    }
+
+    $routes = Json::decode($routes);
+
+    $sql = "INSERT INTO routes (fltnum, dep, arr, duration, aircraftid) VALUES\n";
+    $params = array();
+    $j = 0;
+    foreach ($routes as $item) {
+        if ($j % 50 == 0 && $j != 0) {
+            $sql = trim($sql, ',');
+            $ret = $db->query($sql, $params);
+            if ($ret->error()) {
+                Session::flash('error', "Error Importing Routes");
+                Redirect::to('admin.php?page=opsmanage&section=phpvms');
+                die();
+            }
+            $sql = "INSERT INTO routes (fltnum, dep, arr, duration, aircraftid) VALUES";
+            $params = array();
+        }
+
+        $sql .= "\n(?, ?, ?, ?, ?),";
+        array_push($params, $item["fltnum"]);
+        array_push($params, $item["dep"]);
+        array_push($params, $item["arr"]);
+        array_push($params, $item["duration"]);
+        array_push($params, $item["aircraftid"]);
+        
+        $j++;
+    }
+
+    $sql = trim($sql, ',');
+    $ret = $db->query($sql, $params);
+    if ($ret->error()) {
+        Session::flash('error', "Error Importing Routes");
+        Redirect::to('admin.php?page=opsmanage&section=import');
+        die();
+    }
+
+    Session::flash('success', "Routes Imported Successfully!");
+    Redirect::to('admin.php?page=opsmanage&section=routes');
 }

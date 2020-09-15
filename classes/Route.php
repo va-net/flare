@@ -63,4 +63,11 @@ class Route
         return $db->query($query, array($id));
     }
 
+    public static function update($id, $fields) 
+    {
+        self::init();
+
+        return !(self::$_db->update('routes', $id, 'id', $fields)->error());
+    }
+
 }

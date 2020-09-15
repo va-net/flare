@@ -171,5 +171,40 @@
         ],
         "deletedFiles": [],
         "queries": []
+    },
+    {
+        "tag": "v1.0.0-beta9",
+        "name": "Public Beta 9",
+        "date": "2020-09-16",
+        "notes": "Various Bug Fixes, Added Ability to Customize Text Colour, Added phpVMS Importer, Added Ability to Edit Routes",
+        "prerelease": true,
+        "useUpdater": true,
+        "files": [
+            "version.json",
+            "update.php",
+            "acars.php",
+            "admin.php",
+            "apply.php",
+            "assets/custom.php",
+            "classes/Config.php",
+            "classes/Rank.php",
+            "classes/Route.php",
+            "events.php",
+            "home.php",
+            "includes/header.php",
+            "includes/navbar.php",
+            "includes/sidebar.php",
+            "index.php",
+            "map.php",
+            "pireps.php",
+            "routes.php"
+        ],
+        "deletedFiles": [],
+        "queries": [
+            "CREATE TABLE IF NOT EXISTS `options` ( `name` varchar(120) NOT NULL, `value` text NOT NULL, PRIMARY KEY (`name`)) ENGINE=InnoDB DEFAULT CHARSET=latin1;",
+            "INSERT INTO options (name, value) SELECT * FROM (SELECT 'CHECK_PRERELEASE', '1') AS tmp WHERE NOT EXISTS (SELECT name FROM options WHERE name = 'CHECK_PRERELEASE') LIMIT 1;",
+            "INSERT INTO options (name, value) SELECT * FROM (SELECT 'FORCE_SERVER', '0') AS tmp WHERE NOT EXISTS (SELECT name FROM options WHERE name = 'FORCE_SERVER') LIMIT 1;",
+            "INSERT INTO options (name, value) SELECT * FROM (SELECT 'TEXT_COLOUR', '#FFF') AS tmp WHERE NOT EXISTS (SELECT name FROM options WHERE name = 'TEXT_COLOUR') LIMIT 1;"
+        ]
     }
 ]

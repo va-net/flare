@@ -40,7 +40,7 @@ if (!$user->isLoggedIn()) {
         }
     </style>
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-custom">
+    <nav class="navbar navbar-dark navbar-expand-lg bg-custom">
         <?php include './includes/navbar.php'; ?>
     </nav>
 
@@ -448,8 +448,12 @@ if (!$user->isLoggedIn()) {
                                 <form action="update.php" method="post">
                                     <input hidden name="action" value="setcolour">
                                     <div class="form-group">
-                                        <label for="">Main Colour (hex, without #)</label>
-                                        <input required type="text" class="form-control" name="hexcol" value="<?= str_replace('#', '', Config::get('site/colour_main_hex')) ?>">
+                                        <label for="">Main Colour (hex)</label>
+                                        <input required type="text" class="form-control" name="hexcol" value="<?= Config::get('site/colour_main_hex') ?>">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="">Text Colour (hex)</label>
+                                        <input required type="text" class="form-control" name="textcol" value="<?= Config::get('TEXT_COLOUR') ?>">
                                     </div>
                                     <input type="submit" class="btn bg-custom" value="Save">
                                 </form>
@@ -1424,19 +1428,19 @@ if (!$user->isLoggedIn()) {
                                                 <form action="update.php" method="post">
                                                     <input hidden name="action" value="addroute">
                                                     <div class="form-group">
-                                                        <label for="aircraft">Departure Airport</label>
+                                                        <label for="">Departure Airport</label>
                                                         <input type="text" name="dep" class="form-control" placeholder="ICAO" required />
                                                     </div>
                                                     <div class="form-group">
-                                                        <label for="aircraft">Arrival Airport</label>
+                                                        <label for="">Arrival Airport</label>
                                                         <input type="text" name="arr" class="form-control" placeholder="ICAO" required />
                                                     </div>
                                                     <div class="form-group">
-                                                        <label for="aircraft">Flight Number</label>
+                                                        <label for="">Flight Number</label>
                                                         <input maxlength="10" type="text" name="fltnum" class="form-control" required />
                                                     </div>
                                                     <div class="form-group">
-                                                        <label for="aircraft">Flight Duration</label>
+                                                        <label for="">Flight Duration</label>
                                                         <div class="row">
                                                             <div class="col-sm-6">
                                                                 <input required type="number" min="0" id="flightTimeHrs" class="form-control" placeholder="Hours" />
@@ -1476,7 +1480,7 @@ if (!$user->isLoggedIn()) {
                                                         </script>
                                                     </div>
                                                     <div class="form-group">
-                                                        <label for="aircraft">Aircraft</label>
+                                                        <label for="">Aircraft</label>
                                                         <select class="form-control" name="aircraft" required>
                                                             <option value>Select</option>
                                                             <?php
@@ -1521,6 +1525,11 @@ if (!$user->isLoggedIn()) {
                                             echo '</td><td class="align-middle mobile-hidden">';
                                             echo $route->aircraft;
                                             echo '</td><td class="align-middle">';
+                                            echo '<button class="btn bg-custom editRoute" 
+                                            data-id="'.$route->id.'" data-fltnum="'.$route->fltnum.'" 
+                                            data-dep="'.$route->dep.'" data-arr="'.$route->arr.'" 
+                                            data-duration="'.Time::secsToString($route->duration).'" data-aircraft="'.$route->aircraftid.'" 
+                                            ><i class="fa fa-edit"></i></button>';
                                             echo '&nbsp;<button value="'.$route->id.'" form="deleteroute" type="submit" class="btn btn-danger text-light" name="delete"><i class="fa fa-trash"></i></button>';
                                             echo '</td></tr>';
                                             $x++;
@@ -1528,10 +1537,114 @@ if (!$user->isLoggedIn()) {
                                         ?>
                                     </tbody>
                                 </table>
+                                <div id="routeedit" class="modal fade" role="dialog">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">Edit Route</h4>
+                                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form action="update.php" method="post">
+                                                    <input hidden name="action" value="editroute">
+                                                    <input hidden name="id" id="routeedit-id" />
+                                                    <div class="form-group">
+                                                        <label for="routeedit-dep">Departure Airport</label>
+                                                        <input type="text" name="dep" id="routeedit-dep" class="form-control" placeholder="ICAO" required />
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="aircraft">Arrival Airport</label>
+                                                        <input type="text" name="arr" id="routeedit-arr" class="form-control" placeholder="ICAO" required />
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="aircraft">Flight Number</label>
+                                                        <input maxlength="10" type="text" name="fltnum" id="routeedit-fltnum" class="form-control" required />
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="aircraft">Flight Duration</label>
+                                                        <div class="row">
+                                                            <div class="col-sm-6">
+                                                                <input required type="number" min="0" id="routeedit-hrs" class="form-control" placeholder="Hours" />
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <input required type="number" min="0" id="routeedit-mins" class="form-control" placeholder="Minutes" />
+                                                            </div>
+                                                        </div>
+                                                        <input hidden name="duration" id="routeedit-duration" class="form-control" required />
+                                                        <script>
+                                                            function formatEditFlightTime() {
+                                                                var hrs = $("#routeedit-hrs").val();
+                                                                var mins = $("#routeedit-mins").val();
+                                                                $("#routeedit-duration").val(hrs + ":" + mins);
+                                                            }
+
+                                                            function reverseFormatEditFlightTime() {
+                                                                var formatted = $("#routeedit-duration").val();
+                                                                if (formatted != '') {
+                                                                    var split = formatted.split(":");
+                                                                    var hrs = split[0];
+                                                                    var mins = split[1];
+                                                                    $("#routeedit-hrs").val(hrs);
+                                                                    $("#routeedit-mins").val(mins);
+                                                                }
+                                                            }
+
+                                                            $(document).ready(function() {
+                                                                $("#routeedit-hrs").keyup(function() {
+                                                                    formatEditFlightTime();
+                                                                });
+                                                                $("#routeedit-mins").keyup(function() {
+                                                                    formatEditFlightTime();
+                                                                });
+                                                                reverseFormatEditFlightTime();
+                                                            });
+                                                        </script>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="aircraft">Aircraft</label>
+                                                        <select class="form-control" id="routeedit-aircraft" name="aircraft" required>
+                                                            <option value>Select</option>
+                                                            <?php
+                                                            $aircraft = Aircraft::fetchAllAircraft()->results();
+
+                                                            foreach ($aircraft as $a) {
+                                                                echo '<option value="'.$a->id.'">'.$a->name.'</option>';
+                                                            }
+                                                            ?>
+                                                        </select>
+                                                    </div>
+                                                    <input type="submit" class="btn bg-custom" value="Save" />
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <a href="?page=opsmanage&section=export">Export Routes</a> | <a href="?page=opsmanage&section=import">Import Routes</a>
                                 <form id="deleteroute" method="post" action="update.php">
                                     <input hidden value="deleteroute" name="action">
                                 </form>
+                                <script>
+                                    $(document).ready(function() {
+                                        $(".editRoute").click(function() {
+                                            var id = $(this).data('id');
+                                            var fltnum = $(this).data('fltnum');
+                                            var dep = $(this).data('dep');
+                                            var arr = $(this).data('arr');
+                                            var duration = $(this).data('duration');
+                                            var aircraft = $(this).data('aircraft');
+
+                                            $("#routeedit-id").val(id);
+                                            $("#routeedit-fltnum").val(fltnum);
+                                            $("#routeedit-dep").val(dep);
+                                            $("#routeedit-arr").val(arr);
+                                            $("#routeedit-duration").val(duration);
+                                            reverseFormatEditFlightTime();
+                                            $("#routeedit-aircraft").val(aircraft);
+
+                                            $("#routeedit").modal('show');
+                                        });
+                                    });
+                                </script>
                             <?php elseif (Input::get('section') === 'ranks'): ?>
                                 <h3>Manage Ranks</h3>
                                 <p>Here you can Manage the Ranks that your pilots can be Awarded.</p>
@@ -1551,7 +1664,7 @@ if (!$user->isLoggedIn()) {
                                                         <input type="text" name="name" class="form-control" placeholder="Second Officer" required>
                                                     </div>
                                                     <div class="form-group">
-                                                        <label for="time">Flight time required (<b>in hours</b>)</label>
+                                                        <label for="time">Flight time required (in hours)</label>
                                                         <input type="number" name="time" class="form-control" placeholder="50" required>
                                                     </div>
                                                     <input type="submit" class="btn bg-custom" value="Add Rank">
@@ -1580,11 +1693,11 @@ if (!$user->isLoggedIn()) {
                                             echo '<tr><td class="align-middle">';
                                             echo $rank->name;
                                             echo '</td><td class="align-middle">';
-                                            echo $rank->timereq;
+                                            echo Time::secsToString($rank->timereq);
                                             echo '</td><td class="align-middle">';
                                             echo '<button class="btn btn-primary text-light editRank" 
                                             data-id="'.$rank->id.'" data-name="'.$rank->name.'" 
-                                            data-minhrs="'.$rank->timereq.'">
+                                            data-minhrs="'.($rank->timereq / 3600).'">
                                             <i class="fa fa-edit"></i></button>';
                                             echo '&nbsp;<button class="btn btn-danger text-light" 
                                             value="'.$rank->id.'" form="delrank" name="delete">
@@ -1610,7 +1723,7 @@ if (!$user->isLoggedIn()) {
                                                         <input type="text" name="name" class="form-control" id="rankmodal-name" required>
                                                     </div>
                                                     <div class="form-group">
-                                                        <label for="time">Flight Time Required (<b>in hours</b>)</label>
+                                                        <label for="time">Flight Time Required (in hours)</label>
                                                         <input type="number" min="0" name="time" class="form-control" id="rankmodal-hours" required>
                                                     </div>
                                                     <input type="submit" class="btn bg-custom" value="Save">
@@ -1639,8 +1752,10 @@ if (!$user->isLoggedIn()) {
                                 <h3>Import Operations Files</h3>
                                 <p>
                                     Here, you can import Flare JSON Files containg routes and aircraft into your database.
-                                    Please note when you are importing aircraft from phpVMS, they will all be set to the default rank.
-                                    If you wish to import your files from phpVMS 5, please use the Flare Exporter phpVMS Plugin (WIP).
+                                    Please note when you are importing aircraft, they will all be set to the default rank.<br /><br />
+
+                                    Alternatively, you can import your routes from the phpVMS 
+                                    format <a href="admin.php?page=opsmanage&section=phpvms">here</a>.
                                 </p>
 
                                 <ul class="nav nav-tabs nav-dark justify-content-center">
@@ -1707,6 +1822,121 @@ if (!$user->isLoggedIn()) {
                                         <a href="update.php?action=exportaircraft" download="aircraft.json" class="btn bg-custom">Export Aircraft</a>
                                     </div>
                                 </div>
+                            <?php elseif (Input::get('section') === 'phpvms'): ?>
+                                <h3>phpVMS Importer</h3>
+                                <p>
+                                    Here, you can import your routes from phpVMS. 
+                                </p>
+                                <?php if (empty(Input::get('action'))): ?>
+                                    <form method="post" enctype="multipart/form-data">
+                                        <input hidden name="action" value="phpvms" />
+                                        <div class="custom-file mb-2">
+                                            <input required type="file" class="custom-file-input" name="routes-upload" accept=".csv" id="routes-upload">
+                                            <label class="custom-file-label" id="routes-upload-label" for="routes-upload">Routes File</label>
+                                        </div>
+                                        <input type="submit" class="btn bg-custom" value="Process" />
+                                    </form>
+                                    <script>
+                                        $("#routes-upload").on("change", function() {
+                                            var fileName = $(this).val().split("\\").pop();
+                                            $(this).siblings("#routes-upload-label").addClass("selected").html(fileName);
+                                        });
+
+                                        $("#aircraft-upload").on("change", function() {
+                                            var fileName = $(this).val().split("\\").pop();
+                                            $(this).siblings("#aircraft-upload-label").addClass("selected").html(fileName);
+                                        });
+                                    </script>
+                                <?php else: ?>
+                                    <p>
+                                        So we can import everything correctly, please select the aircraft type and livery for each registration.
+                                        These aircraft will be added with the lowest rank if they do not already exist in your VA's database.
+                                    </p>
+                                    <?php
+                                        $routes = file_get_contents(Input::getFile('routes-upload')["tmp_name"]);
+                                        preg_match_all('/.*\n|\r\n/m', $routes, $routelines);
+
+                                        $i = 0;
+                                        $valid = false;
+                                        $routesArray = [];
+                                        foreach ($routelines[0] as $l) {
+                                            if ($i == 0) {
+                                                if (trim(str_replace(' ', '', $l)) != 'code,flightnum,depicao,arricao,route,aircraft,flightlevel,distance,deptime,arrtime,flighttime,notes,price,flighttype,daysofweek,enabled,week1,week2,week3,week4') {
+                                                    Session::flash('error', 'Your Routes Import seems to be in the incorrect format');
+                                                    Redirect::to('admin.php?page=opsmanage&section=phpvms');
+                                                } else {
+                                                    $valid = true;
+                                                }
+                                            } elseif ($valid) {
+                                                $segments = preg_split('/, ?/', $l);
+
+                                                array_push($routesArray, array(
+                                                    "fltnum" => $segments[1],
+                                                    "dep" => $segments[2],
+                                                    "arr" => $segments[3],
+                                                    "duration" => Time::strToSecs(str_replace('.', ':', $segments[10])),
+                                                    "aircraftid" => $segments[5]
+                                                ));
+                                            }
+                                            $i++;
+                                        }
+
+                                        $routesJson = Json::encode($routesArray);
+
+                                        $allAircraft = Aircraft::fetchAllAircraftFromVANet();
+                                        $aircraftOptions = "";
+                                        foreach ($allAircraft as $id => $name) {
+                                            $aircraftOptions .= '<option value="'.$id.'">'.$name.'</option>';
+                                        }
+
+                                        echo '<form action="update.php" method="post">';
+                                        echo '<input hidden name="action" value="phpvms" />';
+                                        echo "<input hidden name='rJson' value='$routesJson' />";
+                                        $j = 0;
+                                        $doneAircraft = [];
+                                        echo '<table class="w-100 mb-2">';
+                                        for ($j=0; $j<$i-1; $j++) {
+                                            $r = $routesArray[$j];
+                                            if (!in_array($r['aircraftid'], $doneAircraft)) {
+                                                echo '<tr class="border-bottom border-top"><td class="align-middle p-2"><b>';
+                                                echo $r['aircraftid'];
+                                                echo '</b></td><td class="align-middle py-2">';
+                                                echo '<input hidden name="rego'.$j.'" value="'.$r["aircraftid"].'" />';
+                                                echo '<select required class="form-control mb-2 aircraftSelect" name="aircraft'.$j.'" id="'.$j.'">';
+                                                echo '<option value>Aircraft Type</option>';
+                                                echo $aircraftOptions;
+                                                echo '</select>';
+                                                echo '<select required class="form-control" name="livery'.$j.'" id="livery'.$j.'">';
+                                                echo '<option value>Select an Aircraft to Get Liveries</option>';
+                                                echo '</select>';
+                                                echo '</td></tr>';
+                                                array_push($doneAircraft, $r['aircraftid']);
+                                            }
+                                        }
+                                        echo '</table>';
+                                        echo '<input type="submit" class="btn bg-custom" value="Import Now" />';
+                                        echo '</form>';
+
+                                        echo '<script>
+                                            $(document).ready(function() {
+                                                $(".aircraftSelect").change(function() {
+                                                    var id = $(this).attr("id");
+                                                    $("#livery" + id).html("<option value>Loading...</option>");
+                                                    $.ajax({
+                                                        url: "vanet.php",
+                                                        type: "POST",
+                                                        data: { method: "liveriesforaircraft", data: $(this).val() },
+                                                        success: function(html){
+                                                            $("#livery" + id).empty();
+                                                            $("#livery" + id).append("<option>Select</option>");
+                                                            $("#livery" + id).append(html);
+                                                        }
+                                                    });
+                                                });
+                                            });
+                                        </script>';
+                                    ?>
+                                <?php endif; ?>
                             <?php endif; ?>
                         <?php endif; ?>
                     <?php elseif (Input::get('page') === 'codeshares'): ?>
