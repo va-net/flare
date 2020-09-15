@@ -21,8 +21,6 @@ if (!$user->hasPermission('opsmanage')) {
 
 $current = Updater::getVersion();
 
-// TODO: #140 Make this use Updater class and use CHECK_PRERELEASE from DB
-
 // Get Releases
 $opts = array(
     'http'=>array(
