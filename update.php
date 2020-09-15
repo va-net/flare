@@ -857,4 +857,65 @@ if (Input::get('action') === 'editprofile') {
     //VANet::deleteCodeshare($codeshare["id"]);
     Session::flash('success', "Codeshare Routes Imported Successfully!");
     //Redirect::to('admin.php?page=opsmanage&section=routes');
+} elseif (Input::get('action') === 'phpvms') {
+    $routes = Input::get('rJson');
+    $count = count(Json::decode($routes));
+    $db = DB::getInstance();
+
+    $allaircraft = Aircraft::fetchActiveAircraft()->results();
+    $firstRank = $db->query("SELECT * FROM ranks ORDER BY timereq ASC LIMIT 1")->first()->id;
+
+    for ($i=0; $i<$count; $i++) {
+        $item = Input::get('livery'.$i);
+        $aircraft = false;
+        foreach ($allaircraft as $a) {
+            if ($a->ifliveryid == $item) $aircraft = $a;
+        }
+
+        if ($aircraft === FALSE) {
+            Aircraft::add($item, $firstRank);
+            $aircraft = Aircraft::findAircraft($item);
+        }
+
+        $routes = str_replace(Input::get('rego'.$i), $aircraft->id, $routes);
+    }
+
+    $routes = Json::decode($routes);
+
+    $sql = "INSERT INTO routes (fltnum, dep, arr, duration, aircraftid) VALUES\n";
+    $params = array();
+    $j = 0;
+    foreach ($routes as $item) {
+        if ($j % 50 == 0 && $j != 0) {
+            $sql = trim($sql, ',');
+            $ret = $db->query($sql, $params);
+            if ($ret->error()) {
+                Session::flash('error', "Error Importing Routes");
+                Redirect::to('admin.php?page=opsmanage&section=phpvms');
+                die();
+            }
+            $sql = "INSERT INTO routes (fltnum, dep, arr, duration, aircraftid) VALUES";
+            $params = array();
+        }
+
+        $sql .= "\n(?, ?, ?, ?, ?),";
+        array_push($params, $item["fltnum"]);
+        array_push($params, $item["dep"]);
+        array_push($params, $item["arr"]);
+        array_push($params, $item["duration"]);
+        array_push($params, $item["aircraftid"]);
+        
+        $j++;
+    }
+
+    $sql = trim($sql, ',');
+    $ret = $db->query($sql, $params);
+    if ($ret->error()) {
+        Session::flash('error', "Error Importing Routes");
+        Redirect::to('admin.php?page=opsmanage&section=import');
+        die();
+    }
+
+    Session::flash('success', "Routes Imported Successfully!");
+    Redirect::to('admin.php?page=opsmanage&section=routes');
 }

@@ -1643,8 +1643,7 @@ if (!$user->isLoggedIn()) {
                                 <h3>Import Operations Files</h3>
                                 <p>
                                     Here, you can import Flare JSON Files containg routes and aircraft into your database.
-                                    Please note when you are importing aircraft from phpVMS, they will all be set to the default rank.
-                                    If you wish to import your files from phpVMS 5, please use the Flare Exporter phpVMS Plugin (WIP).
+                                    Please note when you are importing aircraft, they will all be set to the default rank.
                                 </p>
 
                                 <ul class="nav nav-tabs nav-dark justify-content-center">
@@ -1711,6 +1710,121 @@ if (!$user->isLoggedIn()) {
                                         <a href="update.php?action=exportaircraft" download="aircraft.json" class="btn bg-custom">Export Aircraft</a>
                                     </div>
                                 </div>
+                            <?php elseif (Input::get('section') === 'phpvms'): ?>
+                                <h3>phpVMS Importer</h3>
+                                <p>
+                                    Here, you can import your routes from phpVMS. 
+                                </p>
+                                <?php if (empty(Input::get('action'))): ?>
+                                    <form method="post" enctype="multipart/form-data">
+                                        <input hidden name="action" value="phpvms" />
+                                        <div class="custom-file mb-2">
+                                            <input required type="file" class="custom-file-input" name="routes-upload" accept=".csv" id="routes-upload">
+                                            <label class="custom-file-label" id="routes-upload-label" for="routes-upload">Routes File</label>
+                                        </div>
+                                        <input type="submit" class="btn bg-custom" value="Process" />
+                                    </form>
+                                    <script>
+                                        $("#routes-upload").on("change", function() {
+                                            var fileName = $(this).val().split("\\").pop();
+                                            $(this).siblings("#routes-upload-label").addClass("selected").html(fileName);
+                                        });
+
+                                        $("#aircraft-upload").on("change", function() {
+                                            var fileName = $(this).val().split("\\").pop();
+                                            $(this).siblings("#aircraft-upload-label").addClass("selected").html(fileName);
+                                        });
+                                    </script>
+                                <?php else: ?>
+                                    <p>
+                                        So we can import everything correctly, please select the aircraft type and livery for each registration.
+                                        These aircraft will be added with the lowest rank if they do not already exist in your VA's database.
+                                    </p>
+                                    <?php
+                                        $routes = file_get_contents(Input::getFile('routes-upload')["tmp_name"]);
+                                        preg_match_all('/.*\n|\r\n/m', $routes, $routelines);
+
+                                        $i = 0;
+                                        $valid = false;
+                                        $routesArray = [];
+                                        foreach ($routelines[0] as $l) {
+                                            if ($i == 0) {
+                                                if (trim(str_replace(' ', '', $l)) != 'code,flightnum,depicao,arricao,route,aircraft,flightlevel,distance,deptime,arrtime,flighttime,notes,price,flighttype,daysofweek,enabled,week1,week2,week3,week4') {
+                                                    Session::flash('error', 'Your Routes Import seems to be in the incorrect format');
+                                                    Redirect::to('admin.php?page=opsmanage&section=phpvms');
+                                                } else {
+                                                    $valid = true;
+                                                }
+                                            } elseif ($valid) {
+                                                $segments = preg_split('/, ?/', $l);
+
+                                                array_push($routesArray, array(
+                                                    "fltnum" => $segments[1],
+                                                    "dep" => $segments[2],
+                                                    "arr" => $segments[3],
+                                                    "duration" => Time::strToSecs(str_replace('.', ':', $segments[10])),
+                                                    "aircraftid" => $segments[5]
+                                                ));
+                                            }
+                                            $i++;
+                                        }
+
+                                        $routesJson = Json::encode($routesArray);
+
+                                        $allAircraft = Aircraft::fetchAllAircraftFromVANet();
+                                        $aircraftOptions = "";
+                                        foreach ($allAircraft as $id => $name) {
+                                            $aircraftOptions .= '<option value="'.$id.'">'.$name.'</option>';
+                                        }
+
+                                        echo '<form action="update.php" method="post">';
+                                        echo '<input hidden name="action" value="phpvms" />';
+                                        echo "<input hidden name='rJson' value='$routesJson' />";
+                                        $j = 0;
+                                        $doneAircraft = [];
+                                        echo '<table class="w-100 mb-2">';
+                                        for ($j=0; $j<$i-1; $j++) {
+                                            $r = $routesArray[$j];
+                                            if (!in_array($r['aircraftid'], $doneAircraft)) {
+                                                echo '<tr class="border-bottom border-top"><td class="align-middle p-2"><b>';
+                                                echo $r['aircraftid'];
+                                                echo '</b></td><td class="align-middle py-2">';
+                                                echo '<input hidden name="rego'.$j.'" value="'.$r["aircraftid"].'" />';
+                                                echo '<select required class="form-control mb-2 aircraftSelect" name="aircraft'.$j.'" id="'.$j.'">';
+                                                echo '<option value>Aircraft Type</option>';
+                                                echo $aircraftOptions;
+                                                echo '</select>';
+                                                echo '<select required class="form-control" name="livery'.$j.'" id="livery'.$j.'">';
+                                                echo '<option value>Select an Aircraft to Get Liveries</option>';
+                                                echo '</select>';
+                                                echo '</td></tr>';
+                                                array_push($doneAircraft, $r['aircraftid']);
+                                            }
+                                        }
+                                        echo '</table>';
+                                        echo '<input type="submit" class="btn bg-custom" value="Import Now" />';
+                                        echo '</form>';
+
+                                        echo '<script>
+                                            $(document).ready(function() {
+                                                $(".aircraftSelect").change(function() {
+                                                    var id = $(this).attr("id");
+                                                    $("#livery" + id).html("<option value>Loading...</option>");
+                                                    $.ajax({
+                                                        url: "vanet.php",
+                                                        type: "POST",
+                                                        data: { method: "liveriesforaircraft", data: $(this).val() },
+                                                        success: function(html){
+                                                            $("#livery" + id).empty();
+                                                            $("#livery" + id).append("<option>Select</option>");
+                                                            $("#livery" + id).append(html);
+                                                        }
+                                                    });
+                                                });
+                                            });
+                                        </script>';
+                                    ?>
+                                <?php endif; ?>
                             <?php endif; ?>
                         <?php endif; ?>
                     <?php elseif (Input::get('page') === 'codeshares'): ?>
