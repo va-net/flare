@@ -34,7 +34,6 @@
         echo '<h3>Administration</h3>';
         echo '<hr class="mt-0 divider">';
         $i = 0;
-        $gold = VANet::isGold();
         foreach ($localmenu as $category => $items) {
             
             echo '<a href="#" data-toggle="collapse" data-target="#collapse'.$i.'" class="panel-link"><i class="fa fa-caret-down"></i>&nbsp;'.$category.'</a><br />';

@@ -46,8 +46,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
         <li class="nav-item desktop-hidden">
             <a href="map.php" id="maplink" class="panel-link" style="color: <?= $textcol ?>!important;"><i class="fa fa-map"></i>&nbsp;Live Map</a>
         </li>
-        <?php 
-        if (VANet::isGold()) {
+        <?php
+        $gold = VANet::isGold();
+        if ($gold) {
             echo '<li class="nav-item desktop-hidden">
                 <a href="events.php" id="eventslink" class="panel-link" style="color: '.$textcol.'!important;"><i class="fa fa-calendar"></i>&nbsp;Events</a>
             </li>';
@@ -71,7 +72,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                 }
             }
             $i = 0;
-            $gold = VANet::isGold();
             foreach ($localmenu as $category => $items) {
                 
                 echo '<li class="nav-item desktop-hidden">';
