@@ -139,5 +139,23 @@
         ],
         "deletedFiles": [],
         "queries": []
+    },
+    {
+        "tag": "v1.0.0-beta8",
+        "name": "Public Beta 8",
+        "date": "2020-09-15",
+        "notes": "Updated Updater, Added Ability to Enable/Disable Receiving Prerelease Versions, Fixed Initialization Issue",
+        "prerelease": true,
+        "useUpdater": true,
+        "files": [
+            "version.json",
+            "core/init.php",
+            "admin.php",
+            "updater.php"
+        ],
+        "deletedFiles": [],
+        "queries": [
+            "INSERT INTO `options` (`name`, `value`) VALUES ('CHECK_PRERELEASE', '1')"
+        ]
     }
 ]
