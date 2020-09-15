@@ -92,6 +92,10 @@ table {
     color: <?= $textcol ?>!important;
 }
 
+.navbar-brand {
+    color: <?= $textcol ?>!important;
+}
+
 #loader {
     position: absolute;
     left: 50%;
