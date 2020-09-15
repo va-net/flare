@@ -89,8 +89,8 @@ CREATE TABLE IF NOT EXISTS `multipliers` (
   UNIQUE KEY `code` (`code`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
-CREATE TABLE IF NOT EXISTS `options` ( `
-  name` varchar(120) NOT NULL, 
+CREATE TABLE IF NOT EXISTS `options` ( 
+  `name` varchar(120) NOT NULL, 
   `value` text NOT NULL, 
   PRIMARY KEY (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
