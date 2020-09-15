@@ -411,8 +411,12 @@ if (Input::get('action') === 'editprofile') {
         die();
     }
 
-    if (!Config::replace('name', Input::get('vaname')) || !Config::replace('identifier', Input::get('vaident')) || !Config::replace("FORCE_SERVER", Input::get('forceserv'))) {
-        Session::flash('error', 'There was an error updating the Config File!');
+    if (!Config::replace('name', Input::get('vaname')) 
+        || !Config::replace('identifier', Input::get('vaident')) 
+        || !Config::replace("FORCE_SERVER", Input::get('forceserv'))
+        || !Config::replace("CHECK_PRERELEASE", Input::get('checkpre'))
+        ) {
+        Session::flash('error', 'There was an error updating the Settings');
         Redirect::to('admin.php?page=site&tab=settings');
         die();
     }
