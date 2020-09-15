@@ -1,4 +1,4 @@
-<div class="col-lg-3 p-3 bg-light text-left mobile-hidden" id="desktopMenu" style="height: 100%;">
+<div class="col-lg-3 p-3 bg-light text-left mobile-hidden border rounded shadow" id="desktopMenu" style="height: 100%;">
     <h3>Pilot Panel - <?= escape($user->data()->callsign) ?></h3>
     <hr class="mt-0 divider" />
     <a href="home.php" id="homelink" class="panel-link"><i class="fa fa-home"></i>&nbsp;Pilot Home</a><br />
