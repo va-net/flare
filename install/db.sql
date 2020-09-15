@@ -96,4 +96,4 @@ CREATE TABLE IF NOT EXISTS `options` ( `
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 INSERT INTO `options` (`name`, `value`) VALUES ('FORCE_SERVER', '0');
-
+INSERT INTO `options` (`name`, `value`) VALUES ('CHECK_PRERELEASE', '0')
