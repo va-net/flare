@@ -392,7 +392,7 @@ if (Input::get('action') === 'editprofile') {
     try {
         Rank::update(Input::get('id'), array(
             'name' => Input::get('name'),
-            'timereq' => Input::get('time')
+            'timereq' => Time::hrsToSecs(Input::get('time'))
         ));
     } catch (Exception $e) {
         Session::flash('error', 'There was an Error Editing the Rank.');

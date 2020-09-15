@@ -1664,7 +1664,7 @@ if (!$user->isLoggedIn()) {
                                                         <input type="text" name="name" class="form-control" placeholder="Second Officer" required>
                                                     </div>
                                                     <div class="form-group">
-                                                        <label for="time">Flight time required (<b>in hours</b>)</label>
+                                                        <label for="time">Flight time required (in hours)</label>
                                                         <input type="number" name="time" class="form-control" placeholder="50" required>
                                                     </div>
                                                     <input type="submit" class="btn bg-custom" value="Add Rank">
@@ -1693,11 +1693,11 @@ if (!$user->isLoggedIn()) {
                                             echo '<tr><td class="align-middle">';
                                             echo $rank->name;
                                             echo '</td><td class="align-middle">';
-                                            echo $rank->timereq;
+                                            echo Time::secsToString($rank->timereq);
                                             echo '</td><td class="align-middle">';
                                             echo '<button class="btn btn-primary text-light editRank" 
                                             data-id="'.$rank->id.'" data-name="'.$rank->name.'" 
-                                            data-minhrs="'.$rank->timereq.'">
+                                            data-minhrs="'.($rank->timereq / 3600).'">
                                             <i class="fa fa-edit"></i></button>';
                                             echo '&nbsp;<button class="btn btn-danger text-light" 
                                             value="'.$rank->id.'" form="delrank" name="delete">
@@ -1723,7 +1723,7 @@ if (!$user->isLoggedIn()) {
                                                         <input type="text" name="name" class="form-control" id="rankmodal-name" required>
                                                     </div>
                                                     <div class="form-group">
-                                                        <label for="time">Flight Time Required (<b>in hours</b>)</label>
+                                                        <label for="time">Flight Time Required (in hours)</label>
                                                         <input type="number" min="0" name="time" class="form-control" id="rankmodal-hours" required>
                                                     </div>
                                                     <input type="submit" class="btn bg-custom" value="Save">
