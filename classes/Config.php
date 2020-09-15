@@ -42,12 +42,12 @@ class Config
 
     }
 
-    public static function replaceColour($new)
+    public static function replaceColour($main, $text)
     {
 
         $currentConf = file_get_contents(__DIR__.'/../core/config.php');
         preg_match("/#([a-f0-9]{3}){1,2}\b/i", $currentConf, $matches);
-        $currentConf = str_replace($matches[0], '#'.$new, $currentConf);
+        $currentConf = str_replace($matches[0], '#'.$main, $currentConf);
 
         $file = fopen(__DIR__.'/../core/config.php', 'w+');
 
@@ -57,6 +57,8 @@ class Config
 
         fwrite($file, $currentConf);
         fclose($file);
+
+        self::replace("TEXT_COLOUR", '#'.$text);
 
         return true;
 
