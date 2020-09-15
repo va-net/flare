@@ -415,6 +415,11 @@ if (!$user->isLoggedIn()) {
                             }
                             $ACTIVE_CATEGORY = 'site-management'; 
                         ?>
+                        <script>
+                            $(document).ready(function() {
+                                $("#<?= $tab; ?>link").click();
+                            });
+                        </script>
                         <h3>Flare Settings</h3>
                         <p>Here you may configure Flare to be your own.</p>
                         <ul class="nav nav-tabs nav-dark justify-content-center">
@@ -427,7 +432,7 @@ if (!$user->isLoggedIn()) {
                             <li class="nav-item">
                                 <a class="nav-link" id="vanetlink" data-toggle="tab" href="#vanet">VANet Settings</a>
                             </li>
-                            <?php if (Json::decode(file_get_contents("./version.json"))["prerelease"]) { ?>
+                            <?php if (Updater::getVersion()["prerelease"]) { ?>
                                 <li class="nav-item">
                                     <a class="nav-link" id="debuglink" data-toggle="tab" href="#debug">Debugging Info</a>
                                 </li>
@@ -475,6 +480,17 @@ if (!$user->isLoggedIn()) {
                                             });
                                         </script>
                                         <small class="text-muted">This will force all operations (PIREP lookups, ACARS, etc) to be on this server. If turned off, pilots will be able to choose.</small>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="">Check for Beta Updates?</label>
+                                        <select requried class="form-control" name="checkpre" id="check-prerelease">
+                                            <option value="0">No (Recommended for Production Sites)</option>
+                                            <option value="1">Yes</option>
+                                        </select>
+                                        <script>
+                                            $("#check-prerelease").val('<?= Config::get("CHECK_PRERELEASE"); ?>');
+                                        </script>
+                                        <small class="text-muted">Beta Pushes are often unstable and may break your site.</small>
                                     </div>
                                     <input type="submit" class="btn bg-custom" value="Save">
                                 </form>
@@ -530,14 +546,11 @@ if (!$user->isLoggedIn()) {
                                     <b>You are on Flare <?php echo $ver["tag"]; ?></b>
                                     <br />
                                     <?php
-                                        $update = Updater::checkUpdate();
-                                        if ($ver["prerelease"]) {
-                                            $update = Updater::checkUpdate(true);
-                                        }
+                                        $update = Updater::checkUpdate(Config::get('CHECK_PRERELEASE') == 1);
                                         if (!$update) {
                                             echo "Flare is Up-to-Date!";
                                         } else {
-                                            echo "An update to Flare ".$update["tag"]." is available<br />";
+                                            echo "<span id=\"updateAvail\">An update to Flare ".$update["tag"]." is available<br /></span>";
                                             echo '<button class="btn bg-custom" id="updateNow">Update Now</button>';
                                             echo '<p id="updateResult"></p>';
                                         }
@@ -546,9 +559,15 @@ if (!$user->isLoggedIn()) {
                                 <script>
                                     $(document).ready(function() {
                                         $("#updateNow").click(function() {
+                                            $(this).hide();
+                                            $("#updateAvail").hide();
+                                            $(".loaded").hide();
+                                            $("#loader-wrapper").show();
                                             $("#updateResult").html('<div class="spinner-grow spinner-custom"></div>');
-                                            $.get("updater-alternate.php", function(data, status) {
+                                            $.get("updater.php", function(data, status) {
                                                 $("#updateResult").html(data);
+                                                $(".loaded").show();
+                                                $("#loader-wrapper").hide();
                                             });
                                         });
                                     });
