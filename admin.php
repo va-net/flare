@@ -1487,13 +1487,10 @@ if (!$user->isLoggedIn()) {
                                                         <select class="form-control" name="aircraft" required>
                                                             <option value>Select</option>
                                                             <?php
-                                                            $all = Aircraft::fetchActiveAircraft();
+                                                            $all = Aircraft::fetchActiveAircraft()->results();
 
-                                                            $x = 0;
-
-                                                            while ($all->count() > $x) {
-                                                                echo '<option>'.$all->results()[$x]->name.'</option>';
-                                                                $x++;
+                                                            foreach ($all as $aircraft) {
+                                                                echo '<option value="'.$aircraft->id.'">'.$aircraft->name.' ('.$aircraft->liveryname.')</option>';
                                                             }
                                                             ?>
                                                         </select>
@@ -1526,7 +1523,7 @@ if (!$user->isLoggedIn()) {
                                             echo '</td><td class="align-middle">';
                                             echo $route->arr;
                                             echo '</td><td class="align-middle mobile-hidden">';
-                                            echo $route->aircraft;
+                                            echo $route->aircraft.'<span class="mobile-hidden"> ('.$route->livery.')</span>';
                                             echo '</td><td class="align-middle">';
                                             echo '<button class="btn bg-custom editRoute" 
                                             data-id="'.$route->id.'" data-fltnum="'.$route->fltnum.'" 
@@ -1535,7 +1532,6 @@ if (!$user->isLoggedIn()) {
                                             ><i class="fa fa-edit"></i></button>';
                                             echo '&nbsp;<button value="'.$route->id.'" form="deleteroute" type="submit" class="btn btn-danger text-light" name="delete"><i class="fa fa-trash"></i></button>';
                                             echo '</td></tr>';
-                                            $x++;
                                         }
                                         ?>
                                     </tbody>
@@ -1611,7 +1607,7 @@ if (!$user->isLoggedIn()) {
                                                             $aircraft = Aircraft::fetchAllAircraft()->results();
 
                                                             foreach ($aircraft as $a) {
-                                                                echo '<option value="'.$a->id.'">'.$a->name.'</option>';
+                                                                echo '<option value="'.$a->id.'">'.$a->name.' ('.$a->liveryname.')</option>';
                                                             }
                                                             ?>
                                                         </select>
