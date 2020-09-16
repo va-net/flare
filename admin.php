@@ -1853,7 +1853,13 @@ if (!$user->isLoggedIn()) {
                                         These aircraft will be added with the lowest rank if they do not already exist in your VA's database.
                                     </p>
                                     <?php
-                                        $routes = file_get_contents(Input::getFile('routes-upload')["tmp_name"]);
+                                        $file = Input::getFile('routes-upload');
+                                        if ($file["error"] == 1 || $file["error"] === TRUE) {
+                                            Session::flash('error', 'Upload failed. Maybe your file is too big?');
+                                            echo '<script>window.location.href= "admin.php?page=opsmanage&section=phpvms";</script>';
+                                            die();
+                                        }
+                                        $routes = file_get_contents($file["tmp_name"]);
                                         preg_match_all('/.*\n|\r\n/m', $routes, $routelines);
 
                                         $i = 0;
@@ -1861,9 +1867,11 @@ if (!$user->isLoggedIn()) {
                                         $routesArray = [];
                                         foreach ($routelines[0] as $l) {
                                             if ($i == 0) {
-                                                if (trim(str_replace(' ', '', $l)) != 'code,flightnum,depicao,arricao,route,aircraft,flightlevel,distance,deptime,arrtime,flighttime,notes,price,flighttype,daysofweek,enabled,week1,week2,week3,week4') {
+                                                $l = trim(preg_replace('/"|\'| /', '', $l));
+                                                if ($l != 'code,flightnum,depicao,arricao,route,aircraft,flightlevel,distance,deptime,arrtime,flighttime,notes,price,flighttype,daysofweek,enabled,week1,week2,week3,week4') {
                                                     Session::flash('error', 'Your Routes Import seems to be in the incorrect format');
-                                                    Redirect::to('admin.php?page=opsmanage&section=phpvms');
+                                                    echo '<script>window.location.href= "admin.php?page=opsmanage&section=phpvms";</script>';
+                                                    die();
                                                 } else {
                                                     $valid = true;
                                                 }
