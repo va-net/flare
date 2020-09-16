@@ -10,6 +10,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 class Redirect {
 
+    /**
+     * @return null
+     * @param int|string Redirect URL/Response Code
+     */
     public static function to($location = null) {
         if ($location) {
             if (is_numeric($location)) {

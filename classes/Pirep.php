@@ -20,6 +20,10 @@ class Pirep
 
     }
 
+    /**
+     * @return bool
+     * @param array $fields PIREP Fields
+     */
     public static function file($fields = array()) 
     {
 
@@ -31,6 +35,11 @@ class Pirep
 
     }
 
+    /**
+     * @return bool
+     * @param int $id PIREP ID
+     * @param array $fields Updated PIREP Fields
+     */
     public static function update($id, $fields = array())
     {
 
@@ -43,6 +52,9 @@ class Pirep
 
     }
 
+    /**
+     * @return array
+     */
     public static function fetchAll()
     {
 
@@ -73,6 +85,9 @@ class Pirep
 
     }
 
+    /**
+     * @return array
+     */
     public static function fetchPending()
     {
 
@@ -103,6 +118,10 @@ class Pirep
 
     }
 
+    /**
+     * @return null
+     * @param int $id PIREP ID
+     */
     public static function accept($id) 
     {
 
@@ -114,6 +133,10 @@ class Pirep
 
     }
 
+    /**
+     * @return null
+     * @param int $id PIREP ID
+     */
     public static function decline($id) 
     {
 
@@ -125,6 +148,11 @@ class Pirep
 
     }
 
+    /**
+     * @return bool
+     * @param string $callsign Pilot Callsign
+     * @param int $id Pilot ID
+     */
     public static function setup($callsign, $id) 
     {
 
@@ -157,6 +185,9 @@ class Pirep
 
     }
 
+    /**
+     * @return array
+     */
     public static function fetchMultipliers() 
     {
         self::init();
@@ -164,6 +195,10 @@ class Pirep
         return self::$_db->getAll('multipliers')->results();
     }
 
+    /**
+     * @return int
+     * @param array $multis Array of Multipliers
+     */
     public static function generateMultiCode($multis = null) 
     {
         if ($multis == null) {
@@ -182,6 +217,10 @@ class Pirep
         return $code;
     }
 
+    /**
+     * @return null
+     * @param int $id Multiplier ID
+     */
     public static function deleteMultiplier($id) 
     {
         self::init();
@@ -189,6 +228,10 @@ class Pirep
         self::$_db->delete('multipliers', array('id', '=', $id));
     }
 
+    /**
+     * @return null
+     * @param array $fields Multiplier Fields
+     */
     public static function addMultiplier($fields = array()) 
     {
         self::init();
@@ -196,6 +239,10 @@ class Pirep
         self::$_db->insert('multipliers', $fields);
     }
 
+    /**
+     * @return bool|object
+     * @param int $code Multiplier Code
+     */
     public static function findMultiplier($code) 
     {
         self::init();

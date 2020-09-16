@@ -10,11 +10,17 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 class Updater 
 {
-    
+    /**
+     * @return array
+     */
     public static function getVersion() {
         return Json::decode(file_get_contents(__DIR__.'/../version.json'));
     }
 
+    /**
+     * @return bool|array
+     * @param bool $prerelease Whether to Check for Prerelease Versions
+     */
     public static function checkUpdate($prerelease = false) {
         $opts = array(
             'http'=>array(

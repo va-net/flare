@@ -20,6 +20,10 @@ class Route
 
     }
 
+    /**
+     * @return null
+     * @param array $fields Route Fields
+     */
     public static function add($fields) 
     {
 
@@ -35,6 +39,9 @@ class Route
         
     }
 
+    /**
+     * @return DB
+     */
     public static function fetchAll()
     {
 
@@ -44,6 +51,10 @@ class Route
 
     }
 
+    /**
+     * @return null
+     * @param int $id Route ID
+     */
     public static function delete($id)
     {
 
@@ -53,6 +64,10 @@ class Route
 
     }
 
+    /**
+     * @return DB
+     * @param int $id Route ID
+     */
     public static function find($id)
     {
         self::init();
@@ -63,6 +78,11 @@ class Route
         return $db->query($query, array($id));
     }
 
+    /**
+     * @return bool
+     * @param int $id Route ID
+     * @param array $fields Updated Route Fields
+     */
     public static function update($id, $fields) 
     {
         self::init();

@@ -46,6 +46,9 @@ class Permissions
         )
     );
 
+    /**
+     * @return array
+     */
     public static function getAll()
     {
 
