@@ -34,7 +34,7 @@ if (!$user->isLoggedIn()) {
                     <div id="loader-wrapper"><div id="loader" class="spinner-border spinner-border-sm spinner-custom"></div></div>
                     <div class="loaded">
                         <h3>ACARS</h3>
-                        <?php if (VANet::isGold()): ?>
+                        <?php if ($IS_GOLD): ?>
                             <?php if ($user->data()->ifuserid != null): ?>
                                 <div id="preRun">
                                 <button data-toggle="collapse" data-target="#howtouseacars" class="btn btn-light w-100 mb-2 collapsed" aria-expanded="false">How to Use ACARS&nbsp;&nbsp;<i class="fa fa-caret-down" aria-hidden="true"></i></button>

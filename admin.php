@@ -1220,8 +1220,11 @@ if (!$user->isLoggedIn()) {
                                 <tr><td><b>Total Routes</b></td><td><?php echo Stats::numRoutes(); ?></td></tr>
                             </table>
                             <hr />
-                            <?php if (!VANet::isGold()): ?>
-                                <p>Sign Up to VANet Gold in order to get access to VANet Stats.</p>
+                            <?php if (!$IS_GOLD): ?>
+                                <p>
+                                    View vFinance Stats on <a href="https://vanet.app/airline/finance/">VANet</a>. 
+                                    Sign Up to VANet Gold in order to get access to VANet Stats right here.
+                                </p>
                             <?php else: ?>
                                 <h4>VANet Statistics</h4>
                                 <?php $stats = VANet::getStats(); ?>

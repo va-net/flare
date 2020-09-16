@@ -47,8 +47,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
             <a href="map.php" id="maplink" class="panel-link" style="color: <?= $textcol ?>!important;"><i class="fa fa-map"></i>&nbsp;Live Map</a>
         </li>
         <?php
-        $gold = VANet::isGold();
-        if ($gold) {
+        $IS_GOLD = VANet::isGold();
+        if ($IS_GOLD) {
             echo '<li class="nav-item desktop-hidden">
                 <a href="events.php" id="eventslink" class="panel-link" style="color: '.$textcol.'!important;"><i class="fa fa-calendar"></i>&nbsp;Events</a>
             </li>';
@@ -80,7 +80,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                 
                 foreach ($items as $label => $data) {
                     if ($user->hasPermission($data["permission"])) {
-                        if (($gold && $data["needsGold"]) || !$data["needsGold"]) {
+                        if (($IS_GOLD && $data["needsGold"]) || !$data["needsGold"]) {
                             echo '<a href="'.$data["link"].'" class="panel-link" style="color: '.$textcol.'!important;"><i class="fa '.$data['icon'].'"></i>&nbsp;'.$label.'</a>';
                         }
                     }
