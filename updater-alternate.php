@@ -32,7 +32,21 @@ $context = stream_context_create($opts);
 $releases = Json::decode(file_get_contents("https://api.github.com/repos/va-net/flare/releases", false, $context));
 
 // Find next applicable release
-$next = Updater::nextVersion();
+$currentFound = false;
+$next = null;
+foreach (array_reverse($releases) as $r) {
+    if (!$currentFound && $r["tag_name"] == $current["tag"]) {
+        $currentFound = true;
+    } elseif ($currentFound && $next == null) {
+        if ($current["prerelease"]) {
+            $next = $r;
+            break;
+        } elseif (!$r["prerelease"]) {
+            $next = $r;
+            break;
+        }
+    }
+}
 
 if ($next == null) {
     echo "Already Up-to-Date";
@@ -40,7 +54,14 @@ if ($next == null) {
 }
 
 // Get Tag Info
-$nextTag = Updater::getTag($next);
+$tags = Json::decode(file_get_contents("https://api.github.com/repos/va-net/flare/tags", false, $context));
+$nextTag = null;
+foreach ($tags as $t) {
+    if ($t["name"] == $next["tag_name"] && $nextTag == null) {
+        $nextTag = $t;
+        break;
+    }
+}
 
 // Get the updates.json file
 $updateData = @file_get_contents("https://raw.githubusercontent.com/va-net/flare/".urlencode($nextTag["commit"]["sha"])."/updates.json");
@@ -51,7 +72,12 @@ if ($updateData === FALSE) {
 }
 // Process updates.json File
 $updateData = Json::decode($updateData);
-$nextUpdate = Updater::getUpdate($nextTag, $updateData);
+$nextUpdate = null;
+foreach ($updateData as $upd) {
+    if ($upd["tag"] == $nextTag["name"]) {
+        $nextUpdate = $upd;
+    }
+}
 
 // Somethin' strange goin on?
 if ($nextUpdate == null) {
@@ -68,9 +94,14 @@ if (!$nextUpdate["useUpdater"]) {
 
 // Update Files
 foreach ($nextUpdate["files"] as $file) {
-    $updRet = Updater::updateFile($file);
-    if (!$updRet) {
-        echo 'There was an Error Updating the File '.$file;
+    $fileData = file_get_contents("https://raw.githubusercontent.com/va-net/flare/".urlencode($nextTag["commit"]["sha"])."/".urlencode($file));
+    $slash = "/";
+    if (strpos(strtolower(php_uname('s')), "window") !== FALSE) {
+        $file = str_replace("/", "\\", $file); 
+        $slash = "\\";
+    }
+    if ($fileData === FALSE || file_put_contents(__DIR__.$slash.$file, $fileData) === FALSE) {
+        echo "Error Updating File ".$file;
         die();
     }
 }
@@ -78,9 +109,8 @@ echo "Updated Files Successfully<br />";
 
 // Delete Files to Delete
 foreach ($nextUpdate["deletedFiles"] as $delFile) {
-    if (!Updater::deleteFile($delFile)) {
-        echo 'There was an Error Deleting the File '.$file;
-        die();
+    if (!unlink(__DIR__.$delFile)) {
+        echo "There was an error deleting ".$delFile;
     }
 }
 echo "Deleted Removed Files Successfully<br />";
@@ -91,12 +121,11 @@ if (count($nextUpdate["queries"]) != 0) {
     foreach ($nextUpdate["queries"] as $q) {
         $db->query($q);
         if ($db->error()) {
-            echo "Error Running the DB Query {$q}";
+            echo "Error Running Query ".$q;
             die();
         }
     }
 }
 echo "Updated Database Successfully<br />";
 
-echo "<br /><b>Flare has been Updated to ".$nextUpdate["name"]." (".$nextUpdate["tag"].")</b><br />";
-echo '<a href="home.php">Go to Pilot Home</a>';
+echo "<br />Flare has been Updated to ".$nextUpdate["name"]." (".$nextUpdate["tag"].")";

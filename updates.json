@@ -206,5 +206,19 @@
             "INSERT INTO options (name, value) SELECT * FROM (SELECT 'FORCE_SERVER', '0') AS tmp WHERE NOT EXISTS (SELECT name FROM options WHERE name = 'FORCE_SERVER') LIMIT 1;",
             "INSERT INTO options (name, value) SELECT * FROM (SELECT 'TEXT_COLOUR', '#FFF') AS tmp WHERE NOT EXISTS (SELECT name FROM options WHERE name = 'TEXT_COLOUR') LIMIT 1;"
         ]
+    },
+    {
+        "tag": "v1.0.0-beta9.1",
+        "name": "Public Beta 9.1",
+        "date": "2020-09-16",
+        "notes": "Fix Issue with Updater",
+        "prerelease": true,
+        "useUpdater": true,
+        "files": [
+            "updater-alternate.php",
+            "version.json"
+        ],
+        "deletedFiles": [],
+        "queries": []
     }
 ]
