@@ -56,7 +56,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                 <a href="acars.php" id="acarslink" class="panel-link" style="color: '.$textcol.'!important;"><i class="fa fa-sync"></i>&nbsp;ACARS</a>
             </li>';
         }
-        $permissions = Permissions::getAll();
         if ($user->hasPermission('admin')) {
             $localmenu = array();
             foreach ($GLOBALS['admin-menu'] as $name => $data) {

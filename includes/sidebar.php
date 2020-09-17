@@ -13,8 +13,6 @@
         }
     ?>
     <?php
-    $permissions = Permissions::getAll();
-
     if ($user->hasPermission('admin')) {
         $localmenu = array();
         foreach ($GLOBALS['admin-menu'] as $name => $data) {

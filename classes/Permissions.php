@@ -12,48 +12,75 @@ class Permissions
 {
 
     private static $_permissions = array(
-        'usermanage' => array(
-            'name' => 'User Management',
-            'icon' =>'fa-users'
-        ), 
-        'staffmanage' => array(
-            'name' => 'Staff Management',
-            'icon' => 'fa-user-shield'
-        ),
-        'recruitment' => array(
-            'name' => 'Recruitment',
-            'icon' => 'fa-id-card'
-        ), 
-        'pirepmanage' => array(
-            'name' => 'PIREP Management',
-            'icon' => 'fa-plane'
-        ), 
-        'newsmanage' => array(
-            'name' => 'News Management',
-            'icon' => 'fa-newspaper'
-        ), 
-        'emailpilots' => array(
-            'name' => 'Email Pilots',
-            'icon' => 'fa-envelope'
-        ), 
-        'opsmanage' => array(
-            'name' => 'Operations Management',
-            'icon' => 'fa-file-alt'
-        ), 
-        'statsviewing' => array(
-            'name' => 'VA Statistics',
-            'icon' => 'fa-chart-pie'
-        )
+        'usermanage' => 'User Management',
+        'staffmanage' => 'Staff Management',
+        'recruitment' => 'Recruitment',
+        'pirepmanage' => 'PIREP Management',
+        'newsmanage' => 'News Management',
+        'opsmanage' => 'Operations Management',
+        'statsviewing' => 'View Statistics',
     );
+    private static $_db;
+
+    private static function init() 
+    {
+        self::$_db = DB::getInstance();
+    }
 
     /**
      * @return array
      */
     public static function getAll()
     {
-
         return self::$_permissions;
+    }
 
+    /**
+     * @return bool
+     * @param int $userid User ID
+     * @param string $perm Permission Name
+     */
+    public static function give($userid, $perm)
+    {
+        self::init();
+
+        $ret = self::$_db->insert('permissions', array(
+            'userid' => $userid,
+            'name' => $perm
+        ));
+
+        return !($ret->error());
+    }
+
+    /**
+     * @return bool
+     * @param int $userid User ID
+     * @param string $perm Permission Name
+     */
+    public static function revoke($userid, $perm)
+    {
+        self::init();
+
+        $ret = self::$_db->query("DELETE FROM permissions WHERE userid=? AND name=?", array($userid, $perm));
+
+        return !($ret->error());
+    }
+
+    /**
+     * @return array
+     * @param int $userid User ID
+     */
+    public static function forUser($userid)
+    {
+        self::init();
+
+        $tempperms = self::$_db->get('permissions', array('userid', '=', $userid))->results();
+        $permissions = [];
+        foreach ($tempperms as $p) {
+            array_push($permissions, $p->name);
+        }
+
+        return $permissions;
     }
 
 }

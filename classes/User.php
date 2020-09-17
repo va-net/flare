@@ -15,7 +15,8 @@ class User
             $_data,
             $_sessionName,
             $_cookieName,
-            $_isLoggedIn;
+            $_isLoggedIn,
+            $_permissions;
 
 
     public function __construct($user = null) 
@@ -67,6 +68,11 @@ class User
             $data = $this->_db->get('pilots', array($field, '=', $user));
             if ($data->count()) {
                 $this->_data = $data->first();
+                $this->_permissions = [];
+                $tempperms = $this->_db->get('permissions', array('userid', '=', $data->first()->id))->results();
+                foreach ($tempperms as $p) {
+                    array_push($this->_permissions, $p->name);
+                }
                 return true;
             }
         }
@@ -191,16 +197,16 @@ class User
 
         $permissions = [];
         if ($id == $this->data()->id) {
-            $permissions = Json::decode($this->data()->permissions);
+            $permissions = $this->_permissions;
         } else {
-            $user = $this->_db->get('pilots', array('id', '=', $id));
-            $permissions = json_decode($user->first()->permissions, true);
+            $tempperms = $this->_db->get('permissions', array('userid', '=', $id))->results();
+            foreach ($tempperms as $p) {
+                array_push($permissions, $p->name);
+            }
         }
         
-        if (array_key_exists($key, $permissions)) {
-            if ($permissions[$key] == true) {
-                return true;
-            }
+        if (in_array($key, $permissions)) {
+            return true;
         }
         return false;
 

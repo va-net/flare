@@ -167,13 +167,13 @@ if (Input::get('action') === 'editprofile') {
         die();
     }
 
+    $myperms = Permissions::forUser(Input::get('id'));
     $permissions = Permissions::getAll();
-    $finalpermissions = array('admin' => 1);
-    foreach ($permissions as $permission => $data) {
-        if (Input::get($permission) == 'on') {
-            $finalpermissions[$permission] = 1;
-        } else {
-            $finalpermissions[$permission] = 0;
+    foreach ($permissions as $permission => $name) {
+        if (Input::get($permission) == 'on' && !in_array($permission, $myperms)) {
+            Permissions::give(Input::get('id'), $permission);
+        } elseif (Input::get($permission) != 'on' && in_array($permission, $myperms)) {
+            Permissions::revoke(Input::get('id'), $permission);
         }
     }
 
@@ -182,8 +182,7 @@ if (Input::get('action') === 'editprofile') {
             'callsign' => Input::get('callsign'),
             'name' => Input::get('name'),
             'email' => Input::get('email'),
-            'ifc' => Input::get('ifc'),
-            'permissions' => Json::encode($finalpermissions)
+            'ifc' => Input::get('ifc')
         ), Input::get('id'));
     } catch (Exception $e) {
         Session::flash('error', 'There was an Error Editing the Staff Member.');
