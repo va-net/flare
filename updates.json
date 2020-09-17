@@ -246,7 +246,7 @@
         "queries": [
             "CREATE TABLE `permissions` ( `id` INT NOT NULL AUTO_INCREMENT , `name` VARCHAR(120) NOT NULL , `userid` INT NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;",
             "DELETE FROM aircraft WHERE status=0",
-            "INSERT INTO permissions (name`, userid) VALUES ('admin', 1), ('usermanage', 1), ('staffmanage', 1), ('recruitment', 1), ('pirepmanage', 1), ('newsmanage', 1), ('opsmanage', 1), ('statsviewing', 1)"
+            "INSERT INTO permissions (name, userid) VALUES ('admin', 1), ('usermanage', 1), ('staffmanage', 1), ('recruitment', 1), ('pirepmanage', 1), ('newsmanage', 1), ('opsmanage', 1), ('statsviewing', 1)"
         ]
     }
 ]
