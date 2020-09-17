@@ -32,7 +32,7 @@ if (!$user->isLoggedIn()) {
                 <div class="col-lg-9 main-content">
                     <div id="loader-wrapper"><div id="loader" class="spinner-border spinner-border-sm spinner-custom"></div></div>
                     <div class="loaded">
-                        <?php if (!VANet::isGold()): ?>
+                        <?php if (!$IS_GOLD): ?>
                             <h3>Events</h3>
                             <p><?= Config::get('va/name'); ?> needs to Subscribe to VANet Gold to access Events.</p>
                         <?php else: ?>

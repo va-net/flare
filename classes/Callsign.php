@@ -20,6 +20,11 @@ class Callsign
 
     }
 
+    /**
+     * @return bool
+     * @param int $id Pilot ID to Exclude
+     * @param string $callsign Callsign to Check
+     */
     public static function assigned($callsign, $id)
     {
 

@@ -20,6 +20,11 @@ class Rank
 
     }
 
+    /**
+     * @return string|int
+     * @param int $hours Hours to Get Rank For
+     * @param bool $returnid Whether to return the Rank ID
+     */
     public static function calc($hours, $returnid = false)
     {
 
@@ -38,6 +43,10 @@ class Rank
 
     }
 
+    /**
+     * @return int
+     * 
+     */
     public static function getId($hours)
     {
 
@@ -47,6 +56,10 @@ class Rank
 
     }
 
+    /**
+     * @return string
+     * @param int $hours Hours to get Rank For
+     */
     public static function getName($hours)
     {
 
@@ -56,6 +69,11 @@ class Rank
 
     }
 
+    /**
+     * @return null
+     * @param string $name Rank Name
+     * @param int $timereq Flight Time Required in Seconds
+     */
     public static function add($name, $timereq) 
     {
 
@@ -68,6 +86,11 @@ class Rank
 
     }
 
+    /**
+     * @return null
+     * @param int $id Rank ID
+     * @param array $fields Updated Rank Fields
+     */
     public static function update($id, $fields = array()) 
     {
         self::init();
@@ -77,6 +100,10 @@ class Rank
         }
     }
 
+    /**
+     * @return bool
+     * @param int $id Rank ID
+     */
     public static function delete($id) 
     {
         self::init();
@@ -85,6 +112,9 @@ class Rank
         return !($ret->error());
     }
 
+    /**
+     * @return string
+     */
     public static function getFirstRank()
     {
 
@@ -94,6 +124,10 @@ class Rank
 
     }
 
+    /**
+     * @return string
+     * @param int $id Rank ID
+     */
     public static function idToName($id) 
     {
 
@@ -103,6 +137,10 @@ class Rank
 
     }
     
+    /**
+     * @return int
+     * @param string $name Rank Name
+     */
     public static function nameToId($name) 
     {
 
@@ -112,6 +150,9 @@ class Rank
 
     }
 
+    /**
+     * @return DB
+     */
     public static function fetchAllNames() 
     {
 

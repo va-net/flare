@@ -11,6 +11,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 class Json
 {
 
+    /**
+     * @return array
+     * @param string $data JSON to Decode
+     */
     public static function decode($data)
     {
 
@@ -18,6 +22,10 @@ class Json
 
     }
 
+    /**
+     * @return string
+     * @param mixed $data Data to Encode
+     */
     public static function encode($data)
     {
 

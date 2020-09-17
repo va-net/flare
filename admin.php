@@ -319,14 +319,12 @@ if (!$user->isLoggedIn()) {
                         </table>
                         <?php
                         $x = 0;
-                        foreach ($stafflist as $staff) {
-                            echo 
-                            '
-                            <div class="modal fade" id="staff'.$x.'modal" tabindex="-1" role="dialog" aria-labelledby="staff'.$x.'label" aria-hidden="true">
+                        foreach ($stafflist as $staff) { ?>
+                            <div class="modal fade" id="staff<?= $x ?>modal" tabindex="-1" role="dialog" aria-labelledby="staff<?= $x ?>label" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title" id="staffmodaltitle">Edit Staff Member - '.$staff['callsign'].'</h5>
+                                            <h5 class="modal-title" id="staffmodaltitle">Edit Staff Member - <?= $staff['callsign'] ?></h5>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                             </button>
@@ -334,73 +332,62 @@ if (!$user->isLoggedIn()) {
                                         <div class="modal-body">
                                             <form action="update.php" method="post">
                                                 <input hidden name="action" value="editstaffmember">
-                                                <input hidden name="id" value="'.$staff['id'].'">
+                                                <input hidden name="id" value="<?= $staff['id'] ?>">
                                                 <div class="form-group">
                                                     <label for="usermodal-callsign">Callsign</label>
-                                                    <input required type="text" value="'.$staff['callsign'].'" class="form-control" name="callsign" id="usermodal-callsign">
+                                                    <input required type="text" value="<?= $staff['callsign'] ?>" class="form-control" name="callsign" id="usermodal-callsign">
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="usermodal-name">Name</label>
-                                                    <input required type="text" value="'.$staff['name'].'" class="form-control" name="name" id="usermodal-name">
+                                                    <input required type="text" value="<?= $staff['name'] ?>" class="form-control" name="name" id="usermodal-name">
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="usermodal-email">Email</label>
-                                                    <input required type="text" value="'.$staff['email'].'" class="form-control" name="email" id="usermodal-email">
+                                                    <input required type="text" value="<?= $staff['email'] ?>" class="form-control" name="email" id="usermodal-email">
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="usermodal-ifc">IFC Username</label>
-                                                    <input required type="text" value="'.$staff['ifc'].'" class="form-control" name="ifc" id="usermodal-ifc">
+                                                    <input required type="text" value="<?= $staff['ifc'] ?>" class="form-control" name="ifc" id="usermodal-ifc">
                                                 </div>
                                                 <div class="form-group">
-                                                    <label for="usermodal-joined">Join date</label>
-                                                    <input readonly type="date" value="'.$staff['joined'].'" class="form-control" name="joined" id="usermodal-joined">
+                                                    <label for="usermodal-joined">Join Date</label>
+                                                    <input readonly type="date" value="<?= date_format(date_create($staff['joined']), 'Y-m-d') ?>" class="form-control" name="joined" id="usermodal-joined">
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="usermodal-status">Status</label>
-                                                    <input readonly type="text" value="'.$staff['status'].'" class="form-control" name="status" id="usermodal-status">
+                                                    <input readonly type="text" value="<?= $staff['status'] ?>" class="form-control" name="status" id="usermodal-status">
                                                 </div>
                                                 <br>
                                                 <h5>Permissions</h5>
-                                                ';
-                                                $permissions = Permissions::getAll();
-
-                                                foreach ($permissions as $permission => $data) {
-                                                    if ($user->hasPermission($permission, $staff['id'])) {
-                                                        echo
-                                                        '
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" value="on" id="permission'.$permission.'" name="'.$permission.'" checked>
-                                                            <label class="form-check-label" for="defaultCheck1">
-                                                                '.$data['name'].'
-                                                            </label>
-                                                        </div>
-                                                        ';
-                                                    } else {
-                                                        echo
-                                                        '
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" value="on" id="permission'.$permission.'" name="'.$permission.'">
-                                                            <label class="form-check-label" for="defaultCheck1">
-                                                                '.$data['name'].'
-                                                            </label>
-                                                        </div>
-                                                        ';
-                                                    }
-                                                }
-                                                echo 
-                                                '
-                                                <br>
+                                                <?php
+                                                    $allperms = Permissions::getAll();
+                                                    $myperms = Permissions::forUser($staff['id']);
+                                                    foreach ($allperms as $permission => $name) {
+                                                        if ($user->hasPermission($permission, $staff['id'])): ?>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" value="on" id="permission-<?= $permission ?>" name="<?= $permission ?>" checked>
+                                                                <label class="form-check-label" for="permission-<?= $permission ?>">
+                                                                    <?= $name ?>
+                                                                </label>
+                                                            </div>
+                                                        <?php else: ?>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" value="on" id="permission-<?= $permission ?>" name="<?= $permission ?>">
+                                                                <label class="form-check-label" for="permission-<?= $permission ?>">
+                                                                    <?= $name ?>
+                                                                </label>
+                                                            </div>
+                                                        <?php endif; ?>
+                                                    <?php } ?>
+                                                <br />
                                                 <input type="submit" class="btn bg-custom" value="Save">
                                             </form>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            ';
-                            $x++;
-                        }
-
-                        ?>
+                            <?php $x++; ?>
+                        <?php } ?>
                         <?php endif; ?>
                     <?php elseif (Input::get('page') === 'site'): ?>
                         <?php
@@ -1220,8 +1207,11 @@ if (!$user->isLoggedIn()) {
                                 <tr><td><b>Total Routes</b></td><td><?php echo Stats::numRoutes(); ?></td></tr>
                             </table>
                             <hr />
-                            <?php if (!VANet::isGold()): ?>
-                                <p>Sign Up to VANet Gold in order to get access to VANet Stats.</p>
+                            <?php if (!$IS_GOLD): ?>
+                                <p>
+                                    View vFinance Stats on <a href="https://vanet.app/airline/finance/">VANet</a>. 
+                                    Sign Up to VANet Gold in order to get access to VANet Stats right here.
+                                </p>
                             <?php else: ?>
                                 <h4>VANet Statistics</h4>
                                 <?php $stats = VANet::getStats(); ?>
@@ -1484,13 +1474,10 @@ if (!$user->isLoggedIn()) {
                                                         <select class="form-control" name="aircraft" required>
                                                             <option value>Select</option>
                                                             <?php
-                                                            $all = Aircraft::fetchActiveAircraft();
+                                                            $all = Aircraft::fetchActiveAircraft()->results();
 
-                                                            $x = 0;
-
-                                                            while ($all->count() > $x) {
-                                                                echo '<option>'.$all->results()[$x]->name.'</option>';
-                                                                $x++;
+                                                            foreach ($all as $aircraft) {
+                                                                echo '<option value="'.$aircraft->id.'">'.$aircraft->name.' ('.$aircraft->liveryname.')</option>';
                                                             }
                                                             ?>
                                                         </select>
@@ -1523,7 +1510,7 @@ if (!$user->isLoggedIn()) {
                                             echo '</td><td class="align-middle">';
                                             echo $route->arr;
                                             echo '</td><td class="align-middle mobile-hidden">';
-                                            echo $route->aircraft;
+                                            echo $route->aircraft.'<span class="mobile-hidden"> ('.$route->livery.')</span>';
                                             echo '</td><td class="align-middle">';
                                             echo '<button class="btn bg-custom editRoute" 
                                             data-id="'.$route->id.'" data-fltnum="'.$route->fltnum.'" 
@@ -1532,7 +1519,6 @@ if (!$user->isLoggedIn()) {
                                             ><i class="fa fa-edit"></i></button>';
                                             echo '&nbsp;<button value="'.$route->id.'" form="deleteroute" type="submit" class="btn btn-danger text-light" name="delete"><i class="fa fa-trash"></i></button>';
                                             echo '</td></tr>';
-                                            $x++;
                                         }
                                         ?>
                                     </tbody>
@@ -1608,7 +1594,7 @@ if (!$user->isLoggedIn()) {
                                                             $aircraft = Aircraft::fetchAllAircraft()->results();
 
                                                             foreach ($aircraft as $a) {
-                                                                echo '<option value="'.$a->id.'">'.$a->name.'</option>';
+                                                                echo '<option value="'.$a->id.'">'.$a->name.' ('.$a->liveryname.')</option>';
                                                             }
                                                             ?>
                                                         </select>

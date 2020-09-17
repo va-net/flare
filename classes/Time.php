@@ -11,6 +11,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 class Time
 {
 
+    /**
+     * @return int
+     * @param string $string HH:MM String
+     */
     public static function strToSecs($string)
     {
 
@@ -22,6 +26,10 @@ class Time
 
     }
 
+    /**
+     * @return string
+     * @param int $secs Seconds
+     */
     public static function secsToString($secs)
     {
 
@@ -32,6 +40,10 @@ class Time
 
     }
 
+    /**
+     * @return int
+     * @param int $secs Seconds
+     */
     public static function hrsToSecs($secs)
     {
 

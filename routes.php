@@ -56,7 +56,7 @@ if (!$user->isLoggedIn()) {
                                     <?php
                                         $aircraft = Aircraft::getAvailableAircraft($user->rank(null, true))->results();
                                         foreach ($aircraft as $ac) {
-                                            echo '<option value="'.$ac->id.'">'.$ac->name.'</option>';
+                                            echo '<option value="'.$ac->id.'">'.$ac->name.' ('.$ac->liveryname.')</option>';
                                         }
                                     ?>
                                 </select>
@@ -129,7 +129,7 @@ if (!$user->isLoggedIn()) {
                                     }
 
                                     $query = 'SELECT routes.fltnum, routes.dep, routes.arr, routes.duration, routes.id, routes.aircraftid, 
-                                    aircraft.name AS aircraft FROM routes INNER JOIN aircraft ON aircraft.id = routes.aircraftid';
+                                    aircraft.name AS aircraft, aircraft.liveryname AS livery FROM routes INNER JOIN aircraft ON aircraft.id = routes.aircraftid';
                                     $i = 0;
                                     foreach ($searchwhere as $cond) {
                                         if ($i == 0) {
@@ -150,7 +150,7 @@ if (!$user->isLoggedIn()) {
                                         echo '</td><td class="align-middle">';
                                         echo $route->arr;
                                         echo '</td><td class="align-middle mobile-hidden">';
-                                        echo $route->aircraft;
+                                        echo $route->aircraft.' ('.$route->livery.')';
                                         echo '</td><td class="align-middle">';
                                         $link = "pireps.php?page=new&fnum={$route->fltnum}&dep={$route->dep}&arr={$route->arr}&aircraft={$route->aircraft}";
                                         echo '<a href="'.$link.'" class="btn bg-custom"><i class="fa fa-plane"></i></a>';

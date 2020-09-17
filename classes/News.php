@@ -20,6 +20,9 @@ class News
 
     }
 
+    /**
+     * @return array
+     */
     public static function get()
     {
 
@@ -49,6 +52,10 @@ class News
 
     }
 
+    /**
+     * @return null
+     * @param int $id Article ID
+     */
     public static function archive($id)
     {
 
@@ -60,6 +67,11 @@ class News
 
     }
 
+    /**
+     * @return null
+     * @param int $id Article ID
+     * @param array $fields Updated Article Fields
+     */
     public static function edit($id, $fields) 
     {
 
@@ -69,6 +81,10 @@ class News
 
     }
 
+    /**
+     * @return null
+     * @param array $fields Article Fields
+     */
     public static function add($fields) 
     {
 

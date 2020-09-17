@@ -220,5 +220,33 @@
         ],
         "deletedFiles": [],
         "queries": []
+    },
+    {
+        "tag": "v1.0.0-beta10",
+        "name": "Public Beta 10",
+        "date": "2020-09-17",
+        "notes": "Bug Fixes, Added Livery when Aircraft is Shown, Redid Permissions System",
+        "prerelease": true,
+        "useUpdater": true,
+        "files": [
+            "admin.php",
+            "acars.php",
+            "admin.php",
+            "events.php",
+            "includes/navbar.php",
+            "includes/sidebar.php",
+            "classes/Route.php",
+            "routes.php",
+            "classes/Permissions.php",
+            "classes/User.php",
+            "update.php",
+            "version.json"
+        ],
+        "deletedFiles": [],
+        "queries": [
+            "CREATE TABLE `permissions` ( `id` INT NOT NULL AUTO_INCREMENT , `name` VARCHAR(120) NOT NULL , `userid` INT NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;",
+            "DELETE FROM aircraft WHERE status=0",
+            "INSERT INTO permissions (name`, userid) VALUES ('admin', 1), ('usermanage', 1), ('staffmanage', 1), ('recruitment', 1), ('pirepmanage', 1), ('newsmanage', 1), ('opsmanage', 1), ('statsviewing', 1)"
+        ]
     }
 ]

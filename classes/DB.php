@@ -29,6 +29,9 @@ class DB
 
     }
 
+    /**
+     * @return DB
+     */
     public static function getInstance() 
     {
 
@@ -39,13 +42,20 @@ class DB
 
     }
 
+    /**
+     * @return DB
+     */
     public static function newInstance() 
     {
 
         return new DB();
 
     }
-
+    /**
+     * @return DB
+     * @param string $sql SQL to Run
+     * @param array $params Prepared Statement Parameters
+     */
     public function query($sql, $params = array())
     {
 
@@ -72,6 +82,10 @@ class DB
 
     }
 
+    /**
+     * @return DB
+     * @param string $table Table Name
+     */
     public function getTable($table)
     {
 
@@ -112,6 +126,9 @@ class DB
         
     }
 
+    /**
+     * @return bool
+     */
     public function error()
     {
 
@@ -119,6 +136,12 @@ class DB
         
     }
 
+    /**
+     * @return DB
+     * @param string $table Table Name
+     * @param array $where Where Clause
+     * @param bool|array $order Order Clause
+     */
     public function get($table, $where, $order = false)
     {
 
@@ -126,6 +149,11 @@ class DB
 
     }
 
+    /**
+     * @return DB
+     * @param string $table Table Name
+     * @param array $where Where Clause
+     */
     public function delete($table, $where) 
     {
 
@@ -133,6 +161,11 @@ class DB
 
     }
 
+    /**
+     * @return DB
+     * @param string $table Table Name
+     * @param array $fields Field Names and Values
+     */
     public function insert($table, $fields = array())
     {
 
@@ -159,6 +192,13 @@ class DB
 
     }
 
+    /**
+     * @return DB
+     * @param string $table Table Name
+     * @param int|string $id ID of Row
+     * @param array $where ID Column Name
+     * @param array $fields Updated Field Names and Values
+     */
     public function update($table, $id, $where, $fields = array())
     {
 
@@ -184,7 +224,9 @@ class DB
 
     }
 
-
+    /**
+     * @return int
+     */
     public function count()
     {
 
@@ -192,6 +234,9 @@ class DB
 
     }
 
+    /**
+     * @return array
+     */
     public function results()
     {
 
@@ -199,6 +244,9 @@ class DB
 
     }
 
+    /**
+     * @return object
+     */
     public function first()
     {
 
@@ -210,6 +258,10 @@ class DB
 
     }
 
+    /**
+     * @return array
+     * @param string $table Table Name
+     */
     public function getAll($table) 
     {
 

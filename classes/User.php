@@ -15,7 +15,8 @@ class User
             $_data,
             $_sessionName,
             $_cookieName,
-            $_isLoggedIn;
+            $_isLoggedIn,
+            $_permissions;
 
 
     public function __construct($user = null) 
@@ -42,6 +43,10 @@ class User
 
     }
 
+    /**
+     * @return null
+     * @param array $fields User Fields
+     */
     public function create($fields) 
     {
 
@@ -51,6 +56,10 @@ class User
 
     }
 
+    /**
+     * @return bool
+     * @param int|string $user Email or User ID
+     */
     public function find($user = null) 
     {
 
@@ -59,6 +68,11 @@ class User
             $data = $this->_db->get('pilots', array($field, '=', $user));
             if ($data->count()) {
                 $this->_data = $data->first();
+                $this->_permissions = [];
+                $tempperms = $this->_db->get('permissions', array('userid', '=', $data->first()->id))->results();
+                foreach ($tempperms as $p) {
+                    array_push($this->_permissions, $p->name);
+                }
                 return true;
             }
         }
@@ -66,6 +80,12 @@ class User
 
     }
 
+    /**
+     * @return bool
+     * @param string $username
+     * @param string $password
+     * @param bool $remember
+     */
     public function login($username = null, $password = null, $remember = false) {
         $user = $this->find($username);     
         
@@ -104,6 +124,9 @@ class User
 
     }
 
+    /**
+     * @return bool
+     */
     public function exists()
     {
 
@@ -111,6 +134,9 @@ class User
 
     }
 
+    /**
+     * @return object
+     */
     public function data() 
     {
 
@@ -118,6 +144,9 @@ class User
 
     }
 
+    /**
+     * @return bool
+     */
     public function isLoggedIn() 
     {
 
@@ -125,6 +154,9 @@ class User
 
     }
 
+    /**
+     * @return null
+     */
     public function logout() 
     {
 
@@ -133,6 +165,11 @@ class User
 
     }
 
+    /**
+     * @return null
+     * @param array $fields Updated User Fields
+     * @param int $id User ID
+     */
     public function update($fields = array(), $id = null) 
     {
 
@@ -146,6 +183,11 @@ class User
 
     }
 
+    /**
+     * @return bool
+     * @param string $key Permission Name
+     * @param int $id User ID
+     */
     public function hasPermission($key, $id = null) 
     {
 
@@ -155,65 +197,26 @@ class User
 
         $permissions = [];
         if ($id == $this->data()->id) {
-            $permissions = Json::decode($this->data()->permissions);
+            $permissions = $this->_permissions;
         } else {
-            $user = $this->_db->get('pilots', array('id', '=', $id));
-            $permissions = json_decode($user->first()->permissions, true);
+            $tempperms = $this->_db->get('permissions', array('userid', '=', $id))->results();
+            foreach ($tempperms as $p) {
+                array_push($permissions, $p->name);
+            }
         }
         
-        if (array_key_exists($key, $permissions)) {
-            if ($permissions[$key] == true) {
-                return true;
-            }
+        if (in_array($key, $permissions)) {
+            return true;
         }
         return false;
 
     }
 
-    public function fullName() 
-    {
-
-        return $this->data()->firstName. ' ' .$this->data()->lastName;
-
-    }
-
-    public function getProfilePic($id = null) 
-    {
-
-        if (!$id && $this->isLoggedIn()) {
-            $id = $this->data()->id;  
-        }
-
-        $result = $this->_db->get('profile_pics', array('user_id', '=', $id));
-
-        if (!$result->first()->status) {
-            return './assets/user/profile_pics/default.jpg';
-        }
-
-        return './assets/user/profile_pics/'.$result->first()->id.'.jpeg';
-
-    }
-
-    public function setProfilePic($file, $id = null) 
-    {
-
-        if (!$id && $this->isLoggedIn()) {
-            $id = $this->data()->id;
-        }
-
-        $uniqueid = Image::save($file, './assets/user/profile_pics/');
-
-        if($uniqueid === false) {
-            return false;
-        }
-        
-        if(!$this->_db->update('profile_pics', $id, 'user_id', array('status' => 1, 'id' => $uniqueid))) {
-            return false;
-        }
-        return true;
-
-    }
-
+    /**
+     * @return int|string
+     * @param int $id User ID
+     * @param bool $returnid Whether to Return the Rank ID
+     */
     public function rank($id = null, $returnid = false) 
     {
 
@@ -231,6 +234,10 @@ class User
 
     }
 
+    /**
+     * @return array
+     * @param int $id User ID
+     */
     public function getAvailableAircraft($id = null)
     {
 
@@ -255,6 +262,10 @@ class User
 
     }
 
+    /**
+     * @return int
+     * @param int $id User ID
+     */
     public function getFlightTime($id = null)
     {
 
@@ -282,6 +293,10 @@ class User
 
     }
 
+    /**
+     * @return int
+     * @param int $id User ID
+     */
     public function numPirepsFiled($id = null)
     {
 
@@ -304,11 +319,14 @@ class User
         return $total;
     }
 
-
-    public function fetchPireps($id)
+    /**
+     * @return int
+     * @param int $id User ID
+     */
+    public function fetchPireps($id = null)
     {
 
-        if (!$id) {
+        if ($id == null) {
             $id = $this->data()->id;
         }
 
@@ -317,6 +335,11 @@ class User
 
     }
     
+    /**
+     * @return array
+     * @param int $id User ID
+     * @param int $num Number of PIREPs to Return
+     */
     public function recentPireps($id = null, $num = 10) 
     {
 
@@ -359,6 +382,10 @@ class User
 
     }
 
+    /**
+     * @return DB
+     * @param int $id User ID
+     */
     public function fetchApprovedPireps($id = null)
     {
 
@@ -370,6 +397,10 @@ class User
 
     }
 
+    /**
+     * @return int
+     * @param int $id User ID
+     */
     public function totalPirepsFiled($id = null)
     {
 
@@ -392,6 +423,9 @@ class User
 
     }
 
+    /**
+     * @return array
+     */
     public function getAllUsers()
     {
 
@@ -426,6 +460,9 @@ class User
 
     }
 
+    /**
+     * @return array
+     */
     public function getAllStaff()
     {
 
@@ -458,6 +495,9 @@ class User
 
     }
 
+    /**
+     * @return array
+     */
     public function getAllPendingUsers()
     {
 
@@ -490,6 +530,10 @@ class User
 
     }
 
+    /**
+     * @return string
+     * @param int $id User ID
+     */
     public function idToCallsign($id)
     {
 
@@ -499,7 +543,12 @@ class User
 
     }
 
-    public function getUser($id) {
+    /**
+     * @return object
+     * @param int $id User ID
+     */
+    public function getUser($id) 
+    {
         $ret = $this->_db->get('pilots', array('id', '=', $id))->first();
 
         return $ret;

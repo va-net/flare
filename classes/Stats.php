@@ -16,7 +16,11 @@ class Stats {
         self::$_db = DB::getInstance();
     }
 
-    public static function totalHours() {
+    /**
+     * @return int
+     */
+    public static function totalHours() 
+    {
         self::init();
         
         $transhours = self::$_db->query('SELECT SUM(transhours) AS trans FROM pilots')->first()->trans;
@@ -24,7 +28,11 @@ class Stats {
         return $transhours = $filedhours;
     }
 
-    public static function totalFlights() {
+    /**
+     * @return int
+     */
+    public static function totalFlights() 
+    {
         self::init();
 
         $transflights = self::$_db->query('SELECT SUM(pilots.transflights) AS trans FROM pilots')->first()->trans;
@@ -32,13 +40,21 @@ class Stats {
         return $transflights + $filedflights;
     }
 
-    public static function numPilots() {
+    /**
+     * @return int
+     */
+    public static function numPilots() 
+    {
         self::init();
 
         return self::$_db->query('SELECT COUNT(*) AS total FROM pilots WHERE status=1')->first()->total;
     }
 
-    public static function numRoutes() {
+    /**
+     * @return int
+     */
+    public static function numRoutes() 
+    {
         self::init();
 
         return self::$_db->query('SELECT COUNT(routes.id) AS total FROM routes')->first()->total;

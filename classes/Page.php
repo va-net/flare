@@ -14,6 +14,10 @@ class Page
     private static $_title;
     private static $_active;
 
+    /**
+     * @return null
+     * @param string $title Title
+     */
     public static function setTitle($title)
     {
 
@@ -21,28 +25,14 @@ class Page
 
     }
 
+    /**
+     * @return string
+     */
     public static function getTitle()
     {
 
         return self::$_title;
 
-    }
-
-    public static function setSidebarActive($active)
-    {
-
-        self::$_active = $active;
-
-    }
-
-    public static function getSidebarActive($name)
-    {
-
-        if (self::$_active == $name) {
-            return 'active';
-        }
-        return '';
-        
     }
 
 }

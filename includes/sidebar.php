@@ -13,8 +13,6 @@
         }
     ?>
     <?php
-    $permissions = Permissions::getAll();
-
     if ($user->hasPermission('admin')) {
         $localmenu = array();
         foreach ($GLOBALS['admin-menu'] as $name => $data) {
@@ -42,7 +40,7 @@
             $j = 0;
             foreach ($items as $label => $data) {
                 if ($user->hasPermission($data["permission"])) {
-                    if (($gold && $data["needsGold"]) || !$data["needsGold"]) {
+                    if (($IS_GOLD && $data["needsGold"]) || !$data["needsGold"]) {
                         if ($j == 0) {
                             echo '&nbsp;&nbsp;<a href="'.$data["link"].'" class="panel-link"><i class="fa '.$data['icon'].'"></i>&nbsp;'.$label.'</a>';
                         } else {

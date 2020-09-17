@@ -11,6 +11,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 class Config 
 {
 
+    /**
+     * @return mixed
+     * @param string $path Config Key, Config File Categories Separated by Slashes
+     */
     public static function get($path = null) {
 
         if ($path) {
@@ -42,6 +46,11 @@ class Config
 
     }
 
+    /**
+     * @return bool
+     * @param string $main Main Theme Colour, No Hash
+     * @param string $text Text Colour, No Hash
+     */
     public static function replaceColour($main, $text)
     {
 
@@ -64,6 +73,11 @@ class Config
 
     }
 
+    /**
+     * @return bool
+     * @param string $where Config Key
+     * @param mixed $new New Value
+     */
     public static function replace($where, $new)
     {
 
@@ -98,6 +112,11 @@ class Config
 
     }
 
+    /**
+     * @return bool
+     * @param string $key Config Key
+     * @param mixed $value Value
+     */
     public static function add($key, $value) {
         $db = DB::getInstance();
         $ret = $db->insert('options', array(

@@ -11,6 +11,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 class Image
 {
 
+    /**
+     * @return string|bool
+     * @param array $tmpFile Temp File
+     * @param string $where Location
+     */
     public static function save($tmpFile, $where) 
     {
 

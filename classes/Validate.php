@@ -18,6 +18,9 @@ class Validate {
         $this->_db = DB::getInstance();
     }
 
+    /**
+     * @return Validate
+     */
     public function check($source, $items = array()) {
         foreach ($items as $item => $rules) {
             foreach ($rules as $rule => $rule_value) {
@@ -63,10 +66,16 @@ class Validate {
         $this->_errors[] = $error;
     }
 
+    /**
+     * @return array
+     */
     public function errors() {
         return $this->_errors;
     }
 
+    /**
+     * @return bool
+     */
     public function passed() {
         return $this->_passed;
     }

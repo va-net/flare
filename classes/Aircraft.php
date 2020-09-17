@@ -20,6 +20,9 @@ class Aircraft
 
     }
 
+    /**
+     * @return array
+     */
     public static function fetchAllAircraftFromVANet()
     {
 
@@ -41,6 +44,9 @@ class Aircraft
 
     }
 
+    /**
+     * @return array
+     */
     public static function fetchAllLiveriesFromVANet()
     {
 
@@ -52,6 +58,10 @@ class Aircraft
 
     }
 
+    /**
+     * @return array
+     * @param string $aircraftid Aircraft ID
+     */
     public static function fetchLiveryIdsForAircraft($aircraftid)
     {
 
@@ -70,6 +80,11 @@ class Aircraft
 
     }
 
+    /**
+     * @return array
+     * @param string $aircraft The Search Term
+     * @param string $search The Search Key
+     */
     public static function fetchAircraftFromVANet($aircraft, $search = 'AircraftID') 
     {
 
@@ -81,6 +96,9 @@ class Aircraft
 
     }
 
+    /**
+     * @return DB
+     */
     public static function fetchActiveAircraft()
     {
 
@@ -90,6 +108,10 @@ class Aircraft
 
     }
 
+    /**
+     * @return object
+     * @param string $liveryId Aircraft Livery ID
+     */
     public static function findAircraft($liveryId)
     {
         self::init();
@@ -98,6 +120,9 @@ class Aircraft
         return $result->first();
     }
 
+    /**
+     * @return DB
+     */
     public static function fetchAllAircraft()
     {
 
@@ -107,6 +132,10 @@ class Aircraft
 
     }
 
+    /**
+     * @return DB
+     * @param int $rankid The Rank ID to Get Aircraft For
+     */
     public static function getAvailableAircraft($rankid)
     {
 
@@ -116,6 +145,10 @@ class Aircraft
 
     }
 
+    /**
+     * @return string
+     * @param int $id Aircraft ID
+     */
     public static function getAircraftName($id)
     {
 
@@ -127,6 +160,10 @@ class Aircraft
 
     }
 
+    /**
+     * @return int
+     * @param string $name Aircraft Name
+     */
     public static function getId($name)
     {
 
@@ -138,6 +175,10 @@ class Aircraft
 
     }
 
+    /**
+     * @return null
+     * @param int $id Aircraft ID
+     */
     public static function archive($id)
     {
 
@@ -149,6 +190,11 @@ class Aircraft
 
     }
 
+    /**
+     * @return string
+     * @param string $livery Livery Name
+     * @param string $aircraftid Aircraft ID
+     */
     public static function liveryNameToId($livery, $aircraftid) 
     {
 
@@ -164,6 +210,11 @@ class Aircraft
 
     }
 
+    /**
+     * @return null
+     * @param string $liveryId Livery ID
+     * @param int $rank Rank ID
+     */
     public static function add($liveryId, $rank) 
     {
 
@@ -181,6 +232,11 @@ class Aircraft
         ));
     }
 
+    /**
+     * @return null
+     * @param int $rankId Rank ID
+     * @param int $aircraftId Aircraft ID
+     */
     public static function updateRank($rankId, $aircraftId) 
     {
         self::init();
@@ -194,6 +250,10 @@ class Aircraft
         }
     }
 
+    /**
+     * @return int
+     * @param string $name Aircraft Name
+     */
     public static function nameToId($name)
     {
 
@@ -204,6 +264,10 @@ class Aircraft
 
     }
 
+    /**
+     * @return string
+     * @param string $name Aircraft Name
+     */
     public static function nameToAircraftId($name)
     {
 
@@ -214,6 +278,10 @@ class Aircraft
 
     }
 
+    /**
+     * @return string
+     * @param string $name Aircraft Name
+     */
     public static function nameToLiveryId($name)
     {
 
@@ -223,6 +291,10 @@ class Aircraft
 
     }
 
+    /**
+     * @return string
+     * @param int $id Aircraft ID
+     */
     public static function idToName($id)
     {
 
@@ -232,6 +304,10 @@ class Aircraft
 
     }
 
+    /**
+     * @return bool
+     * @param string $liveryId Livery ID
+     */
     public static function exists($liveryId) 
     {
 
