@@ -1389,18 +1389,16 @@ if (!$user->isLoggedIn()) {
                                 </div>
 
                                 <script>
-                                    $(document).ready(function() {
-                                        $(".editFleet").click(function() {
-                                            var acName = $(this).data('acname');
-                                            var acRank = $(this).data('rankreq');
-                                            var acId = $(this).data('id');
-                                            
-                                            $("#fleetedit-title").text("Edit Aircraft: " + acName);
-                                            $("#fleetedit-id").val(acId);
-                                            $("#fleetedit-rank-" + acRank).attr('selected', true);
+                                    $(".editFleet").click(function() {
+                                        var acName = $(this).data('acname');
+                                        var acRank = $(this).data('rankreq');
+                                        var acId = $(this).data('id');
+                                        
+                                        $("#fleetedit-title").text("Edit Aircraft: " + acName);
+                                        $("#fleetedit-id").val(acId);
+                                        $("#fleetedit-rank-" + acRank).attr('selected', true);
 
-                                            $("#fleetedit").modal('show');
-                                        });
+                                        $("#fleetedit").modal('show');
                                     });
                                 </script>
                             <?php elseif (Input::get('section') === 'routes'): ?>
