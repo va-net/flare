@@ -87,153 +87,152 @@ if (!$user->isLoggedIn()) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                <?php
-                                $users = $user->getAllUsers();
-                                $x = 0;
-                                foreach ($users as $user) {
-                                    echo '<tr><td class="align-middle">';
-                                    echo $user["callsign"];
-                                    echo '</td><td class="mobile-hidden align-middle">';
-                                    echo $user["name"];
-                                    echo '</td><td class="mobile-hidden align-middle">';
-                                    echo $user["email"];
-                                    echo '</td><td class="align-middle">';
-                                    echo $user["status"];
-                                    echo '</td><td class="align-middle">';
-                                    echo '<button class="btn btn-primary text-light userEdit" data-callsign="'.$user['callsign'].'" 
-                                    data-name="'.$user['name'].'" data-email="'.$user['email'].'" data-ifc="'.$user['ifc'].'" 
-                                    data-joined="'.date_format(date_create($user['joined']), 'Y-m-d').'" data-status="'.$user['status'].'" 
-                                    data-id="'.$user['id'].'" data-thrs="'.Time::secsToString($user["transhours"]).'" 
-                                    data-admin="'.$user['isAdmin'].'" data-tflts="'.$user["transflights"].'"><i class="fa fa-edit"></i>
-                                    </button>';
-                                    echo '&nbsp;<button id="delconfirmbtn" class="btn text-light btn-danger" 
-                                    data-toggle="modal" data-target="#delconfirmmodal" 
-                                    data-callsign="'.$user['callsign'].'" data-id="'.$user['id'].'">
-                                    <i class="fa fa-trash"></i></button>';
-                                    echo '</td>';
-                                    $x++;
-                                }
-                                ?>
-                            </tbody>
-                        </table>
-                        <div class="modal fade" id="delconfirmmodal" tabindex="-1" role="dialog" aria-labelledby="delconfirmmodallabel" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLabel">Confirm</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <p id="delconfirmmessage"></p>
-                                        <form action="update.php" method="post">
-                                            <input hidden name="action" value="deluser">
-                                            <input hidden value="" name="id" id="delconfirmuserid">
-                                            <input type="submit" class="btn bg-danger text-light" value="Mark as Inactive">
-                                        </form>
+                                    <?php
+                                    $users = $user->getAllUsers();
+                                    $x = 0;
+                                    foreach ($users as $user) {
+                                        echo '<tr><td class="align-middle">';
+                                        echo $user["callsign"];
+                                        echo '</td><td class="mobile-hidden align-middle">';
+                                        echo $user["name"];
+                                        echo '</td><td class="mobile-hidden align-middle">';
+                                        echo $user["email"];
+                                        echo '</td><td class="align-middle">';
+                                        echo $user["status"];
+                                        echo '</td><td class="align-middle">';
+                                        echo '<button class="btn btn-primary text-light userEdit" data-callsign="'.$user['callsign'].'" 
+                                        data-name="'.$user['name'].'" data-email="'.$user['email'].'" data-ifc="'.$user['ifc'].'" 
+                                        data-joined="'.date_format(date_create($user['joined']), 'Y-m-d').'" data-status="'.$user['status'].'" 
+                                        data-id="'.$user['id'].'" data-thrs="'.Time::secsToString($user["transhours"]).'" 
+                                        data-admin="'.$user['isAdmin'].'" data-tflts="'.$user["transflights"].'"><i class="fa fa-edit"></i>
+                                        </button>';
+                                        echo '&nbsp;<button id="delconfirmbtn" class="btn text-light btn-danger" 
+                                        data-toggle="modal" data-target="#delconfirmmodal" 
+                                        data-callsign="'.$user['callsign'].'" data-id="'.$user['id'].'">
+                                        <i class="fa fa-trash"></i></button>';
+                                        echo '</td>';
+                                        $x++;
+                                    }
+                                    ?>
+                                </tbody>
+                            </table>
+                            <div class="modal fade" id="delconfirmmodal" tabindex="-1" role="dialog" aria-labelledby="delconfirmmodallabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Confirm</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p id="delconfirmmessage"></p>
+                                            <form action="update.php" method="post">
+                                                <input hidden name="action" value="deluser">
+                                                <input hidden value="" name="id" id="delconfirmuserid">
+                                                <input type="submit" class="btn bg-danger text-light" value="Mark as Inactive">
+                                            </form>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="modal fade" id="usermodal" tabindex="-1" role="dialog" aria-labelledby="pirep'.$x.'label" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="usermodal-title"></h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form action="update.php" method="post">
-                                            <input hidden name="action" value="edituser">
-                                            <input hidden name="id" id="usermodal-id" value="">
-                                            <div class="form-group">
-                                                <label for="usermodal-callsign">Callsign</label>
-                                                <input required type="text" value="" class="form-control" name="callsign" id="usermodal-callsign">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="usermodal-name">Name</label>
-                                                <input required type="text" value="" class="form-control" name="name" id="usermodal-name">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="usermodal-email">Email</label>
-                                                <input required type="text" value="" class="form-control" name="email" id="usermodal-email">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="usermodal-ifc">IFC Profile URL</label>
-                                                <input required type="url" value="" class="form-control" name="ifc" id="usermodal-ifc">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="usermodal-thrs">Transfer Flight Time</label>
-                                                <div class="row">
-                                                    <div class="col-sm-6">
-                                                        <input required type="number" min="0" id="flightTimeHrs" class="form-control" placeholder="Hours" />
-                                                    </div>
-                                                    <div class="col-sm-6">
-                                                        <input required type="number" min="0" id="flightTimeMins" class="form-control" placeholder="Minutes" />
-                                                    </div>
+                            <div class="modal fade" id="usermodal" tabindex="-1" role="dialog" aria-labelledby="pirep'.$x.'label" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="usermodal-title"></h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form action="update.php" method="post">
+                                                <input hidden name="action" value="edituser">
+                                                <input hidden name="id" id="usermodal-id" value="">
+                                                <div class="form-group">
+                                                    <label for="usermodal-callsign">Callsign</label>
+                                                    <input required type="text" value="" class="form-control" name="callsign" id="usermodal-callsign">
                                                 </div>
-                                                <input hidden name="transhours" id="usermodal-thrs" class="form-control" value="<?= escape(Input::get('ftime')) ?>" required />
-                                                <script>
-                                                    function formatFlightTime() {
-                                                        var hrs = $("#flightTimeHrs").val();
-                                                        var mins = $("#flightTimeMins").val();
-                                                        $("#usermodal-thrs").val(hrs + ":" + mins);
-                                                    }
-
-                                                    function reverseFormatFlightTime() {
-                                                        var formatted = $("#usermodal-thrs").val();
-                                                        if (formatted != '') {
-                                                            var split = formatted.split(":");
-                                                            var hrs = split[0];
-                                                            var mins = split[1];
-                                                            $("#flightTimeHrs").val(hrs);
-                                                            $("#flightTimeMins").val(mins);
+                                                <div class="form-group">
+                                                    <label for="usermodal-name">Name</label>
+                                                    <input required type="text" value="" class="form-control" name="name" id="usermodal-name">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="usermodal-email">Email</label>
+                                                    <input required type="text" value="" class="form-control" name="email" id="usermodal-email">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="usermodal-ifc">IFC Profile URL</label>
+                                                    <input required type="url" value="" class="form-control" name="ifc" id="usermodal-ifc">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="usermodal-thrs">Transfer Flight Time</label>
+                                                    <div class="row">
+                                                        <div class="col-sm-6">
+                                                            <input required type="number" min="0" id="flightTimeHrs" class="form-control" placeholder="Hours" />
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <input required type="number" min="0" id="flightTimeMins" class="form-control" placeholder="Minutes" />
+                                                        </div>
+                                                    </div>
+                                                    <input hidden name="transhours" id="usermodal-thrs" class="form-control" value="<?= escape(Input::get('ftime')) ?>" required />
+                                                    <script>
+                                                        function formatFlightTime() {
+                                                            var hrs = $("#flightTimeHrs").val();
+                                                            var mins = $("#flightTimeMins").val();
+                                                            $("#usermodal-thrs").val(hrs + ":" + mins);
                                                         }
-                                                    }
 
-                                                    $(document).ready(function() {
-                                                        $("#flightTimeHrs").keyup(function() {
-                                                            formatFlightTime();
+                                                        function reverseFormatFlightTime() {
+                                                            var formatted = $("#usermodal-thrs").val();
+                                                            if (formatted != '') {
+                                                                var split = formatted.split(":");
+                                                                var hrs = split[0];
+                                                                var mins = split[1];
+                                                                $("#flightTimeHrs").val(hrs);
+                                                                $("#flightTimeMins").val(mins);
+                                                            }
+                                                        }
+
+                                                        $(document).ready(function() {
+                                                            $("#flightTimeHrs").keyup(function() {
+                                                                formatFlightTime();
+                                                            });
+                                                            $("#flightTimeMins").keyup(function() {
+                                                                formatFlightTime();
+                                                            });
+                                                            reverseFormatFlightTime();
                                                         });
-                                                        $("#flightTimeMins").keyup(function() {
-                                                            formatFlightTime();
-                                                        });
-                                                        reverseFormatFlightTime();
-                                                    });
-                                                </script>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="usermodal-tflts"># Transfer Flights</label>
-                                                <input required type="number" min="0" value="" class="form-control" name="transflights" id="usermodal-tflts">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="usermodal-joined">Join date</label>
-                                                <input readonly type="date" value="" class="form-control" name="joined" id="usermodal-joined">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="usermodal-status">Status</label>
-                                                <input readonly type="text" value="" class="form-control" name="status" id="usermodal-status">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="usermodal-admin">Admin Status</label>
-                                                <select required class="form-control" name="admin" id="usermodal-admin">
-                                                    <option value>Select</option>
-                                                    <option value="0" id="usermodal-admin-0">Pilot</option>
-                                                    <option value="1" id="usermodal-admin-1">Staff Member</option>
-                                                </select>
-                                            </div>
-                                            <input type="submit" class="btn bg-custom" value="Save">
-                                        </form>
+                                                    </script>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="usermodal-tflts"># Transfer Flights</label>
+                                                    <input required type="number" min="0" value="" class="form-control" name="transflights" id="usermodal-tflts">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="usermodal-joined">Join date</label>
+                                                    <input readonly type="date" value="" class="form-control" name="joined" id="usermodal-joined">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="usermodal-status">Status</label>
+                                                    <input readonly type="text" value="" class="form-control" name="status" id="usermodal-status">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="usermodal-admin">Admin Status</label>
+                                                    <select required class="form-control" name="admin" id="usermodal-admin">
+                                                        <option value>Select</option>
+                                                        <option value="0" id="usermodal-admin-0">Pilot</option>
+                                                        <option value="1" id="usermodal-admin-1">Staff Member</option>
+                                                    </select>
+                                                </div>
+                                                <input type="submit" class="btn bg-custom" value="Save">
+                                            </form>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <!-- Populate modal fields -->
-                        <script>
-                            $(document).ready(function() {
+                            <!-- Populate modal fields -->
+                            <script>
                                 $('.userEdit').click(function(e) {
                                     var userCallsign = $(this).data("callsign");
                                     var userName = $(this).data("name");
@@ -262,21 +261,20 @@ if (!$user->isLoggedIn()) {
 
                                     $("#usermodal").modal("show");
                                 });
-                            });
-                        </script>
-                        <!-- Confirm delete modal -->
-                        <script>
-                            $(document).ready(function() {
-                                $('#delconfirmmodal').on('show.bs.modal', function(e) {
-                                    var userCallsign = $(e.relatedTarget).data('callsign');
-                                    var userId = $(e.relatedTarget).data('id');
+                            </script>
+                            <!-- Confirm delete modal -->
+                            <script>
+                                $(document).ready(function() {
+                                    $('#delconfirmmodal').on('show.bs.modal', function(e) {
+                                        var userCallsign = $(e.relatedTarget).data('callsign');
+                                        var userId = $(e.relatedTarget).data('id');
 
-                                    var message = 'Are you sure you want to mark the user ' + userCallsign + ' as inactive?'
-                                    $("#delconfirmmessage").text(message);
-                                    $("#delconfirmuserid").val(userId);
+                                        var message = 'Are you sure you want to mark the user ' + userCallsign + ' as inactive?'
+                                        $("#delconfirmmessage").text(message);
+                                        $("#delconfirmuserid").val(userId);
+                                    });
                                 });
-                            });
-                        </script>
+                            </script>
                         <?php endif; ?>
                     <?php elseif (Input::get('page') === 'staffmanage'): ?>
                         <?php $ACTIVE_CATEGORY = 'user-management'; ?>
@@ -953,12 +951,10 @@ if (!$user->isLoggedIn()) {
                             </form>
 
                             <script>
-                                $(document).ready(function() {
-                                    $(".deleteArticle").click(function() {
-                                        var id = $(this).data('id');
-                                        $("#confirmNewsDelete-id").val(id);
-                                        $("#confirmNewsDelete").modal('show');
-                                    });
+                                $(".deleteArticle").click(function() {
+                                    var id = $(this).data('id');
+                                    $("#confirmNewsDelete-id").val(id);
+                                    $("#confirmNewsDelete").modal('show');
                                 });
                             </script>
                         <?php endif; ?>
@@ -1608,25 +1604,23 @@ if (!$user->isLoggedIn()) {
                                     <input hidden value="deleteroute" name="action">
                                 </form>
                                 <script>
-                                    $(document).ready(function() {
-                                        $(".editRoute").click(function() {
-                                            var id = $(this).data('id');
-                                            var fltnum = $(this).data('fltnum');
-                                            var dep = $(this).data('dep');
-                                            var arr = $(this).data('arr');
-                                            var duration = $(this).data('duration');
-                                            var aircraft = $(this).data('aircraft');
+                                    $(".editRoute").click(function() {
+                                        var id = $(this).data('id');
+                                        var fltnum = $(this).data('fltnum');
+                                        var dep = $(this).data('dep');
+                                        var arr = $(this).data('arr');
+                                        var duration = $(this).data('duration');
+                                        var aircraft = $(this).data('aircraft');
 
-                                            $("#routeedit-id").val(id);
-                                            $("#routeedit-fltnum").val(fltnum);
-                                            $("#routeedit-dep").val(dep);
-                                            $("#routeedit-arr").val(arr);
-                                            $("#routeedit-duration").val(duration);
-                                            reverseFormatEditFlightTime();
-                                            $("#routeedit-aircraft").val(aircraft);
+                                        $("#routeedit-id").val(id);
+                                        $("#routeedit-fltnum").val(fltnum);
+                                        $("#routeedit-dep").val(dep);
+                                        $("#routeedit-arr").val(arr);
+                                        $("#routeedit-duration").val(duration);
+                                        reverseFormatEditFlightTime();
+                                        $("#routeedit-aircraft").val(aircraft);
 
-                                            $("#routeedit").modal('show');
-                                        });
+                                        $("#routeedit").modal('show');
                                     });
                                 </script>
                             <?php elseif (Input::get('section') === 'ranks'): ?>
@@ -1717,19 +1711,17 @@ if (!$user->isLoggedIn()) {
                                     </div>
                                 </div>
                                 <script>
-                                    $(document).ready(function() {
-                                        $('.editRank').click(function(e) {
-                                            var rankId = $(this).data("id");
-                                            var rankName = $(this).data("name");
-                                            var rankHrs = $(this).data("minhrs");
+                                    $('.editRank').click(function(e) {
+                                        var rankId = $(this).data("id");
+                                        var rankName = $(this).data("name");
+                                        var rankHrs = $(this).data("minhrs");
 
-                                            $("#rankmodal-id").val(rankId);
-                                            $("#rankmodal-name").val(rankName);
-                                            $("#rankmodal-hours").val(rankHrs);
-                                            $("#rankmodal-title").text("Edit Rank - " + rankName);
+                                        $("#rankmodal-id").val(rankId);
+                                        $("#rankmodal-name").val(rankName);
+                                        $("#rankmodal-hours").val(rankHrs);
+                                        $("#rankmodal-title").text("Edit Rank - " + rankName);
 
-                                            $("#rankmodal").modal("show");
-                                        });
+                                        $("#rankmodal").modal("show");
                                     });
                                 </script>
                             <?php elseif (Input::get('section') === 'import'): ?>
