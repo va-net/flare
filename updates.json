@@ -253,11 +253,15 @@
         "tag": "v1.0.0-beta11",
         "name": "Public Beta 11",
         "date": "2020-09-19",
-        "notes": "TODO",
+        "notes": "Various Bug Fixes",
         "prerelease": true,
         "useUpdater": true,
         "files": [
             "events.php",
+            "classes/Pirep.php",
+            "pireps.php",
+            "update.php",
+            "admin.php",
             "version.json"
         ],
         "deletedFiles": [],
