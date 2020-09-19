@@ -83,69 +83,77 @@ if (!$user->isLoggedIn()) {
                                 }
                                 ?>
 
-                                <div class="row">
-                                    <div class="col-lg-6 px-5">
-                                        <h4 class="text-left">Event Details</h4>
-                                        <p class="text-left">
-                                            <b>Date & Time:</b> <?= $event["dateTime"].'Z'; ?><br />
-                                            <b>Departure:</b> <?= $event["departureAirport"]; ?><br />
-                                            <b>Arrival:</b> <?= $event["arrivalAirport"]; ?><br />
-                                            <b>Aircraft:</b> <?= $event["aircraft"]["aircraftName"].' ('.$event["aircraft"]["liveryName"].')'; ?><br />
-                                            <b>Server:</b> <?= ucfirst($event["server"]); ?><br />
-                                        </p>
-                                        <h4 class="text-left">Aircraft Specifications</h4>
-                                        <p class="text-left">
-                                            <b>Max. Takeoff Weight:</b> <?= $event["aircraft"]["maxTakeoffWeight"]."kg"; ?><br />
-                                            <b>Max. Landing Weight:</b> <?= $event["aircraft"]["maxLandingWeight"]."kg"; ?><br />
-                                            <b>Never Exceed Speed:</b> <?= $event["aircraft"]["neverExceed"]; ?><br />
-                                            <b>Service Ceiling:</b> <?= $event["aircraft"]["serviceCeiling"]."ft"; ?><br />
-                                            <b>Range:</b> <?= $event["aircraft"]["range"]." NM"; ?><br />
-                                            <b>Approach Speed:</b> <?= $event["aircraft"]["apprSpeedRef"]."kts"; ?><br />
-                                            <b>Max. Passengers:</b> <?= $event["aircraft"]["maxPassengers"]; ?><br />
-                                        </p>
-                                    </div>
-                                    <div class="col-lg-6 px-5">
-                                        <h4 class="text-center">Gates</h4>
-                                        <form id="signUp" action="update.php" method="post">
-                                            <input hidden name="action" value="eventsignup" />
-                                            <input hidden name="event" value="<?= $event["id"] ?>" />
-                                        </form>
-                                        <form id="vacate" action="update.php" method="post">
-                                            <input hidden name="action" value="vacateslot" />
-                                            <input hidden name="event" value="<?= $event["id"] ?>" />
-                                        </form>
-                                        <table class="table table-striped text-center datatable-nosearch">
-                                            <thead class="bg-custom">
-                                                <tr>
-                                                    <th>Gate</th>
-                                                    <th>Pilot</th>
-                                                    <th>Actions</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <?php
-                                                    $signedUp = VANet::isSignedUp($user->data()->ifuserid, Input::get('event'));
-                                                    
-                                                    foreach ($event["signups"] as $gate) {
-                                                        echo '<tr><td class="align-middle">';
-                                                        echo $gate["gate"];
-                                                        echo '</td><td class="align-middle">';
-                                                        echo $gate["pilotName"];
-                                                        echo '</td><td class="align-middle">';
-                                                        switch ($signedUp) {
-                                                            case false:
-                                                                echo '<button value="'.$gate['id'].'" form="signUp" type="submit" class="btn bg-custom text-light" name="gate">Sign Up</button>';
-                                                                break;
-                                                            case $gate["id"]:
-                                                                echo '<button value="'.$gate['id'].'" form="vacate" type="submit" class="btn bg-custom text-light" name="gate">Pull Out</button>';
+                                <?php if ($user->data()->ifuserid == null): ?>
+                                    <p class="text-center"><b>
+                                        You have not set up PIREPs yet. You will need to do this before you can
+                                        view or register for this event. 
+                                        You can set up PIREPs <a href="pireps.php?page=new">here</a>.
+                                    </b></p>
+                                <?php else: ?>
+                                    <div class="row">
+                                        <div class="col-lg-6 px-5">
+                                            <h4 class="text-left">Event Details</h4>
+                                            <p class="text-left">
+                                                <b>Date & Time:</b> <?= $event["dateTime"].'Z'; ?><br />
+                                                <b>Departure:</b> <?= $event["departureAirport"]; ?><br />
+                                                <b>Arrival:</b> <?= $event["arrivalAirport"]; ?><br />
+                                                <b>Aircraft:</b> <?= $event["aircraft"]["aircraftName"].' ('.$event["aircraft"]["liveryName"].')'; ?><br />
+                                                <b>Server:</b> <?= ucfirst($event["server"]); ?><br />
+                                            </p>
+                                            <h4 class="text-left">Aircraft Specifications</h4>
+                                            <p class="text-left">
+                                                <b>Max. Takeoff Weight:</b> <?= $event["aircraft"]["maxTakeoffWeight"]."kg"; ?><br />
+                                                <b>Max. Landing Weight:</b> <?= $event["aircraft"]["maxLandingWeight"]."kg"; ?><br />
+                                                <b>Never Exceed Speed:</b> <?= $event["aircraft"]["neverExceed"]; ?><br />
+                                                <b>Service Ceiling:</b> <?= $event["aircraft"]["serviceCeiling"]."ft"; ?><br />
+                                                <b>Range:</b> <?= $event["aircraft"]["range"]." NM"; ?><br />
+                                                <b>Approach Speed:</b> <?= $event["aircraft"]["apprSpeedRef"]."kts"; ?><br />
+                                                <b>Max. Passengers:</b> <?= $event["aircraft"]["maxPassengers"]; ?><br />
+                                            </p>
+                                        </div>
+                                        <div class="col-lg-6 px-5">
+                                            <h4 class="text-center">Gates</h4>
+                                            <form id="signUp" action="update.php" method="post">
+                                                <input hidden name="action" value="eventsignup" />
+                                                <input hidden name="event" value="<?= $event["id"] ?>" />
+                                            </form>
+                                            <form id="vacate" action="update.php" method="post">
+                                                <input hidden name="action" value="vacateslot" />
+                                                <input hidden name="event" value="<?= $event["id"] ?>" />
+                                            </form>
+                                            <table class="table table-striped text-center datatable-nosearch">
+                                                <thead class="bg-custom">
+                                                    <tr>
+                                                        <th>Gate</th>
+                                                        <th>Pilot</th>
+                                                        <th>Actions</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <?php
+                                                        $signedUp = VANet::isSignedUp($user->data()->ifuserid, Input::get('event'));
+                                                        
+                                                        foreach ($event["signups"] as $gate) {
+                                                            echo '<tr><td class="align-middle">';
+                                                            echo $gate["gate"];
+                                                            echo '</td><td class="align-middle">';
+                                                            echo $gate["pilotName"];
+                                                            echo '</td><td class="align-middle">';
+                                                            switch ($signedUp) {
+                                                                case false:
+                                                                    echo '<button value="'.$gate['id'].'" form="signUp" type="submit" class="btn bg-custom text-light" name="gate">Sign Up</button>';
+                                                                    break;
+                                                                case $gate["id"]:
+                                                                    echo '<button value="'.$gate['id'].'" form="vacate" type="submit" class="btn bg-custom text-light" name="gate">Pull Out</button>';
+                                                            }
+                                                            echo '</td></tr>';
                                                         }
-                                                        echo '</td></tr>';
-                                                    }
-                                                ?>
-                                            </tbody>
-                                        </table>
+                                                    ?>
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
-                                </div>
+                                <?php endif; ?>
 
                                 <div class="text-center">
                                     <hr />
