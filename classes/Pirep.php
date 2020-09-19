@@ -160,7 +160,7 @@ class Pirep
 
         $server = 'casual';
         $force = Config::get('FORCE_SERVER');
-        if ($force !== 0 && $force !== 'casual') $server = $force;
+        if ($force != 0 && $force != 'casual') $server = $force;
 
         $curl = new Curl;
         $request = $curl->get(Config::get('vanet/base_url').'/api/userid', array(

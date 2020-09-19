@@ -327,7 +327,7 @@ if (Input::get('action') === 'editprofile') {
 } elseif (Input::get('action') === 'setuppireps') {
     if (!Pirep::setup(Input::get('callsign'), $user->data()->id)) {
         $server = 'casual';
-        if ($force !== 0 && $force !== 'casual') $server = $force;
+        if ($force != 0 && $force != 'casual') $server = $force;
         Session::flash('errorrecent', 'There was an Error Connecting to Infinite Flight. Ensure you are spawned in on the <b>'.ucfirst($server).' Server, and have set your callsign to \''.$user->data()->callsign.'\'</b>!');
         Redirect::to('pireps.php?page=new');
     }
