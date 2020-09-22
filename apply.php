@@ -68,7 +68,6 @@ if (Input::exists()) {
                     'grade' => Input::get('grade'),
                     'violand' => Input::get('violand'),
                     'notes' => Input::get('notes'),
-                    'permissions' => Config::get('defaults/permissions')
                 ));
             } catch(Exception $e) {
                 die($e->getMessage());

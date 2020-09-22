@@ -82,9 +82,9 @@ switch (Input::get('page')) {
                     'ifc' => Input::get('ifc'),
                     'password' => Hash::make(Input::get('password')),
                     'callsign' => Input::get('callsign'),
-                    'permissions' => Config::get('defaults/fulladminpermissions'),
                     'status' => 1
                 ));
+                Permissions::giveAll(1);
             } catch(Exception $e) {
                 Session::flash('error', 'Something went wrong when trying to register the user. Please try again.');
                 Redirect::to('?page=user-setup');

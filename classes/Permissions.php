@@ -83,4 +83,18 @@ class Permissions
         return $permissions;
     }
 
+    /**
+     * @return null
+     * @param int $userid User ID
+     */
+    public static function giveAll($userid)
+    {
+        foreach (self::$_permissions as $key => $val) {
+            $ret = self::give($userid, $key);
+            if (!$ret) {
+                throw new Exception("Could not Give Permission {$val} ({$key})");
+            }
+        }
+    }
+
 }
