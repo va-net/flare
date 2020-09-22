@@ -253,6 +253,7 @@ class User
         while ($x < $result->count()) {
             $newdata = array(
                 'name' => $result->results()[$x]->name,
+                'liveryname' => $result->results()[$x]->liveryname,
                 'id' => $result->results()[$x]->id,
             );
             $aircraft[$x] = $newdata;
