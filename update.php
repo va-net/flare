@@ -10,6 +10,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 require_once './core/init.php';
 
 $user = new User();
+if (!$user->isLoggedIn()) {
+    Redirect::to('index.php');
+}
 
 if (Input::get('action') === 'editprofile') {
     if (!Callsign::assigned(Input::get('callsign'), $user->data()->id)) {
@@ -327,7 +330,8 @@ if (Input::get('action') === 'editprofile') {
 } elseif (Input::get('action') === 'setuppireps') {
     if (!Pirep::setup(Input::get('callsign'), $user->data()->id)) {
         $server = 'casual';
-        if ($force != 0 && $force != 'casual') $server = $force;
+        $force = Config::get('FORCE_SERVER');
+        if ($force !== 0 && $force !== 'casual') $server = $force;
         Session::flash('errorrecent', 'There was an Error Connecting to Infinite Flight. Ensure you are spawned in on the <b>'.ucfirst($server).' Server, and have set your callsign to \''.$user->data()->callsign.'\'</b>!');
         Redirect::to('pireps.php?page=new');
     }

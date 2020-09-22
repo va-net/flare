@@ -266,5 +266,25 @@
         ],
         "deletedFiles": [],
         "queries": []
+    },
+    {
+        "tag": "v1.0.0-beta12",
+        "name": "Public Beta 12",
+        "date": "2020-09-22",
+        "notes": "Various Bug Fixes",
+        "prerelease": true,
+        "useUpdater": true,
+        "files": [
+            "events.php",
+            "update.php",
+            "classes/User.php",
+            "pireps.php",
+            "classes/Pirep.php",
+            "apply.php",
+            "classes/Permissions.php",
+            "version.json"
+        ],
+        "deletedFiles": [],
+        "queries": []
     }
 ]
