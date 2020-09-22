@@ -10,6 +10,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 require_once './core/init.php';
 
 $user = new User();
+if (!$user->isLoggedIn()) {
+    Redirect::to('index.php');
+}
 
 if (Input::get('action') === 'editprofile') {
     if (!Callsign::assigned(Input::get('callsign'), $user->data()->id)) {
