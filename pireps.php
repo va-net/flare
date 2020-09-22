@@ -270,7 +270,7 @@ if (!$user->isLoggedIn()) {
                             <?php
                                 $server = 'casual';
                                 $force = Config::get('FORCE_SERVER');
-                                if ($force != 0 && $force !== 'casual') $server = $force;
+                                if ($force !== 0 && $force !== 'casual') $server = $force;
                             ?>
                             <p>Before you can start filing PIREPs, we need to grab a bit of data from Infinite Flight. Please spawn in on the <?= ucfirst($server); ?> Server, and ensure that you <b>set your callsign to your assigned one (<?= $user->data()->callsign ?>, if you've forgotten!).</b> Then, click the button below.</p>
                             <form method="post" action="update.php">
