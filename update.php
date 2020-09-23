@@ -80,7 +80,7 @@ if (Input::get('action') === 'editprofile') {
     $curl = new Curl;
 
     $response = VANet::sendPirep(array (
-        'AircraftID' => Aircraft::nameToLiveryId(Input::get('aircraft')),
+        'AircraftID' => Aircraft::idToLiveryId(Input::get('aircraft')),
         'Arrival' => Input::get('arr'),
         'DateTime' => Input::get('date'),
         'Departure' => Input::get('dep'),

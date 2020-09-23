@@ -293,6 +293,17 @@ class Aircraft
 
     /**
      * @return string
+     * @param int $id Internal Aircraft ID
+     */
+    public static function idToLiveryId($id)
+    {
+        self::init();
+        $result = self::$_db->get('aircraft', array('id', '=', $id));
+        return $result->first()->ifliveryid;
+    }
+
+    /**
+     * @return string
      * @param int $id Aircraft ID
      */
     public static function idToName($id)
