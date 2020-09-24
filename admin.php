@@ -264,15 +264,13 @@ if (!$user->isLoggedIn()) {
                             </script>
                             <!-- Confirm delete modal -->
                             <script>
-                                $(document).ready(function() {
-                                    $('#delconfirmmodal').on('show.bs.modal', function(e) {
-                                        var userCallsign = $(e.relatedTarget).data('callsign');
-                                        var userId = $(e.relatedTarget).data('id');
+                                $('#delconfirmmodal').on('show.bs.modal', function(e) {
+                                    var userCallsign = $(e.relatedTarget).data('callsign');
+                                    var userId = $(e.relatedTarget).data('id');
 
-                                        var message = 'Are you sure you want to mark the user ' + userCallsign + ' as inactive?'
-                                        $("#delconfirmmessage").text(message);
-                                        $("#delconfirmuserid").val(userId);
-                                    });
+                                    var message = 'Are you sure you want to mark the user ' + userCallsign + ' as inactive?'
+                                    $("#delconfirmmessage").text(message);
+                                    $("#delconfirmuserid").val(userId);
                                 });
                             </script>
                         <?php endif; ?>
@@ -1344,12 +1342,10 @@ if (!$user->isLoggedIn()) {
                                 </table>
 
                                 <script>
-                                    $(document).ready(function() {
-                                        $(".deleteFleet").click(function() {
-                                            var id = $(this).data('id');
-                                            $("#confirmFleetDelete-id").val(id);
-                                            $("#confirmFleetDelete").modal('show');
-                                        });
+                                    $(".deleteFleet").click(function() {
+                                        var id = $(this).data('id');
+                                        $("#confirmFleetDelete-id").val(id);
+                                        $("#confirmFleetDelete").modal('show');
                                     });
                                 </script>
 

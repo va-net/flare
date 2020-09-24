@@ -286,5 +286,21 @@
         ],
         "deletedFiles": [],
         "queries": []
+    },
+    {
+        "tag": "v1.0.0-beta13",
+        "name": "Public Beta 13",
+        "date": "2020-09-24",
+        "notes": "Various Bug Fixes",
+        "prerelease": true,
+        "useUpdater": true,
+        "files": [
+            "classes/Aircraft.php",
+            "update.php",
+            "admin.php",
+            "version.json"
+        ],
+        "deletedFiles": [],
+        "queries": []
     }
 ]
