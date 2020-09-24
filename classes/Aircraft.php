@@ -139,7 +139,7 @@ class Aircraft
         self::init();
 
         $result = self::$_db->get('aircraft', array('id', '=', $id));
-        
+
         return $result->first()->name;
     }
 
@@ -195,7 +195,7 @@ class Aircraft
     public static function add($liveryId, $rank)
     {
         self::init();
-        
+
         $details = self::fetchAircraftFromVANet($liveryId, 'LiveryID')[0];
 
         $x = self::$_db->insert('aircraft', array(
@@ -216,7 +216,7 @@ class Aircraft
     public static function updateRank($rankId, $aircraftId)
     {
         self::init();
-        
+
         $fields = array(
             'rankreq' => $rankId,
         );
