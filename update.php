@@ -79,7 +79,7 @@ if (Input::get('action') === 'editprofile') {
 
     $curl = new Curl;
 
-    $response = VANet::sendPirep(array (
+    $response = VANet::sendPirep(array(
         'AircraftID' => Aircraft::idToLiveryId(Input::get('aircraft')),
         'Arrival' => Input::get('arr'),
         'DateTime' => Input::get('date'),
@@ -331,7 +331,9 @@ if (Input::get('action') === 'editprofile') {
     if (!Pirep::setup(Input::get('callsign'), $user->data()->id)) {
         $server = 'casual';
         $force = Config::get('FORCE_SERVER');
-        if ($force !== 0 && $force !== 'casual') $server = $force;
+        if ($force !== 0 && $force !== 'casual') {
+            $server = $force;
+        }
         Session::flash('errorrecent', 'There was an Error Connecting to Infinite Flight. Ensure you are spawned in on the <b>'.ucfirst($server).' Server, and have set your callsign to \''.$user->data()->callsign.'\'</b>!');
         Redirect::to('pireps.php?page=new');
     }
@@ -369,7 +371,7 @@ if (Input::get('action') === 'editprofile') {
         "duration" => Time::strToSecs(Input::get('duration'))
     ));
 
-    if ($ret === FALSE) {
+    if ($ret === false) {
         Session::flash('error', 'Error Updating Route');
         Redirect::to('admin.php?page=opsmanage&section=routes');
         die();
@@ -415,7 +417,7 @@ if (Input::get('action') === 'editprofile') {
         Redirect::to('admin.php?page=opsmanage&section=ranks');
     } else {
         Session::flash('success', 'Rank Deleted Successfully!');
-    Redirect::to('admin.php?page=opsmanage&section=ranks');
+        Redirect::to('admin.php?page=opsmanage&section=ranks');
     }
 } elseif (Input::get('action') === 'setcolour') {
     if (!$user->hasPermission('opsmanage')) {
@@ -436,8 +438,8 @@ if (Input::get('action') === 'editprofile') {
         die();
     }
 
-    if (!Config::replace('name', Input::get('vaname')) 
-        || !Config::replace('identifier', Input::get('vaident')) 
+    if (!Config::replace('name', Input::get('vaname'))
+        || !Config::replace('identifier', Input::get('vaident'))
         || !Config::replace("FORCE_SERVER", Input::get('forceserv'))
         || !Config::replace("CHECK_PRERELEASE", Input::get('checkpre'))
         ) {
@@ -819,7 +821,7 @@ if (Input::get('action') === 'editprofile') {
     }
 
     $codeshare = VANet::findCodeshare(Input::get('id'));
-    if ($codeshare === FALSE) {
+    if ($codeshare === false) {
         Session::flash('error', "Codeshare Not Found");
         //Redirect::to('admin.php?page=codeshares');
         die();
@@ -881,7 +883,7 @@ if (Input::get('action') === 'editprofile') {
     }
     //VANet::deleteCodeshare($codeshare["id"]);
     Session::flash('success', "Codeshare Routes Imported Successfully!");
-    //Redirect::to('admin.php?page=opsmanage&section=routes');
+//Redirect::to('admin.php?page=opsmanage&section=routes');
 } elseif (Input::get('action') === 'phpvms') {
     $routes = Input::get('rJson');
     $count = count(Json::decode($routes));
@@ -894,10 +896,12 @@ if (Input::get('action') === 'editprofile') {
         $item = Input::get('livery'.$i);
         $aircraft = false;
         foreach ($allaircraft as $a) {
-            if ($a->ifliveryid == $item) $aircraft = $a;
+            if ($a->ifliveryid == $item) {
+                $aircraft = $a;
+            }
         }
 
-        if ($aircraft === FALSE) {
+        if ($aircraft === false) {
             Aircraft::add($item, $firstRank);
             $aircraft = Aircraft::findAircraft($item);
         }

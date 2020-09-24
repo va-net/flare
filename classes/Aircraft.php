@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /*
 Flare, a fully featured and easy to use crew centre, designed for Infinite Flight.
@@ -10,14 +10,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 class Aircraft
 {
-
     private static $_db;
 
-    private static function init() 
+    private static function init()
     {
-
         self::$_db = DB::getInstance();
-
     }
 
     /**
@@ -25,7 +22,6 @@ class Aircraft
      */
     public static function fetchAllAircraftFromVANet()
     {
-
         $curl = new Curl;
         $response = $curl->get(Config::get('vanet/base_url').'/api/aircraft', array(
             'apikey' => Config::get('vanet/api_key')
@@ -41,7 +37,6 @@ class Aircraft
             }
         }
         return $completed;
-
     }
 
     /**
@@ -49,13 +44,11 @@ class Aircraft
      */
     public static function fetchAllLiveriesFromVANet()
     {
-
         $curl = new Curl;
         $response = $curl->get(Config::get('vanet/base_url').'/api/aircraft', array(
             'apikey' => Config::get('vanet/api_key')
         ));
         return Json::decode($response->body);
-
     }
 
     /**
@@ -64,7 +57,6 @@ class Aircraft
      */
     public static function fetchLiveryIdsForAircraft($aircraftid)
     {
-
         self::init();
         $curl = new Curl;
         $response = $curl->get(Config::get('vanet/base_url')."/api/aircraft/AircraftID/{$aircraftid}", array(
@@ -77,7 +69,6 @@ class Aircraft
         }
 
         return $final;
-
     }
 
     /**
@@ -85,15 +76,13 @@ class Aircraft
      * @param string $aircraft The Search Term
      * @param string $search The Search Key
      */
-    public static function fetchAircraftFromVANet($aircraft, $search = 'AircraftID') 
+    public static function fetchAircraftFromVANet($aircraft, $search = 'AircraftID')
     {
-
         $curl = new Curl;
         $response = $curl->get(Config::get('vanet/base_url')."/api/aircraft/{$search}/{$aircraft}", array(
             'apikey' => Config::get('vanet/api_key')
         ));
         return Json::decode($response->body);
-
     }
 
     /**
@@ -101,11 +90,9 @@ class Aircraft
      */
     public static function fetchActiveAircraft()
     {
-
         self::init();
 
         return self::$_db->query("SELECT aircraft.*, ranks.name AS rank FROM aircraft INNER JOIN ranks ON aircraft.rankreq=ranks.id WHERE status=1 ORDER BY aircraft.name ASC;");
-
     }
 
     /**
@@ -116,7 +103,9 @@ class Aircraft
     {
         self::init();
         $result = self::$_db->get('aircraft', array('ifliveryid', '=', $liveryId));
-        if ($result->count() === 0) return false;
+        if ($result->count() === 0) {
+            return false;
+        }
         return $result->first();
     }
 
@@ -125,11 +114,9 @@ class Aircraft
      */
     public static function fetchAllAircraft()
     {
-
         self::init();
 
         return self::$_db->get('aircraft', array('status', '<', 3), array('name', 'ASC'));
-
     }
 
     /**
@@ -138,11 +125,9 @@ class Aircraft
      */
     public static function getAvailableAircraft($rankid)
     {
-
         self::init();
 
         return self::$_db->query('SELECT * FROM aircraft WHERE rankreq <= ? AND status = 1 ORDER BY name ASC', array($rankid));
-
     }
 
     /**
@@ -151,13 +136,11 @@ class Aircraft
      */
     public static function getAircraftName($id)
     {
-
         self::init();
 
         $result = self::$_db->get('aircraft', array('id', '=', $id));
         
         return $result->first()->name;
-
     }
 
     /**
@@ -166,13 +149,11 @@ class Aircraft
      */
     public static function getId($name)
     {
-
         self::init();
 
         $result = self::$_db->get('aircraft', array('name', '=', $name));
 
         return $result->first()->id;
-
     }
 
     /**
@@ -181,13 +162,11 @@ class Aircraft
      */
     public static function archive($id)
     {
-
         self::init();
 
         self::$_db->update('aircraft', $id, 'id', array(
             'status' => 0
         ));
-
     }
 
     /**
@@ -195,9 +174,8 @@ class Aircraft
      * @param string $livery Livery Name
      * @param string $aircraftid Aircraft ID
      */
-    public static function liveryNameToId($livery, $aircraftid) 
+    public static function liveryNameToId($livery, $aircraftid)
     {
-
         $response = self::fetchAircraftFromVANet(rawurlencode($livery), 'LiveryName');
 
         foreach ($response as $aircraft) {
@@ -207,7 +185,6 @@ class Aircraft
             $fin = $aircraft['liveryID'];
         }
         return $fin;
-
     }
 
     /**
@@ -215,9 +192,8 @@ class Aircraft
      * @param string $liveryId Livery ID
      * @param int $rank Rank ID
      */
-    public static function add($liveryId, $rank) 
+    public static function add($liveryId, $rank)
     {
-
         self::init();
         
         $details = self::fetchAircraftFromVANet($liveryId, 'LiveryID')[0];
@@ -237,7 +213,7 @@ class Aircraft
      * @param int $rankId Rank ID
      * @param int $aircraftId Aircraft ID
      */
-    public static function updateRank($rankId, $aircraftId) 
+    public static function updateRank($rankId, $aircraftId)
     {
         self::init();
         
@@ -256,12 +232,10 @@ class Aircraft
      */
     public static function nameToId($name)
     {
-
         self::init();
 
         $result = self::$_db->get('aircraft', array('name', '=', $name));
         return $result->first()->id;
-
     }
 
     /**
@@ -270,12 +244,10 @@ class Aircraft
      */
     public static function nameToAircraftId($name)
     {
-
         self::init();
 
         $result = self::$_db->get('aircraft', array('name', '=', $name));
         return $result->first()->ifaircraftid;
-
     }
 
     /**
@@ -284,11 +256,9 @@ class Aircraft
      */
     public static function nameToLiveryId($name)
     {
-
         self::init();
         $result = self::$_db->get('aircraft', array('name', '=', $name));
         return $result->first()->ifliveryid;
-
     }
 
     /**
@@ -308,23 +278,19 @@ class Aircraft
      */
     public static function idToName($id)
     {
-
         self::init();
         $result = self::$_db->get('aircraft', array('id', '=', $id));
         return $result->first()->name;
-
     }
 
     /**
      * @return bool
      * @param string $liveryId Livery ID
      */
-    public static function exists($liveryId) 
+    public static function exists($liveryId)
     {
-
         self::init();
         $result = self::$_db->get('aircraft', array('ifliveryid', '=', $liveryId));
         return !($result->count() == 0);
     }
-
 }
