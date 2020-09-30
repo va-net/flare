@@ -618,10 +618,10 @@ if (!$user->isLoggedIn()) {
                                     } else {
                                         echo '<span class="badge badge-success">None</span>';
                                     }
-                                    echo '</td><td class="align-middle">';
-                                    echo '<button class="btn btn-success text-light" value="'.$user['id'].'" form="accept" type="submit" name="accept"><i class="fa fa-check"></i></button>';
-                                    echo '&nbsp;<button value="'.$user['id'].'" id="delconfirmbtn" data-toggle="modal" data-target="#user'.$x.'declinemodal" class="btn btn-danger text-light" name="decline"><i class="fa fa-times"></i></button>';
-                                    echo '&nbsp;<button id="delconfirmbtn" class="btn btn-primary text-light" data-toggle="modal" data-target="#user'.$x.'modal"><i class="fa fa-plus"></i></button>';
+                                    echo '</td><td class="align-middle">&nbsp;';
+                                    if (!in_array(strtolower($username), $blacklist)) echo '<button class="btn btn-success text-light" value="'.$user['id'].'" form="accept" type="submit" name="accept"><i class="fa fa-check"></i></button>&nbsp;';
+                                    echo '<button value="'.$user['id'].'" id="delconfirmbtn" data-toggle="modal" data-target="#user'.$x.'declinemodal" class="btn btn-danger text-light" name="decline"><i class="fa fa-times"></i></button>&nbsp;';
+                                    echo '<button id="delconfirmbtn" class="btn btn-primary text-light" data-toggle="modal" data-target="#user'.$x.'modal"><i class="fa fa-plus"></i></button>';
                                     echo '</td>';
                                     $x++;
                                 }
