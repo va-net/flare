@@ -21,6 +21,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 <script>
   $(document).ready(function() {
     $('[data-toggle="tooltip"]').tooltip(); 
+    $(".tooltip-toggle").tooltip();
 
     $("nav .panel-link").addClass("nav-link");
 
