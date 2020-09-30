@@ -352,7 +352,7 @@ class User
             $id = $this->data()->id;
         }
 
-        return $this->_db->query('SELECT pireps.*, aircraft.name AS aircraft FROM pireps INNER JOIN aircraft ON pireps.aircraftid=aircraft.id WHERE pilotid = ? ORDER BY date DESC', array($id));
+        return $this->_db->query('SELECT pireps.*, aircraft.name AS aircraft, aircraft.liveryname AS livery FROM pireps INNER JOIN aircraft ON pireps.aircraftid=aircraft.id WHERE pilotid = ? ORDER BY date DESC', array($id));
         //return $this->_db->get('pireps', array('pilotid', '=', $id), array('date', 'DESC'));
 
     }
@@ -392,6 +392,7 @@ class User
                 'flighttime' => $pirep->flighttime,
                 'multi' => $pirep->multi,
                 'aircraft' => $pirep->aircraft,
+                'livery' => $pirep->livery,
             );
             $pireps[$x] = $newdata;
             $counter++;

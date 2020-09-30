@@ -86,7 +86,7 @@ if (!$user->isLoggedIn()) {
                                                 echo $pirep["departure"] . '-' . $pirep["arrival"];
                                                 echo '</td><td class="mobile-hidden align-middle">';
                                                 echo date_format(date_create($pirep['date']), 'Y-m-d');
-                                                echo '</td><td class="mobile-hidden align-middle">';
+                                                echo '</td><td class="mobile-hidden align-middle" data-toggle="tooltip" title="'.$pirep["livery"].'">';
                                                 echo $pirep["aircraft"];
                                                 echo '</td><td class="align-middle">';
                                                 echo $pirep["status"];
