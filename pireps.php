@@ -91,7 +91,7 @@ if (!$user->isLoggedIn()) {
                                                 echo '</td><td class="align-middle">';
                                                 echo $pirep["status"];
                                                 echo '</td><td class="align-middle">';
-                                                echo '<button class="btn text-light btn-primary tooltip-toggle" data-toggle="modal" data-target="#pirep'.$x.'" title="Edit PIREP"><i class="fa fa-edit"></i></button>';
+                                                echo '<button class="btn text-light btn-primary" data-toggle="modal" data-target="#pirep'.$x.'"><i class="fa fa-edit"></i></button>';
                                                 echo '</td></tr>';
                                                 $x++;
                                             }
