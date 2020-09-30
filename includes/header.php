@@ -20,13 +20,18 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.21/datatables.min.js"></script>
 <script>
   $(document).ready(function() {
+    $('[data-toggle="tooltip"]').tooltip(); 
+    $(".tooltip-toggle").tooltip();
+
     $("nav .panel-link").addClass("nav-link");
+
     $(".datatable").dataTable({
       "paging": true,
       "ordering": true,
       "info": true,
       "pageLength": 10
     });
+    
     $(".datatable-nosearch").dataTable({
       "paging": true,
       "ordering": true,

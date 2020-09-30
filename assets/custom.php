@@ -14,7 +14,7 @@ header("Content-type: text/css; charset: UTF-8");
 @import url('https://fonts.googleapis.com/css2?family=Rubik&display=swap');
 
 @media only screen and (max-width: 991px) {
-    .mobile-hidden {
+    .mobile-hidden, .tooltip {
         display: none;
     }
     .main-content {

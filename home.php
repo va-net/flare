@@ -159,7 +159,15 @@ if (!$user->isLoggedIn()) {
                             </tr>
                             <tr>
                                 <td class="align-middle"><b>Rank</b></td>
-                                <td class="align-middle"><?= escape($user->rank()) ?></td>
+                                <?php 
+                                    $next = $user->nextrank(); 
+                                    $tip = "The Top Rank!";
+                                    if ($next != null) {
+                                        $hrs = $next->timereq / 3600;
+                                        $tip = "Next Rank: {$next->name} ({$hrs}hrs)";
+                                    }
+                                ?>
+                                <td class="align-middle" data-toggle="tooltip" title="<?= $tip ?>"><?= escape($user->rank()) ?></td>
                             </tr>
                             <tr>
                                 <td class="align-middle"><b>PIREPs</b></td>

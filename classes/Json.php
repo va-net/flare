@@ -25,9 +25,14 @@ class Json
     /**
      * @return string
      * @param mixed $data Data to Encode
+     * @param bool $pretty Whether to Pretty Print the JSON
      */
-    public static function encode($data)
+    public static function encode($data, $pretty = false)
     {
+
+        if ($pretty) {
+            return json_encode($data, JSON_PRETTY_PRINT);
+        }
 
         return json_encode($data);
 

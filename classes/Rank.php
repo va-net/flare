@@ -157,7 +157,7 @@ class Rank
     {
 
         self::init();
-        return self::$_db->getAll('ranks');
+        return self::$_db->getAll('ranks', ['1', '=', '1'], array('timereq', 'ASC'));
 
     }
 
