@@ -594,9 +594,9 @@ if (!$user->isLoggedIn()) {
                                 $blacklist = array();
                                 foreach ($lists as $l) {
                                     if ($l["type"] == "Watchlist") {
-                                        array_push($watchlist, strtolower($l["ifc"]));
+                                        $watchlist[strtolower($l["ifc"])] = $l["notes"];
                                     } else {
-                                        array_push($blacklist, strtolower($l["ifc"]));
+                                        $blacklist[strtolower($l["ifc"])] = $l["notes"];
                                     }
                                 }
 
@@ -611,15 +611,15 @@ if (!$user->isLoggedIn()) {
                                     $username = explode('/', $user['ifc'])[4];
                                     echo '<a href="'.$user['ifc'].'" target="_blank">'.$username.'</a>';
                                     echo '</td><td class="align-middle">';
-                                    if (in_array(strtolower($username), $watchlist)) {
-                                        echo '<span class="badge badge-warning">Watchlisted</span>';
-                                    } elseif (in_array(strtolower($username), $blacklist)) {
-                                        echo '<span class="badge badge-danger">Blacklisted</span>';
+                                    if (array_key_exists(strtolower($username), $blacklist)) {
+                                        echo '<span class="badge badge-danger" data-toggle="tooltip" title="'.$blacklist[strtolower($username)].'">Blacklisted</span>';
+                                    } elseif (array_key_exists(strtolower($username), $watchlist)) {
+                                        echo '<span class="badge badge-warning" data-toggle="tooltip" title="'.$watchlist[strtolower($username)].'">Watchlisted</span>';
                                     } else {
                                         echo '<span class="badge badge-success">None</span>';
                                     }
                                     echo '</td><td class="align-middle">&nbsp;';
-                                    if (!in_array(strtolower($username), $blacklist)) echo '<button class="btn btn-success text-light" value="'.$user['id'].'" form="accept" type="submit" name="accept"><i class="fa fa-check"></i></button>&nbsp;';
+                                    if (!array_key_exists(strtolower($username), $blacklist)) echo '<button class="btn btn-success text-light" value="'.$user['id'].'" form="accept" type="submit" name="accept"><i class="fa fa-check"></i></button>&nbsp;';
                                     echo '<button value="'.$user['id'].'" id="delconfirmbtn" data-toggle="modal" data-target="#user'.$x.'declinemodal" class="btn btn-danger text-light" name="decline"><i class="fa fa-times"></i></button>&nbsp;';
                                     echo '<button id="delconfirmbtn" class="btn btn-primary text-light" data-toggle="modal" data-target="#user'.$x.'modal"><i class="fa fa-plus"></i></button>';
                                     echo '</td>';
