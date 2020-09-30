@@ -432,26 +432,25 @@ class User
 
         $db = DB::newInstance();
 
-        $results = $db->getAll('pilots');
+        $results = $db->getAll('pilots')->results();
 
         $usersarray = array();
         $statuses = array('Pending', 'Active', 'Inactive');
         $x = 0;
-
-        while ($x < $results->count()) {
+        $admins = Permissions::usersWith('admin');
+        foreach ($results as $r) {
             $newdata = array(
-                'id' => $results->results()[$x]->id,
-                'callsign' => $results->results()[$x]->callsign,
-                'name' => $results->results()[$x]->name,
-                'email' => $results->results()[$x]->email,
-                'ifc' => $results->results()[$x]->ifc,
-                'rank' => $this->rank($results->results()[$x]->id),
-                'status' => $statuses[$results->results()[$x]->status],
-                'joined' => $results->results()[$x]->joined,
-                'permissions' => $results->results()[$x]->permissions,
-                'transhours' => $results->results()[$x]->transhours,
-                'transflights' => $results->results()[$x]->transflights,
-                'isAdmin' => Json::decode($results->results()[$x]->permissions)["admin"],
+                'id' => $r->id,
+                'callsign' => $r->callsign,
+                'name' => $r->name,
+                'email' => $r->email,
+                'ifc' => $r->ifc,
+                'rank' => $this->rank($r->id),
+                'status' => $statuses[$r->status],
+                'joined' => $r->joined,
+                'transhours' => $r->transhours,
+                'transflights' => $r->transflights,
+                'isAdmin' => in_array($r, $admins) ? 1 : 0,
             );
             $usersarray[$x] = $newdata;
             $x++;

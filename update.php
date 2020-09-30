@@ -134,7 +134,6 @@ if (Input::get('action') === 'editprofile') {
         die();
     }
 
-    $perms = Json::decode($user->getUser(Input::get('id'))->permissions);
     $perms["admin"] = Input::get("admin");
 
     $user->update(array(
@@ -144,7 +143,6 @@ if (Input::get('action') === 'editprofile') {
         'ifc' => Input::get('ifc'),
         'transhours' => Time::strToSecs(Input::get('transhours')),
         'transflights' => Input::get('transflights'),
-        'permissions' => Json::encode($perms),
     ), Input::get('id'));
     Session::flash('success', 'User Edited Successfully!');
     Redirect::to('admin.php?page=usermanage');

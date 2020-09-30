@@ -97,4 +97,16 @@ class Permissions
         }
     }
 
+    /**
+     * @return array
+     * @param string $perm Permission Key
+     */
+    public static function usersWith($perm)
+    {
+        self::init();
+
+        $sql = "SELECT u.* FROM pilots u WHERE u.id IN (SELECT p.userid FROM permissions p WHERE name=?)";
+        return self::$_db->query($sql, [$perm])->results();
+    }
+
 }
