@@ -88,7 +88,7 @@ if (!$user->isLoggedIn()) {
                                             </div>
                                             <div class="form-group">
                                                 <label for="callsign">Callsign</label>
-                                                <input type="text" maxlegnth="8" name="callsign" id="callsign" class="form-control" required value="<?= escape($user->data()->callsign) ?>"> 
+                                                <input type="text" maxlegnth="8" name="callsign" id="callsign" class="form-control" required value="<?= escape($user->data()->callsign) ?>">
                                             </div>
                                             <div class="form-group">
                                                 <label for="email">Email</label>
@@ -175,7 +175,7 @@ if (!$user->isLoggedIn()) {
                             </tr>
                         </table>
                         <br />
-                    </section>  
+                    </section>
                     <!-- news -->
                     <section id="news">
                         <h3>News Feed</h3>
@@ -237,8 +237,8 @@ if (!$user->isLoggedIn()) {
                         <?php else: ?>
                             <?= 'No Recent PIREPs' ?>
                         <?php endif; ?>
-                    </section>  
-                </div>  
+                    </section>
+                </div>
             </div>
         </div>
         <footer class="container-fluid text-center">

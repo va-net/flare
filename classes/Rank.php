@@ -83,7 +83,7 @@ class Rank
     public static function update($id, $fields = array())
     {
         self::init();
-        
+
         if (!self::$_db->update('ranks', $id, 'id', $fields)) {
             throw new Exception('There was a problem updating the user.');
         }
@@ -121,7 +121,7 @@ class Rank
         $rank = self::$_db->get('ranks', array('id', '=', $id));
         return $rank->first()->name;
     }
-    
+
     /**
      * @return int
      * @param string $name Rank Name

@@ -82,7 +82,7 @@ class User
     public function login($username = null, $password = null, $remember = false)
     {
         $user = $this->find($username);
-        
+
         if (!$username && !$password && $this->exists()) {
             Session::create($this->_sessionName, $this->data()->id);
         } else {
@@ -185,7 +185,7 @@ class User
                 array_push($permissions, $p->name);
             }
         }
-        
+
         if (in_array($key, $permissions)) {
             return true;
         }
@@ -310,7 +310,7 @@ class User
             $user = $this->_db->get('pilots', array('id', '=', $id));
             $trans = $result->first()->transflights;
         }
-        
+
         $total = $trans + $filed;
         return $total;
     }
@@ -328,7 +328,7 @@ class User
         return $this->_db->query('SELECT pireps.*, aircraft.name AS aircraft FROM pireps INNER JOIN aircraft ON pireps.aircraftid=aircraft.id WHERE pilotid = ? ORDER BY date DESC', array($id));
         //return $this->_db->get('pireps', array('pilotid', '=', $id), array('date', 'DESC'));
     }
-    
+
     /**
      * @return array
      * @param int $id User ID
