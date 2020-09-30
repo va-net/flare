@@ -738,7 +738,7 @@ if (Input::get('action') === 'editprofile') {
         ));
     }
 
-    echo Json::encode($ret);
+    echo Json::encode($ret, true);
 } elseif (Input::get('action') === 'exportaircraft') {
     header('Content-Type: application/json');
 
@@ -748,7 +748,7 @@ if (Input::get('action') === 'editprofile') {
         array_push($ret, $a->ifliveryid);
     }
 
-    echo Json::encode($ret);
+    echo Json::encode($ret, true);
 } elseif (Input::get('action') === 'newcodeshare') {
     if (!$user->hasPermission('opsmanage')) {
         Redirect::to('home.php');
