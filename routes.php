@@ -153,7 +153,7 @@ if (!$user->isLoggedIn()) {
                                         echo $route->aircraft.' ('.$route->livery.')';
                                         echo '</td><td class="align-middle">';
                                         $link = "pireps.php?page=new&fnum={$route->fltnum}&dep={$route->dep}&arr={$route->arr}&aircraft={$route->aircraft}";
-                                        echo '<a href="'.$link.'" class="btn bg-custom"><i class="fa fa-plane"></i></a>';
+                                        echo '<a href="'.$link.'" class="btn bg-custom" data-toggle="tooltip" title="File PIPEP"><i class="fa fa-plane"></i></a>';
                                         echo '</td></tr>';
                                     }
                                 ?>
