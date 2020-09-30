@@ -580,10 +580,8 @@ if (!$user->isLoggedIn()) {
                             <table class="table table-striped datatable">
                             <thead class="bg-custom">
                                 <tr>
-                                    <th class="mobile-hidden">Callsign</th>
                                     <th>Name</th>
                                     <th class="mobile-hidden">Email</th>
-                                    <th class="mobile-hidden">Grade</th>
                                     <th class="mobile-hidden">IFC</th>
                                     <th>Flags</th>
                                     <th>Actions</th>
@@ -606,13 +604,9 @@ if (!$user->isLoggedIn()) {
                                 $x = 0;
                                 foreach ($users as $user) {
                                     echo '<tr><td class="mobile-hidden align-middle">';
-                                    echo $user["callsign"];
-                                    echo '</td><td class="align-middle">';
                                     echo $user["name"];
                                     echo '</td><td class="mobile-hidden align-middle">';
                                     echo $user["email"];
-                                    echo '</td><td class="mobile-hidden align-middle">';
-                                    echo $user["grade"];
                                     echo '</td><td class="mobile-hidden align-middle">';
                                     $username = explode('/', $user['ifc'])[4];
                                     echo '<a href="'.$user['ifc'].'" target="_blank">'.$username.'</a>';
@@ -664,7 +658,7 @@ if (!$user->isLoggedIn()) {
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="usermodal-ifc">IFC Username</label>
-                                                    <a href="'.$user['ifc'].'" target="_blank"><input readonly type="text" style="cursor:pointer" value="'.$username[4].'" class="form-control" name="ifc"></a>
+                                                    <a href="'.$user['ifc'].'" target="_blank"><input readonly type="text" style="cursor:pointer" value="'.$username.'" class="form-control" name="ifc"></a>
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="usermodal-joined">Grade</label>
