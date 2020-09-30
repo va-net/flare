@@ -235,6 +235,27 @@ class User
     }
 
     /**
+     * @return object
+     * @param int $id User ID
+     */
+    public function nextrank($id = null) {
+        if (!$id && $this->isLoggedIn()) {
+            $id = $this->data()->id;
+        }
+
+        $current = $this->rank($id, true);
+        $ranks = Rank::fetchAllNames()->results();
+        $currentFound = false;
+        foreach ($ranks as $r) {
+            if ($r->id == $current && !$currentFound) {
+                $currentFound = true;
+            } elseif ($currentFound) {
+                return $r;
+            }
+        }
+    }
+
+    /**
      * @return array
      * @param int $id User ID
      */
