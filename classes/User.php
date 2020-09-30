@@ -10,18 +10,16 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 class User
 {
+    private $_db;
+    private $_data;
+    private $_sessionName;
+    private $_cookieName;
+    private $_isLoggedIn;
+    private $_permissions;
 
-    private $_db,
-            $_data,
-            $_sessionName,
-            $_cookieName,
-            $_isLoggedIn,
-            $_permissions;
 
-
-    public function __construct($user = null) 
+    public function __construct($user = null)
     {
-
         $this->_db = DB::getInstance();
 
         $this->_sessionName = Config::get('session/session_name');
@@ -29,40 +27,36 @@ class User
 
         if (!$user) {
             if (Session::exists($this->_sessionName)) {
-               $user = Session::get($this->_sessionName);
+                $user = Session::get($this->_sessionName);
 
-               if ($this->find($user)) {
-                   $this->_isLoggedIn = true;
-               } else {
-                   $this->logout();
-               }
+                if ($this->find($user)) {
+                    $this->_isLoggedIn = true;
+                } else {
+                    $this->logout();
+                }
             }
         } else {
             $this->find($user);
         }
-
     }
 
     /**
      * @return null
      * @param array $fields User Fields
      */
-    public function create($fields) 
+    public function create($fields)
     {
-
         if (!$this->_db->insert('pilots', $fields)) {
             throw new Exception('There was a problem creating an account.');
         }
-
     }
 
     /**
      * @return bool
      * @param int|string $user Email or User ID
      */
-    public function find($user = null) 
+    public function find($user = null)
     {
-
         if ($user) {
             $field = (is_numeric($user)) ? 'id' : 'email';
             $data = $this->_db->get('pilots', array($field, '=', $user));
@@ -77,7 +71,6 @@ class User
             }
         }
         return false;
-
     }
 
     /**
@@ -86,16 +79,17 @@ class User
      * @param string $password
      * @param bool $remember
      */
-    public function login($username = null, $password = null, $remember = false) {
-        $user = $this->find($username);     
+    public function login($username = null, $password = null, $remember = false)
+    {
+        $user = $this->find($username);
         
         if (!$username && !$password && $this->exists()) {
             Session::create($this->_sessionName, $this->data()->id);
         } else {
-            $user = $this->find($username);    
+            $user = $this->find($username);
 
             if ($user) {
-                if(Hash::check($password, $this->data()->password)) {
+                if (Hash::check($password, $this->data()->password)) {
                     Session::create($this->_sessionName, $this->data()->id);
 
                     if ($remember) {
@@ -112,7 +106,6 @@ class User
                         }
 
                         Cookie::create($this->_cookieName, $hash, Config::get('remember/cookie_expiry'));
-
                     }
 
                     return true;
@@ -121,7 +114,6 @@ class User
         }
         $_SESSION = array();
         return false;
-
     }
 
     /**
@@ -129,40 +121,32 @@ class User
      */
     public function exists()
     {
-
         return (!empty($this->_data)) ? true : false;
-
     }
 
     /**
      * @return object
      */
-    public function data() 
+    public function data()
     {
-
         return $this->_data;
-
     }
 
     /**
      * @return bool
      */
-    public function isLoggedIn() 
+    public function isLoggedIn()
     {
-
         return $this->_isLoggedIn;
-
     }
 
     /**
      * @return null
      */
-    public function logout() 
+    public function logout()
     {
-
         Session::delete($this->_sessionName);
         Cookie::delete($this->_cookieName);
-
     }
 
     /**
@@ -170,9 +154,8 @@ class User
      * @param array $fields Updated User Fields
      * @param int $id User ID
      */
-    public function update($fields = array(), $id = null) 
+    public function update($fields = array(), $id = null)
     {
-
         if (!$id && $this->isLoggedIn()) {
             $id = $this->data()->id;
         }
@@ -180,7 +163,6 @@ class User
         if (!$this->_db->update('pilots', $id, 'id', $fields)) {
             throw new Exception('There was a problem updating the user.');
         }
-
     }
 
     /**
@@ -188,9 +170,8 @@ class User
      * @param string $key Permission Name
      * @param int $id User ID
      */
-    public function hasPermission($key, $id = null) 
+    public function hasPermission($key, $id = null)
     {
-
         if (!$id && $this->isLoggedIn()) {
             $id = $this->data()->id;
         }
@@ -209,7 +190,6 @@ class User
             return true;
         }
         return false;
-
     }
 
     /**
@@ -217,9 +197,8 @@ class User
      * @param int $id User ID
      * @param bool $returnid Whether to Return the Rank ID
      */
-    public function rank($id = null, $returnid = false) 
+    public function rank($id = null, $returnid = false)
     {
-
         if (!$id && $this->isLoggedIn()) {
             $id = $this->data()->id;
         }
@@ -231,14 +210,14 @@ class User
         }
 
         return Rank::calc($time);
-
     }
 
     /**
      * @return object
      * @param int $id User ID
      */
-    public function nextrank($id = null) {
+    public function nextrank($id = null)
+    {
         if (!$id && $this->isLoggedIn()) {
             $id = $this->data()->id;
         }
@@ -261,7 +240,6 @@ class User
      */
     public function getAvailableAircraft($id = null)
     {
-
         if (!$id && $this->isLoggedIn()) {
             $id = $this->data()->id;
         }
@@ -281,7 +259,6 @@ class User
             $x++;
         }
         return $aircraft;
-
     }
 
     /**
@@ -290,7 +267,6 @@ class User
      */
     public function getFlightTime($id = null)
     {
-
         if (!$id && $this->isLoggedIn()) {
             $id = $this->data()->id;
         }
@@ -312,7 +288,6 @@ class User
         }
 
         return $time;
-
     }
 
     /**
@@ -321,7 +296,6 @@ class User
      */
     public function numPirepsFiled($id = null)
     {
-
         if (!$id && $this->isLoggedIn()) {
             $id = $this->data()->id;
         }
@@ -347,14 +321,12 @@ class User
      */
     public function fetchPireps($id = null)
     {
-
         if ($id == null) {
             $id = $this->data()->id;
         }
 
         return $this->_db->query('SELECT pireps.*, aircraft.name AS aircraft FROM pireps INNER JOIN aircraft ON pireps.aircraftid=aircraft.id WHERE pilotid = ? ORDER BY date DESC', array($id));
         //return $this->_db->get('pireps', array('pilotid', '=', $id), array('date', 'DESC'));
-
     }
     
     /**
@@ -362,9 +334,8 @@ class User
      * @param int $id User ID
      * @param int $num Number of PIREPs to Return
      */
-    public function recentPireps($id = null, $num = 10) 
+    public function recentPireps($id = null, $num = 10)
     {
-
         if (!$id && $this->isLoggedIn()) {
             $id = $this->data()->id;
         }
@@ -401,7 +372,6 @@ class User
             $x++;
         }
         return $pireps;
-
     }
 
     /**
@@ -410,13 +380,11 @@ class User
      */
     public function fetchApprovedPireps($id = null)
     {
-
         if (!$id && $this->isLoggedIn()) {
             $id = $this->data()->id;
         }
 
         return $this->_db->query('SELECT * FROM pireps WHERE pilotid = ? AND status = ?', array($id, 1));
-
     }
 
     /**
@@ -425,7 +393,6 @@ class User
      */
     public function totalPirepsFiled($id = null)
     {
-
         if (!$id && $this->isLoggedIn()) {
             $id = $this->data()->id;
         }
@@ -442,7 +409,6 @@ class User
             $x++;
         }
         return $total;
-
     }
 
     /**
@@ -450,7 +416,6 @@ class User
      */
     public function getAllUsers()
     {
-
         $db = DB::newInstance();
 
         $results = $db->getAll('pilots')->results();
@@ -478,7 +443,6 @@ class User
         }
 
         return $usersarray;
-
     }
 
     /**
@@ -501,7 +465,6 @@ class User
      */
     public function getAllPendingUsers()
     {
-
         $db = DB::newInstance();
 
         $results = $db->get('pilots', array('status', '=', 0));
@@ -528,7 +491,6 @@ class User
         }
 
         return $usersarray;
-
     }
 
     /**
@@ -537,22 +499,19 @@ class User
      */
     public function idToCallsign($id)
     {
-
         $result = $this->_db->get('pilots', array('id', '=', $id));
         $result =  $result->first();
         return $result->callsign;
-
     }
 
     /**
      * @return object
      * @param int $id User ID
      */
-    public function getUser($id) 
+    public function getUser($id)
     {
         $ret = $this->_db->get('pilots', array('id', '=', $id))->first();
 
         return $ret;
     }
-
 }

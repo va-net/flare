@@ -159,8 +159,8 @@ if (!$user->isLoggedIn()) {
                             </tr>
                             <tr>
                                 <td class="align-middle"><b>Rank</b></td>
-                                <?php 
-                                    $next = $user->nextrank(); 
+                                <?php
+                                    $next = $user->nextrank();
                                     $tip = "The Top Rank!";
                                     if ($next != null) {
                                         $hrs = $next->timereq / 3600;

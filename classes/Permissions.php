@@ -10,7 +10,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 class Permissions
 {
-
     private static $_permissions = array(
         'usermanage' => 'User Management',
         'staffmanage' => 'Staff Management',
@@ -22,7 +21,7 @@ class Permissions
     );
     private static $_db;
 
-    private static function init() 
+    private static function init()
     {
         self::$_db = DB::getInstance();
     }
@@ -108,5 +107,4 @@ class Permissions
         $sql = "SELECT u.* FROM pilots u WHERE u.id IN (SELECT p.userid FROM permissions p WHERE name=?)";
         return self::$_db->query($sql, [$perm])->results();
     }
-
 }

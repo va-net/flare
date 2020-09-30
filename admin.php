@@ -374,7 +374,8 @@ if (!$user->isLoggedIn()) {
                                                                 </label>
                                                             </div>
                                                         <?php endif; ?>
-                                                    <?php } ?>
+                                                    <?php
+                                                    } ?>
                                                 <br />
                                                 <input type="submit" class="btn bg-custom" value="Save">
                                             </form>
@@ -396,7 +397,7 @@ if (!$user->isLoggedIn()) {
                             if (!empty(Input::get('tab'))) {
                                 $tab = Input::get('tab');
                             }
-                            $ACTIVE_CATEGORY = 'site-management'; 
+                            $ACTIVE_CATEGORY = 'site-management';
                         ?>
                         <script>
                             $(document).ready(function() {
@@ -619,7 +620,9 @@ if (!$user->isLoggedIn()) {
                                         echo '<span class="badge badge-success">None</span>';
                                     }
                                     echo '</td><td class="align-middle">&nbsp;';
-                                    if (!array_key_exists(strtolower($username), $blacklist)) echo '<button class="btn btn-success text-light" value="'.$user['id'].'" form="accept" type="submit" name="accept"><i class="fa fa-check"></i></button>&nbsp;';
+                                    if (!array_key_exists(strtolower($username), $blacklist)) {
+                                        echo '<button class="btn btn-success text-light" value="'.$user['id'].'" form="accept" type="submit" name="accept"><i class="fa fa-check"></i></button>&nbsp;';
+                                    }
                                     echo '<button value="'.$user['id'].'" id="delconfirmbtn" data-toggle="modal" data-target="#user'.$x.'declinemodal" class="btn btn-danger text-light" name="decline"><i class="fa fa-times"></i></button>&nbsp;';
                                     echo '<button id="delconfirmbtn" class="btn btn-primary text-light" data-toggle="modal" data-target="#user'.$x.'modal"><i class="fa fa-plus"></i></button>';
                                     echo '</td>';
@@ -631,7 +634,7 @@ if (!$user->isLoggedIn()) {
                         <?php
                         $x = 0;
                         foreach ($users as $user) {
-                            echo 
+                            echo
                             '
                             <div class="modal fade" id="user'.$x.'modal" tabindex="-1" role="dialog" aria-labelledby="user'.$x.'label" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
@@ -733,7 +736,7 @@ if (!$user->isLoggedIn()) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php 
+                                    <?php
                                     $x = 0;
                                     $pireps = Pirep::fetchPending();
                                     foreach ($pireps as $pirep) {
@@ -857,8 +860,8 @@ if (!$user->isLoggedIn()) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php 
-                                    $x = 0; 
+                                    <?php
+                                    $x = 0;
                                     $news = News::get();
                                     foreach ($news as $article) {
                                         echo '<tr><td class="align-middle">';
@@ -879,7 +882,7 @@ if (!$user->isLoggedIn()) {
                             <?php
                             $x = 0;
                             foreach ($news as $article) {
-                                echo 
+                                echo
                                 '
                                 <div class="modal fade" id="article'.$x.'editmodal" tabindex="-1" role="dialog" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
@@ -1013,7 +1016,7 @@ if (!$user->isLoggedIn()) {
                                                 <select required class="form-control" name="time" id="event-time">
                                                     <option value>Select</option>
                                                     <?php
-                                                        $times = ["00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", 
+                                                        $times = ["00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17",
                                                         "18", "19", "20", "21", "22", "23"];
                                                         foreach ($times as $t) {
                                                             echo '<option value="'.$t.'00'.'">'.$t.'00Z</option>';
@@ -1316,7 +1319,7 @@ if (!$user->isLoggedIn()) {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php 
+                                        <?php
                                         $all = Aircraft::fetchActiveAircraft()->results();
                                         foreach ($all as $aircraft) {
                                             echo '<tr><td class="align-middle">';
@@ -1483,7 +1486,7 @@ if (!$user->isLoggedIn()) {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php 
+                                        <?php
                                         $all = Route::fetchAll()->results();
 
                                         foreach ($all as $route) {
@@ -1655,7 +1658,7 @@ if (!$user->isLoggedIn()) {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php 
+                                        <?php
                                         $all = Rank::fetchAllNames()->results();
                                         foreach ($all as $rank) {
                                             echo '<tr><td class="align-middle">';
@@ -1820,7 +1823,7 @@ if (!$user->isLoggedIn()) {
                                     </p>
                                     <?php
                                         $file = Input::getFile('routes-upload');
-                                        if ($file["error"] == 1 || $file["error"] === TRUE) {
+                                        if ($file["error"] == 1 || $file["error"] === true) {
                                             Session::flash('error', 'Upload failed. Maybe your file is too big?');
                                             echo '<script>window.location.href= "admin.php?page=opsmanage&section=phpvms";</script>';
                                             die();

@@ -17,9 +17,7 @@ class Json
      */
     public static function decode($data)
     {
-
         return json_decode($data, true);
-
     }
 
     /**
@@ -29,13 +27,10 @@ class Json
      */
     public static function encode($data, $pretty = false)
     {
-
         if ($pretty) {
             return json_encode($data, JSON_PRETTY_PRINT);
         }
 
         return json_encode($data);
-
     }
-
 }
