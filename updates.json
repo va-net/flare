@@ -302,5 +302,27 @@
         ],
         "deletedFiles": [],
         "queries": []
+    },
+    {
+        "tag": "v1.0.0-beta14",
+        "name": "Public Beta 14",
+        "date": "2020-10-01",
+        "notes": "Various Bug Fixes, Made Exports Pretty Print, Updated Recruitment Page, ",
+        "prerelease": true,
+        "useUpdater": true,
+        "files": [
+            "classes/Permissions.php",
+            "classes/User.php",
+            "update.php",
+            "classes/Json.php",
+            "admin.php",
+            "includes/header.php",
+            "assets/custom.php",
+            "classes/Rank.php",
+            "home.php",
+            "version.json"
+        ],
+        "deletedFiles": [],
+        "queries": []
     }
 ]
