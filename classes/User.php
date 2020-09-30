@@ -487,34 +487,14 @@ class User
      */
     public function getAllStaff()
     {
-
-        $users = $this->getAllUsers();
-        $staff = array();
-        $x = 0;
-
-        foreach ($users as $user) {
-            $permissions = Json::decode($user['permissions']);
-            
-            if (array_key_exists('admin', $permissions)) {
-                if ($permissions['admin'] == 1) {
-                    $newdata = array(
-                        'id' => $user['id'],
-                        'callsign' => $user['callsign'],
-                        'name' => $user['name'],
-                        'email' => $user['email'],
-                        'ifc' => $user['ifc'],
-                        'rank' => $user['rank'],
-                        'status' => $user['status'],
-                        'joined' => $user['joined'],
-                        'permissions' => $permissions
-                    );
-                    $staff[$x] = $newdata;
-                }
-            }
-            $x++;
+        $sql = "SELECT u.* FROM pilots u WHERE u.id IN (SELECT p.userid FROM permissions p WHERE p.name='admin')";
+        $res = $this->_db->query($sql)->results();
+        $ret = [];
+        foreach ($res as $staff) {
+            array_push($ret, (array)$staff);
         }
-        return $staff;
 
+        return $ret;
     }
 
     /**
