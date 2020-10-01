@@ -349,10 +349,6 @@ if (!$user->isLoggedIn()) {
                                                     <label for="usermodal-joined">Join Date</label>
                                                     <input readonly type="date" value="<?= date_format(date_create($staff['joined']), 'Y-m-d') ?>" class="form-control" name="joined" id="usermodal-joined">
                                                 </div>
-                                                <div class="form-group">
-                                                    <label for="usermodal-status">Status</label>
-                                                    <input readonly type="text" value="<?= $staff['status'] ?>" class="form-control" name="status" id="usermodal-status">
-                                                </div>
                                                 <br>
                                                 <h5>Permissions</h5>
                                                 <?php

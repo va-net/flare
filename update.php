@@ -134,7 +134,12 @@ if (Input::get('action') === 'editprofile') {
         die();
     }
 
-    $perms["admin"] = Input::get("admin");
+    $isAdmin = $user->hasPermission('admin', Input::get('id'));
+    if (!$isAdmin && Input::get('admin') == 1) {
+        Permissions::give(Input::get('id'), 'admin');
+    } elseif ($isAdmin && Input::get('admin') == 0) {
+        Permissions::revoke(Input::get('id'), 'admin');
+    }
 
     $user->update(array(
         'callsign' => Input::get('callsign'),
