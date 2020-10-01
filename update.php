@@ -326,7 +326,7 @@ if (Input::get('action') === 'editprofile') {
         Redirect::to('home.php');
         die();
     }
-    
+
     Aircraft::updateRank(Input::get('rank'), Input::get('id'));
     Session::flash('success', 'Aircraft Updated Successfully!');
     Redirect::to('admin.php?page=opsmanage&section=fleet');
@@ -365,7 +365,7 @@ if (Input::get('action') === 'editprofile') {
         Redirect::to('home.php');
         die();
     }
-    
+
     $ret = Route::update(Input::get('id'), array(
         "fltnum" => Input::get('fltnum'),
         "dep" => Input::get('dep'),
@@ -457,7 +457,7 @@ if (Input::get('action') === 'editprofile') {
         Redirect::to('home.php');
         die();
     }
-    
+
     if (!Config::replace('api_key', trim(Input::get('vanetkey')))) {
         Session::flash('error', 'There was an error updating the config file!');
         Redirect::to('admin.php?page=site&tab=vanet');
@@ -644,7 +644,7 @@ if (Input::get('action') === 'editprofile') {
         array_push($params, $item["arr"]);
         array_push($params, $item["duration"]);
         array_push($params, $acId);
-        
+
         $i++;
     }
 
@@ -716,7 +716,7 @@ if (Input::get('action') === 'editprofile') {
         array_push($params, $aircraft["liveryID"]);
         array_push($params, $minrank);
         array_push($params, 1);
-        
+
         $i++;
     }
 
@@ -866,7 +866,7 @@ if (Input::get('action') === 'editprofile') {
             $acId = $acId->first()->id;
         }
 
-        
+
 
         $sql .= "\n(?, ?, ?, ?, ?),";
         array_push($params, $codeshare["veFrom"]["code"].$route["flightNum"]);
@@ -936,7 +936,7 @@ if (Input::get('action') === 'editprofile') {
         array_push($params, $item["arr"]);
         array_push($params, $item["duration"]);
         array_push($params, $item["aircraftid"]);
-        
+
         $j++;
     }
 

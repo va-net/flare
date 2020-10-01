@@ -100,14 +100,14 @@ if (!$user->isLoggedIn()) {
                                         echo '</td><td class="align-middle">';
                                         echo $user["status"];
                                         echo '</td><td class="align-middle">';
-                                        echo '<button class="btn btn-primary text-light userEdit" data-callsign="'.$user['callsign'].'" 
-                                        data-name="'.$user['name'].'" data-email="'.$user['email'].'" data-ifc="'.$user['ifc'].'" 
-                                        data-joined="'.date_format(date_create($user['joined']), 'Y-m-d').'" data-status="'.$user['status'].'" 
-                                        data-id="'.$user['id'].'" data-thrs="'.Time::secsToString($user["transhours"]).'" 
+                                        echo '<button class="btn btn-primary text-light userEdit" data-callsign="'.$user['callsign'].'"
+                                        data-name="'.$user['name'].'" data-email="'.$user['email'].'" data-ifc="'.$user['ifc'].'"
+                                        data-joined="'.date_format(date_create($user['joined']), 'Y-m-d').'" data-status="'.$user['status'].'"
+                                        data-id="'.$user['id'].'" data-thrs="'.Time::secsToString($user["transhours"]).'"
                                         data-admin="'.$user['isAdmin'].'" data-tflts="'.$user["transflights"].'"><i class="fa fa-edit"></i>
                                         </button>';
-                                        echo '&nbsp;<button id="delconfirmbtn" class="btn text-light btn-danger" 
-                                        data-toggle="modal" data-target="#delconfirmmodal" 
+                                        echo '&nbsp;<button id="delconfirmbtn" class="btn text-light btn-danger"
+                                        data-toggle="modal" data-target="#delconfirmmodal"
                                         data-callsign="'.$user['callsign'].'" data-id="'.$user['id'].'">
                                         <i class="fa fa-trash"></i></button>';
                                         echo '</td>';
@@ -1062,7 +1062,7 @@ if (!$user->isLoggedIn()) {
                                                 <input required type="text" class="form-control" name="gates" id="event-gates" />
                                                 <small class="text-muted">Comma-Separated List of Gate Names</small>
                                             </div>
-                                            
+
                                             <input type="submit" class="btn bg-custom" value="Add Event" />
                                         </form>
                                     </div>
@@ -1173,7 +1173,7 @@ if (!$user->isLoggedIn()) {
                                                     <option value="expert">Expert Server</option>
                                                 </select>
                                             </div>
-                                            
+
                                             <input type="submit" class="btn bg-custom" value="Save" />
                                         </form>
                                     </div>
@@ -1196,7 +1196,7 @@ if (!$user->isLoggedIn()) {
                             <hr />
                             <?php if (!$IS_GOLD): ?>
                                 <p>
-                                    View vFinance Stats on <a href="https://vanet.app/airline/finance/">VANet</a>. 
+                                    View vFinance Stats on <a href="https://vanet.app/airline/finance/">VANet</a>.
                                     Sign Up to VANet Gold in order to get access to VANet Stats right here.
                                 </p>
                             <?php else: ?>
@@ -1326,7 +1326,7 @@ if (!$user->isLoggedIn()) {
                                             echo $aircraft->rank;
                                             echo '</td><td class="align-middle">';
                                             echo '&nbsp;<button data-id="'.$aircraft->id.'" class="btn btn-danger text-light deleteFleet"><i class="fa fa-trash"></i></button>';
-                                            echo '&nbsp;<button class="btn btn-primary editFleet" data-acName="'.$aircraft->name.' ('.$aircraft->liveryname.')'.'" 
+                                            echo '&nbsp;<button class="btn btn-primary editFleet" data-acName="'.$aircraft->name.' ('.$aircraft->liveryname.')'.'"
                                             data-rankReq="'.$aircraft->rankreq.'" data-id="'.$aircraft->id.'"><i class="fa fa-edit"></i></button>';
                                             echo '</td>';
                                         }
@@ -1378,7 +1378,7 @@ if (!$user->isLoggedIn()) {
                                         var acName = $(this).data('acname');
                                         var acRank = $(this).data('rankreq');
                                         var acId = $(this).data('id');
-                                        
+
                                         $("#fleetedit-title").text("Edit Aircraft: " + acName);
                                         $("#fleetedit-id").val(acId);
                                         $("#fleetedit-rank-" + acRank).attr('selected', true);
@@ -1495,10 +1495,10 @@ if (!$user->isLoggedIn()) {
                                             echo '</td><td class="align-middle mobile-hidden">';
                                             echo $route->aircraft.'<span class="mobile-hidden"> ('.$route->livery.')</span>';
                                             echo '</td><td class="align-middle">';
-                                            echo '<button class="btn bg-custom editRoute" 
-                                            data-id="'.$route->id.'" data-fltnum="'.$route->fltnum.'" 
-                                            data-dep="'.$route->dep.'" data-arr="'.$route->arr.'" 
-                                            data-duration="'.Time::secsToString($route->duration).'" data-aircraft="'.$route->aircraftid.'" 
+                                            echo '<button class="btn bg-custom editRoute"
+                                            data-id="'.$route->id.'" data-fltnum="'.$route->fltnum.'"
+                                            data-dep="'.$route->dep.'" data-arr="'.$route->arr.'"
+                                            data-duration="'.Time::secsToString($route->duration).'" data-aircraft="'.$route->aircraftid.'"
                                             ><i class="fa fa-edit"></i></button>';
                                             echo '&nbsp;<button value="'.$route->id.'" form="deleteroute" type="submit" class="btn btn-danger text-light" name="delete"><i class="fa fa-trash"></i></button>';
                                             echo '</td></tr>';
@@ -1662,11 +1662,11 @@ if (!$user->isLoggedIn()) {
                                             echo '</td><td class="align-middle">';
                                             echo Time::secsToString($rank->timereq);
                                             echo '</td><td class="align-middle">';
-                                            echo '<button class="btn btn-primary text-light editRank" 
-                                            data-id="'.$rank->id.'" data-name="'.$rank->name.'" 
+                                            echo '<button class="btn btn-primary text-light editRank"
+                                            data-id="'.$rank->id.'" data-name="'.$rank->name.'"
                                             data-minhrs="'.($rank->timereq / 3600).'">
                                             <i class="fa fa-edit"></i></button>';
-                                            echo '&nbsp;<button class="btn btn-danger text-light" 
+                                            echo '&nbsp;<button class="btn btn-danger text-light"
                                             value="'.$rank->id.'" form="delrank" name="delete">
                                             <i class="fa fa-trash"></i></button>';
                                             echo '</td></tr>';
@@ -1719,7 +1719,7 @@ if (!$user->isLoggedIn()) {
                                     Here, you can import Flare JSON Files containg routes and aircraft into your database.
                                     Please note when you are importing aircraft, they will all be set to the default rank.<br /><br />
 
-                                    Alternatively, you can import your routes from the phpVMS 
+                                    Alternatively, you can import your routes from the phpVMS
                                     format <a href="admin.php?page=opsmanage&section=phpvms">here</a>.
                                 </p>
 
@@ -1790,7 +1790,7 @@ if (!$user->isLoggedIn()) {
                             <?php elseif (Input::get('section') === 'phpvms'): ?>
                                 <h3>phpVMS Importer</h3>
                                 <p>
-                                    Here, you can import your routes from phpVMS. 
+                                    Here, you can import your routes from phpVMS.
                                 </p>
                                 <?php if (empty(Input::get('action'))): ?>
                                     <form method="post" enctype="multipart/form-data">
@@ -1919,7 +1919,7 @@ if (!$user->isLoggedIn()) {
                         <?php else: ?>
                             <h3>Codeshares Dashboard</h3>
                             <p>
-                                Here you can see active codeshare requests from other VAs. 
+                                Here you can see active codeshare requests from other VAs.
                                 You can also make codeshare requests to share routes with other VAs.
                             </p>
                             <!-- Delete Codeshare Confirmation Modal -->
