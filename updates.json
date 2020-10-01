@@ -64,9 +64,7 @@
       "version.json"
     ],
     "deletedFiles": [],
-    "queries": [
-      "DELETE FROM aircraft WHERE status != 1;"
-    ]
+    "queries": ["DELETE FROM aircraft WHERE status != 1;"]
   },
   {
     "tag": "v1.0.0-beta6",
@@ -109,11 +107,7 @@
     "notes": "Fixed Installation DB Structure, Fixed Issue with Editing Staff in User Management",
     "prerelease": true,
     "useUpdater": true,
-    "files": [
-      "version.json",
-      "update.php",
-      "classes/User.php"
-    ],
+    "files": ["version.json", "update.php", "classes/User.php"],
     "deletedFiles": [],
     "queries": []
   },
@@ -147,12 +141,7 @@
     "notes": "Updated Updater, Added Ability to Enable/Disable Receiving Prerelease Versions, Fixed Initialization Issue",
     "prerelease": true,
     "useUpdater": true,
-    "files": [
-      "version.json",
-      "core/init.php",
-      "admin.php",
-      "updater.php"
-    ],
+    "files": ["version.json", "core/init.php", "admin.php", "updater.php"],
     "deletedFiles": [],
     "queries": [
       "INSERT INTO `options` (`name`, `value`) VALUES ('CHECK_PRERELEASE', '1')"
@@ -165,10 +154,7 @@
     "notes": "Updated Alternate Updater",
     "prerelease": true,
     "useUpdater": true,
-    "files": [
-      "version.json",
-      "updater-alternate.php"
-    ],
+    "files": ["version.json", "updater-alternate.php"],
     "deletedFiles": [],
     "queries": []
   },
@@ -214,10 +200,7 @@
     "notes": "Fix Issue with Updater",
     "prerelease": true,
     "useUpdater": true,
-    "files": [
-      "updater-alternate.php",
-      "version.json"
-    ],
+    "files": ["updater-alternate.php", "version.json"],
     "deletedFiles": [],
     "queries": []
   },
@@ -332,11 +315,7 @@
     "notes": "Bug Fixes",
     "prerelease": true,
     "useUpdater": true,
-    "files": [
-      "admin.php",
-      "update.php",
-      "version.json"
-    ],
+    "files": ["admin.php", "update.php", "version.json"],
     "deletedFiles": [],
     "queries": []
   }
