@@ -1268,6 +1268,10 @@ if (!$user->isLoggedIn()) {
                                                             ?>
                                                         </select>
                                                     </div>
+                                                    <div class="form-group">
+                                                        <label for="notes">Notes</label>
+                                                        <input type="text" class="form-control" maxlength="12" name="notes" id="notes" />
+                                                    </div>
                                                     <input type="submit" class="btn bg-custom" value="Add Aircraft">
                                                 </form>
                                             </div>
@@ -1324,7 +1328,8 @@ if (!$user->isLoggedIn()) {
                                             echo '</td><td class="align-middle">';
                                             echo '&nbsp;<button data-id="'.$aircraft->id.'" class="btn btn-danger text-light deleteFleet"><i class="fa fa-trash"></i></button>';
                                             echo '&nbsp;<button class="btn btn-primary editFleet" data-acName="'.$aircraft->name.' ('.$aircraft->liveryname.')'.'" 
-                                            data-rankReq="'.$aircraft->rankreq.'" data-id="'.$aircraft->id.'"><i class="fa fa-edit"></i></button>';
+                                            data-rankReq="'.$aircraft->rankreq.'" data-id="'.$aircraft->id.'" data-notes="'.$aircraft->notes.'">
+                                            <i class="fa fa-edit"></i></button>';
                                             echo '</td>';
                                         }
                                         ?>
@@ -1363,6 +1368,10 @@ if (!$user->isLoggedIn()) {
                                                         ?>
                                                     </select>
                                                 </div>
+                                                <div class="form-group">
+                                                    <label for="fleetedit-notes">Notes</label>
+                                                    <input type="text" class="form-control" maxlength="12" name="notes" id="fleetedit-notes" />
+                                                </div>
                                                 <input type="submit" class="btn bg-custom" value="Save" />
                                             </form>
                                         </div>
@@ -1375,10 +1384,12 @@ if (!$user->isLoggedIn()) {
                                         var acName = $(this).data('acname');
                                         var acRank = $(this).data('rankreq');
                                         var acId = $(this).data('id');
+                                        var acNotes = $(this).data('notes');
                                         
                                         $("#fleetedit-title").text("Edit Aircraft: " + acName);
                                         $("#fleetedit-id").val(acId);
-                                        $("#fleetedit-rank-" + acRank).attr('selected', true);
+                                        $("#fleetedit-rank").val(acRank);
+                                        $("#fleetedit-notes").val(acNotes);
 
                                         $("#fleetedit").modal('show');
                                     });
@@ -1457,7 +1468,8 @@ if (!$user->isLoggedIn()) {
                                                             $all = Aircraft::fetchActiveAircraft()->results();
 
                                                             foreach ($all as $aircraft) {
-                                                                echo '<option value="'.$aircraft->id.'">'.$aircraft->name.' ('.$aircraft->liveryname.')</option>';
+                                                                $notes = $aircraft->notes == null ? '' : ' - '.$aircraft->notes;
+                                                                echo '<option value="'.$aircraft->id.'">'.$aircraft->name.' ('.$aircraft->liveryname.')'.$notes.'</option>';
                                                             }
                                                             ?>
                                                         </select>
@@ -1574,7 +1586,8 @@ if (!$user->isLoggedIn()) {
                                                             $aircraft = Aircraft::fetchAllAircraft()->results();
 
                                                             foreach ($aircraft as $a) {
-                                                                echo '<option value="'.$a->id.'">'.$a->name.' ('.$a->liveryname.')</option>';
+                                                                $notes = $a->notes == null ? '' : ' - '.$a->notes;
+                                                                echo '<option value="'.$a->id.'">'.$a->name.' ('.$a->liveryname.')'.$notes.'</option>';
                                                             }
                                                             ?>
                                                         </select>

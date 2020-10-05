@@ -339,5 +339,24 @@
         ],
         "deletedFiles": [],
         "queries": []
+    },
+    {
+        "tag": "v1.0.0-beta15",
+        "name": "Public Beta 15",
+        "date": "2020-10-06",
+        "notes": "Added Events to Home Page, Added Notes for Aircraft",
+        "prerelease": true,
+        "useUpdater": true,
+        "files": [
+            "home.php",
+            "admin.php",
+            "update.php",
+            "classes/Aircraft.php",
+            "version.json"
+        ],
+        "deletedFiles": [],
+        "queries": [
+            "ALTER TABLE aircraft ADD COLUMN notes VARCHAR(12) AFTER ifliveryid"
+        ]
     }
 ]
