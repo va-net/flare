@@ -497,24 +497,16 @@ if (!$user->isLoggedIn()) {
                                 </p>
                                 <table class="table">
                                     <tr>
-                                        <th>DB Host</th>
-                                        <td><?= Config::get('mysql/host'); ?></td>
-                                    </tr>
-                                    <tr>
                                         <th>DB Port</th>
                                         <td><?= Config::get('mysql/port'); ?></td>
                                     </tr>
                                     <tr>
-                                        <th>VANet API Key</th>
-                                        <td><?= Config::get('vanet/api_key'); ?></td>
-                                    </tr>
-                                    <tr>
-                                        <th>Is VANet Gold?</th>
-                                        <td><?= VANet::isGold(); ?></td>
+                                        <th>VANet Gold</th>
+                                        <td><?= VANet::isGold() ? 'Yes': 'No' ?></td>
                                     </tr>
                                     <tr>
                                         <th>Force Server</th>
-                                        <td><?= Config::get('FORCE_SERVER'); ?></td>
+                                        <td><?= Config::get('FORCE_SERVER') == 0 ? 'None' : Config::get('FORCE_SERVER') ?></td>
                                     </tr>
                                     <tr>
                                         <th>Version</th>
