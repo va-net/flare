@@ -674,7 +674,7 @@ if (Input::get('action') === 'editprofile') {
 
     $minrank = $db->query("SELECT * FROM ranks ORDER BY timereq ASC")->first()->id;
 
-    $sql = "INSERT INTO aircraft (name, ifaircraftid, liveryname, ifliveryid, rankreq, status) VALUES\n";
+    $sql = "INSERT INTO aircraft (name, ifaircraftid, liveryname, ifliveryid, rankreq, status, notes) VALUES\n";
     $params = array();
     $i = 0;
 
@@ -690,7 +690,7 @@ if (Input::get('action') === 'editprofile') {
                 Redirect::to('admin.php?page=opsmanage&section=import');
                 die();
             }
-            $sql = "INSERT INTO aircraft (name, ifaircraftid, liveryname, ifliveryid, rankreq, status) VALUES\n";
+            $sql = "INSERT INTO aircraft (name, ifaircraftid, liveryname, ifliveryid, rankreq, status, notes) VALUES\n";
             $params = array();
         }
 
@@ -707,13 +707,14 @@ if (Input::get('action') === 'editprofile') {
             die();
         }
 
-        $sql .= "\n(?, ?, ?, ?, ?, ?),";
+        $sql .= "\n(?, ?, ?, ?, ?, ?, ?),";
         array_push($params, $aircraft["aircraftName"]);
         array_push($params, $aircraft["aircraftID"]);
         array_push($params, $aircraft["liveryName"]);
         array_push($params, $aircraft["liveryID"]);
         array_push($params, $minrank);
         array_push($params, 1);
+        array_push($params, null);
         
         $i++;
     }
