@@ -89,3 +89,41 @@ $GLOBALS['admin-menu']["Site Management"] = array(
         "needsGold" => false
     ]
 );
+
+$GLOBALS['pilot-menu'] = array(
+    "Pilot Home" => [
+        "link" => "home.php",
+        "icon" => "fa-home",
+        "needsGold" => false
+    ],
+    "File PIREP" => [
+        "link" => "pireps.php?page=new",
+        "icon" => "fa-plane",
+        "needsGold" => false
+    ],
+    "My PIREPs" => [
+        "link" => "pireps.php?page=recents",
+        "icon" => "fa-folder",
+        "needsGold" => false
+    ],
+    "Route Database" => [
+        "link" => "routes.php",
+        "icon" => "fa-database",
+        "needsGold" => false
+    ],
+    "Live Map" => [
+        "link" => "map.php",
+        "icon" => "fa-map",
+        "needsGold" => false
+    ],
+    "Events" => [
+        "link" => "events.php",
+        "icon" => "fa-calendar",
+        "needsGold" => true
+    ],
+    "ACARS" => [
+        "link" => "acars.php",
+        "icon" => "fa-sync",
+        "needsGold" => true
+    ],
+);

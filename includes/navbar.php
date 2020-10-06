@@ -31,30 +31,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
         <li class="nav-item mobile-hidden">
             <a class="nav-link" href="logout.php" style="color: <?= $textcol ?>!important;"><i class="fa fa-sign-out-alt"></i>&nbsp;Log Out</a>
         </li>
-        <li class="nav-item desktop-hidden">
-            <a href="home.php" id="homelink" class="panel-link" style="color: <?= $textcol ?>!important;"><i class="fa fa-home"></i>&nbsp;Pilot Home</a>
-        </li>
-        <li class="nav-item desktop-hidden">
-            <a href="pireps.php?page=new" id="filepireplink" class="panel-link" style="color: <?= $textcol ?>!important;"><i class="fa fa-plane"></i>&nbsp;File PIREP</a>
-        </li>
-        <li class="nav-item desktop-hidden">
-            <a href="pireps.php?page=recents" id="mypirepslink" class="panel-link" style="color: <?= $textcol ?>!important;"><i class="fa fa-folder"></i>&nbsp;My PIREPs</a>
-        </li>
-        <li class="nav-item desktop-hidden">
-            <a href="routes.php" id="routeslink" class="panel-link" style="color: <?= $textcol ?>!important;"><i class="fa fa-database"></i>&nbsp;Route Database</a>
-        </li>
-        <li class="nav-item desktop-hidden">
-            <a href="map.php" id="maplink" class="panel-link" style="color: <?= $textcol ?>!important;"><i class="fa fa-map"></i>&nbsp;Live Map</a>
-        </li>
         <?php
         $IS_GOLD = VANet::isGold();
-        if ($IS_GOLD) {
-            echo '<li class="nav-item desktop-hidden">
-                <a href="events.php" id="eventslink" class="panel-link" style="color: '.$textcol.'!important;"><i class="fa fa-calendar"></i>&nbsp;Events</a>
-            </li>';
-            echo '<li class="nav-item desktop-hidden">
-                <a href="acars.php" id="acarslink" class="panel-link" style="color: '.$textcol.'!important;"><i class="fa fa-sync"></i>&nbsp;ACARS</a>
-            </li>';
+        foreach ($GLOBALS['pilot-menu'] as $name => $data) {
+            if ($IS_GOLD || $data["needsGold"] == false) {
+                echo '<li class="nav-item desktop-hidden">';
+                echo '<a href="'.$data['link'].'" class="panel-link" style="color: '.$textcol.' !important;"><i class="fa '.$data['icon'].'"></i>&nbsp;'.$name.'</a>';
+                echo '</li>';
+            }
         }
         if ($user->hasPermission('admin')) {
             $localmenu = array();
