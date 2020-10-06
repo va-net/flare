@@ -344,7 +344,7 @@
         "tag": "v1.0.0-beta15",
         "name": "Public Beta 15",
         "date": "2020-10-06",
-        "notes": "Added Events to Home Page, Added Notes for Aircraft, Various Bug Fixes",
+        "notes": "Added Events to Home Page, Added Notes for Aircraft, Added Events, Various Bug Fixes",
         "prerelease": true,
         "useUpdater": true,
         "files": [
@@ -354,9 +354,24 @@
             "classes/Aircraft.php",
             "classes/Pirep.php",
             "pireps.php",
+            "classes/Config.php",
+            "classes/Events.php",
+            "classes/News.php",
+            "classes/Permissions.php",
+            "classes/Rank.php",
+            "classes/Route.php",
+            "classes/User.php",
+            "classes/VANet.php",
+            "core/init.php",
+            "core/listeners.php",
+            "index.php",
+            "apply.php",
+            "updater.php",
             "version.json"
         ],
-        "deletedFiles": [],
+        "deletedFiles": [
+            "/updater-alternate.php"
+        ],
         "queries": [
             "ALTER TABLE aircraft ADD COLUMN notes VARCHAR(12) AFTER ifliveryid"
         ]
