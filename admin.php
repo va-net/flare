@@ -1827,33 +1827,18 @@ if (!$user->isLoggedIn()) {
                                             die();
                                         }
                                         $routes = file_get_contents($file["tmp_name"]);
-                                        preg_match_all('/.*\n|\r\n/m', $routes, $routelines);
+                                        preg_match_all('/\n.*/m', $routes, $routelines);
 
-                                        $i = 0;
-                                        $valid = false;
                                         $routesArray = [];
                                         foreach ($routelines[0] as $l) {
-                                            if ($i == 0) {
-                                                $l = trim(preg_replace('/"|\'| /', '', $l));
-                                                if ($l != 'code,flightnum,depicao,arricao,route,aircraft,flightlevel,distance,deptime,arrtime,flighttime,notes,price,flighttype,daysofweek,enabled,week1,week2,week3,week4') {
-                                                    Session::flash('error', 'Your Routes Import seems to be in the incorrect format');
-                                                    echo '<script>window.location.href= "admin.php?page=opsmanage&section=phpvms";</script>';
-                                                    die();
-                                                } else {
-                                                    $valid = true;
-                                                }
-                                            } elseif ($valid) {
-                                                $segments = preg_split('/, ?/', $l);
-
-                                                array_push($routesArray, array(
-                                                    "fltnum" => $segments[1],
-                                                    "dep" => $segments[2],
-                                                    "arr" => $segments[3],
-                                                    "duration" => Time::strToSecs(str_replace('.', ':', $segments[10])),
-                                                    "aircraftid" => $segments[5]
-                                                ));
-                                            }
-                                            $i++;
+                                            $segments = preg_split('/, ?/', $l);
+                                            array_push($routesArray, array(
+                                                "fltnum" => $segments[1],
+                                                "dep" => $segments[2],
+                                                "arr" => $segments[3],
+                                                "duration" => Time::strToSecs(str_replace('.', ':', $segments[10])),
+                                                "aircraftid" => $segments[5]
+                                            ));
                                         }
 
                                         $routesJson = Json::encode($routesArray);
