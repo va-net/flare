@@ -2054,6 +2054,10 @@ if (!$user->isLoggedIn()) {
                             </div>
                             <div id="installed" class="tab-pane container-fluid p-3 fade">
                                 <h4>Installed Plugins</h4>
+                                <form id="removeplugin" method="post" action="update.php">
+                                    <input hidden name="action" value="removeplugin" />
+                                    <input hidden name="plugin" id="removeplugin-name" />
+                                </form>
                                 <table class="table datatable-nosearch">
                                     <thead>
                                         <tr>
@@ -2070,7 +2074,7 @@ if (!$user->isLoggedIn()) {
                                                 echo '</td><td class="align-middle">';
                                                 echo $p["version"]["tag"];
                                                 echo '</td><td class="align-middle">';
-                                                echo '<button class="btn btn-danger uninstallBtn" data-slug="'.$p["slug"].'"><i class="fa fa-trash"></i></button>';
+                                                echo '<button class="btn btn-danger removeBtn" data-name="'.$p["name"].'"><i class="fa fa-trash"></i></button>';
                                                 echo '</td></tr>';
                                             }
                                         ?>
@@ -2097,10 +2101,19 @@ if (!$user->isLoggedIn()) {
                                 var name = $(this).data('name');
                                 var slug = $(this).data('slug');
                                 
-                                var conf = confirm('Are you sure you want to install the plugin ' + name + '?');
+                                var conf = confirm('Are you sure you want to install the plugin ""' + name + '"?');
                                 if (conf) {
                                     $("#installplugin-plugin").val(slug);
                                     $("#installplugin").submit();
+                                }
+                            });
+                            $(".removeBtn").click(function() {
+                                var name = $(this).data('name');
+                                
+                                var conf = confirm('Are you sure you want to Remove the plugin "' + name + '"?');
+                                if (conf) {
+                                    $("#removeplugin-name").val(name);
+                                    $("#removeplugin").submit();
                                 }
                             });
                         </script>

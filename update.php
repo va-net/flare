@@ -1030,8 +1030,43 @@ if (Input::get('action') === 'editprofile') {
 
     $currentplugins = Json::decode(file_get_contents('./plugins.json'));
     array_push($currentplugins, $pluginadv);
-    file_put_contents('./plugins.json', Json::encode($currentplugins));
+    file_put_contents('./plugins.json', Json::encode($currentplugins, true));
 
     Session::flash('success', 'Plugin Installed!');
+    Redirect::to('admin.php?page=pluginmanage&tab=installed');
+} elseif (Input::get('action') === 'removeplugin') {
+    if (!$user->hasPermission('admin')) {
+        Redirect::to('home.php');
+    }
+
+    $slash = "/";
+    if (strpos(strtolower(php_uname('s')), "window") !== FALSE) {
+        $slash = "\\";
+    }
+
+    $theplugin = null;
+    foreach ($INSTALLED_PLUGINS as $p) {
+        if ($theplugin == null && $p["name"] == Input::get('plugin')) {
+            $theplugin = $p;
+            $INSTALLED_PLUGINS = array_filter($INSTALLED_PLUGINS, function($item) {
+                global $theplugin;
+                if ($item == $theplugin) {
+                    return false;
+                } 
+
+                return true;
+            });
+            file_put_contents('./plugins.json', Json::encode($INSTALLED_PLUGINS, true));
+            break;
+        }
+    }
+
+    foreach ($theplugin["installation"]["files"] as $file) {
+        $file = str_replace("/", $slash, $file);
+        $path = __DIR__.$slash.$file;
+        unlink($path);
+    }
+
+    Session::flash('success', 'Plugin Removed');
     Redirect::to('admin.php?page=pluginmanage&tab=installed');
 }
