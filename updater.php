@@ -126,6 +126,9 @@ if (count($nextUpdate["queries"]) != 0) {
         }
     }
 }
+
+Events::trigger('site/updated', $nextUpdate);
+
 echo "Updated Database Successfully<br />";
 
 echo "<br />Flare has been Updated to ".$nextUpdate["name"]." (".$nextUpdate["tag"].")";

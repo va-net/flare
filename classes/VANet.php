@@ -169,6 +169,8 @@ class VANet
         if (array_key_exists("status", $response) || !$response["success"]) {
             return false;
         }
+
+        Events::trigger('vanet/event/added', $fields);
         
         return true;
     }
@@ -193,6 +195,8 @@ class VANet
         if (!$response["success"]) {
             throw new Exception("Error Connecting to VANet");
         }
+
+        Events::trigger('vanet/event/signup/added', ['pilotUid' => $pilotUid, 'gateId' => $gateId]);
 
         return true;
     }
@@ -227,6 +231,8 @@ class VANet
         if (!$response["success"]) {
             throw new Exception("Error Connecting to VANet");
         }
+
+        Events::trigger('vanet/event/signup/removed', ['slot' => $slotId, 'pilot' => $pilotUid, 'event' => $eventId]);
 
         return true;
     }
@@ -270,6 +276,7 @@ class VANet
 
         $curl = new Curl;
         $curl->delete(Config::get('vanet/base_url').'/api/events/delete/'.urlencode($eventId).'?apikey='.urlencode($key));
+        Events::trigger('vanet/event/deleted', ['id' => $eventId]);
         return true;
     }
 
@@ -290,6 +297,9 @@ class VANet
         if (array_key_exists("status", Json::decode($response->body))) {
             return false;
         }
+
+        $fields["id"] = $id;
+        Events::trigger('vanet/event/updated', $fields);
 
         return true;
     }
@@ -345,6 +355,8 @@ class VANet
             return false;
         }
 
+        Events::trigger('vanet/codeshare/requested', $fields);
+
         return true;
     }
 
@@ -361,6 +373,8 @@ class VANet
         if (array_key_exists("status", $response) || !$response["success"]) {
             return false;
         }
+
+        Events::trigger('vanet/codeshare/deleted', ['id' => $id]);
 
         return true;
     }

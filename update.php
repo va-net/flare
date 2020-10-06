@@ -211,6 +211,9 @@ if (Input::get('action') === 'editprofile') {
         Session::flash('error', 'There was an error Declining the Application.');
         Redirect::to('admin.php?page=recruitment');
     }
+
+    Events::trigger('user/declined', ['id' => Input::get('id')]);
+
     Session::flash('success', 'Application Declined Successfully');
     Redirect::to('admin.php?page=recruitment');
 } elseif (Input::get('action') === 'acceptapplication') {
@@ -227,6 +230,9 @@ if (Input::get('action') === 'editprofile') {
         Session::flash('error', 'There was an Error Accepting the Application.');
         Redirect::to('admin.php?page=recruitment');
     }
+
+    Events::trigger('user/accepted', Input::get('accept'));
+
     Session::flash('success', 'Application Accepted Successfully!');
     Redirect::to('admin.php?page=recruitment');
 } elseif (Input::get('action') === 'acceptpirep') {
@@ -653,6 +659,8 @@ if (Input::get('action') === 'editprofile') {
         Redirect::to('admin.php?page=opsmanage&section=import');
         die();
     }
+
+    Events::trigger('route/imported');
     Session::flash('success', "Routes Imported Successfully!");
     Redirect::to('admin.php?page=opsmanage&section=routes');
 } elseif (Input::get('action') === 'importaircraft') {
@@ -727,6 +735,9 @@ if (Input::get('action') === 'editprofile') {
         Redirect::to('admin.php?page=opsmanage&section=import');
         die();
     }
+
+    Events::trigger('aircraft/imported');
+
     Session::flash('success', "Aircraft Imported Successfully!");
     Redirect::to('admin.php?page=opsmanage&section=fleet');
 } elseif (Input::get('action') === 'exportroutes') {
@@ -744,6 +755,8 @@ if (Input::get('action') === 'editprofile') {
         ));
     }
 
+    Events::trigger('route/exported');
+
     echo Json::encode($ret, true);
 } elseif (Input::get('action') === 'exportaircraft') {
     header('Content-Type: application/json');
@@ -753,6 +766,8 @@ if (Input::get('action') === 'editprofile') {
     foreach ($aircraft as $a) {
         array_push($ret, $a->ifliveryid);
     }
+
+    Events::trigger('aircraft/exported');
 
     echo Json::encode($ret, true);
 } elseif (Input::get('action') === 'newcodeshare') {
@@ -945,6 +960,9 @@ if (Input::get('action') === 'editprofile') {
         Redirect::to('admin.php?page=opsmanage&section=import');
         die();
     }
+
+    Events::trigger('route/imported');
+    Events::trigger('aircraft/imported');
 
     Session::flash('success', "Routes Imported Successfully!");
     Redirect::to('admin.php?page=opsmanage&section=routes');

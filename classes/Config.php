@@ -69,6 +69,9 @@ class Config
 
         self::replace("TEXT_COLOUR", '#'.$text);
 
+        Events::trigger('config/updated', ['item' => 'TEXT_COLOUR']);
+        Events::trigger('config/updated', ['item' => 'site/colour_main_hex']);
+
         return true;
 
     }
@@ -108,6 +111,8 @@ class Config
         fwrite($file, $newConf);
         fclose($file);
 
+        Events::trigger('config/updated', ['item' => $where]);
+
         return true;
 
     }
@@ -123,6 +128,8 @@ class Config
             'name' => $key,
             'value' => $value
         ));
+
+        Events::trigger('config/added', ['item' => $where]);
 
         return !($ret->error());
     }

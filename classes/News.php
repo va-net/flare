@@ -65,6 +65,8 @@ class News
             'status' => 2
         ));
 
+        Events::trigger('news/archived', ['id' => $id]);
+
     }
 
     /**
@@ -78,6 +80,8 @@ class News
         self::init();
 
         self::$_db->update('news', $id, 'id', $fields);
+        $fields["id"] = $id;
+        Events::trigger('news/updated', $fields);
 
     }
 
@@ -91,6 +95,7 @@ class News
         self::init();
 
         self::$_db->insert('news', $fields);
+        Events::trigger('news/added', $fields);
 
     }
 

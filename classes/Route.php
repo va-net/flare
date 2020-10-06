@@ -29,13 +29,15 @@ class Route
 
         self::init();
 
-        self::$_db->insert('routes', array(
+        $data = array(
             'fltnum' => $fields[0], 
             'dep' => $fields[1],
             'arr' => $fields[2],
             'duration' => $fields[3],
             'aircraftid' => $fields[4]
-        ));
+        );
+        self::$_db->insert('routes', $data);
+        Events::trigger('route/added', $data);
         
     }
 
@@ -61,7 +63,7 @@ class Route
         self::init();
 
         self::$_db->delete('routes', array('id', '=', $id));
-
+        Events::trigger('route/deleted', ["id" => $id]);
     }
 
     /**
@@ -86,8 +88,12 @@ class Route
     public static function update($id, $fields) 
     {
         self::init();
+        $ret = self::$_db->update('routes', $id, 'id', $fields);
 
-        return !(self::$_db->update('routes', $id, 'id', $fields)->error());
+        $fields["id"] = $id;
+        Events::trigger('route/updated', $fields);
+
+        return !($ret->error());
     }
 
 }
