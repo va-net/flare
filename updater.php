@@ -92,14 +92,28 @@ if (!$nextUpdate["useUpdater"]) {
     die();
 }
 
+$slash = "/";
+if (strpos(strtolower(php_uname('s')), "window") !== FALSE) {
+    $slash = "\\";
+}
+
+// Add Directories
+if (array_key_exists('newFolders', $nextUpdate)) {
+    foreach ($nextUpdate['newFolders'] as $dir) {
+        $dir = str_replace("/", $slash, $dir);
+        if (!file_exists(__DIR__.$slash.$dir)) {
+            if (mkdir(__DIR__.$slash.$dir) === FALSE) {
+                echo "Error Creating Directory ".$dir;
+                die();
+            }
+        }
+    }
+}
+
 // Update Files
 foreach ($nextUpdate["files"] as $file) {
     $fileData = file_get_contents("https://raw.githubusercontent.com/va-net/flare/".urlencode($nextTag["commit"]["sha"])."/".urlencode($file));
-    $slash = "/";
-    if (strpos(strtolower(php_uname('s')), "window") !== FALSE) {
-        $file = str_replace("/", "\\", $file); 
-        $slash = "\\";
-    }
+    $file = str_replace("/", $slash, $file); 
     if ($fileData === FALSE || file_put_contents(__DIR__.$slash.$file, $fileData) === FALSE) {
         echo "Error Updating File ".$file;
         die();
@@ -109,7 +123,7 @@ echo "Updated Files Successfully<br />";
 
 // Delete Files to Delete
 foreach ($nextUpdate["deletedFiles"] as $delFile) {
-    if (!unlink(__DIR__.$delFile)) {
+    if (!unlink(__DIR__.$slash.$delFile)) {
         echo "There was an error deleting ".$delFile;
     }
 }
