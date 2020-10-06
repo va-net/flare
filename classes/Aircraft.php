@@ -188,6 +188,8 @@ class Aircraft
             'status' => 0
         ));
 
+        Events::trigger('aircraft/archived', ['id' => $id]);
+
     }
 
     /**
@@ -214,40 +216,47 @@ class Aircraft
      * @return null
      * @param string $liveryId Livery ID
      * @param int $rank Rank ID
+     * @param string $notes Notes
      */
-    public static function add($liveryId, $rank) 
+    public static function add($liveryId, $rank, $notes = null) 
     {
-
         self::init();
         
         $details = self::fetchAircraftFromVANet($liveryId, 'LiveryID')[0];
-
-        $x = self::$_db->insert('aircraft', array(
+        $data = array(
             'status' => 1,
             'rankreq' => $rank,
             'ifliveryid' => $liveryId,
             'liveryname' => $details["liveryName"],
             'name' => $details["aircraftName"],
-            'ifaircraftid' => $details["aircraftID"]
-        ));
+            'ifaircraftid' => $details["aircraftID"],
+            'notes' => $notes
+        );
+        self::$_db->insert('aircraft', $data);
+        Events::trigger('aircraft/added', $data);
     }
 
     /**
      * @return null
-     * @param int $rankId Rank ID
+     * @param int $rankId Updated Rank ID
+     * @param string $notes Updated Notes
      * @param int $aircraftId Aircraft ID
      */
-    public static function updateRank($rankId, $aircraftId) 
+    public static function update($rankId, $notes, $aircraftId) 
     {
         self::init();
         
         $fields = array(
             'rankreq' => $rankId,
+            'notes' => $notes,
         );
 
         if (!self::$_db->update('aircraft', $aircraftId, 'id', $fields)) {
             throw new Exception('There was a problem updating the user.');
         }
+
+        $fields['id'] = $aircraftId;
+        Events::trigger('aircraft/updated', $fields);
     }
 
     /**

@@ -31,6 +31,7 @@ class Pirep
         if (self::$_db->insert('pireps', $fields)->error()) {
             return false;
         }
+        Events::trigger('pirep/filed', $fields);
         return true;
 
     }
@@ -48,6 +49,8 @@ class Pirep
         if(!self::$_db->update('pireps', $id, 'id', $fields)) {
             return false;
         }
+        $fields["id"] = $id;
+        Events::trigger('pirep/updated', $fields);
         return true;
 
     }
@@ -131,6 +134,8 @@ class Pirep
             'status' => 1
         ));
 
+        Events::trigger('pirep/accepted', ["id" => $id]);
+
     }
 
     /**
@@ -145,6 +150,7 @@ class Pirep
         self::$_db->update('pireps', $id, 'id', array(
             'status' => 2
         ));
+        Events::trigger('pirep/denied', ["id" => $id]);
 
     }
 
@@ -160,7 +166,7 @@ class Pirep
 
         $server = 'casual';
         $force = Config::get('FORCE_SERVER');
-        if ($force !== 0 && $force !== 'casual') $server = $force;
+        if ($force != 0 && $force != 'casual') $server = $force;
 
         $curl = new Curl;
         $request = $curl->get(Config::get('vanet/base_url').'/api/userid', array(
@@ -180,6 +186,8 @@ class Pirep
         ))) {
             return false;
         }
+
+        Events::trigger('pirep/setup', ["pilot" => $id, "userid" => $response["data"]]);
         
         return true;
 
@@ -226,6 +234,7 @@ class Pirep
         self::init();
 
         self::$_db->delete('multipliers', array('id', '=', $id));
+        Events::trigger('pirep/multipliers/deleted', ["id" => $id]);
     }
 
     /**
@@ -237,6 +246,7 @@ class Pirep
         self::init();
 
         self::$_db->insert('multipliers', $fields);
+        Events::trigger('pirep/multipliers/added', $fields);
     }
 
     /**

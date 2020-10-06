@@ -54,6 +54,8 @@ class User
             throw new Exception('There was a problem creating an account.');
         }
 
+        Events::trigger('user/created', $fields);
+
     }
 
     /**
@@ -114,7 +116,7 @@ class User
                         Cookie::create($this->_cookieName, $hash, Config::get('remember/cookie_expiry'));
 
                     }
-
+                    Events::trigger('user/logged-in', (array)$this->data());
                     return true;
                 }
             }
@@ -162,6 +164,7 @@ class User
 
         Session::delete($this->_sessionName);
         Cookie::delete($this->_cookieName);
+        Events::trigger('user/logged-out', (array)$this->data());
 
     }
 
@@ -180,6 +183,9 @@ class User
         if (!$this->_db->update('pilots', $id, 'id', $fields)) {
             throw new Exception('There was a problem updating the user.');
         }
+
+        $fields["id"] = $id;
+        Events::trigger('user/updated', $fields);
 
     }
 

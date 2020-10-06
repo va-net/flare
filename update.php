@@ -211,6 +211,9 @@ if (Input::get('action') === 'editprofile') {
         Session::flash('error', 'There was an error Declining the Application.');
         Redirect::to('admin.php?page=recruitment');
     }
+
+    Events::trigger('user/declined', ['id' => Input::get('id')]);
+
     Session::flash('success', 'Application Declined Successfully');
     Redirect::to('admin.php?page=recruitment');
 } elseif (Input::get('action') === 'acceptapplication') {
@@ -227,6 +230,9 @@ if (Input::get('action') === 'editprofile') {
         Session::flash('error', 'There was an Error Accepting the Application.');
         Redirect::to('admin.php?page=recruitment');
     }
+
+    Events::trigger('user/accepted', Input::get('accept'));
+
     Session::flash('success', 'Application Accepted Successfully!');
     Redirect::to('admin.php?page=recruitment');
 } elseif (Input::get('action') === 'acceptpirep') {
@@ -318,7 +324,7 @@ if (Input::get('action') === 'editprofile') {
         die();
     }
 
-    Aircraft::add(Input::get('livery'), Input::get('rank'));
+    Aircraft::add(Input::get('livery'), Input::get('rank'), Input::get('notes'));
     Session::flash('success', 'Aircraft Added Successfully! ');
     Redirect::to('admin.php?page=opsmanage&section=fleet');
 } elseif (Input::get('action') === 'editfleet') {
@@ -327,14 +333,14 @@ if (Input::get('action') === 'editprofile') {
         die();
     }
     
-    Aircraft::updateRank(Input::get('rank'), Input::get('id'));
+    Aircraft::update(Input::get('rank'), Input::get('notes'), Input::get('id'));
     Session::flash('success', 'Aircraft Updated Successfully!');
     Redirect::to('admin.php?page=opsmanage&section=fleet');
 } elseif (Input::get('action') === 'setuppireps') {
     if (!Pirep::setup(Input::get('callsign'), $user->data()->id)) {
         $server = 'casual';
         $force = Config::get('FORCE_SERVER');
-        if ($force !== 0 && $force !== 'casual') $server = $force;
+        if ($force != 0 && $force != 'casual') $server = $force;
         Session::flash('errorrecent', 'There was an Error Connecting to Infinite Flight. Ensure you are spawned in on the <b>'.ucfirst($server).' Server, and have set your callsign to \''.$user->data()->callsign.'\'</b>!');
         Redirect::to('pireps.php?page=new');
     }
@@ -653,6 +659,8 @@ if (Input::get('action') === 'editprofile') {
         Redirect::to('admin.php?page=opsmanage&section=import');
         die();
     }
+
+    Events::trigger('route/imported');
     Session::flash('success', "Routes Imported Successfully!");
     Redirect::to('admin.php?page=opsmanage&section=routes');
 } elseif (Input::get('action') === 'importaircraft') {
@@ -674,7 +682,7 @@ if (Input::get('action') === 'editprofile') {
 
     $minrank = $db->query("SELECT * FROM ranks ORDER BY timereq ASC")->first()->id;
 
-    $sql = "INSERT INTO aircraft (name, ifaircraftid, liveryname, ifliveryid, rankreq, status) VALUES\n";
+    $sql = "INSERT INTO aircraft (name, ifaircraftid, liveryname, ifliveryid, rankreq, status, notes) VALUES\n";
     $params = array();
     $i = 0;
 
@@ -690,7 +698,7 @@ if (Input::get('action') === 'editprofile') {
                 Redirect::to('admin.php?page=opsmanage&section=import');
                 die();
             }
-            $sql = "INSERT INTO aircraft (name, ifaircraftid, liveryname, ifliveryid, rankreq, status) VALUES\n";
+            $sql = "INSERT INTO aircraft (name, ifaircraftid, liveryname, ifliveryid, rankreq, status, notes) VALUES\n";
             $params = array();
         }
 
@@ -707,13 +715,14 @@ if (Input::get('action') === 'editprofile') {
             die();
         }
 
-        $sql .= "\n(?, ?, ?, ?, ?, ?),";
+        $sql .= "\n(?, ?, ?, ?, ?, ?, ?),";
         array_push($params, $aircraft["aircraftName"]);
         array_push($params, $aircraft["aircraftID"]);
         array_push($params, $aircraft["liveryName"]);
         array_push($params, $aircraft["liveryID"]);
         array_push($params, $minrank);
         array_push($params, 1);
+        array_push($params, null);
         
         $i++;
     }
@@ -726,6 +735,9 @@ if (Input::get('action') === 'editprofile') {
         Redirect::to('admin.php?page=opsmanage&section=import');
         die();
     }
+
+    Events::trigger('aircraft/imported');
+
     Session::flash('success', "Aircraft Imported Successfully!");
     Redirect::to('admin.php?page=opsmanage&section=fleet');
 } elseif (Input::get('action') === 'exportroutes') {
@@ -743,6 +755,8 @@ if (Input::get('action') === 'editprofile') {
         ));
     }
 
+    Events::trigger('route/exported');
+
     echo Json::encode($ret, true);
 } elseif (Input::get('action') === 'exportaircraft') {
     header('Content-Type: application/json');
@@ -752,6 +766,8 @@ if (Input::get('action') === 'editprofile') {
     foreach ($aircraft as $a) {
         array_push($ret, $a->ifliveryid);
     }
+
+    Events::trigger('aircraft/exported');
 
     echo Json::encode($ret, true);
 } elseif (Input::get('action') === 'newcodeshare') {
@@ -910,7 +926,7 @@ if (Input::get('action') === 'editprofile') {
 
     $routes = Json::decode($routes);
 
-    $sql = "INSERT INTO routes (fltnum, dep, arr, duration, aircraftid) VALUES\n";
+    $sql = "INSERT INTO routes (fltnum, dep, arr, duration, aircraftid, notes) VALUES\n";
     $params = array();
     $j = 0;
     foreach ($routes as $item) {
@@ -922,7 +938,7 @@ if (Input::get('action') === 'editprofile') {
                 Redirect::to('admin.php?page=opsmanage&section=phpvms');
                 die();
             }
-            $sql = "INSERT INTO routes (fltnum, dep, arr, duration, aircraftid) VALUES";
+            $sql = "INSERT INTO routes (fltnum, dep, arr, duration, aircraftid, notes) VALUES";
             $params = array();
         }
 
@@ -932,6 +948,7 @@ if (Input::get('action') === 'editprofile') {
         array_push($params, $item["arr"]);
         array_push($params, $item["duration"]);
         array_push($params, $item["aircraftid"]);
+        array_push($params, Input::get('rego'.$i));
         
         $j++;
     }
@@ -943,6 +960,9 @@ if (Input::get('action') === 'editprofile') {
         Redirect::to('admin.php?page=opsmanage&section=import');
         die();
     }
+
+    Events::trigger('route/imported');
+    Events::trigger('aircraft/imported');
 
     Session::flash('success', "Routes Imported Successfully!");
     Redirect::to('admin.php?page=opsmanage&section=routes');

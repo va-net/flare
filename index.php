@@ -42,16 +42,20 @@ if (Input::exists()) {
                 } elseif ($user->data()->status == 0) {
                     $user->logout();
                     Session::flash('error', 'Whoops! You need to wait until your application has been approved before logging in!');
+                    Events::trigger('user/login-failed', ['reason' => 'Pending', 'user' => $user->data()]);
                 } elseif ($user->data()->status == 2) {
                     $user->logout();
                     Session::flash('error', 'Looks like your account has been marked as inactive - contact a member of staff to have this rectified!');
+                    Events::trigger('user/login-failed', ['reason' => 'Inactive', 'user' => $user->data()]);
                 } elseif ($user->data()->status == 3) {
                     $user->logout();
-                    Session::flash('error', 'Unfortunately, your application has been declined for the following reason: '.$user->data()->declinereason);
+                    Session::flash('error', 'Unfortunately, your application has been declined.');
+                    Events::trigger('user/login-failed', ['reason' => 'Declined', 'user' => $user->data()]);
                 }
             } else {
                 $user->logout();
                 Session::flash('error', 'Login failed.');
+                Events::trigger('user/login-failed', ['reason' => 'Invalid', 'user' => null]);
             } 
 
         } else {

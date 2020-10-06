@@ -44,10 +44,13 @@ class Permissions
     {
         self::init();
 
-        $ret = self::$_db->insert('permissions', array(
+        $fields = array(
             'userid' => $userid,
             'name' => $perm
-        ));
+        );
+        $ret = self::$_db->insert('permissions', $fields);
+
+        Events::trigger('permission/given', $fields);
 
         return !($ret->error());
     }
@@ -62,6 +65,7 @@ class Permissions
         self::init();
 
         $ret = self::$_db->query("DELETE FROM permissions WHERE userid=? AND name=?", array($userid, $perm));
+        Events::trigger('permission/revoked', ["userid" => $userid, "name" => $perm]);
 
         return !($ret->error());
     }
