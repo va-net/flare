@@ -367,6 +367,9 @@
             "index.php",
             "apply.php",
             "updater.php",
+            "includes/menus.php",
+            "includes/navbar.php",
+            "includes/sidebar.php",
             "version.json"
         ],
         "deletedFiles": [
