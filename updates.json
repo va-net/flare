@@ -378,5 +378,25 @@
         "queries": [
             "ALTER TABLE aircraft ADD COLUMN notes VARCHAR(12) AFTER ifliveryid"
         ]
+    },
+    {
+        "tag": "v1.0.0-beta16",
+        "name": "Public Beta 16",
+        "date": "2020-10-09",
+        "notes": "Added Plugin System",
+        "prerelease": true,
+        "useUpdater": true,
+        "files": [
+            "admin.php",
+            "classes/Plugin.php",
+            "core/init.php",
+            "includes/menus.php",
+            "plugins.json",
+            "update.php",
+            "version.json"
+        ],
+        "deletedFiles": [],
+        "queries": [],
+        "newFolders": []
     }
 ]
