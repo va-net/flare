@@ -90,6 +90,15 @@ $GLOBALS['admin-menu']["Site Management"] = array(
     ]
 );
 
+$GLOBALS['admin-menu']["Plugins"] = array(
+    "Manage Plugins" => [
+        "link" => "admin.php?page=pluginmanage",
+        "icon" => "fa-plug",
+        "permission" => "admin",
+        "needsGold" => false
+    ],
+);
+
 $GLOBALS['pilot-menu'] = array(
     "Pilot Home" => [
         "link" => "home.php",
