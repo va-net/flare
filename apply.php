@@ -138,8 +138,7 @@ if (Input::exists()) {
 
                     <div class="form-group text-center">
                     <label for="callsign">Callsign</label>
-                    <input required class="form-control publicform" type="text" value="<?= Config::get('va/identifier') ?>" id="callsign" name="callsign" value="<?= escape(Input::get('callsign')) ?>">
-                    <small class="form-text text-muted">Must begin with <?= Config::get('va/identifier') ?> then have 2-4 numbers, eg <?= Config::get('va/identifier') ?>123</small>
+                    <input required class="form-control publicform" type="text" id="callsign" name="callsign" value="<?= escape(Input::get('callsign')) ?>">
                     </div>
 
                     <div class="form-group text-center">
