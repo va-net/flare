@@ -31,8 +31,8 @@ $slash = "/";
 if (strpos(strtolower(php_uname('s')), "window") !== FALSE) {
     $slash = "\\";
 }
-$plugins = Json::decode(file_get_contents(__DIR__.$slash.'..'.$slash.'plugins.json'));
-foreach ($plugins as $p) {
+$INSTALLED_PLUGINS = Json::decode(file_get_contents(__DIR__.$slash.'..'.$slash.'plugins.json'));
+foreach ($INSTALLED_PLUGINS as $p) {
     $classname = $p["class"];
     $classname::init();
 }

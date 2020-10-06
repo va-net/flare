@@ -2054,6 +2054,28 @@ if (!$user->isLoggedIn()) {
                             </div>
                             <div id="installed" class="tab-pane container-fluid p-3 fade">
                                 <h4>Installed Plugins</h4>
+                                <table class="table datatable-nosearch">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Version</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                            foreach ($INSTALLED_PLUGINS as $p) {
+                                                echo '<tr><td class="align-middle">';
+                                                echo $p["name"];
+                                                echo '</td><td class="align-middle">';
+                                                echo $p["version"]["tag"];
+                                                echo '</td><td class="align-middle">';
+                                                echo '<button class="btn btn-danger uninstallBtn" data-slug="'.$p["slug"].'"><i class="fa fa-trash"></i></button>';
+                                                echo '</td></tr>';
+                                            }
+                                        ?>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
 
