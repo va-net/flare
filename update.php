@@ -966,4 +966,72 @@ if (Input::get('action') === 'editprofile') {
 
     Session::flash('success', "Routes Imported Successfully!");
     Redirect::to('admin.php?page=opsmanage&section=routes');
+} elseif (Input::get('action') === 'installplugin') {
+    if (!$user->hasPermission('admin')) {
+        Redirect::to('home.php');
+    }
+
+    $slash = "/";
+    if (strpos(strtolower(php_uname('s')), "window") !== FALSE) {
+        $slash = "\\";
+    }
+
+    $url = "https://raw.githubusercontent.com/va-net/flare-plugins/master/plugins.tsv";
+    $opts = array(
+        'http'=>array(
+            'method'=>"GET",
+            'header'=>"User-Agent: va-net\r\n"
+        )
+    );
+    $context = stream_context_create($opts);
+    $plugins = file_get_contents($url, false, $context);
+    $pluginbasic = null;
+    preg_match_all('/\n.*/m', $plugins, $lines);
+    foreach ($lines[0] as $l) {
+        $l = trim($l);
+        $l = explode("\t", $l);
+        if ($pluginbasic == null && $l[1] == Input::get('plugin') ) {
+            $pluginbasic = array(
+                "name" => $l[0],
+                "slug" => $l[1],
+                "author" => $l[2],
+                "version" => $l[3],
+                "update-date" => $l[4],
+                "tags" => explode(",", $l[5])
+            );
+            break;
+        }
+    }
+
+    $version = Updater::getVersion();
+    $pluginadv = Json::decode(file_get_contents("https://raw.githubusercontent.com/va-net/flare-plugins/master/".$pluginbasic["slug"]."/plugin.json", false, $context));
+    if (!in_array($version["tag"], $pluginadv["compatability"]) && $version["prerelease"] == false) {
+        Session::flash('error', 'This plugin does not support this version of Flare.');
+        Redirect::to('admin.php?page=pluginmanage');
+    }
+
+    foreach ($pluginadv["installation"]["files"] as $f) {
+        $f = str_replace("/", $slash, $f);
+        if (file_exists(__DIR__.$slash.$f)) {
+            Session::flash('error', 'File "'.$f.'" already exists.');
+            Redirect::to('admin.php?page=pluginmanage');
+        }
+    }
+    foreach ($pluginadv["installation"]["files"] as $f) {
+        $data = file_get_contents("https://raw.githubusercontent.com/va-net/flare-plugins/master/".$pluginbasic["slug"]."/".$f, false, $context);
+        $f = str_replace("/", $slash, $f);
+        file_put_contents(__DIR__.$slash.$f, $data);
+    }
+
+    $db = DB::getInstance();
+    foreach ($pluginadv["installation"]["queries"] as $q) {
+        $db->query($q);
+    }
+
+    $currentplugins = Json::decode(file_get_contents('./plugins.json'));
+    array_push($currentplugins, $pluginadv);
+    file_put_contents('./plugins.json', Json::encode($currentplugins));
+
+    Session::flash('success', 'Plugin Installed!');
+    Redirect::to('admin.php?page=pluginmanage&tab=installed');
 }

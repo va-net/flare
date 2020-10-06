@@ -1986,6 +1986,102 @@ if (!$user->isLoggedIn()) {
                                 <input type="submit" class="btn bg-custom" value="Send Request" />
                             </form>
                         <?php endif; ?>
+                    <?php elseif (Input::get('page') === 'pluginmanage'): ?>
+                        <h3>Manage Plugins</h3>
+                        <?php
+                            $tab = "store";
+                            if (!empty(Input::get('tab'))) {
+                                $tab = Input::get('tab');
+                            }
+                            $ACTIVE_CATEGORY = 'plugins';
+                        ?>
+                        <script>
+                            $(document).ready(function() {
+                                $("#<?= $tab; ?>link").click();
+                            });
+                        </script>
+                        <ul class="nav nav-tabs nav-dark justify-content-center">
+                            <li class="nav-item">
+                                <a class="nav-link" id="storelink" data-toggle="tab" href="#store">Store</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="installedlink" data-toggle="tab" href="#installed">Installed</a>
+                            </li>
+                        </ul>
+
+                        <div class="tab-content">
+                            <div id="store" class="tab-pane container-fluid p-3 fade">
+                                <h4>Plugin Store</h4>
+                                <form id="installplugin" method="post" action="update.php">
+                                    <input hidden name="action" value="installplugin" />
+                                    <input hidden name="plugin" id="installplugin-plugin" />
+                                </form>
+                                <table class="table table-striped mobile-hidden" id="pluginstable">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Tags</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                            $url = "https://raw.githubusercontent.com/va-net/flare-plugins/master/plugins.tsv";
+                                            $opts = array(
+                                                'http'=>array(
+                                                    'method'=>"GET",
+                                                    'header'=>"User-Agent: va-net\r\n"
+                                                )
+                                            );
+                                            $context = stream_context_create($opts);
+                                            $plugins = file_get_contents($url, false, $context);
+                                            preg_match_all('/\n.*/m', $plugins, $lines);
+                                            foreach ($lines[0] as $l) {
+                                                $segments = explode("\t", $l);
+                                                echo '<tr><td class="align-middle">';
+                                                echo $segments[0];
+                                                echo '</td><td class="align-middle">';
+                                                $tags = implode('</span><span class="badge badge-light mx-1">', explode(",", $segments[5]));
+                                                echo '<span class="badge badge-light mx-1">'.$tags.'</span>';
+                                                echo '</td><td class="align-middle">';
+                                                echo '<button class="btn bg-custom installBtn" data-slug="'.$segments[1].'" data-name="'.$segments[0].'"><i class="fa fa-cloud-download-alt"></i></button>';
+                                                echo '</td></tr>';
+                                            }
+                                        ?>
+                                    </tbody>
+                                </table>
+                                <p class="desktop-hidden">Please user a larger screen for the plugins store</p>
+                            </div>
+                            <div id="installed" class="tab-pane container-fluid p-3 fade">
+                                <h4>Installed Plugins</h4>
+                            </div>
+                        </div>
+
+                        <style>
+                            .nav-tabs .nav-link {
+                                color: #000!important;
+                            }
+                        </style>
+                        <script>
+                            if ($("#pluginstable").css('display') != 'none') {
+                                $("#pluginstable").dataTable({
+                                    "paging": true,
+                                    "ordering": true,
+                                    "info": true,
+                                    "pageLength": 10
+                                });
+                            }
+                            $(".installBtn").click(function() {
+                                var name = $(this).data('name');
+                                var slug = $(this).data('slug');
+                                
+                                var conf = confirm('Are you sure you want to install the plugin ' + name + '?');
+                                if (conf) {
+                                    $("#installplugin-plugin").val(slug);
+                                    $("#installplugin").submit();
+                                }
+                            });
+                        </script>
                     <?php endif; ?>
                 </div>
             </div>
