@@ -39,10 +39,10 @@ class Events {
      */
     public static function trigger($event, $args = []) 
     {
-        $params = new EventParams($args);
-        foreach ($_listeners as $l) {
+        $params = new Event($event, $args);
+        foreach (self::$_listeners as $l) {
             if (($l["event"] == $event || $l["event"] == "*" || preg_match($l["event"], $event) == 1) && $l["action"] != null) {
-                call_user_func_array($l["action"], $args);
+                call_user_func_array($l["action"], [$params]);
             }
         }
     }
