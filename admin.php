@@ -1217,7 +1217,7 @@ if (!$user->isLoggedIn()) {
                                                     <input hidden name="action" value="addaircraft">
                                                     <div class="form-group">
                                                         <label for="aircraft">Type</label>
-                                                        <select class="form-control" name="aircraftselect" id="aircraftselect" required>
+                                                        <select required class="form-control" name="aircraftselect" id="aircraftselect" required>
                                                             <option value>Select</option>
                                                             <?php
                                                             $allac = Aircraft::fetchAllAircraftFromVANet();
@@ -1229,7 +1229,7 @@ if (!$user->isLoggedIn()) {
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="rank">Livery</label>
-                                                        <select class="form-control" name="livery" id="liveriesselect" required>
+                                                        <select required class="form-control" name="livery" id="liveriesselect" required>
                                                             <option disabled>Loading...</option>
                                                         </select>
                                                     </div>
@@ -1248,8 +1248,8 @@ if (!$user->isLoggedIn()) {
                                                             });
                                                     </script>
                                                     <div class="form-group">
-                                                        <label for="rank">Rank required</label>
-                                                        <select class="form-control" name="rank" required>
+                                                        <label for="rank">Minimum Rank</label>
+                                                        <select required class="form-control" name="rank" required>
                                                             <option value>Select</option>
                                                             <?php
                                                             $ranks = Rank::fetchAllNames()->results();
@@ -1351,7 +1351,7 @@ if (!$user->isLoggedIn()) {
                                                 <input hidden name="id" id="fleetedit-id" />
                                                 <div class="form-group">
                                                     <label for="fleetedit-rank">Minimum Rank</label>
-                                                    <select class="form-control" name="rank" id="fleetedit-rank">
+                                                    <select required class="form-control" name="rank" id="fleetedit-rank">
                                                         <?php
                                                             $ranks = Rank::fetchAllNames()->results();
                                                             foreach ($ranks as $r) {
