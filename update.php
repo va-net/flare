@@ -150,7 +150,7 @@ if (Input::get('action') === 'editprofile') {
         'transflights' => Input::get('transflights'),
     ), Input::get('id'));
     Session::flash('success', 'User Edited Successfully!');
-    Redirect::to('admin.php?page=usermanage');
+    Redirect::to('/admin/users.php');
 } elseif (Input::get('action') === 'deluser') {
     if (!$user->hasPermission('usermanage')) {
         Redirect::to('home.php');
@@ -163,10 +163,10 @@ if (Input::get('action') === 'editprofile') {
         ), Input::get('id'));
     } catch (Exception $e) {
         Session::flash('error', 'There was an Error Deleting the User.');
-        Redirect::to('admin.php?page=usermanage');
+        Redirect::to('/admin/users.php');
     }
     Session::flash('success', 'User deleted successfully!');
-    Redirect::to('admin.php?page=usermanage');
+    Redirect::to('/admin/users.php');
 } elseif (Input::get('action') === 'editstaffmember') {
     if (!$user->hasPermission('staffmanage')) {
         Redirect::to('home.php');
@@ -192,10 +192,10 @@ if (Input::get('action') === 'editprofile') {
         ), Input::get('id'));
     } catch (Exception $e) {
         Session::flash('error', 'There was an Error Editing the Staff Member.');
-        Redirect::to('admin.php?page=staffmanage');
+        Redirect::to('/admin/staff.php');
     }
     Session::flash('success', 'Staff Member Edited Successfully!');
-    Redirect::to('admin.php?page=staffmanage');
+    Redirect::to('/admin/staff.php');
 } elseif (Input::get('action') === 'declineapplication') {
     if (!$user->hasPermission('recruitment')) {
         Redirect::to('home.php');
@@ -209,13 +209,13 @@ if (Input::get('action') === 'editprofile') {
         ), Input::get('id'));
     } catch (Exception $e) {
         Session::flash('error', 'There was an error Declining the Application.');
-        Redirect::to('admin.php?page=recruitment');
+        Redirect::to('/admin/recruitment.php');
     }
 
     Events::trigger('user/declined', ['id' => Input::get('id')]);
 
     Session::flash('success', 'Application Declined Successfully');
-    Redirect::to('admin.php?page=recruitment');
+    Redirect::to('/admin/recruitment.php');
 } elseif (Input::get('action') === 'acceptapplication') {
     if (!$user->hasPermission('recruitment')) {
         Redirect::to('home.php');
@@ -228,13 +228,13 @@ if (Input::get('action') === 'editprofile') {
         ), Input::get('accept'));
     } catch (Exception $e) {
         Session::flash('error', 'There was an Error Accepting the Application.');
-        Redirect::to('admin.php?page=recruitment');
+        Redirect::to('/admin/recruitment.php');
     }
 
     Events::trigger('user/accepted', Input::get('accept'));
 
     Session::flash('success', 'Application Accepted Successfully!');
-    Redirect::to('admin.php?page=recruitment');
+    Redirect::to('/admin/recruitment.php');
 } elseif (Input::get('action') === 'acceptpirep') {
     if (!$user->hasPermission('pirepmanage')) {
         Redirect::to('home.php');
@@ -243,7 +243,7 @@ if (Input::get('action') === 'editprofile') {
 
     Pirep::accept(Input::get('accept'));
     Session::flash('success', 'PIREP Accepted Successfully!');
-    Redirect::to('admin.php?page=pirepmanage');
+    Redirect::to('/admin/pireps.php');
 } elseif (Input::get('action') === 'declinepirep') {
     if (!$user->hasPermission('pirepmanage')) {
         Redirect::to('home.php');
@@ -252,7 +252,7 @@ if (Input::get('action') === 'editprofile') {
 
     Pirep::decline(Input::get('decline'));
     Session::flash('success', 'PIREP Declined Successfully');
-    Redirect::to('admin.php?page=pirepmanage');
+    Redirect::to('/admin/pireps.php');
 } elseif (Input::get('action') === 'deletemulti') {
     if (!$user->hasPermission('pirepmanage')) {
         Redirect::to('home.php');
@@ -261,7 +261,7 @@ if (Input::get('action') === 'editprofile') {
 
     Pirep::deleteMultiplier(Input::get('delete'));
     Session::flash('success', 'Multiplier Deleted Successfully!');
-    Redirect::to('admin.php?page=multimanage');
+    Redirect::to('/admin/multipliers.php');
 } elseif (Input::get('action') === 'addmulti') {
     if (!$user->hasPermission('pirepmanage')) {
         Redirect::to('home.php');
@@ -274,7 +274,7 @@ if (Input::get('action') === 'editprofile') {
         "multiplier" => Input::get("multi")
     ));
     Session::flash('success', 'Multiplier Added Successfully!');
-    Redirect::to('admin.php?page=multimanage');
+    Redirect::to('/admin/multipliers.php');
 } elseif (Input::get('action') === 'deletearticle') {
     if (!$user->hasPermission('newsmanage')) {
         Redirect::to('home.php');
@@ -283,7 +283,7 @@ if (Input::get('action') === 'editprofile') {
 
     News::archive(Input::get('delete'));
     Session::flash('success', 'News Item Archived Successfully! ');
-    Redirect::to('admin.php?page=newsmanage');
+    Redirect::to('/admin/news.php');
 } elseif (Input::get('action') === 'editarticle') {
     if (!$user->hasPermission('newsmanage')) {
         Redirect::to('home.php');
@@ -295,7 +295,7 @@ if (Input::get('action') === 'editprofile') {
         'content' => Input::get('content')
     ));
     Session::flash('success', 'News Article Edited Successfully! ');
-    Redirect::to('admin.php?page=newsmanage');
+    Redirect::to('/admin/news.php');
 } elseif (Input::get('action') === 'newarticle') {
     if (!$user->hasPermission('newsmanage')) {
         Redirect::to('home.php');
@@ -308,7 +308,7 @@ if (Input::get('action') === 'editprofile') {
         'author' => Input::get('author')
     ));
     Session::flash('success', 'News Article Added Successfully! ');
-    Redirect::to('admin.php?page=newsmanage');
+    Redirect::to('/admin/news.php');
 } elseif (Input::get('action') === 'deleteaircraft') {
     if (!$user->hasPermission('opsmanage')) {
         Redirect::to('home.php');
@@ -317,7 +317,7 @@ if (Input::get('action') === 'editprofile') {
 
     Aircraft::archive(Input::get('delete'));
     Session::flash('success', 'Aircraft Archived Successfully! ');
-    Redirect::to('admin.php?page=opsmanage&section=fleet');
+    Redirect::to('/admin/operations.php?section=fleet');
 } elseif (Input::get('action') === 'addaircraft') {
     if (!$user->hasPermission('opsmanage')) {
         Redirect::to('home.php');
@@ -326,7 +326,7 @@ if (Input::get('action') === 'editprofile') {
 
     Aircraft::add(Input::get('livery'), Input::get('rank'), Input::get('notes'));
     Session::flash('success', 'Aircraft Added Successfully! ');
-    Redirect::to('admin.php?page=opsmanage&section=fleet');
+    Redirect::to('/admin/operations.php?section=fleet');
 } elseif (Input::get('action') === 'editfleet') {
     if (!$user->hasPermission('opsmanage')) {
         Redirect::to('home.php');
@@ -335,7 +335,7 @@ if (Input::get('action') === 'editprofile') {
     
     Aircraft::update(Input::get('rank'), Input::get('notes'), Input::get('id'));
     Session::flash('success', 'Aircraft Updated Successfully!');
-    Redirect::to('admin.php?page=opsmanage&section=fleet');
+    Redirect::to('/admin/operations.php?section=fleet');
 } elseif (Input::get('action') === 'setuppireps') {
     if (!Pirep::setup(Input::get('callsign'), $user->data()->id)) {
         $server = 'casual';
@@ -354,7 +354,7 @@ if (Input::get('action') === 'editprofile') {
 
     Route::add(array(Input::get('fltnum'), Input::get('dep'), Input::get('arr'), Time::strToSecs(Input::get('duration')), Input::get('aircraft')));
     Session::flash('success', 'Route Added Successfully!');
-    Redirect::to('admin.php?page=opsmanage&section=routes');
+    Redirect::to('/admin/operations.php?section=routes');
 } elseif (Input::get('action') === 'deleteroute') {
     if (!$user->hasPermission('opsmanage')) {
         Redirect::to('home.php');
@@ -363,7 +363,7 @@ if (Input::get('action') === 'editprofile') {
 
     Route::delete(Input::get('delete'));
     Session::flash('success', 'Route Removed Successfully!');
-    Redirect::to('admin.php?page=opsmanage&section=routes');
+    Redirect::to('/admin/operations.php?section=routes');
 } elseif (Input::get('action') === 'editroute') {
     if (!$user->hasPermission('opsmanage')) {
         Redirect::to('home.php');
@@ -380,12 +380,12 @@ if (Input::get('action') === 'editprofile') {
 
     if ($ret === FALSE) {
         Session::flash('error', 'Error Updating Route');
-        Redirect::to('admin.php?page=opsmanage&section=routes');
+        Redirect::to('/admin/operations.php?section=routes');
         die();
     }
 
     Session::flash('success', 'Route Updated Successfully!');
-    Redirect::to('admin.php?page=opsmanage&section=routes');
+    Redirect::to('/admin/operations.php?section=routes');
 } elseif (Input::get('action') === 'addrank') {
     if (!$user->hasPermission('opsmanage')) {
         Redirect::to('home.php');
@@ -394,7 +394,7 @@ if (Input::get('action') === 'editprofile') {
 
     Rank::add(Input::get('name'), Time::hrsToSecs(Input::get('time')));
     Session::flash('success', 'Rank Added Successfully!');
-    Redirect::to('admin.php?page=opsmanage&section=ranks');
+    Redirect::to('/admin/operations.php?section=ranks');
 } elseif (Input::get('action') === 'editrank') {
     if (!$user->hasPermission('opsmanage')) {
         Redirect::to('home.php');
@@ -408,10 +408,10 @@ if (Input::get('action') === 'editprofile') {
         ));
     } catch (Exception $e) {
         Session::flash('error', 'There was an Error Editing the Rank.');
-        Redirect::to('admin.php?page=opsmanage&section=ranks');
+        Redirect::to('/admin/operations.php?section=ranks');
     }
     Session::flash('success', 'Rank Edited Successfully!');
-    Redirect::to('admin.php?page=opsmanage&section=ranks');
+    Redirect::to('/admin/operations.php?section=ranks');
 } elseif (Input::get('action') === 'delrank') {
     if (!$user->hasPermission('opsmanage')) {
         Redirect::to('home.php');
@@ -421,10 +421,10 @@ if (Input::get('action') === 'editprofile') {
     $ret = Rank::delete(Input::get('delete'));
     if (!$ret) {
         Session::flash('error', 'There was an Error Deleting the Rank.');
-        Redirect::to('admin.php?page=opsmanage&section=ranks');
+        Redirect::to('/admin/operations.php?section=ranks');
     } else {
         Session::flash('success', 'Rank Deleted Successfully!');
-    Redirect::to('admin.php?page=opsmanage&section=ranks');
+    Redirect::to('/admin/operations.php?section=ranks');
     }
 } elseif (Input::get('action') === 'setcolour') {
     if (!$user->hasPermission('opsmanage')) {
@@ -434,11 +434,11 @@ if (Input::get('action') === 'editprofile') {
 
     if (!Config::replaceColour(trim(Input::get('hexcol'), "#"), trim(Input::get('textcol'), "#"))) {
         Session::flash('error', 'There was an Error Updating the Colour Theme!');
-        Redirect::to('admin.php?page=site&tab=colors');
+        Redirect::to('/admin/site.php');
         die();
     }
     Session::flash('success', 'Colour Theme Updated Successfully! You may need to reload the page or clear your cache in order for it to show.');
-    Redirect::to('admin.php?page=site&tab=colors');
+    Redirect::to('/admin/site.php');
 } elseif (Input::get('action') === 'vasettingsupdate') {
     if (!$user->hasPermission('opsmanage')) {
         Redirect::to('home.php');
@@ -451,11 +451,11 @@ if (Input::get('action') === 'editprofile') {
         || !Config::replace("CHECK_PRERELEASE", Input::get('checkpre'))
         ) {
         Session::flash('error', 'There was an error updating the Settings');
-        Redirect::to('admin.php?page=site&tab=settings');
+        Redirect::to('/admin/site.php?tab=settings');
         die();
     }
     Session::flash('success', 'VA Settings Changed Successfully!');
-    Redirect::to('admin.php?page=site&tab=settings');
+    Redirect::to('/admin/site.php?tab=settings');
 } elseif (Input::get('action') === 'vanetupdate') {
     if (!$user->hasPermission('opsmanage')) {
         Redirect::to('home.php');
@@ -464,11 +464,11 @@ if (Input::get('action') === 'editprofile') {
     
     if (!Config::replace('api_key', trim(Input::get('vanetkey')))) {
         Session::flash('error', 'There was an error updating the config file!');
-        Redirect::to('admin.php?page=site&tab=vanet');
+        Redirect::to('/admin/site.php?tab=vanet');
         die();
     }
     Session::flash('success', 'VANet API Key changed Successfully.');
-    Redirect::to('admin.php?page=site&tab=vanet');
+    Redirect::to('/admin/site.php?tab=vanet');
 } elseif (Input::get('action') === 'addevent') {
     if (!$user->hasPermission('opsmanage')) {
         Redirect::to('home.php');
@@ -505,7 +505,7 @@ if (Input::get('action') === 'editprofile') {
     } catch (Exception $e) {
         Session::flash('error', 'Error Creating Event');
     } finally {
-        Redirect::to('admin.php?page=events');
+        Redirect::to('/admin/events.php');
     }
 } elseif (Input::get('action') === 'eventsignup') {
     $uData = $user->data();
@@ -561,7 +561,7 @@ if (Input::get('action') === 'editprofile') {
 
     VANet::deleteEvent(Input::get('delete'));
     Session::flash('success', 'Event Deleted Successfully');
-    Redirect::to('admin.php?page=events');
+    Redirect::to('/admin/events.php');
 } elseif (Input::get('action') === 'editevent') {
     if (!$user->hasPermission('opsmanage')) {
         Redirect::to('home.php');
@@ -585,10 +585,10 @@ if (Input::get('action') === 'editprofile') {
 
     if (!$ret) {
         Session::flash('error', "Error Updating Event");
-        Redirect::to('admin.php?page=events');
+        Redirect::to('/admin/events.php');
     } else {
         Session::flash('success', "Event Updated Successfully");
-        Redirect::to('admin.php?page=events');
+        Redirect::to('/admin/events.php');
     }
 } elseif (Input::get('action') === 'importroutes') {
     if (!$user->hasPermission('opsmanage')) {
@@ -600,7 +600,7 @@ if (Input::get('action') === 'editprofile') {
     $fileName = explode(".", $file["name"]);
     if ($fileName[count($fileName) - 1] != "json") {
         Session::flash('error', 'You Uploaded an Invalid File Type');
-        Redirect::to('admin.php?page=opsmanage&section=import');
+        Redirect::to('/admin/operations.php?section=import');
         die();
     }
 
@@ -619,7 +619,7 @@ if (Input::get('action') === 'editprofile') {
             $ret = $db->query($sql, $params);
             if ($ret->error()) {
                 Session::flash('error', "Error Importing Routes");
-                Redirect::to('admin.php?page=opsmanage&section=import');
+                Redirect::to('/admin/operations.php?section=import');
                 die();
             }
             $sql = "INSERT INTO routes (fltnum, dep, arr, duration, aircraftid) VALUES";
@@ -656,13 +656,13 @@ if (Input::get('action') === 'editprofile') {
     $ret = $db->query($sql, $params);
     if ($ret->error()) {
         Session::flash('error', "Error Importing Routes");
-        Redirect::to('admin.php?page=opsmanage&section=import');
+        Redirect::to('/admin/operations.php?section=import');
         die();
     }
 
     Events::trigger('route/imported');
     Session::flash('success', "Routes Imported Successfully!");
-    Redirect::to('admin.php?page=opsmanage&section=routes');
+    Redirect::to('/admin/operations.php?section=routes');
 } elseif (Input::get('action') === 'importaircraft') {
     if (!$user->hasPermission('opsmanage')) {
         Redirect::to('home.php');
@@ -673,7 +673,7 @@ if (Input::get('action') === 'editprofile') {
     $fileName = explode(".", $file["name"]);
     if ($fileName[count($fileName) - 1] != "json") {
         Session::flash('error', 'You Uploaded an Invalid File Type');
-        Redirect::to('admin.php?page=opsmanage&section=import');
+        Redirect::to('/admin/operations.php?section=import');
         die();
     }
 
@@ -695,7 +695,7 @@ if (Input::get('action') === 'editprofile') {
             if ($ret->error()) {
                 Session::flash('error', "Error Importing Aircraft");
                 throw new Exception($sql);
-                Redirect::to('admin.php?page=opsmanage&section=import');
+                Redirect::to('/admin/operations.php?section=import');
                 die();
             }
             $sql = "INSERT INTO aircraft (name, ifaircraftid, liveryname, ifliveryid, rankreq, status, notes) VALUES\n";
@@ -711,7 +711,7 @@ if (Input::get('action') === 'editprofile') {
 
         if ($aircraft == null) {
             Session::flash('error', "Could Not Find Aircraft with ID ".$item);
-            Redirect::to('admin.php?page=opsmanage&section=import');
+            Redirect::to('/admin/operations.php?section=import');
             die();
         }
 
@@ -732,14 +732,14 @@ if (Input::get('action') === 'editprofile') {
     if ($ret->error()) {
         Session::flash('error', "Error Importing Aircraft");
         throw new Exception($sql);
-        Redirect::to('admin.php?page=opsmanage&section=import');
+        Redirect::to('/admin/operations.php?section=import');
         die();
     }
 
     Events::trigger('aircraft/imported');
 
     Session::flash('success', "Aircraft Imported Successfully!");
-    Redirect::to('admin.php?page=opsmanage&section=fleet');
+    Redirect::to('/admin/operations.php?section=fleet');
 } elseif (Input::get('action') === 'exportroutes') {
     header('Content-Type: application/json');
 
@@ -785,11 +785,11 @@ if (Input::get('action') === 'editprofile') {
         $query = $db->query('SELECT routes.*, aircraft.ifliveryid AS liveryid FROM routes INNER JOIN aircraft ON routes.aircraftid=aircraft.id WHERE routes.fltnum=?', array($input));
         if ($query->count() === 0) {
             Session::flash('error', 'Could not Find Route '.$input);
-            Redirect::to('admin.php?page=codeshares');
+            Redirect::to('/admin/codeshares.php');
             die();
         } elseif ($query->count() > 1) {
             Session::flash('error', 'There\'s More than One Route with the Flight Number '.$input);
-            Redirect::to('admin.php?page=codeshares');
+            Redirect::to('/admin/codeshares.php');
             die();
         }
 
@@ -810,11 +810,11 @@ if (Input::get('action') === 'editprofile') {
     ));
     if (!$ret) {
         Session::flash('error', "Error Connnecting to VANet");
-        Redirect::to('admin.php?page=codeshares');
+        Redirect::to('/admin/codeshares.php');
         die();
     } else {
         Session::flash('success', "Codeshare Sent Successfully!");
-        Redirect::to('admin.php?page=codeshares');
+        Redirect::to('/admin/codeshares.php');
     }
 } elseif (Input::get('action') === 'deletecodeshare') {
     if (!$user->hasPermission('opsmanage')) {
@@ -825,11 +825,11 @@ if (Input::get('action') === 'editprofile') {
     $ret = VANet::deleteCodeshare(Input::get('delete'));
     if (!$ret) {
         Session::flash('error', "Error Connnecting to VANet");
-        Redirect::to('admin.php?page=codeshares');
+        Redirect::to('/admin/codeshares.php');
         die();
     } else {
         Session::flash('success', "Codeshare Deleted Successfully!");
-        Redirect::to('admin.php?page=codeshares');
+        Redirect::to('/admin/codeshares.php');
     }
 } elseif (Input::get('action') === 'importcodeshare') {
     if (!$user->hasPermission('opsmanage')) {
@@ -840,7 +840,7 @@ if (Input::get('action') === 'editprofile') {
     $codeshare = VANet::findCodeshare(Input::get('id'));
     if ($codeshare === FALSE) {
         Session::flash('error', "Codeshare Not Found");
-        //Redirect::to('admin.php?page=codeshares');
+        //Redirect::to('/admin/codeshares.php');
         die();
     }
 
@@ -857,7 +857,7 @@ if (Input::get('action') === 'editprofile') {
             $ret = $db->query($sql, $params);
             if ($ret->error()) {
                 Session::flash('error', "Error Importing Codeshare Routes");
-                //Redirect::to('admin.php?page=codeshares');
+                //Redirect::to('/admin/codeshares.php');
                 die();
             }
             $sql = "INSERT INTO routes (fltnum, dep, arr, duration, aircraftid) VALUES";
@@ -895,12 +895,12 @@ if (Input::get('action') === 'editprofile') {
     $ret = $db->query($sql, $params);
     if ($ret->error()) {
         Session::flash('error', "Error Importing Codeshare Routes");
-        //Redirect::to('admin.php?page=codeshares');
+        //Redirect::to('/admin/codeshares.php');
         die();
     }
     //VANet::deleteCodeshare($codeshare["id"]);
     Session::flash('success', "Codeshare Routes Imported Successfully!");
-    //Redirect::to('admin.php?page=opsmanage&section=routes');
+    //Redirect::to('/admin/operations.php?section=routes');
 } elseif (Input::get('action') === 'phpvms') {
     $routes = Input::get('rJson');
     $count = count(Json::decode($routes));
@@ -935,7 +935,7 @@ if (Input::get('action') === 'editprofile') {
             $ret = $db->query($sql, $params);
             if ($ret->error()) {
                 Session::flash('error', "Error Importing Routes");
-                Redirect::to('admin.php?page=opsmanage&section=phpvms');
+                Redirect::to('/admin/operations.php?section=phpvms');
                 die();
             }
             $sql = "INSERT INTO routes (fltnum, dep, arr, duration, aircraftid, notes) VALUES";
@@ -957,7 +957,7 @@ if (Input::get('action') === 'editprofile') {
     $ret = $db->query($sql, $params);
     if ($ret->error()) {
         Session::flash('error', "Error Importing Routes");
-        Redirect::to('admin.php?page=opsmanage&section=import');
+        Redirect::to('/admin/operations.php?section=import');
         die();
     }
 
@@ -965,5 +965,108 @@ if (Input::get('action') === 'editprofile') {
     Events::trigger('aircraft/imported');
 
     Session::flash('success', "Routes Imported Successfully!");
-    Redirect::to('admin.php?page=opsmanage&section=routes');
+    Redirect::to('/admin/operations.php?section=routes');
+} elseif (Input::get('action') === 'installplugin') {
+    if (!$user->hasPermission('admin')) {
+        Redirect::to('home.php');
+    }
+
+    $slash = "/";
+    if (strpos(strtolower(php_uname('s')), "window") !== FALSE) {
+        $slash = "\\";
+    }
+
+    $url = "https://raw.githubusercontent.com/va-net/flare-plugins/master/plugins.tsv";
+    $opts = array(
+        'http'=>array(
+            'method'=>"GET",
+            'header'=>"User-Agent: va-net\r\n"
+        )
+    );
+    $context = stream_context_create($opts);
+    $plugins = file_get_contents($url, false, $context);
+    $pluginbasic = null;
+    preg_match_all('/\n.*/m', $plugins, $lines);
+    foreach ($lines[0] as $l) {
+        $l = trim($l);
+        $l = explode("\t", $l);
+        if ($pluginbasic == null && $l[1] == Input::get('plugin') ) {
+            $pluginbasic = array(
+                "name" => $l[0],
+                "slug" => $l[1],
+                "author" => $l[2],
+                "version" => $l[3],
+                "update-date" => $l[4],
+                "tags" => explode(",", $l[5])
+            );
+            break;
+        }
+    }
+
+    $version = Updater::getVersion();
+    $pluginadv = Json::decode(file_get_contents("https://raw.githubusercontent.com/va-net/flare-plugins/master/".$pluginbasic["slug"]."/plugin.json", false, $context));
+    if (!in_array($version["tag"], $pluginadv["compatability"]) && $version["prerelease"] == false) {
+        Session::flash('error', 'This plugin does not support this version of Flare.');
+        Redirect::to('/admin/plugins.php');
+    }
+
+    foreach ($pluginadv["installation"]["files"] as $f) {
+        $f = str_replace("/", $slash, $f);
+        if (file_exists(__DIR__.$slash.$f)) {
+            Session::flash('error', 'File "'.$f.'" already exists.');
+            Redirect::to('/admin/plugins.php');
+        }
+    }
+    foreach ($pluginadv["installation"]["files"] as $f) {
+        $data = file_get_contents("https://raw.githubusercontent.com/va-net/flare-plugins/master/".$pluginbasic["slug"]."/".$f, false, $context);
+        $f = str_replace("/", $slash, $f);
+        file_put_contents(__DIR__.$slash.$f, $data);
+    }
+
+    $db = DB::getInstance();
+    foreach ($pluginadv["installation"]["queries"] as $q) {
+        $db->query($q);
+    }
+
+    $currentplugins = Json::decode(file_get_contents('./plugins.json'));
+    array_push($currentplugins, $pluginadv);
+    file_put_contents('./plugins.json', Json::encode($currentplugins, true));
+
+    Session::flash('success', 'Plugin Installed!');
+    Redirect::to('/admin/plugins.php?tab=installed');
+} elseif (Input::get('action') === 'removeplugin') {
+    if (!$user->hasPermission('admin')) {
+        Redirect::to('home.php');
+    }
+
+    $slash = "/";
+    if (strpos(strtolower(php_uname('s')), "window") !== FALSE) {
+        $slash = "\\";
+    }
+
+    $theplugin = null;
+    foreach ($INSTALLED_PLUGINS as $p) {
+        if ($theplugin == null && $p["name"] == Input::get('plugin')) {
+            $theplugin = $p;
+            $INSTALLED_PLUGINS = array_filter($INSTALLED_PLUGINS, function($item) {
+                global $theplugin;
+                if ($item == $theplugin) {
+                    return false;
+                } 
+
+                return true;
+            });
+            file_put_contents('./plugins.json', Json::encode($INSTALLED_PLUGINS, true));
+            break;
+        }
+    }
+
+    foreach ($theplugin["installation"]["files"] as $file) {
+        $file = str_replace("/", $slash, $file);
+        $path = __DIR__.$slash.$file;
+        unlink($path);
+    }
+
+    Session::flash('success', 'Plugin Removed');
+    Redirect::to('/admin/plugins.php?tab=installed');
 }
