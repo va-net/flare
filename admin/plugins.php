@@ -151,7 +151,7 @@ $ACTIVE_CATEGORY = 'plugins';
                                 var name = $(this).data('name');
                                 var slug = $(this).data('slug');
                                 
-                                var conf = confirm('Are you sure you want to install the plugin ""' + name + '"?');
+                                var conf = confirm('Are you sure you want to install the plugin "' + name + '"?');
                                 if (conf) {
                                     $("#installplugin-plugin").val(slug);
                                     $("#installplugin").submit();
