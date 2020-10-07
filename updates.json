@@ -405,6 +405,7 @@
             "admin/staff.php",
             "admin/stats.php",
             "admin/users.php",
+            "includes/header.php",
             "version.json"
         ],
         "deletedFiles": [],
@@ -412,21 +413,5 @@
         "newFolders": [
             "admin"
         ]
-    },
-    {
-        "tag": "v1.0.0-beta16.1",
-        "name": "Public Beta 16.1",
-        "date": "2020-10-09",
-        "notes": "Fixed Admin Formatting Bug",
-        "prerelease": true,
-        "useUpdater": true,
-        "files": [
-            "includes/header.php",
-            "admin.php",
-            "version.json"
-        ],
-        "deletedFiles": [],
-        "queries": [],
-        "newFolders": []
     }
 ]
