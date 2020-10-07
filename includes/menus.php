@@ -2,31 +2,31 @@
 
 $GLOBALS['admin-menu']["Operations Management"] = array(
     "Manage Ranks" => [
-        "link" => "admin.php?page=opsmanage&section=ranks",
+        "link" => "/admin/operations.php?section=ranks",
         "icon" => "fa-medal",
         "permission" => "opsmanage",
         "needsGold" => false
     ],
     "Manage Fleet" => [
-        "link" => "admin.php?page=opsmanage&section=fleet",
+        "link" => "/admin/operations.php?section=fleet",
         "icon" => "fa-plane",
         "permission" => "opsmanage",
         "needsGold" => false
     ],
     "Manage Routes" => [
-        "link" => "admin.php?page=opsmanage&section=routes",
+        "link" => "/admin/operations.php?section=routes",
         "icon" => "fa-plane-departure",
         "permission" => "opsmanage",
         "needsGold" => false
     ],
     "Manage Codeshares" => [
-        "link" => "admin.php?page=codeshares",
+        "link" => "/admin.php?page=codeshares",
         "icon" => "fa-handshake",
         "permission" => "opsmanage",
         "needsGold" => false
     ],
     "Manage Events" => [
-        "link" => "admin.php?page=events",
+        "link" => "/admin/events.php",
         "icon" => "fa-plane-arrival",
         "permission" => "opsmanage",
         "needsGold" => true
@@ -35,19 +35,19 @@ $GLOBALS['admin-menu']["Operations Management"] = array(
 
 $GLOBALS['admin-menu']["User Management"] = array(
     "Manage Users" => [
-        "link" => "admin.php?page=usermanage",
+        "link" => "/admin/users.php",
         "icon" => "fa-user",
         "permission" => "usermanage",
         "needsGold" => false
     ],
     "Manage Staff" => [
-        "link" => "admin.php?page=staffmanage",
+        "link" => "/admin/staff.php",
         "icon" => "fa-user-shield",
         "permission" => "staffmanage",
         "needsGold" => false
     ],
     "Recruitment" => [
-        "link" => "admin.php?page=recruitment",
+        "link" => "/admin/recruitment.php",
         "icon" => "fa-id-card",
         "permission" => "recruitment",
         "needsGold" => false
@@ -56,19 +56,19 @@ $GLOBALS['admin-menu']["User Management"] = array(
 
 $GLOBALS['admin-menu']["PIREP Management"] = array(
     "Pending PIREPs" => [
-        "link" => "admin.php?page=pirepmanage",
+        "link" => "/admin/pireps.php",
         "icon" => "fa-folder-open",
         "permission" => "pirepmanage",
         "needsGold" => false
     ],
     "Manage Multipliers" => [
-        "link" => "admin.php?page=multimanage",
+        "link" => "/admin/multipliers.php",
         "icon" => "fa-calculator",
         "permission" => "pirepmanage",
         "needsGold" => false
     ],
     "VA Statistics" => [
-        "link" => "admin.php?page=statsviewing",
+        "link" => "/admin/stats.php",
         "icon" => "fa-chart-pie",
         "permission" => "statsviewing",
         "needsGold" => false
@@ -77,13 +77,13 @@ $GLOBALS['admin-menu']["PIREP Management"] = array(
 
 $GLOBALS['admin-menu']["Site Management"] = array(
     "Site Settings" => [
-        "link" => "admin.php?page=site",
+        "link" => "/admin/site.php",
         "icon" => "fa-cog",
         "permission" => "opsmanage",
         "needsGold" => false
     ],
     "Manage News" => [
-        "link" => "admin.php?page=newsmanage",
+        "link" => "/admin/news.php",
         "icon" => "fa-newspaper",
         "permission" => "newsmanage",
         "needsGold" => false
@@ -92,7 +92,7 @@ $GLOBALS['admin-menu']["Site Management"] = array(
 
 $GLOBALS['admin-menu']["Plugins"] = array(
     "Manage Plugins" => [
-        "link" => "admin.php?page=pluginmanage",
+        "link" => "/admin/plugins.php",
         "icon" => "fa-plug",
         "permission" => "admin",
         "needsGold" => false
@@ -101,37 +101,37 @@ $GLOBALS['admin-menu']["Plugins"] = array(
 
 $GLOBALS['pilot-menu'] = array(
     "Pilot Home" => [
-        "link" => "home.php",
+        "link" => "/home.php",
         "icon" => "fa-home",
         "needsGold" => false
     ],
     "File PIREP" => [
-        "link" => "pireps.php?page=new",
+        "link" => "/pireps.php?page=new",
         "icon" => "fa-plane",
         "needsGold" => false
     ],
     "My PIREPs" => [
-        "link" => "pireps.php?page=recents",
+        "link" => "/pireps.php?page=recents",
         "icon" => "fa-folder",
         "needsGold" => false
     ],
     "Route Database" => [
-        "link" => "routes.php",
+        "link" => "/routes.php",
         "icon" => "fa-database",
         "needsGold" => false
     ],
     "Live Map" => [
-        "link" => "map.php",
+        "link" => "/map.php",
         "icon" => "fa-map",
         "needsGold" => false
     ],
     "Events" => [
-        "link" => "events.php",
+        "link" => "/events.php",
         "icon" => "fa-calendar",
         "needsGold" => true
     ],
     "ACARS" => [
-        "link" => "acars.php",
+        "link" => "/acars.php",
         "icon" => "fa-sync",
         "needsGold" => true
     ],
