@@ -393,10 +393,24 @@
             "includes/menus.php",
             "plugins.json",
             "update.php",
+            "admin/codeshares.php",
+            "admin/events.php",
+            "admin/multipliers.php",
+            "admin/news.php",
+            "admin/operations.php",
+            "admin/pireps.php",
+            "admin/plugins.php",
+            "admin/recruitment.php",
+            "admin/site.php",
+            "admin/staff.php",
+            "admin/stats.php",
+            "admin/users.php",
             "version.json"
         ],
         "deletedFiles": [],
         "queries": [],
-        "newFolders": []
+        "newFolders": [
+            "admin"
+        ]
     }
 ]
