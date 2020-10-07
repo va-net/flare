@@ -23,5 +23,8 @@ A clear and concise description of what you expected to happen.
 **Screenshots**
 If applicable, add screenshots to help explain your problem.
 
+**Debugging Panel**
+If you are on a Prerelease version of Flare, you will have a debugging panel available under *Site Settings*. Attach a screenshot of that screen here.
+
 **Additional context**
 Add any other context about the problem here.
