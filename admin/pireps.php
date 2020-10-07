@@ -37,6 +37,14 @@ $ACTIVE_CATEGORY = 'pirep-management';
                 <div class="col-lg-9 main-content">
                     <div id="loader-wrapper"><div id="loader" class="spinner-border spinner-border-sm spinner-custom"></div></div>
                     <div class="loaded">
+                        <?php
+                        if (Session::exists('error')) {
+                            echo '<div class="alert alert-danger text-center">Error: '.Session::flash('error').'</div>';
+                        }
+                        if (Session::exists('success')) {
+                            echo '<div class="alert alert-success text-center">'.Session::flash('success').'</div>';
+                        }
+                        ?>
                         <h3>Manage PIREPs</h3>
                         <form id="acceptpirep" action="/update.php" method="post">
                             <input hidden name="action" value="acceptpirep">

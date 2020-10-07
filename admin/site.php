@@ -49,6 +49,14 @@ $ACTIVE_CATEGORY = 'site-management';
                                 $("#<?= $tab; ?>link").click();
                             });
                         </script>
+                        <?php
+                        if (Session::exists('error')) {
+                            echo '<div class="alert alert-danger text-center">Error: '.Session::flash('error').'</div>';
+                        }
+                        if (Session::exists('success')) {
+                            echo '<div class="alert alert-success text-center">'.Session::flash('success').'</div>';
+                        }
+                        ?>
                         <h3>Flare Settings</h3>
                         <p>Here you may configure Flare to be your own.</p>
                         <ul class="nav nav-tabs nav-dark justify-content-center">
