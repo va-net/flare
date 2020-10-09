@@ -48,12 +48,6 @@ CREATE TABLE IF NOT EXISTS `permissions` (
   `userid` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-ALTER TABLE `permissions`
-  ADD PRIMARY KEY (`id`);
-
-ALTER TABLE `permissions`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
-
 CREATE TABLE IF NOT EXISTS `pireps` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `flightnum` varchar(10) NOT NULL,
