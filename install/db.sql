@@ -43,10 +43,11 @@ CREATE TABLE IF NOT EXISTS `pilots` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 CREATE TABLE IF NOT EXISTS `permissions` (
-  `id` int NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
   `name` text NOT NULL,
-  `userid` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `userid` int NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 CREATE TABLE IF NOT EXISTS `pireps` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -99,7 +100,7 @@ CREATE TABLE IF NOT EXISTS `options` (
   `name` varchar(120) NOT NULL, 
   `value` text NOT NULL, 
   PRIMARY KEY (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 INSERT INTO `options` (`name`, `value`) VALUES ('FORCE_SERVER', '0');
 INSERT INTO `options` (`name`, `value`) VALUES ('CHECK_PRERELEASE', '0');

@@ -93,7 +93,7 @@ class Permissions
      */
     public static function giveAll($userid)
     {
-        foreach (self::$_pemissions as $key => $val) {
+        foreach (self::$_permissions as $key => $val) {
             $ret = self::give($userid, $key);
             if (!$ret) {
                 throw new Exception("Could not Give Permission {$val} ({$key})");
