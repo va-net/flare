@@ -196,9 +196,8 @@ if (!$user->isLoggedIn()) {
                         ?>
                     </section>
                     <!-- pireps -->
-                    <section id="pireps">
+                    <section id="pireps" class="mb-3">
                         <h3>Your Recent PIREPs</h3>
-                        <br>
                         <?php $pireps = $user->recentPireps(); ?>
                         <?php if ($pireps): ?>
                             <table class="table table-striped">
@@ -236,7 +235,7 @@ if (!$user->isLoggedIn()) {
                     </section>  
                     <?php if ($IS_GOLD): ?>
                         <!-- events -->
-                        <section id="events">
+                        <section id="events" class="mb-3">
                             <h3>Upcoming Events</h3>
                             <table class="table table-striped text-center">
                                 <thead class="bg-custom">
