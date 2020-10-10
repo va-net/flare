@@ -272,16 +272,15 @@ class User
             $id = $this->data()->id;
         }
 
-        $result = Aircraft::getAvailableAircraft($this->rank($id, true));
-
+        $result = Aircraft::getAvailableAircraft($this->rank($id, true))->results();
         $aircraft = array();
-        $x = 0;
 
-        while ($x < $result->count()) {
+        foreach ($result as $r) {
             $newdata = array(
-                'name' => $result->results()[$x]->name,
-                'liveryname' => $result->results()[$x]->liveryname,
-                'id' => $result->results()[$x]->id,
+                'name' => $r->name,
+                'liveryname' => $r->liveryname,
+                'id' => $r->id,
+                'notes' => $r->notes
             );
             $aircraft[$x] = $newdata;
             $x++;
