@@ -895,12 +895,12 @@ if (Input::get('action') === 'editprofile') {
     $ret = $db->query($sql, $params);
     if ($ret->error()) {
         Session::flash('error', "Error Importing Codeshare Routes");
-        //Redirect::to('/admin/codeshares.php');
+        Redirect::to('/admin/codeshares.php');
         die();
     }
-    //VANet::deleteCodeshare($codeshare["id"]);
+    VANet::deleteCodeshare($codeshare["id"]);
     Session::flash('success', "Codeshare Routes Imported Successfully!");
-    //Redirect::to('/admin/operations.php?section=routes');
+    Redirect::to('/admin/operations.php?section=routes');
 } elseif (Input::get('action') === 'phpvms') {
     $routes = Input::get('rJson');
     $count = count(Json::decode($routes));
