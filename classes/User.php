@@ -492,7 +492,7 @@ class User
      */
     public function getAllStaff()
     {
-        $sql = "SELECT u.* FROM pilots u WHERE u.id IN (SELECT p.userid FROM permissions p WHERE p.name='admin')";
+        $sql = "SELECT u.* FROM pilots u WHERE u.id IN (SELECT p.userid FROM permissions p WHERE p.name='admin') AND u.status=1";
         $res = $this->_db->query($sql)->results();
         $ret = [];
         foreach ($res as $staff) {
