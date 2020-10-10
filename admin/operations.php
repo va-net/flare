@@ -79,7 +79,7 @@ $ACTIVE_CATEGORY = 'operations-management';
                                                 <script>
                                                     $("#aircraftselect").change(function() {
                                                         $.ajax({
-                                                            url: "vanet.php",
+                                                            url: "/vanet.php",
                                                             type: "POST",
                                                             data: { method: "liveriesforaircraft", data: $(this).val() },
                                                             success: function(html){
