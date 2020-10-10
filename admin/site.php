@@ -168,7 +168,7 @@ $ACTIVE_CATEGORY = 'site-management';
                                     </tr>
                                     <tr>
                                         <th>Version</th>
-                                        <td><?= Json::decode(file_get_contents("./version.json"))["tag"]; ?></td>
+                                        <td><?= Updater::getVersion()["tag"]; ?></td>
                                     </tr>
                                 </table>
                             </div>
