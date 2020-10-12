@@ -413,5 +413,30 @@
         "newFolders": [
             "admin"
         ]
+    },
+    {
+        "tag": "v1.0.0-beta17",
+        "name": "Public Beta 17",
+        "date": "2020-10-12",
+        "notes": "Various Bug Fixes",
+        "prerelease": true,
+        "useUpdater": true,
+        "files": [
+            "classes/Permissions.php",
+            "includes/menus.php",
+            "admin/site.php",
+            "admin/staff.php",
+            "classes/User.php",
+            "core/init.php",
+            "home.php",
+            "admin/operations.php",
+            "admin.php",
+            "update.php",
+            "classes/User.php",
+            "pireps.php",
+            "version.json"
+        ],
+        "deletedFiles": [],
+        "queries": []
     }
 ]
