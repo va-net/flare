@@ -50,5 +50,5 @@
     }
     ?>
     <br />
-    <a href="logout.php" class="panel-link"><i class="fa fa-sign-out-alt"></i>&nbsp;Log Out</a>
+    <a href="/logout.php" class="panel-link"><i class="fa fa-sign-out-alt"></i>&nbsp;Log Out</a>
 </div>

@@ -7,7 +7,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-require_once '../core/init.php';
+require_once 'core/init.php';
 
 if (Input::get('page') === 'usermanage'):
     Redirect::to('/admin/users.php');

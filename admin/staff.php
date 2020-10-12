@@ -53,7 +53,6 @@ $ACTIVE_CATEGORY = 'user-management';
                                     <th>Callsign</th>
                                     <th class="mobile-hidden">Name</th>
                                     <th class="mobile-hidden">Email</th>
-                                    <th>Status</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -68,8 +67,6 @@ $ACTIVE_CATEGORY = 'user-management';
                                     echo $staff["name"];
                                     echo '</td><td class="mobile-hidden align-middle">';
                                     echo $staff["email"];
-                                    echo '</td><td class="align-middle">';
-                                    echo $staff["status"];
                                     echo '</td><td class="align-middle">';
                                     echo '<button class="btn text-light btn-primary" data-toggle="modal" data-target="#staff'.$x.'modal" data-callsign="'.$staff['callsign'].'" data-name="'.$staff['name'].'" data-email="'.$staff['email'].'" data-ifc="'.$staff['ifc'].'" data-joined="'.date_format(date_create($staff['joined']), 'Y-m-d').'" data-status="'.$staff['status'].'" data-id="'.$staff['id'].'"><i class="fa fa-edit"></i></button>';
                                     echo '&nbsp;<button id="delconfirmbtn" class="btn text-light btn-danger" data-toggle="modal" data-target="#delconfirmmodal" data-callsign="'.$staff['callsign'].'"><i class="fa fa-trash"></i></button>';

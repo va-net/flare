@@ -248,10 +248,11 @@ if (!$user->isLoggedIn()) {
                                                 $aircraftlist = $user->getAvailableAircraft();
 
                                                 foreach($aircraftlist as $aircraft) {
+                                                    $notes = $aircraft['notes'] == null ? '' : ' - '.$aircraft['notes'];
                                                     if ($aircraft["name"] == Input::get("aircraft")) {
-                                                        echo '<option value="'.$aircraft['id'].'" selected>'.$aircraft['name'].' ('.$aircraft['liveryname'].')</option>';
+                                                        echo '<option value="'.$aircraft['id'].'" selected>'.$aircraft['name'].' ('.$aircraft['liveryname'].')'.$notes.'</option>';
                                                     } else {
-                                                        echo '<option value="'.$aircraft['id'].'">'.$aircraft['name'].' ('.$aircraft['liveryname'].')</option>';
+                                                        echo '<option value="'.$aircraft['id'].'">'.$aircraft['name'].' ('.$aircraft['liveryname'].')'.$notes.'</option>';
                                                     }
                                                 }
                                                 ?>

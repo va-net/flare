@@ -99,6 +99,11 @@ class Permissions
                 throw new Exception("Could not Give Permission {$val} ({$key})");
             }
         }
+
+        $res = self::give($userid, 'admin');
+        if (!res) {
+            throw new Exception("Could not Give Permission Admin (admin)");
+        }
     }
 
     /**

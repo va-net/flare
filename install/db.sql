@@ -4,6 +4,7 @@ CREATE TABLE IF NOT EXISTS `aircraft` (
   `ifaircraftid` text NOT NULL,
   `liveryname` text DEFAULT NULL,
   `ifliveryid` text DEFAULT NULL,
+  `notes` VARCHAR(12),
   `rankreq` int(11) NOT NULL DEFAULT '1',
   `status` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
@@ -35,11 +36,17 @@ CREATE TABLE IF NOT EXISTS `pilots` (
   `violand` double DEFAULT NULL,
   `grade` int(11) DEFAULT NULL,
   `notes` varchar(1200) NOT NULL DEFAULT '',
-  `permissions` text NOT NULL,
   `status` int(3) NOT NULL DEFAULT '0',
   `joined` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `callsign` (`callsign`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+CREATE TABLE IF NOT EXISTS `permissions` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `name` text NOT NULL,
+  `userid` int NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 CREATE TABLE IF NOT EXISTS `pireps` (
@@ -93,7 +100,8 @@ CREATE TABLE IF NOT EXISTS `options` (
   `name` varchar(120) NOT NULL, 
   `value` text NOT NULL, 
   PRIMARY KEY (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 INSERT INTO `options` (`name`, `value`) VALUES ('FORCE_SERVER', '0');
-INSERT INTO `options` (`name`, `value`) VALUES ('CHECK_PRERELEASE', '0')
+INSERT INTO `options` (`name`, `value`) VALUES ('CHECK_PRERELEASE', '0');
+INSERT INTO `options` (`name`, `value`) VALUES ('TEXT_COLOUR', '#fff');

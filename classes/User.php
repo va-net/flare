@@ -272,16 +272,15 @@ class User
             $id = $this->data()->id;
         }
 
-        $result = Aircraft::getAvailableAircraft($this->rank($id, true));
-
+        $result = Aircraft::getAvailableAircraft($this->rank($id, true))->results();
         $aircraft = array();
-        $x = 0;
 
-        while ($x < $result->count()) {
+        foreach ($result as $r) {
             $newdata = array(
-                'name' => $result->results()[$x]->name,
-                'liveryname' => $result->results()[$x]->liveryname,
-                'id' => $result->results()[$x]->id,
+                'name' => $r->name,
+                'liveryname' => $r->liveryname,
+                'id' => $r->id,
+                'notes' => $r->notes
             );
             $aircraft[$x] = $newdata;
             $x++;
@@ -492,7 +491,7 @@ class User
      */
     public function getAllStaff()
     {
-        $sql = "SELECT u.* FROM pilots u WHERE u.id IN (SELECT p.userid FROM permissions p WHERE p.name='admin')";
+        $sql = "SELECT u.* FROM pilots u WHERE u.id IN (SELECT p.userid FROM permissions p WHERE p.name='admin') AND u.status=1";
         $res = $this->_db->query($sql)->results();
         $ret = [];
         foreach ($res as $staff) {

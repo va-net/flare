@@ -20,7 +20,7 @@ $GLOBALS['admin-menu']["Operations Management"] = array(
         "needsGold" => false
     ],
     "Manage Codeshares" => [
-        "link" => "/admin.php?page=codeshares",
+        "link" => "/admin/codeshares.php",
         "icon" => "fa-handshake",
         "permission" => "opsmanage",
         "needsGold" => false
