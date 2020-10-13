@@ -2,6 +2,7 @@
     "name": "va-net/flare",
     "description": "Modern and Responsive VA Crew Center - Designed for Infinite Flight and Integrated with VANet",
     "require": {
+        "niklongstone/regex-reverse": "^0.4.0",
         "phpmailer/phpmailer": "^6.1"
     }
 }

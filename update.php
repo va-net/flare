@@ -8,6 +8,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 require_once './core/init.php';
+use RegRev\RegRev;
 
 $user = new User();
 if (!$user->isLoggedIn()) {
@@ -15,8 +16,15 @@ if (!$user->isLoggedIn()) {
 }
 
 if (Input::get('action') === 'editprofile') {
+    $csPattern = Config::get('VA_CALLSIGN_FORMAT');
+    $trimmedPattern = preg_replace("/\/[a-z]*$/", '', preg_replace("/^\//", '', $csPattern));
+
     if (!Callsign::assigned(Input::get('callsign'), $user->data()->id)) {
         Session::flash('error', 'Callsign is Already Taken!');
+        Redirect::to('/home.php');
+    } elseif (!Regex::match($csPattern, Input::get('callsign'))) {
+        Session::flash('error', 'Callsign does not match the required format! Try <b>'.RegRev::generate($trimmedPattern).'</b> instead.');
+        Redirect::to('/home.php');
     } else {
         try {
             $user->update(array(
@@ -446,9 +454,10 @@ if (Input::get('action') === 'editprofile') {
     }
 
     if (!Config::replace('name', Input::get('vaname')) 
-        || !Config::replace('identifier', Input::get('vaident')) 
+        || !Config::replace('identifier', Input::get('vaabbrv')) 
         || !Config::replace("FORCE_SERVER", Input::get('forceserv'))
         || !Config::replace("CHECK_PRERELEASE", Input::get('checkpre'))
+        || !Config::replace("VA_CALLSIGN_FORMAT", Input::get('vaident'))
         ) {
         Session::flash('error', 'There was an error updating the Settings');
         Redirect::to('/admin/site.php?tab=settings');
