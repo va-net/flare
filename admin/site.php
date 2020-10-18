@@ -101,11 +101,21 @@ $ACTIVE_CATEGORY = 'site-management';
                                     <input hidden name="action" value="vasettingsupdate">
                                     <div class="form-group">
                                         <label for="">VA Full Name</label>
-                                        <input required type="text" class="form-control" name="vaname" value="<?= Config::get('va/name') ?>">
+                                        <input required type="text" class="form-control" name="vaname" value="<?= Config::get('va/name') ?>" />
                                     </div>
                                     <div class="form-group">
-                                        <label for="">VA Callsign Identifier</label>
-                                        <input required type="text" class="form-control" name="vaident" value="<?= Config::get('va/identifier') ?>">
+                                        <label for="">VA Callsign RegEx&nbsp;&nbsp;<i class="fa fa-question-circle" data-toggle="tooltip" title="RegEx is a way to match complex text formats"></i></label>
+                                        <input required type="text" class="form-control" name="vaident" id="vaident" value="<?= Config::get('VA_CALLSIGN_FORMAT') ?>" />
+                                        <small class="text-muted">
+                                            <b>Pre-fill:</b> 
+                                            <span class="text-primary cursor-pointer" id="prefill-va">Airline 123VA</span> | 
+                                            <span class="text-primary cursor-pointer" id="prefill-any">Any Callsign</span>
+                                        </small>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="">VA Abbreviation</label>
+                                        <input required type="text" class="form-control" name="vaabbrv" value="<?= Config::get('va/identifier') ?>" />
+                                        <small class="text-muted">This is your VA Abbreviation such as BAVA, DLVA, etc</small>
                                     </div>
                                     <div class="form-group">
                                         <label for="">Force Live Server</label>
@@ -135,6 +145,21 @@ $ACTIVE_CATEGORY = 'site-management';
                                     </div>
                                     <input type="submit" class="btn bg-custom" value="Save">
                                 </form>
+                                <script>
+                                    $(document).ready(function() {
+                                        $("#prefill-va").click(function() {
+                                            var airline = prompt('Enter Airline Callsing (Speedbird, American, etc)');
+                                            var regex = '/' + airline + ' \\d{1,3}VA/i';
+                                            $("#vaident").val(regex);
+                                            alert('Filled!');
+                                        });
+                                        $("#prefill-any").click(function() {
+                                            var regex = '/.*/i';
+                                            $("#vaident").val(regex);
+                                            alert('Filled!');
+                                        });
+                                    });
+                                </script>
                             </div>
                             <div id="vanet" class="tab-pane container-fluid p-3 fade">
                                 <h4>VANet Settings</h4>
