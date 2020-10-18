@@ -82,7 +82,7 @@ table {
     border-top: 1px solid #fff!important;
 }
 
-.toggledark {
+.cursor-pointer {
     cursor: pointer;
 }
 
