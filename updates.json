@@ -480,6 +480,8 @@
             "version.json"
         ],
         "deletedFiles": [],
-        "queries": []
+        "queries": [
+            "INSERT INTO `options` (`name`, `value`) VALUES ('VA_CALLSIGN_FORMAT', '/.*/i')"
+        ]
     }
 ]
