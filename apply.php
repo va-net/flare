@@ -144,7 +144,7 @@ if (Input::exists()) {
 
                     <div class="form-group text-center">
                     <label for="callsign">Callsign</label>
-                    <input required class="form-control publicform" type="text" id="callsign" name="callsign" value="<?= escape(empty(Input::get('callsign')) ? RegRev::generate($trimmedPattern) : Input::get('callsign')) ?>">
+                    <input required class="form-control publicform" type="text" id="callsign" name="callsign" value="<?= escape(empty(Input::get('callsign')) && $trimmedPattern != ".*" ? RegRev::generate($trimmedPattern) : Input::get('callsign')) ?>">
                     </div>
 
                     <div class="form-group text-center">
