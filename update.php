@@ -889,10 +889,10 @@ if (Input::get('action') === 'editprofile') {
             $acId = $acId->first()->id;
         }
 
-        
+        $fltnum = preg_replace('/^[a-z]+/i', '', $route["flightNum"]);
 
         $sql .= "\n(?, ?, ?, ?, ?),";
-        array_push($params, $codeshare["veFrom"]["code"].$route["flightNum"]);
+        array_push($params, $codeshare["veFrom"]["code"].$fltnum);
         array_push($params, $route["departure"]);
         array_push($params, $route["arrival"]);
         array_push($params, $route["flightTime"]);
