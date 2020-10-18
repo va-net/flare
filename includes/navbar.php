@@ -19,17 +19,17 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
     <ul class="navbar-nav">
         <?php if (!$user->isLoggedIn()): ?>
         <li class="nav-item">
-            <a class="nav-link" href="apply.php" style="color: <?= $textcol ?>!important;">Apply</a>
+            <a class="nav-link" href="/apply.php" style="color: <?= $textcol ?>!important;">Apply</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="index.php" style="color: <?= $textcol ?>!important;">Log In</a>
+            <a class="nav-link" href="/index.php" style="color: <?= $textcol ?>!important;">Log In</a>
         </li>
         <?php else: ?>
         <li class="nav-item mobile-hidden">
-            <a class="nav-link" href="home.php" style="color: <?= $textcol ?>!important;"><i class="fa fa-user"></i>&nbsp;Pilot Panel</a>
+            <a class="nav-link" href="/home.php" style="color: <?= $textcol ?>!important;"><i class="fa fa-user"></i>&nbsp;Pilot Panel</a>
         </li>
         <li class="nav-item mobile-hidden">
-            <a class="nav-link" href="logout.php" style="color: <?= $textcol ?>!important;"><i class="fa fa-sign-out-alt"></i>&nbsp;Log Out</a>
+            <a class="nav-link" href="/logout.php" style="color: <?= $textcol ?>!important;"><i class="fa fa-sign-out-alt"></i>&nbsp;Log Out</a>
         </li>
         <?php
         $IS_GOLD = VANet::isGold();
