@@ -482,6 +482,18 @@
         "deletedFiles": [],
         "queries": [
             "INSERT INTO `options` (`name`, `value`) VALUES ('VA_CALLSIGN_FORMAT', '/.*/i')"
+        ],
+        "newFolders": [
+            "vendor/niklongstone",
+            "vendor/niklongstone/regex-reverse",
+            "vendor/niklongstone/regex-reverse/src",
+            "vendor/niklongstone/regex-reverse/src/RegRev",
+            "vendor/niklongstone/regex-reverse/src/RegRev/Exception",
+            "vendor/niklongstone/regex-reverse/src/RegRev/Metacharacter",
+            "vendor/niklongstone/regex-reverse/src/RegRev/Metacharacter/CharType",
+            "vendor/niklongstone/regex-reverse/src/RegRev/Metacharacter/GroupType",
+            "vendor/niklongstone/regex-reverse/src/RegRev/Metacharacter/Quantifier",
+            "vendor/niklongstone/regex-reverse/src/RegRev/Metacharacter/Range"
         ]
     }
 ]
