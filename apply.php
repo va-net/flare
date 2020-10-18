@@ -8,7 +8,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 require_once './core/init.php';
-use RegRev\RegRev;
 
 Page::setTitle('Apply - '.Config::get('va/name'));
 
@@ -16,9 +15,6 @@ $user = new User();
 if ($user->isLoggedIn()) {
     Redirect::to('home.php');
 }
-
-$csPattern = Config::get('VA_CALLSIGN_FORMAT');
-$trimmedPattern = preg_replace("/\/[a-z]*$/", '', preg_replace("/^\//", '', $csPattern));
 
 if (Input::exists()) {
     if (Token::check(Input::get('token'))) {
@@ -60,7 +56,7 @@ if (Input::exists()) {
             )
         ));
 
-        if ($validate->passed() && Regex::match($csPattern, Input::get('callsign'))) {
+        if ($validate->passed()) {
             $user = new User();
             try {
                 $user->create(array(
@@ -78,12 +74,10 @@ if (Input::exists()) {
             }
             Session::flash('success', 'Your application has been submitted! You will be contacted by a staff member in the coming weeks regarding the status of your application.');
             Redirect::to('index.php');
-        } elseif (!$validate->passed()) {
+        } else {
             foreach ($validate->errors() as $error) {
                 Session::flash('error', $error);
             }
-        } else {
-            Session::flash('error', 'Your Callsign is in an Invalid Format');
         }
     }
 }
@@ -144,7 +138,7 @@ if (Input::exists()) {
 
                     <div class="form-group text-center">
                     <label for="callsign">Callsign</label>
-                    <input required class="form-control publicform" type="text" id="callsign" name="callsign" value="<?= escape(empty(Input::get('callsign')) && $trimmedPattern != ".*" ? RegRev::generate($trimmedPattern) : Input::get('callsign')) ?>">
+                    <input required class="form-control publicform" type="text" id="callsign" name="callsign" value="<?= escape(Input::get('callsign')) ?>">
                     </div>
 
                     <div class="form-group text-center">
