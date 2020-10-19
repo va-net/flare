@@ -495,5 +495,20 @@
             "vendor/niklongstone/regex-reverse/src/RegRev/Metacharacter/Quantifier",
             "vendor/niklongstone/regex-reverse/src/RegRev/Metacharacter/Range"
         ]
+    },
+    {
+        "tag": "v1.0.0-beta18.1",
+        "name": "Public Beta 18.1",
+        "date": "2020-10-19",
+        "notes": "Various Bug Fixes",
+        "prerelease": true,
+        "useUpdater": true,
+        "files": [
+            "vendor/niklongstone/regex-reverse/src/RegRev/Metacharacter/CharType/CharListInterface.php",
+            
+            "version.json"
+        ],
+        "deletedFiles": [],
+        "queries": []
     }
 ]
