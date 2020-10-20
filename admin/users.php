@@ -47,6 +47,9 @@ $ACTIVE_CATEGORY = 'user-management';
                         ?>
                         <h3>Manage Users</h3>
                         <p>Here you can view all users, active and inactive. Click on a user to view/edit the information.</p>
+                        <p>
+                            <span class="text-primary cursor-pointer" id="toggle-inactive" data-state="0">Hide Inactive Users</span>
+                        </p>
                         <table class="table table-striped datatable">
                             <thead class="bg-custom">
                                 <tr>
@@ -62,7 +65,11 @@ $ACTIVE_CATEGORY = 'user-management';
                                 $users = $user->getAllUsers();
                                 $x = 0;
                                 foreach ($users as $user) {
-                                    echo '<tr><td class="align-middle">';
+                                    $rowClassName = '';
+                                    if ($user['status'] == 'Inactive') {
+                                        $rowClassName = 'inactive-row';
+                                    }
+                                    echo '<tr class="'.$rowClassName.'"><td class="align-middle">';
                                     echo $user["callsign"];
                                     echo '</td><td class="mobile-hidden align-middle">';
                                     echo $user["name"];
@@ -242,6 +249,23 @@ $ACTIVE_CATEGORY = 'user-management';
                                 var message = 'Are you sure you want to mark the user ' + userCallsign + ' as inactive?'
                                 $("#delconfirmmessage").text(message);
                                 $("#delconfirmuserid").val(userId);
+                            });
+                        </script>
+                        <!-- Hide Inactive Users -->
+                        <script>
+                            $(document).ready(function() {
+                                $("#toggle-inactive").click(function() {
+                                    var state = $("#toggle-inactive").attr('data-state');
+                                    if (state == '0') {
+                                        $(".inactive-row").attr('style', 'display: none;');
+                                        $("#toggle-inactive").attr('data-state', '1');
+                                        $(this).text('Show Inactive Users');
+                                    } else {
+                                        $(".inactive-row").attr('style', 'display: auto;');
+                                        $("#toggle-inactive").attr('data-state', '0');
+                                        $(this).text('Hide Inactive Users');
+                                    }
+                                })
                             });
                         </script>
                     </div>
