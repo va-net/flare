@@ -67,7 +67,7 @@ class User
 
         if ($user) {
             $field = (is_numeric($user)) ? 'id' : 'email';
-            $data = $this->_db->get('pilots', array($field, '=', $user));
+            $data = $this->_db->query("SELECT * FROM pilots WHERE {$field}=? AND status=1", [$user]);
             if ($data->count()) {
                 $this->_data = $data->first();
                 $this->_permissions = [];
@@ -122,6 +122,7 @@ class User
             }
         }
         $_SESSION = array();
+        Events::trigger('user/login-failed');
         return false;
 
     }

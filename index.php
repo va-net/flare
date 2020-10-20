@@ -37,25 +37,10 @@ if (Input::exists()) {
             $remember = (Input::get('remember') === 'on') ? true : false;
 
             if ($user->login(Input::get('email'), Input::get('password'), $remember)) {
-                if ($user->data()->status == 1) {
-                    Redirect::to('home.php');
-                } elseif ($user->data()->status == 0) {
-                    $user->logout();
-                    Session::flash('error', 'Whoops! You need to wait until your application has been approved before logging in!');
-                    Events::trigger('user/login-failed', ['reason' => 'Pending', 'user' => $user->data()]);
-                } elseif ($user->data()->status == 2) {
-                    $user->logout();
-                    Session::flash('error', 'Looks like your account has been marked as inactive - contact a member of staff to have this rectified!');
-                    Events::trigger('user/login-failed', ['reason' => 'Inactive', 'user' => $user->data()]);
-                } elseif ($user->data()->status == 3) {
-                    $user->logout();
-                    Session::flash('error', 'Unfortunately, your application has been declined.');
-                    Events::trigger('user/login-failed', ['reason' => 'Declined', 'user' => $user->data()]);
-                }
+                Redirect::to('home.php');
             } else {
                 $user->logout();
-                Session::flash('error', 'Login failed.');
-                Events::trigger('user/login-failed', ['reason' => 'Invalid', 'user' => null]);
+                Session::flash('error', 'Login Failed. Your application may still be pending or it may have been denied. Please contact us for more details if you believe this is an error.');
             } 
 
         } else {

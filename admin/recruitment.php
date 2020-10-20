@@ -104,7 +104,7 @@ $ACTIVE_CATEGORY = 'user-management';
                         <?php
                         $x = 0;
                         foreach ($users as $user) { ?>
-                            <div class="modal fade" id="user'.$x.'modal" tabindex="-1" role="dialog" aria-labelledby="user'.$x.'label" aria-hidden="true">
+                            <div class="modal fade" id="user<?= $x ?>modal" tabindex="-1" role="dialog" aria-labelledby="user<?= $x ?>label" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
@@ -117,27 +117,28 @@ $ACTIVE_CATEGORY = 'user-management';
                                             <form action="/update.php" method="post">
                                                 <div class="form-group">
                                                     <label for="usermodal-callsign">Callsign</label>
-                                                    <input readonly type="text" value="'.$user["callsign"].'" class="form-control" name="callsign">
+                                                    <input readonly type="text" value="<?= $user["callsign"] ?>" class="form-control" name="callsign">
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="usermodal-name">Name</label>
-                                                    <input readonly type="text" value="'.$user["name"].'" class="form-control" name="name">
+                                                    <input readonly type="text" value="<?= $user["name"] ?>" class="form-control" name="name">
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="usermodal-email">Email</label>
-                                                    <input readonly type="text" value="'.$user["email"].'" class="form-control" name="email">
+                                                    <input readonly type="text" value="<?= $user["email"] ?>" class="form-control" name="email">
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="usermodal-ifc">IFC Username</label>
-                                                    <a href="'.$user['ifc'].'" target="_blank"><input readonly type="text" style="cursor:pointer" value="'.$username.'" class="form-control" name="ifc"></a>
+                                                    <?php $username = explode('/', $user['ifc'])[4]; ?>
+                                                    <a href="<?= $user['ifc'] ?>" target="_blank"><input readonly type="text" style="cursor: pointer;" value="<?= $username ?>" class="form-control" name="ifc"></a>
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="usermodal-joined">Grade</label>
-                                                    <input readonly type="text" value="'.$user["grade"].'" class="form-control" name="grade">
+                                                    <input readonly type="text" value="<?= $user["grade"] ?>" class="form-control" name="grade">
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="usermodal-status">Violations to landings</label>
-                                                    <input readonly type="text" value="'.$user["viol"].'" class="form-control" name="viol">
+                                                    <input readonly type="text" value="<?= $user["viol"] ?>" class="form-control" name="viol">
                                                 </div>
                                             </form>
                                         </div>
@@ -147,7 +148,7 @@ $ACTIVE_CATEGORY = 'user-management';
                                     </div>
                                 </div>
                             </div>
-                            <div class="modal fade" id="user'.$x.'declinemodal" tabindex="-1" role="dialog" aria-labelledby="user'.$x.'label" aria-hidden="true">
+                            <div class="modal fade" id="user<?= $x ?>declinemodal" tabindex="-1" role="dialog" aria-labelledby="user<?= $x ?>label" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
