@@ -265,7 +265,7 @@ $ACTIVE_CATEGORY = 'user-management';
                                         $("#toggle-inactive").attr('data-state', '0');
                                         $(this).text('Hide Inactive Users');
                                     }
-                                })
+                                });
                             });
                         </script>
                     </div>
