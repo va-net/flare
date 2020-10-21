@@ -38,7 +38,7 @@ $ACTIVE_CATEGORY = 'site-management';
                     <div id="loader-wrapper"><div id="loader" class="spinner-border spinner-border-sm spinner-custom"></div></div>
                     <div class="loaded">
                         <?php
-                            $tab = "colors";
+                            $tab = "settings";
                             if (!empty(Input::get('tab'))) {
                                 $tab = Input::get('tab');
                             }
@@ -50,51 +50,40 @@ $ACTIVE_CATEGORY = 'site-management';
                             });
                         </script>
                         <?php
-                        if (Session::exists('error')) {
-                            echo '<div class="alert alert-danger text-center">Error: '.Session::flash('error').'</div>';
-                        }
-                        if (Session::exists('success')) {
-                            echo '<div class="alert alert-success text-center">'.Session::flash('success').'</div>';
-                        }
+                            if (Session::exists('error')) {
+                                echo '<div class="alert alert-danger text-center">Error: '.Session::flash('error').'</div>';
+                            }
+                            if (Session::exists('success')) {
+                                echo '<div class="alert alert-success text-center">'.Session::flash('success').'</div>';
+                            }
+
+                            $ver = Updater::getVersion();
+                            $update = Updater::checkUpdate(Config::get('CHECK_PRERELEASE') == 1);
                         ?>
                         <h3>Flare Settings</h3>
                         <p>Here you may configure Flare to be your own.</p>
                         <ul class="nav nav-tabs nav-dark justify-content-center">
                             <li class="nav-item">
-                                <a class="nav-link" id="colorslink" data-toggle="tab" href="#colors">Color Theme</a>
+                                <a class="nav-link" id="settingslink" data-toggle="tab" href="#settings">VA Settings</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" id="settingslink" data-toggle="tab" href="#settings">VA Settings</a>
+                                <a class="nav-link" id="designlink" data-toggle="tab" href="#design">Site Design</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" id="vanetlink" data-toggle="tab" href="#vanet">VANet Settings</a>
                             </li>
-                            <?php if (Updater::getVersion()["prerelease"]) { ?>
+                            <?php if (Config::get('CHECK_PRERELEASE') == 1) { ?>
                                 <li class="nav-item">
                                     <a class="nav-link" id="debuglink" data-toggle="tab" href="#debug">Debugging Info</a>
                                 </li>
                             <?php } ?>
                             <li class="nav-item">
-                                <a class="nav-link" id="updateslink" data-toggle="tab" href="#updates">Updates</a>
+                                <?php $updateAlert = $update ? ' <span class="text-danger"><i class="fa fa-exclamation-circle"></i></span>' : ''; ?>
+                                <a class="nav-link" id="updateslink" data-toggle="tab" href="#updates">Updates<?= $updateAlert ?></a>
                             </li>
                         </ul>
 
                         <div class="tab-content">
-                            <div id="colors" class="tab-pane container-fluid p-3 fade">
-                                <h4>Colour Theme</h4>
-                                <form action="/update.php" method="post">
-                                    <input hidden name="action" value="setcolour">
-                                    <div class="form-group">
-                                        <label for="">Main Colour (hex)</label>
-                                        <input required type="text" class="form-control" name="hexcol" value="<?= Config::get('site/colour_main_hex') ?>">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="">Text Colour (hex)</label>
-                                        <input required type="text" class="form-control" name="textcol" value="<?= Config::get('TEXT_COLOUR') ?>">
-                                    </div>
-                                    <input type="submit" class="btn bg-custom" value="Save">
-                                </form>
-                            </div>
                             <div id="settings" class="tab-pane container-fluid p-3 fade">
                                 <h4>VA Settings</h4>
                                 <form action="/update.php" method="post">
@@ -166,6 +155,21 @@ $ACTIVE_CATEGORY = 'site-management';
                                     });
                                 </script>
                             </div>
+                            <div id="design" class="tab-pane container-fluid p-3 fade">
+                                <h4>Site Design</h4>
+                                <form action="/update.php" method="post">
+                                    <input hidden name="action" value="setdesign">
+                                    <div class="form-group">
+                                        <label for="">Main Colour (hex)</label>
+                                        <input required type="text" class="form-control" name="hexcol" value="<?= Config::get('site/colour_main_hex') ?>">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="">Text Colour (hex)</label>
+                                        <input required type="text" class="form-control" name="textcol" value="<?= Config::get('TEXT_COLOUR') ?>">
+                                    </div>
+                                    <input type="submit" class="btn bg-custom" value="Save">
+                                </form>
+                            </div>
                             <div id="vanet" class="tab-pane container-fluid p-3 fade">
                                 <h4>VANet Settings</h4>
                                 <form action="/update.php" method="post">
@@ -205,11 +209,9 @@ $ACTIVE_CATEGORY = 'site-management';
                             <div id="updates" class="tab-pane container-fluid p-3 fade">
                                 <h4>Flare Updates</h4>
                                 <p>
-                                    <?php $ver = Updater::getVersion(); ?>
                                     <b>You are on Flare <?php echo $ver["tag"]; ?></b>
                                     <br />
                                     <?php
-                                        $update = Updater::checkUpdate(Config::get('CHECK_PRERELEASE') == 1);
                                         if (!$update) {
                                             echo "Flare is Up-to-Date!";
                                         } else {
