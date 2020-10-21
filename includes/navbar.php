@@ -7,7 +7,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 ?>
-<a class="navbar-brand" href="index.php"><?= Config::get('va/name') ?></a>
+
+<a class="navbar-brand" href="/">
+    <?php if (empty(Config::get("VA_LOGO_URL"))): ?>
+        <?= Config::get('va/name') ?>
+    <?php else: ?>
+        <img src="<?= Config::get("VA_LOGO_URL") ?>" height="35" />
+    <?php endif; ?>
+</a>
 
 <!-- navbar toggler -->
 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">

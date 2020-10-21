@@ -104,6 +104,11 @@ $ACTIVE_CATEGORY = 'site-management';
                                         <input required type="text" class="form-control" name="vaname" value="<?= Config::get('va/name') ?>" />
                                     </div>
                                     <div class="form-group">
+                                        <label for="">VA Logo URL</label>
+                                        <input type="url" class="form-control" name="valogo" value="<?= Config::get('VA_LOGO_URL') ?>" />
+                                        <small class="text-muted">This must be the URL ending in png, jpg, etc. If set, this will override your VA name in the navbar.</small>
+                                    </div>
+                                    <div class="form-group">
                                         <label for="">VA Callsign RegEx&nbsp;&nbsp;<i class="fa fa-question-circle" data-toggle="tooltip" title="RegEx is a way to match complex text formats"></i></label>
                                         <input required type="text" class="form-control" name="vaident" id="vaident" value="<?= Config::get('VA_CALLSIGN_FORMAT') ?>" />
                                         <small class="text-muted">
