@@ -10,6 +10,25 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 class Config 
 {
+    /**
+     * @var array
+     */
+    private static $_dbConfig = [];
+
+    /**
+     * @return null
+     */
+    private static function loadDbConf()
+    {
+        if (self::$_dbConfig != []) {
+            return;
+        }
+        $db = DB::getInstance();
+        $ret = $db->getAll('options')->results();
+        foreach ($ret as $c) {
+            self::$_dbConfig[$c->name] = $c->value;
+        }
+    }
 
     /**
      * @return mixed
@@ -29,13 +48,8 @@ class Config
 
             // Check if the Key was Invalid. If so, fall back on the Database
             if ($config === $GLOBALS['config']) {
-                $db = DB::getInstance();
-                $ret = $db->get('options', array('name', '=', $path[0]));
-                if ($ret->count() === 0) {
-                    return false;
-                }
-
-                return $ret->first()->value;
+                self::loadDbConf();
+                return self::$_dbConfig[$path[0]];
             }
 
             return $config;
