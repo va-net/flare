@@ -167,6 +167,10 @@ $ACTIVE_CATEGORY = 'site-management';
                                         <label for="">Text Colour (hex)</label>
                                         <input required type="text" class="form-control" name="textcol" value="<?= Config::get('TEXT_COLOUR') ?>">
                                     </div>
+                                    <div class="form-group">
+                                        <label for="">Custom CSS&nbsp;&nbsp;<i class="fa fa-question-circle" data-toggle="tooltip" title="CSS is a Website Styling Language"></i></label>
+                                        <textarea style="font-family: 'Courier New', Courier, monospace;" class="form-control" name="customcss" rows="10"><?= Config::getCss() ?></textarea>
+                                    </div>
                                     <input type="submit" class="btn bg-custom" value="Save">
                                 </form>
                             </div>

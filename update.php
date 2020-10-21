@@ -434,19 +434,22 @@ if (Input::get('action') === 'editprofile') {
         Session::flash('success', 'Rank Deleted Successfully!');
     Redirect::to('/admin/operations.php?section=ranks');
     }
-} elseif (Input::get('action') === 'setcolour') {
+} elseif (Input::get('action') === 'setdesign') {
     if (!$user->hasPermission('opsmanage')) {
         Redirect::to('home.php');
         die();
     }
 
-    if (!Config::replaceColour(trim(Input::get('hexcol'), "#"), trim(Input::get('textcol'), "#"))) {
-        Session::flash('error', 'There was an Error Updating the Colour Theme!');
+    if (
+        !Config::replaceColour(trim(Input::get('hexcol'), "#"), trim(Input::get('textcol'), "#"))
+        || !Config::replaceCss(Input::get('customcss'))
+        ) {
+        Session::flash('error', 'There was an Error Updating the Design');
         Redirect::to('/admin/site.php');
         die();
     }
-    Session::flash('success', 'Colour Theme Updated Successfully! You may need to reload the page or clear your cache in order for it to show.');
-    Redirect::to('/admin/site.php');
+    Session::flash('success', 'Design Updated Successfully! You may need to reload the page or clear your cache in order for it to show.');
+    Redirect::to('/admin/site.php?page=design');
 } elseif (Input::get('action') === 'vasettingsupdate') {
     if (!$user->hasPermission('opsmanage')) {
         Redirect::to('home.php');

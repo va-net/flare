@@ -92,6 +92,24 @@ class Config
 
     /**
      * @return bool
+     * @param string $data CSS Data
+     */
+    public static function replaceCss($data)
+    {
+        $res = file_put_contents(__DIR__.'/../assets/custom.css', $data);
+        return !($res === FALSE);
+    }
+
+    /**
+     * @return string|bool
+     */
+    public static function getCss()
+    {
+        return file_get_contents(__DIR__.'/../assets/custom.css');
+    } 
+
+    /**
+     * @return bool
      * @param string $where Config Key
      * @param mixed $new New Value
      */
