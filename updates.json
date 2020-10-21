@@ -505,7 +505,24 @@
         "useUpdater": true,
         "files": [
             "vendor/niklongstone/regex-reverse/src/RegRev/Metacharacter/CharType/CharListInterface.php",
-            
+            "version.json"
+        ],
+        "deletedFiles": [],
+        "queries": []
+    },
+    {
+        "tag": "v1.0.0-beta19",
+        "name": "Public Beta 19",
+        "date": "2020-10-22",
+        "notes": "Various Bug Fixes & Authentication Update",
+        "prerelease": true,
+        "useUpdater": true,
+        "files": [
+            "admin/recruitment.php",
+            "apply.php",
+            "classes/User.php",
+            "index.php",
+            "admin/users.php",
             "version.json"
         ],
         "deletedFiles": [],
