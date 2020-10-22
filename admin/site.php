@@ -205,6 +205,10 @@ $ACTIVE_CATEGORY = 'site-management';
                                         <td><?= Config::get('FORCE_SERVER') == 0 ? 'None' : Config::get('FORCE_SERVER') ?></td>
                                     </tr>
                                     <tr>
+                                        <th>Callsign Format</th>
+                                        <td><?= Config::get('VA_CALLSIGN_FORMAT') ?></td>
+                                    </tr>
+                                    <tr>
                                         <th>Version</th>
                                         <td><?= Updater::getVersion()["tag"]; ?></td>
                                     </tr>
