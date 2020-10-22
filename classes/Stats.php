@@ -9,6 +9,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 class Stats {
+    /**
+     * @var DB
+     */
     private static $_db;
 
     private static function init() 
@@ -18,26 +21,57 @@ class Stats {
 
     /**
      * @return int
+     * @param int $days Time Period
      */
-    public static function totalHours() 
+    public static function totalHours($days = null) 
     {
         self::init();
+        $transhours;
+        $transflights;
+
+        if ($days == null) {
+            $transhours = self::$_db->query('SELECT SUM(transhours) AS trans FROM pilots')->first()->trans;
+            $filedhours = self::$_db->query('SELECT SUM(flighttime) AS filed FROM pireps WHERE status=1')->first()->filed;
+        } else {
+            $transhours = 0;
+            $filedhours = self::$_db->query('SELECT SUM(flighttime) AS filed FROM pireps WHERE status=1 AND DATEDIFF(NOW(), date) <= ?', [$days])->first()->filed;
+        }
+
+        if ($filedhours == null) $filedhours = 0;
         
-        $transhours = self::$_db->query('SELECT SUM(transhours) AS trans FROM pilots')->first()->trans;
-        $filedhours = self::$_db->query('SELECT SUM(flighttime) AS filed FROM pireps WHERE status=1')->first()->filed;
-        return $transhours = $filedhours;
+        return $transhours + $filedhours;
     }
 
     /**
      * @return int
+     * @param int $days Time Period
      */
-    public static function totalFlights() 
+    public static function totalFlights($days = null) 
     {
         self::init();
 
-        $transflights = self::$_db->query('SELECT SUM(pilots.transflights) AS trans FROM pilots')->first()->trans;
-        $filedflights = self::$_db->query('SELECT COUNT(pireps.id) AS pireps FROM pireps WHERE pireps.status=1')->first()->pireps;
+        if ($days == null) {
+            $transflights = self::$_db->query('SELECT SUM(pilots.transflights) AS trans FROM pilots')->first()->trans;
+            $filedflights = self::$_db->query('SELECT COUNT(pireps.id) AS pireps FROM pireps WHERE status=1')->first()->pireps;
+        } else {
+            $transflights = self::$_db->query('SELECT SUM(pilots.transflights) AS trans FROM pilots')->first()->trans;
+            $filedflights = self::$_db->query('SELECT COUNT(pireps.id) AS pireps FROM pireps WHERE status=1 AND DATEDIFF(NOW(), date) <= ?', [$days])->first()->pireps;
+        }
+        
         return $transflights + $filedflights;
+    }
+
+    /**
+     * @return int
+     * @param int $days Time Period
+     */
+    public static function pilotsApplied($days)
+    {
+        self::init();
+
+        $pilots = self::$_db->query("SELECT COUNT(id) AS applied FROM pilots WHERE DATEDIFF(NOW(), joined) < ?", [$days])->first()->applied;
+        
+        return $pilots;
     }
 
     /**

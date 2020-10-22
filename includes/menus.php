@@ -76,6 +76,12 @@ $GLOBALS['admin-menu']["PIREP Management"] = array(
 );
 
 $GLOBALS['admin-menu']["Site Management"] = array(
+    "Site Dashboard" => [
+        "link" => "/admin",
+        "icon" => "fa-tachometer-alt",
+        "permission" => "admin",
+        "needsGold" => false
+    ],
     "Site Settings" => [
         "link" => "/admin/site.php",
         "icon" => "fa-cog",
