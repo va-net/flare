@@ -67,7 +67,7 @@ $ACTIVE_CATEGORY = 'site-management';
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-lg-6 p-3">
+                            <div class="col-lg p-3">
                                 <div class="card p-3 shadow h-100">
                                     <h5 class="font-weight-bold">PIREPs Over Time</h5>
                                     <canvas id="pireps-chart"></canvas>
@@ -107,7 +107,7 @@ $ACTIVE_CATEGORY = 'site-management';
                                     </script>
                                 </div>
                             </div>
-                            <div class="col-lg-6 p-3">
+                            <div class="col-lg p-3">
                                 <div class="card p-3 shadow h-100">
                                     <h5 class="font-weight-bold">Applications Over Time</h5>
                                     <canvas id="pilots-chart"></canvas>
@@ -145,6 +145,39 @@ $ACTIVE_CATEGORY = 'site-management';
                                             options: {}
                                         });
                                     </script>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg p-3">
+                                <div class="card p-3 shadow h-100">
+                                    <h5 class="font-weight-bold">Pilot Leaderboard</h5>
+                                    <p>By hours, past 7 days.</p>
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Pilot</th>
+                                                <th>Hours</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php
+                                                $top = Stats::pilotLeaderboard(5, 'flighttime');
+                                                $i = 1;
+                                                foreach ($top as $t) {
+                                                    echo '<tr><td>';
+                                                    echo $i;
+                                                    echo '</td><td>';
+                                                    echo $t->name;
+                                                    echo '</td><td>';
+                                                    echo Time::secsToString($t->flighttime);
+                                                    echo '</td></tr>';
+                                                    $i++;
+                                                }
+                                            ?>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>

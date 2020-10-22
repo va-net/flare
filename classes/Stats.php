@@ -93,4 +93,18 @@ class Stats {
 
         return self::$_db->query('SELECT COUNT(routes.id) AS total FROM routes')->first()->total;
     }
+
+    /**
+     * @return array
+     * @param string $field Field to Sort By
+     * @param string $order Sort Order
+     * @param int $limit Records to Return
+     */
+    public static function pilotLeaderboard($limit, $field, $order = 'DESC')
+    {
+        self::init();
+
+        $sql = "SELECT u.*, (SELECT SUM(flighttime) FROM pireps p WHERE p.pilotid=u.id AND status=1) AS flighttime FROM pilots u WHERE status=1 ORDER BY {$field} {$order} LIMIT {$limit}";
+        return self::$_db->query($sql)->results();
+    }
 }
