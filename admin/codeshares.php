@@ -48,7 +48,8 @@ $ACTIVE_CATEGORY = 'operations-management';
                         <h3>Codeshares Dashboard</h3>
                         <p>
                             Here you can see active codeshare requests from other VAs. 
-                            You can also make codeshare requests to share routes with other VAs.
+                            You can also make codeshare requests to send a selection of 
+                            your routes to other VAs.
                         </p>
                         <!-- Delete Codeshare Confirmation Modal -->
                         <div class="modal fade" id="confirmShareDelete">
@@ -118,7 +119,7 @@ $ACTIVE_CATEGORY = 'operations-management';
                             <div class="form-group">
                                 <label for="codeshare-routes">Routes</label>
                                 <input required type="text" class="form-control" name="routes" id="codeshare-routes" />
-                                <small class="text-muted">Comma-Separated List of Flight Numbers</small>
+                                <small class="text-muted">Comma-Separated List of Flight Numbers to Send to this VA</small>
                             </div>
                             <div class="form-group">
                                 <label for="codeshare-msg">Optional Message</label>
