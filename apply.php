@@ -20,7 +20,7 @@ if ($user->isLoggedIn()) {
 $csPattern = Config::get('VA_CALLSIGN_FORMAT');
 $trimmedPattern = preg_replace("/\/[a-z]*$/", '', preg_replace("/^\//", '', $csPattern));
 
-if (Token::check() && Input::exists()) {
+if (Token::check(Input::get('token')) && Input::exists()) {
     $validate = new Validate();
     $validation = $validate->check($_POST, array(
         'name' => array(
