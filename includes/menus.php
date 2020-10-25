@@ -142,3 +142,30 @@ $GLOBALS['pilot-menu'] = array(
         "needsGold" => true
     ],
 );
+
+$GLOBALS['top-menu'] = array(
+    "Apply" => [
+        "link" => "/apply.php",
+        "icon" => "fa-id-card",
+        "loginOnly" => false,
+        "mobileHidden" => false,
+    ],
+    "Log In" => [
+        "link" => "/index.php",
+        "icon" => "fa-sign-in-alt",
+        "loginOnly" => false,
+        "mobileHidden" => false,
+    ],
+    "Pilot Panel" => [
+        "link" => "/home.php",
+        "icon" => "fa-user",
+        "loginOnly" => true,
+        "mobileHidden" => true,
+    ],
+    "Log Out" => [
+        "link" => "/logout.php",
+        "icon" => "fa-sign-out-alt",
+        "loginOnly" => true,
+        "mobileHidden" => true,
+    ]
+);
