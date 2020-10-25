@@ -20,71 +20,66 @@ if ($user->isLoggedIn()) {
 $csPattern = Config::get('VA_CALLSIGN_FORMAT');
 $trimmedPattern = preg_replace("/\/[a-z]*$/", '', preg_replace("/^\//", '', $csPattern));
 
-if (Input::exists()) {
-    if (Token::check(Input::get('token'))) {
-        $validate = new Validate();
-        $validation = $validate->check($_POST, array(
-            'name' => array(
-                'required' => true,
-                'min' => 2,
-                'max' => 50
-            ),
-            'ifc' => array(
-                'required' => true
-            ),
-            'email' => array(
-                'required' => true,
-                'min' => 5,
-                'max' => 50,
-                'unique' => 'pilots'
-            ), 
-            'callsign' => array(
-                'required' => true,
-                'max' => 10,
-                'unique' => 'pilots'
-            ),
-            'violand' => array(
-                'required' => true
-            ),
-            'grade' => array(
-                'required' => true
-            ),
-            'password' => array(
-                'required' => true,
-                'min' => 6
-            ),
-            'password-repeat' => array(
-                'required' => true,
-                'min' => 6,
-                'matches' => 'password'
-            )
-        ));
+if (Token::check(Input::get('token')) && Input::exists()) {
+    $validate = new Validate();
+    $validation = $validate->check($_POST, array(
+        'name' => array(
+            'required' => true,
+            'min' => 2,
+            'max' => 50
+        ),
+        'ifc' => array(
+            'required' => true
+        ),
+        'email' => array(
+            'required' => true,
+            'min' => 5,
+            'max' => 50
+        ), 
+        'callsign' => array(
+            'required' => true,
+            'max' => 120,
+            'unique' => 'pilots'
+        ),
+        'violand' => array(
+            'required' => true
+        ),
+        'grade' => array(
+            'required' => true
+        ),
+        'password' => array(
+            'required' => true,
+            'min' => 6
+        ),
+        'password-repeat' => array(
+            'required' => true,
+            'min' => 6,
+            'matches' => 'password'
+        )
+    ));
 
-        if ($validate->passed() && Regex::match($csPattern, Input::get('callsign'))) {
-            $user = new User();
-            try {
-                $user->create(array(
-                    'name' => Input::get('name'),
-                    'email' => Input::get('email'),
-                    'ifc' => Input::get('ifc'),
-                    'password' => Hash::make(Input::get('password')),
-                    'callsign' => Input::get('callsign'),
-                    'grade' => Input::get('grade'),
-                    'violand' => Input::get('violand'),
-                    'notes' => Input::get('notes'),
-                ));
-            } catch(Exception $e) {
-                die($e->getMessage());
-            }
-            Session::flash('success', 'Your application has been submitted! You will be contacted by a staff member in the coming weeks regarding the status of your application.');
-            Redirect::to('index.php');
-        } elseif (!$validate->passed()) {
-            foreach ($validate->errors() as $error) {
-                Session::flash('error', $error);
-            }
-        } else {
-            Session::flash('error', 'Your Callsign is in an Invalid Format');
+    if ($validate->passed() && Regex::match($csPattern, Input::get('callsign'))) {
+        $user = new User();
+        try {
+            $user->create(array(
+                'name' => Input::get('name'),
+                'email' => Input::get('email'),
+                'ifc' => Input::get('ifc'),
+                'password' => Hash::make(Input::get('password')),
+                'callsign' => Input::get('callsign'),
+                'grade' => Input::get('grade'),
+                'violand' => Input::get('violand'),
+                'notes' => Input::get('notes'),
+            ));
+        } catch(Exception $e) {
+            die($e->getMessage());
         }
+        Session::flash('success', 'Your application has been submitted! You will be contacted by a staff member in the coming weeks regarding the status of your application.');
+        Redirect::to('index.php');
+    } elseif (!$validate->passed()) {
+        Session::flash('error', $validate->errors()[0]);
+    } else {
+        Session::flash('error', 'Your Callsign is in an Invalid Format');
     }
 }
 ?>
@@ -165,7 +160,7 @@ if (Input::exists()) {
 
                     <div class="form-group text-center">
                     <label for="comments">Other Comments</label>
-                    <textarea class="form-control publicform" id="comments" name="comments"><?= escape(Input::get('violand')) ?></textarea>
+                    <textarea class="form-control publicform" id="comments" name="comments"><?= escape(Input::get('comments')) ?></textarea>
                     </div>
 
                     <div class="form-group text-center">

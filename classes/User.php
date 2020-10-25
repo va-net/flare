@@ -67,7 +67,7 @@ class User
 
         if ($user) {
             $field = (is_numeric($user)) ? 'id' : 'email';
-            $data = $this->_db->get('pilots', array($field, '=', $user));
+            $data = $this->_db->query("SELECT * FROM pilots WHERE {$field}=? AND status=1", [$user]);
             if ($data->count()) {
                 $this->_data = $data->first();
                 $this->_permissions = [];
@@ -122,6 +122,7 @@ class User
             }
         }
         $_SESSION = array();
+        Events::trigger('user/login-failed');
         return false;
 
     }
@@ -458,7 +459,8 @@ class User
 
         $db = DB::newInstance();
 
-        $results = $db->getAll('pilots')->results();
+        $sql = "SELECT u.*, (SELECT SUM(flighttime) FROM pireps p WHERE p.pilotid=u.id AND status=1) flighttime FROM pilots u";
+        $results = $db->query($sql)->results();
 
         $usersarray = array();
         $statuses = array('Pending', 'Active', 'Inactive');
@@ -471,12 +473,12 @@ class User
                 'name' => $r->name,
                 'email' => $r->email,
                 'ifc' => $r->ifc,
-                'rank' => $this->rank($r->id),
                 'status' => $statuses[$r->status],
                 'joined' => $r->joined,
                 'transhours' => $r->transhours,
                 'transflights' => $r->transflights,
                 'isAdmin' => in_array($r, $admins) ? 1 : 0,
+                'flighttime' => $r->flighttime == null ? 0 : $r->flighttime,
             );
             $usersarray[$x] = $newdata;
             $x++;

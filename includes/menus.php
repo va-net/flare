@@ -76,6 +76,12 @@ $GLOBALS['admin-menu']["PIREP Management"] = array(
 );
 
 $GLOBALS['admin-menu']["Site Management"] = array(
+    "Site Dashboard" => [
+        "link" => "/admin",
+        "icon" => "fa-tachometer-alt",
+        "permission" => "admin",
+        "needsGold" => false
+    ],
     "Site Settings" => [
         "link" => "/admin/site.php",
         "icon" => "fa-cog",
@@ -135,4 +141,31 @@ $GLOBALS['pilot-menu'] = array(
         "icon" => "fa-sync",
         "needsGold" => true
     ],
+);
+
+$GLOBALS['top-menu'] = array(
+    "Apply" => [
+        "link" => "/apply.php",
+        "icon" => "fa-id-card",
+        "loginOnly" => false,
+        "mobileHidden" => false,
+    ],
+    "Log In" => [
+        "link" => "/index.php",
+        "icon" => "fa-sign-in-alt",
+        "loginOnly" => false,
+        "mobileHidden" => false,
+    ],
+    "Pilot Panel" => [
+        "link" => "/home.php",
+        "icon" => "fa-user",
+        "loginOnly" => true,
+        "mobileHidden" => true,
+    ],
+    "Log Out" => [
+        "link" => "/logout.php",
+        "icon" => "fa-sign-out-alt",
+        "loginOnly" => true,
+        "mobileHidden" => true,
+    ]
 );

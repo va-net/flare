@@ -96,7 +96,7 @@ $ACTIVE_CATEGORY = 'plugins';
                                             preg_match_all('/\n.*/m', $plugins, $lines);
                                             foreach ($lines[0] as $l) {
                                                 $segments = explode("\t", $l);
-                                                echo '<tr><td class="align-middle">';
+                                                echo '<tr><td class="align-middle" data-toggle="tooltip" title="'.escape($segments[6]).'">';
                                                 echo $segments[0];
                                                 echo '</td><td class="align-middle">';
                                                 $tags = implode('</span><span class="badge badge-light mx-1">', explode(",", $segments[5]));

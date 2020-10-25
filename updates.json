@@ -505,10 +505,45 @@
         "useUpdater": true,
         "files": [
             "vendor/niklongstone/regex-reverse/src/RegRev/Metacharacter/CharType/CharListInterface.php",
-            
             "version.json"
         ],
         "deletedFiles": [],
         "queries": []
+    },
+    {
+        "tag": "v1.0.0-beta19",
+        "name": "Public Beta 19",
+        "date": "2020-10-22",
+        "notes": "Various Bug Fixes & Authentication Update",
+        "prerelease": true,
+        "useUpdater": true,
+        "files": [
+            "admin/recruitment.php",
+            "apply.php",
+            "classes/User.php",
+            "index.php",
+            "admin/users.php",
+            "admin/site.php",
+            "includes/navbar.php",
+            "update.php",
+            "assets/custom.css",
+            "assets/style.css.php",
+            "includes/header.php",
+            "classes/Config.php",
+            "admin/index.php",
+            "classes/Stats.php",
+            "includes/menus.php",
+            "admin/codeshares.php",
+            "routes.php",
+            "admin/plugins.php",
+            "classes/Plugin.php",
+            "version.json"
+        ],
+        "deletedFiles": [
+            "assets/custom.php"
+        ],
+        "queries": [
+            "INSERT INTO `options` (`name`, `value`) VALUES ('VA_LOGO_URL', '');"
+        ]
     }
 ]

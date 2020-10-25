@@ -20,4 +20,14 @@ class Plugin {
         $data["needsGold"] = false;
         $GLOBALS['admin-menu']['Plugins'][$label] = $data;
     }
+
+    /**
+     * @return null
+     * @param string $label Menu Item Label
+     * @param array $data Menu Item Data
+     */
+    public static function topMenu($label, $data)
+    {
+        $GLOBALS['top-menu'][$label] = $data;
+    }
 }
