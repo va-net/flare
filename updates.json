@@ -523,9 +523,25 @@
             "classes/User.php",
             "index.php",
             "admin/users.php",
+            "admin/site.php",
+            "includes/navbar.php",
+            "update.php",
+            "assets/custom.css",
+            "assets/style.css.php",
+            "includes/header.php",
+            "classes/Config.php",
+            "admin/index.php",
+            "classes/Stats.php",
+            "includes/menus.php",
+            "admin/codeshares.php",
+            "routes.php",
+            "admin/plugins.php",
+            "classes/Plugin.php",
             "version.json"
         ],
-        "deletedFiles": [],
+        "deletedFiles": [
+            "assets/custom.php"
+        ],
         "queries": [
             "INSERT INTO `options` (`name`, `value`) VALUES ('VA_LOGO_URL', '');"
         ]
