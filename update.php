@@ -1016,6 +1016,8 @@ if (Input::get('action') === 'editprofile') {
         }
     }
 
+    $pluginbasic["slug"] = strtolower($pluginbasic["slug"]);
+
     $version = Updater::getVersion();
     $pluginadv = Json::decode(file_get_contents("https://raw.githubusercontent.com/va-net/flare-plugins/master/".$pluginbasic["slug"]."/plugin.json", false, $context));
     if (!in_array($version["tag"], $pluginadv["compatability"]) && $version["prerelease"] == false) {
