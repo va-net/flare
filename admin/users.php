@@ -74,7 +74,7 @@ $ACTIVE_CATEGORY = 'user-management';
                                     echo '</td><td class="mobile-hidden align-middle">';
                                     echo $user["name"];
                                     echo '</td><td class="mobile-hidden align-middle">';
-                                    echo Time::secsToString($user["flighttime"]);
+                                    echo Time::secsToString($user["flighttime"] + $user["transhours"]);
                                     echo '</td><td class="align-middle">';
                                     echo $user["status"];
                                     echo '</td><td class="align-middle">';
