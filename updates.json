@@ -545,5 +545,19 @@
         "queries": [
             "INSERT INTO `options` (`name`, `value`) VALUES ('VA_LOGO_URL', '');"
         ]
+    },
+    {
+        "tag": "v1.0.0-beta19.1",
+        "name": "Public Beta 19.1",
+        "date": "2020-10-25",
+        "notes": "Bug Fixes",
+        "prerelease": true,
+        "useUpdater": true,
+        "files": [
+            "admin/users.php",
+            "version.json"
+        ],
+        "deletedFiles": [],
+        "queries": []
     }
 ]
