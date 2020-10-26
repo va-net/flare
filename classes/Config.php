@@ -17,10 +17,11 @@ class Config
 
     /**
      * @return null
+     * @param bool $force Force Reload
      */
-    private static function loadDbConf()
+    private static function loadDbConf($force = false)
     {
-        if (self::$_dbConfig != []) {
+        if (self::$_dbConfig != [] && !$force) {
             return;
         }
         $db = DB::getInstance();
@@ -47,7 +48,7 @@ class Config
             }
 
             // Check if the Key was Invalid. If so, fall back on the Database
-            if ($config === $GLOBALS['config']) {
+            if ($config === $GLOBALS['config'] && $path != null) {
                 self::loadDbConf();
                 return self::$_dbConfig[$path[0]];
             }
@@ -144,6 +145,8 @@ class Config
         fclose($file);
 
         Events::trigger('config/updated', ['item' => $where]);
+
+        self::loadDbConf(true);
 
         return true;
 
