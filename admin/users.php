@@ -38,6 +38,10 @@ $ACTIVE_CATEGORY = 'user-management';
                     <div id="loader-wrapper"><div id="loader" class="spinner-border spinner-border-sm spinner-custom"></div></div>
                     <div class="loaded">
                         <?php
+                        if (file_exists(__DIR__.'/../install/install.php') && !file_exists(__DIR__.'/../.development')) {
+                            echo '<div class="alert alert-danger text-center">The Install Folder still Exists! Please delete it immediately, it poses a severe security risk.</div>';
+                        }
+                        
                         if (Session::exists('error')) {
                             echo '<div class="alert alert-danger text-center">Error: '.Session::flash('error').'</div>';
                         }
@@ -81,7 +85,7 @@ $ACTIVE_CATEGORY = 'user-management';
                                     echo '<button class="btn btn-primary text-light userEdit" data-callsign="'.$user['callsign'].'" 
                                     data-name="'.$user['name'].'" data-email="'.$user['email'].'" data-ifc="'.$user['ifc'].'" 
                                     data-joined="'.date_format(date_create($user['joined']), 'Y-m-d').'" data-status="'.$user['status'].'" 
-                                    data-id="'.$user['id'].'" data-thrs="'.Time::secsToString($user["transhours"]).'" 
+                                    data-id="'.$user['id'].'" data-thrs="'.Time::secsToString($user["transhours"] + $user["transhours"]).'" 
                                     data-admin="'.$user['isAdmin'].'" data-tflts="'.$user["transflights"].'"><i class="fa fa-edit"></i>
                                     </button>';
                                     echo '&nbsp;<button id="delconfirmbtn" class="btn text-light btn-danger" 

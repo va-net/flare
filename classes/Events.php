@@ -41,7 +41,7 @@ class Events {
     {
         $params = new Event($event, $args);
         foreach (self::$_listeners as $l) {
-            if (($l["event"] == $event || $l["event"] == "*" || preg_match($l["event"], $event) == 1) && $l["action"] != null) {
+            if (($l["event"] == $event || $l["event"] == "*") && $l["action"] != null) {
                 call_user_func_array($l["action"], [$params]);
             }
         }

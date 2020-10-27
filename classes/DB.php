@@ -74,6 +74,8 @@ class DB
                 $this->_count = $this->_query->rowCount();
             } else {
                 $this->_error = true;
+                $this->_results = [];
+                $this->_count = 0;
             }
 
         }
@@ -196,7 +198,7 @@ class DB
      * @return DB
      * @param string $table Table Name
      * @param int|string $id ID of Row
-     * @param array $where ID Column Name
+     * @param string $where ID Column Name
      * @param array $fields Updated Field Names and Values
      */
     public function update($table, $id, $where, $fields = array())

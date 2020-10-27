@@ -545,5 +545,41 @@
         "queries": [
             "INSERT INTO `options` (`name`, `value`) VALUES ('VA_LOGO_URL', '');"
         ]
+    },
+    {
+        "tag": "v1.0.0-beta20",
+        "name": "Public Beta 20",
+        "date": "2020-10-28",
+        "notes": "Various Bug Fixes, Added Logs, ",
+        "prerelease": true,
+        "useUpdater": true,
+        "files": [
+            "update.php",
+            "classes/Events.php",
+            "admin/users.php",
+            "classes/Config.php",
+            "classes/DB.php",
+            "classes/Logger.php",
+            "core/init.php",
+            "admin/site.php",
+            "updater.php",
+            "admin/recruitment.php",
+            "admin/codeshares.php",
+            "admin/events.php",
+            "admin/index.php",
+            "admin/multipliers.php",
+            "admin/news.php",
+            "admin/operations.php",
+            "admin/pireps.php",
+            "admin/plugins.php",
+            "admin/staff.php",
+            "admin/stats.php",
+            "version.json"
+        ],
+        "deletedFiles": [],
+        "queries": [],
+        "newFolders": [
+            "core/logs"
+        ]
     }
 ]

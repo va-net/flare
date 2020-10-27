@@ -50,15 +50,19 @@ $ACTIVE_CATEGORY = 'site-management';
                             });
                         </script>
                         <?php
-                            if (Session::exists('error')) {
-                                echo '<div class="alert alert-danger text-center">Error: '.Session::flash('error').'</div>';
-                            }
-                            if (Session::exists('success')) {
-                                echo '<div class="alert alert-success text-center">'.Session::flash('success').'</div>';
-                            }
+                        if (file_exists(__DIR__.'/../install/install.php') && !file_exists(__DIR__.'/../.development')) {
+                            echo '<div class="alert alert-danger text-center">The Install Folder still Exists! Please delete it immediately, it poses a severe security risk.</div>';
+                        }
+                        
+                        if (Session::exists('error')) {
+                            echo '<div class="alert alert-danger text-center">Error: '.Session::flash('error').'</div>';
+                        }
+                        if (Session::exists('success')) {
+                            echo '<div class="alert alert-success text-center">'.Session::flash('success').'</div>';
+                        }
 
-                            $ver = Updater::getVersion();
-                            $update = Updater::checkUpdate(Config::get('CHECK_PRERELEASE') == 1);
+                        $ver = Updater::getVersion();
+                        $update = Updater::checkUpdate(Config::get('CHECK_PRERELEASE') == 1);
                         ?>
                         <h3>Flare Settings</h3>
                         <p>Here you may configure Flare to be your own.</p>
@@ -71,6 +75,9 @@ $ACTIVE_CATEGORY = 'site-management';
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" id="vanetlink" data-toggle="tab" href="#vanet">VANet Settings</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="maintenancelink" data-toggle="tab" href="#maint">Maintenance</a>
                             </li>
                             <?php if (Config::get('CHECK_PRERELEASE') == 1) { ?>
                                 <li class="nav-item">
@@ -213,6 +220,25 @@ $ACTIVE_CATEGORY = 'site-management';
                                         <td><?= Updater::getVersion()["tag"]; ?></td>
                                     </tr>
                                 </table>
+                            </div>
+                            <div id="maint" class="tab-pane container-fluid p-3 fade">
+                                <h4>Site Maintenance</h4>
+                                <div class="row">
+                                    <div class="col-lg">
+                                        <form action="/update.php" method="post">
+                                            <input hidden name="action" value="clearlogs" />
+                                            <input hidden name="period" value="*" />
+                                            <input type="submit" class="btn bg-custom" value="Clear All Logs" />
+                                        </form>
+                                    </div>
+                                    <div class="col-lg">
+                                        <form action="update.php" method="post">
+                                            <input hidden name="action" value="clearlogs" />
+                                            <input hidden name="period" value="30" />
+                                            <input type="submit" class="btn bg-custom" value="Clear Old Logs" />
+                                        </form>
+                                    </div>
+                                </div>
                             </div>
                             <div id="updates" class="tab-pane container-fluid p-3 fade">
                                 <h4>Flare Updates</h4>

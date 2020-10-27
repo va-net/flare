@@ -17,10 +17,11 @@ class Config
 
     /**
      * @return null
+     * @param bool $force Force Reload
      */
-    private static function loadDbConf()
+    private static function loadDbConf($force = false)
     {
-        if (self::$_dbConfig != []) {
+        if (self::$_dbConfig != [] && !$force) {
             return;
         }
         $db = DB::getInstance();
@@ -34,30 +35,29 @@ class Config
      * @return mixed
      * @param string $path Config Key, Config File Categories Separated by Slashes
      */
-    public static function get($path = null) {
+    public static function get($path) 
+    {
+        $config = $GLOBALS['config'];
+        $path = explode('/', $path);
 
-        if ($path) {
-            $config = $GLOBALS['config'];
-            $path = explode('/', $path);
-
-            foreach ($path as $bit) {
-                if(isset($config[$bit])) {
-                    $config = $config[$bit];
-                }
+        foreach ($path as $bit) {
+            if(isset($config[$bit])) {
+                $config = $config[$bit];
             }
-
-            // Check if the Key was Invalid. If so, fall back on the Database
-            if ($config === $GLOBALS['config']) {
-                self::loadDbConf();
-                return self::$_dbConfig[$path[0]];
-            }
-
-            return $config;
-
         }
 
-        return false;
+        // Check if the Key was Invalid. If so, fall back on the Database
+        if ($config === $GLOBALS['config'] && $path != null) {
+            self::loadDbConf();
+            $path = implode('/', $path);
+            if (array_key_exists($path, self::$_dbConfig)) {
+                return self::$_dbConfig[$path];
+            }
+            
+            return '';
+        }
 
+        return $config;
     }
 
     /**
@@ -122,10 +122,18 @@ class Config
 
         if (count($matches) === 0) {
             $db = DB::getInstance();
-            $ret = $db->update('options', '\''.$where.'\'', 'name', array(
-                'value' => $new
-            ));
-            return !($ret->error());
+            $sql = "SELECT COUNT(name) AS results FROM options WHERE name = ?";
+            $exists = $db->query($sql, [$where])->results()[0]->results;
+            if ($exists > 0) {
+                $res = $db->update('options', "'".$where."'", 'name', ["value" => $new]);
+                return !($res->error());
+            }
+
+            $res = $db->insert('options', [
+                "name" => $where,
+                "value" => $new,
+            ]);
+            return !($res->error());
         }
 
         $currentVal = explode('=>', $matches[0]);
@@ -144,6 +152,8 @@ class Config
         fclose($file);
 
         Events::trigger('config/updated', ['item' => $where]);
+
+        self::loadDbConf(true);
 
         return true;
 
