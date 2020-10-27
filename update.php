@@ -1084,4 +1084,17 @@ if (Input::get('action') === 'editprofile') {
 
     Session::flash('success', 'Plugin Removed');
     Redirect::to('/admin/plugins.php?tab=installed');
+} elseif (Input::get('action') === 'clearlogs') {
+    if (!$user->hasPermission('opsmanage')) {
+        Redirect::to('home.php');
+    }
+
+    if (Input::get('period') == '*') {
+        Logger::clearAll();
+    } else {
+        Logger::clearOld(Input::get('period'));
+    }
+
+    Session::flash('success', 'Logs Cleared');
+    Redirect::to('/admin/site.php?tab=maintenance');
 }

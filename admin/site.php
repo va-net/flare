@@ -72,6 +72,9 @@ $ACTIVE_CATEGORY = 'site-management';
                             <li class="nav-item">
                                 <a class="nav-link" id="vanetlink" data-toggle="tab" href="#vanet">VANet Settings</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="maintenancelink" data-toggle="tab" href="#maint">Maintenance</a>
+                            </li>
                             <?php if (Config::get('CHECK_PRERELEASE') == 1) { ?>
                                 <li class="nav-item">
                                     <a class="nav-link" id="debuglink" data-toggle="tab" href="#debug">Debugging Info</a>
@@ -213,6 +216,25 @@ $ACTIVE_CATEGORY = 'site-management';
                                         <td><?= Updater::getVersion()["tag"]; ?></td>
                                     </tr>
                                 </table>
+                            </div>
+                            <div id="maint" class="tab-pane container-fluid p-3 fade">
+                                <h4>Site Maintenance</h4>
+                                <div class="row">
+                                    <div class="col-lg">
+                                        <form action="/update.php" method="post">
+                                            <input hidden name="action" value="clearlogs" />
+                                            <input hidden name="period" value="*" />
+                                            <input type="submit" class="btn bg-custom" value="Clear All Logs" />
+                                        </form>
+                                    </div>
+                                    <div class="col-lg">
+                                        <form action="update.php" method="post">
+                                            <input hidden name="action" value="clearlogs" />
+                                            <input hidden name="period" value="30" />
+                                            <input type="submit" class="btn bg-custom" value="Clear Old Logs" />
+                                        </form>
+                                    </div>
+                                </div>
                             </div>
                             <div id="updates" class="tab-pane container-fluid p-3 fade">
                                 <h4>Flare Updates</h4>

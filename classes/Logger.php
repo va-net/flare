@@ -60,7 +60,7 @@ class Logger {
         $now = new DateTime();
         $logs = scandir(self::$_logDir);
         foreach ($logs as $l) {
-            $path = $_logDir.'/'.$l;
+            $path = self::$_logDir.'/'.$l;
             if (strpos($l, '.') == 0) continue;
             $lDate = new DateTime(str_replace('.log', '', $l));
             $diff = $lDate->diff($now);
@@ -68,6 +68,8 @@ class Logger {
                 unlink($path);
             }
         }
+
+        Events::trigger('logs/cleared', ["period" => $days]);
     }
 
     /**
@@ -77,10 +79,15 @@ class Logger {
     {
         $logs = scandir(self::$_logDir);
         foreach ($logs as $l) {
-            $path = $_logDir.'/'.$l;
+            $path = self::$_logDir.'/'.$l;
             if (strpos($l, '.') == 0) continue;
+            if (strpos(strtolower(php_uname('s')), "window") !== FALSE) {
+                $path = str_replace('/', '\\', $path);
+            }
             unlink($path);
         }
+
+        Events::trigger('logs/cleared', ["period" => "*"]);
     }
 
 }
