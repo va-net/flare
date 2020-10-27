@@ -212,8 +212,7 @@ if (Input::get('action') === 'editprofile') {
 
     try {
         $user->update(array(
-            'status' => 3,
-            'declinereason' => Input::get('declinereason')
+            'status' => 3
         ), Input::get('id'));
     } catch (Exception $e) {
         Session::flash('error', 'There was an error Declining the Application.');

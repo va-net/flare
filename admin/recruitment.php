@@ -152,7 +152,7 @@ $ACTIVE_CATEGORY = 'user-management';
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title" id="usermodal-title"></h5>
+                                            <h5 class="modal-title" id="declinemodal-title">Decline Application</h5>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                             </button>
@@ -162,14 +162,14 @@ $ACTIVE_CATEGORY = 'user-management';
                                                 <input hidden class="form-control" name="action" value="declineapplication">
                                                 <input hidden class="form-control" name="id" value="'.$user['id'].'">
                                                 <div class="form-group">
-                                                    <label for="usermodal-status">Reason for decline of application</label>
+                                                    <label for="declinemodal-status">Reason for decline of application</label>
                                                     <input required type="text" class="form-control" name="declinereason">
                                                 </div>
                                             </form>
                                         </div>
                                         <div class="modal-footer">
                                             <button class="btn bg-custom" form="declinemodal" type="submit">Decline</button>
-                                            <button type="button" class="btn bg-secondary" data-dismiss="modal">Close</button>
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                         </div>
                                     </div>
                                 </div>
