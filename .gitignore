@@ -7,3 +7,4 @@ classes/curl_cookie.txt
 routes.json
 aircraft.json
 test.php
+core/logs/*

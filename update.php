@@ -989,7 +989,9 @@ if (Input::get('action') === 'editprofile') {
         $slash = "\\";
     }
 
-    $url = "https://raw.githubusercontent.com/va-net/flare-plugins/master/plugins.tsv";
+    $GH_BRANCH = "master";
+
+    $url = "https://raw.githubusercontent.com/va-net/flare-plugins/{$GH_BRANCH}/plugins.tsv";
     $opts = array(
         'http'=>array(
             'method'=>"GET",
@@ -1016,8 +1018,10 @@ if (Input::get('action') === 'editprofile') {
         }
     }
 
+    $pluginbasic["slug"] = strtolower($pluginbasic["slug"]);
+
     $version = Updater::getVersion();
-    $pluginadv = Json::decode(file_get_contents("https://raw.githubusercontent.com/va-net/flare-plugins/master/".$pluginbasic["slug"]."/plugin.json", false, $context));
+    $pluginadv = Json::decode(file_get_contents("https://raw.githubusercontent.com/va-net/flare-plugins/{$GH_BRANCH}/".$pluginbasic["slug"]."/plugin.json", false, $context));
     if (!in_array($version["tag"], $pluginadv["compatability"]) && $version["prerelease"] == false) {
         Session::flash('error', 'This plugin does not support this version of Flare.');
         Redirect::to('/admin/plugins.php');
@@ -1084,4 +1088,17 @@ if (Input::get('action') === 'editprofile') {
     Redirect::to('/admin/plugins.php?tab=installed');
 } elseif (Input::get('action') === 'addeventtocal') {
     EventCalendar::createAndDownloadEvent(Input::get('name'), Input::get('description'), Input::get('dateTime'), Input::get('from'), Input::get('to'));
+} elseif (Input::get('action') === 'clearlogs') {
+    if (!$user->hasPermission('opsmanage')) {
+        Redirect::to('home.php');
+    }
+
+    if (Input::get('period') == '*') {
+        Logger::clearAll();
+    } else {
+        Logger::clearOld(Input::get('period'));
+    }
+
+    Session::flash('success', 'Logs Cleared');
+    Redirect::to('/admin/site.php?tab=maintenance');
 }

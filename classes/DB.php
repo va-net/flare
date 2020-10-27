@@ -74,6 +74,8 @@ class DB
                 $this->_count = $this->_query->rowCount();
             } else {
                 $this->_error = true;
+                $this->_results = [];
+                $this->_count = 0;
             }
 
         }

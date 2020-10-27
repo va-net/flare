@@ -17,10 +17,11 @@ class Config
 
     /**
      * @return null
+     * @param bool $force Force Reload
      */
-    private static function loadDbConf()
+    private static function loadDbConf($force = false)
     {
-        if (self::$_dbConfig != []) {
+        if (self::$_dbConfig != [] && !$force) {
             return;
         }
         $db = DB::getInstance();
@@ -47,7 +48,7 @@ class Config
             }
 
             // Check if the Key was Invalid. If so, fall back on the Database
-            if ($config === $GLOBALS['config']) {
+            if ($config === $GLOBALS['config'] && $path != null) {
                 self::loadDbConf();
                 return self::$_dbConfig[$path[0]];
             }
@@ -120,11 +121,11 @@ class Config
         $regex = '/\''.$where.'\' => .*/m';
         preg_match($regex, $currentConfFile, $matches);
 
+        $sql = "INSERT INTO options (name, value) SELECT * FROM (SELECT '?', '?') AS tmp WHERE NOT EXISTS (SELECT name FROM options WHERE name = '?') LIMIT 1;";
+
         if (count($matches) === 0) {
             $db = DB::getInstance();
-            $ret = $db->update('options', '\''.$where.'\'', 'name', array(
-                'value' => $new
-            ));
+            $ret = $db->query($sql, array($where, $new, $where));
             return !($ret->error());
         }
 
@@ -144,6 +145,8 @@ class Config
         fclose($file);
 
         Events::trigger('config/updated', ['item' => $where]);
+
+        self::loadDbConf(true);
 
         return true;
 
