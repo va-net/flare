@@ -154,7 +154,15 @@ if (!$user->isLoggedIn()) {
                                         </div>
                                     </div>
                                 <?php endif; ?>
-
+                                <form id="addtocal" action="update.php" method="post">
+                                    <input hidden name="action" value="addeventtocal" />
+                                    <input hidden name="name" value="<?= $event['name'] ?>" />
+                                    <input hidden name="description" value="<?= $event['description'] ?>" />
+                                    <input hidden name="dateTime" value="<?= $event['dateTime'] ?>" />
+                                    <input hidden name="from" value="<?= $event['departureAirport'] ?>" />
+                                    <input hidden name="to" value="<?= $event['arrivalAirport'] ?>" />
+                                </form>
+                                <button form="addtocal" type="submit" class="btn bg-custom text-light" name="addtocalsubmit">Add to calendar</button>
                                 <div class="text-center">
                                     <hr />
                                     <small><a href="events.php">Back to All Events</a></small>
