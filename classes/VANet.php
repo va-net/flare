@@ -55,6 +55,7 @@ class VANet
      */
     public static function isVeKey($key = null)
     {
+
         if ($key == null) {
             $key = Config::get('vanet/api_key');
         }

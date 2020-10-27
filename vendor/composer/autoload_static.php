@@ -15,10 +15,6 @@ class ComposerStaticInitce89cc5e9c24bcbf7c1b97126e45e811
         array (
             'PHPMailer\\PHPMailer\\' => 20,
         ),
-        'E' => 
-        array (
-            'Eluceo\\iCal\\' => 12,
-        ),
     );
 
     public static $prefixDirsPsr4 = array (
@@ -29,10 +25,6 @@ class ComposerStaticInitce89cc5e9c24bcbf7c1b97126e45e811
         'PHPMailer\\PHPMailer\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpmailer/phpmailer/src',
-        ),
-        'Eluceo\\iCal\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/eluceo/ical/src',
         ),
     );
 

@@ -8,5 +8,4 @@ $baseDir = dirname($vendorDir);
 return array(
     'RegRev\\' => array($vendorDir . '/niklongstone/regex-reverse/src/RegRev'),
     'PHPMailer\\PHPMailer\\' => array($vendorDir . '/phpmailer/phpmailer/src'),
-    'Eluceo\\iCal\\' => array($vendorDir . '/eluceo/ical/src'),
 );
