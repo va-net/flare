@@ -220,7 +220,7 @@ if (Input::get('action') === 'editprofile') {
         Redirect::to('/admin/recruitment.php');
     }
 
-    Events::trigger('user/declined', ['id' => Input::get('id')]);
+    Events::trigger('user/declined', ['id' => Input::get('id'), 'reason' => Input::get('declinereason')]);
 
     Session::flash('success', 'Application Declined Successfully');
     Redirect::to('/admin/recruitment.php');
