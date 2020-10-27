@@ -50,15 +50,19 @@ $ACTIVE_CATEGORY = 'site-management';
                             });
                         </script>
                         <?php
-                            if (Session::exists('error')) {
-                                echo '<div class="alert alert-danger text-center">Error: '.Session::flash('error').'</div>';
-                            }
-                            if (Session::exists('success')) {
-                                echo '<div class="alert alert-success text-center">'.Session::flash('success').'</div>';
-                            }
+                        if (file_exists(__DIR__.'/../install/install.php')) {
+                            echo '<div class="alert alert-danger text-center">The Install Folder still Exists! Please delete it immediately, it poses a severe security risk.</div>';
+                        }
+                        
+                        if (Session::exists('error')) {
+                            echo '<div class="alert alert-danger text-center">Error: '.Session::flash('error').'</div>';
+                        }
+                        if (Session::exists('success')) {
+                            echo '<div class="alert alert-success text-center">'.Session::flash('success').'</div>';
+                        }
 
-                            $ver = Updater::getVersion();
-                            $update = Updater::checkUpdate(Config::get('CHECK_PRERELEASE') == 1);
+                        $ver = Updater::getVersion();
+                        $update = Updater::checkUpdate(Config::get('CHECK_PRERELEASE') == 1);
                         ?>
                         <h3>Flare Settings</h3>
                         <p>Here you may configure Flare to be your own.</p>
