@@ -50,7 +50,7 @@ $ACTIVE_CATEGORY = 'site-management';
                             });
                         </script>
                         <?php
-                        if (file_exists(__DIR__.'/../install/install.php')) {
+                        if (file_exists(__DIR__.'/../install/install.php') && !file_exists(__DIR__.'/../.development')) {
                             echo '<div class="alert alert-danger text-center">The Install Folder still Exists! Please delete it immediately, it poses a severe security risk.</div>';
                         }
                         
