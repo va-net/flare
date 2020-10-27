@@ -35,30 +35,29 @@ class Config
      * @return mixed
      * @param string $path Config Key, Config File Categories Separated by Slashes
      */
-    public static function get($path = null) {
+    public static function get($path) 
+    {
+        $config = $GLOBALS['config'];
+        $path = explode('/', $path);
 
-        if ($path) {
-            $config = $GLOBALS['config'];
-            $path = explode('/', $path);
-
-            foreach ($path as $bit) {
-                if(isset($config[$bit])) {
-                    $config = $config[$bit];
-                }
+        foreach ($path as $bit) {
+            if(isset($config[$bit])) {
+                $config = $config[$bit];
             }
-
-            // Check if the Key was Invalid. If so, fall back on the Database
-            if ($config === $GLOBALS['config'] && $path != null) {
-                self::loadDbConf();
-                return self::$_dbConfig[$path[0]];
-            }
-
-            return $config;
-
         }
 
-        return false;
+        // Check if the Key was Invalid. If so, fall back on the Database
+        if ($config === $GLOBALS['config'] && $path != null) {
+            self::loadDbConf();
+            $path = implode('/', $path);
+            if (array_key_exists($path, self::$_dbConfig)) {
+                return self::$_dbConfig[$path];
+            }
+            
+            return '';
+        }
 
+        return $config;
     }
 
     /**
@@ -121,12 +120,20 @@ class Config
         $regex = '/\''.$where.'\' => .*/m';
         preg_match($regex, $currentConfFile, $matches);
 
-        $sql = "INSERT INTO options (name, value) SELECT * FROM (SELECT '?', '?') AS tmp WHERE NOT EXISTS (SELECT name FROM options WHERE name = '?') LIMIT 1;";
-
         if (count($matches) === 0) {
             $db = DB::getInstance();
-            $ret = $db->query($sql, array($where, $new, $where));
-            return !($ret->error());
+            $sql = "SELECT COUNT(name) AS results FROM options WHERE name = ?";
+            $exists = $db->query($sql, [$where])->results()[0]->results;
+            if ($exists > 0) {
+                $res = $db->update('options', "'".$where."'", 'name', ["value" => $new]);
+                return !($res->error());
+            }
+
+            $res = $db->insert('options', [
+                "name" => $where,
+                "value" => $new,
+            ]);
+            return !($res->error());
         }
 
         $currentVal = explode('=>', $matches[0]);
