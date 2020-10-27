@@ -121,11 +121,11 @@ class Config
         $regex = '/\''.$where.'\' => .*/m';
         preg_match($regex, $currentConfFile, $matches);
 
+        $sql = "INSERT INTO options (name, value) SELECT * FROM (SELECT '?', '?') AS tmp WHERE NOT EXISTS (SELECT name FROM options WHERE name = '?') LIMIT 1;";
+
         if (count($matches) === 0) {
             $db = DB::getInstance();
-            $ret = $db->update('options', '\''.$where.'\'', 'name', array(
-                'value' => $new
-            ));
+            $ret = $db->query($sql, array($where, $new, $where));
             return !($ret->error());
         }
 
