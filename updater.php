@@ -19,6 +19,10 @@ if (!$user->hasPermission('opsmanage')) {
     die();
 }
 
+$RELEASES_URL = "https://api.github.com/repos/va-net/flare/releases";
+$TAGS_URL = "https://api.github.com/repos/va-net/flare/tags";
+$RAW_URL = "https://raw.githubusercontent.com/va-net/flare/";
+
 $current = Updater::getVersion();
 
 // Get Releases
@@ -29,7 +33,7 @@ $opts = array(
     )
 );
 $context = stream_context_create($opts);
-$releases = Json::decode(file_get_contents("https://api.github.com/repos/va-net/flare/releases", false, $context));
+$releases = Json::decode(file_get_contents($RELEASES_URL, false, $context));
 
 // Find next applicable release
 $currentFound = false;
@@ -54,7 +58,7 @@ if ($next == null) {
 }
 
 // Get Tag Info
-$tags = Json::decode(file_get_contents("https://api.github.com/repos/va-net/flare/tags", false, $context));
+$tags = Json::decode(file_get_contents($TAGS_URL, false, $context));
 $nextTag = null;
 foreach ($tags as $t) {
     if ($t["name"] == $next["tag_name"] && $nextTag == null) {
@@ -64,7 +68,7 @@ foreach ($tags as $t) {
 }
 
 // Get the updates.json file
-$updateData = @file_get_contents("https://raw.githubusercontent.com/va-net/flare/".urlencode($nextTag["commit"]["sha"])."/updates.json");
+$updateData = @file_get_contents($RAW_URL.urlencode($nextTag["commit"]["sha"])."/updates.json");
 // Check Release is Compatible
 if ($updateData === FALSE) {
     echo "This Version of Flare does not support the Updater.";
@@ -112,7 +116,7 @@ if (array_key_exists('newFolders', $nextUpdate)) {
 
 // Update Files
 foreach ($nextUpdate["files"] as $file) {
-    $fileData = file_get_contents("https://raw.githubusercontent.com/va-net/flare/".urlencode($nextTag["commit"]["sha"])."/".urlencode($file));
+    $fileData = file_get_contents($RAW_URL.urlencode($nextTag["commit"]["sha"])."/".urlencode($file));
     $file = str_replace("/", $slash, $file); 
     if ($fileData === FALSE || file_put_contents(__DIR__.$slash.$file, $fileData) === FALSE) {
         echo "Error Updating File ".$file;
