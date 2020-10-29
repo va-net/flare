@@ -35,7 +35,7 @@ class EventCalendar {
             ->setLocation($location)
             ->setOccurrence(
                 new SingleDay(
-                    new Date(DateTimeImmutable::createFromFormat('Y-m-d H:m', $dateTime))
+                    new Date(DateTimeImmutable::createFromFormat('Y-m-d H:i', $dateTime))
                 )
             );
 
@@ -43,11 +43,11 @@ class EventCalendar {
 
         $componentFactory = new CalendarFactory();
         $calendarComponent = $componentFactory->createCalendar($calendar);
-        
+
         header('Content-Type: text/calendar; charset=utf-8');
         header('Content-Disposition: attachment; filename="'.$name.'.ics"');
-        
-        echo $calendarComponent;
+
+        die ($calendarComponent);
     }
 
 }

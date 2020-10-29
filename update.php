@@ -1087,7 +1087,8 @@ if (Input::get('action') === 'editprofile') {
     Session::flash('success', 'Plugin Removed');
     Redirect::to('/admin/plugins.php?tab=installed');
 } elseif (Input::get('action') === 'addeventtocal') {
-    EventCalendar::createAndDownloadEvent(Input::get('name'), Input::get('description'), Input::get('dateTime'), Input::get('from'), Input::get('to'));
+    EventCalendar::createAndDownloadEvent(Input::get('name'), strip_tags(Input::get('description')), "2020-11-02 16:34", Input::get('from'), Input::get('to'));
+    Redirect::to('events.php');
 } elseif (Input::get('action') === 'clearlogs') {
     if (!$user->hasPermission('opsmanage')) {
         Redirect::to('home.php');
