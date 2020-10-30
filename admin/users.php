@@ -236,7 +236,7 @@ $ACTIVE_CATEGORY = 'user-management';
                                 $("#usermodal-thrs").val(userThrs);
                                 $("#usermodal-tflts").val(userTflts);
                                 $("#usermodal-id").val(userId);
-                                $("#usermodal-admin-" + userAdmin).attr("selected", true);
+                                $("#usermodal-admin").val(userAdmin);
 
                                 $("#usermodal-title").text("Edit User - " + userCallsign);
                                 reverseFormatFlightTime();
