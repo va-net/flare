@@ -1085,8 +1085,6 @@ if (Input::get('action') === 'editprofile') {
 
     Session::flash('success', 'Plugin Removed');
     Redirect::to('/admin/plugins.php?tab=installed');
-} elseif (Input::get('action') === 'addeventtocal') {
-    EventCalendar::createAndDownloadEvent(Input::get('name'), Input::get('description'), Input::get('dateTime'), Input::get('from'), Input::get('to'));
 } elseif (Input::get('action') === 'clearlogs') {
     if (!$user->hasPermission('opsmanage')) {
         Redirect::to('home.php');
