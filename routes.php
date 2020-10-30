@@ -114,7 +114,7 @@ if (!$user->isLoggedIn()) {
                                         array_push($searchwhere, 'aircraftid = ?');
                                         array_push($stmts, Input::get('aircraft'));
                                     }
-                                    if (!empty(Input::get('duration')) || Input::get('duration') == 0) {
+                                    if (!empty(Input::get('duration')) || Input::get('duration') === '0') {
                                         if (Input::get('duration') == 0) {
                                             array_push($searchwhere, 'duration <= ?');
                                             array_push($stmts, 3600);
