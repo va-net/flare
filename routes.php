@@ -113,7 +113,7 @@ if (!$user->isLoggedIn()) {
                                         array_push($searchwhere, 'aircraftid = ?');
                                         array_push($stmts, Input::get('aircraft'));
                                     }
-                                    if (!empty(Input::get('duration'))) {
+                                    if (!empty(Input::get('duration')) || Input::get('duration') == 0) {
                                         if (Input::get('duration') == 0) {
                                             array_push($searchwhere, 'duration <= ?');
                                             array_push($stmts, 3600);
@@ -128,7 +128,6 @@ if (!$user->isLoggedIn()) {
                                             array_push($stmts, (Input::get('duration') + 1) * 3600);
                                         }
                                     }
-
                                     $query = 'SELECT routes.fltnum, routes.dep, routes.arr, routes.duration, routes.id, routes.aircraftid, 
                                     aircraft.name AS aircraft, aircraft.liveryname AS livery FROM routes INNER JOIN aircraft ON aircraft.id = routes.aircraftid';
                                     $i = 0;
