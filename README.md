@@ -1,4 +1,5 @@
 # Flare
+
 ![PHP Composer](https://github.com/VA-Net/Flare/workflows/PHP%20Composer/badge.svg)
 
 Modern and Responsive VA Crew Center - Designed for Infinite Flight and Integrated with VANet.
@@ -12,6 +13,7 @@ Installation is easy - download the latest [release](https://github.com/va-net/F
 For all instructions on how to use and configure Flare, please visit the [community tutorials](https://vanet.app/tutorials).
 
 ## Contributing
+
 Thanks for your interest in helping make Flare better! If you wish to contribute, fork the `dev` branch, make your changes then open a Pull Request.
 
 ## Patreon

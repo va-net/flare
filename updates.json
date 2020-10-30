@@ -581,5 +581,22 @@
         "newFolders": [
             "core/logs"
         ]
+    },
+    {
+        "tag": "v1.0.0-beta21",
+        "name": "Public Beta 21",
+        "date": "2020-10-30",
+        "notes": "Various Bug Fixes",
+        "prerelease": true,
+        "useUpdater": true,
+        "files": [
+            "admin/users.php",
+            "classes/User.php",
+            "routes.php",
+            "version.json"
+        ],
+        "deletedFiles": [],
+        "queries": [],
+        "newFolders": []
     }
 ]

@@ -466,6 +466,7 @@ class User
         $statuses = array('Pending', 'Active', 'Inactive');
         $x = 0;
         $admins = Permissions::usersWith('admin');
+        $admins = array_map(function($item) { return $item->id; }, $admins);
         foreach ($results as $r) {
             $newdata = array(
                 'id' => $r->id,
@@ -477,7 +478,7 @@ class User
                 'joined' => $r->joined,
                 'transhours' => $r->transhours,
                 'transflights' => $r->transflights,
-                'isAdmin' => in_array($r, $admins) ? 1 : 0,
+                'isAdmin' => in_array($r->id, $admins) ? 1 : 0,
                 'flighttime' => $r->flighttime == null ? 0 : $r->flighttime,
             );
             $usersarray[$x] = $newdata;

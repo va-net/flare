@@ -78,7 +78,7 @@ $ACTIVE_CATEGORY = 'user-management';
                                     echo '</td><td class="mobile-hidden align-middle">';
                                     echo $user["name"];
                                     echo '</td><td class="mobile-hidden align-middle">';
-                                    echo Time::secsToString($user["flighttime"]);
+                                    echo Time::secsToString($user["flighttime"] + $user["transhours"]);
                                     echo '</td><td class="align-middle">';
                                     echo $user["status"];
                                     echo '</td><td class="align-middle">';
@@ -236,7 +236,7 @@ $ACTIVE_CATEGORY = 'user-management';
                                 $("#usermodal-thrs").val(userThrs);
                                 $("#usermodal-tflts").val(userTflts);
                                 $("#usermodal-id").val(userId);
-                                $("#usermodal-admin-" + userAdmin).attr("selected", true);
+                                $("#usermodal-admin").val(userAdmin);
 
                                 $("#usermodal-title").text("Edit User - " + userCallsign);
                                 reverseFormatFlightTime();
