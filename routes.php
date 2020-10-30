@@ -56,7 +56,8 @@ if (!$user->isLoggedIn()) {
                                     <?php
                                         $aircraft = Aircraft::getAvailableAircraft($user->rank(null, true))->results();
                                         foreach ($aircraft as $ac) {
-                                            echo '<option value="'.$ac->id.'">'.$ac->name.' ('.$ac->liveryname.')</option>';
+                                            $notes = $ac->notes == null ? '' : ' - '.$ac->notes;
+                                            echo '<option value="'.$ac->id.'">'.$ac->name.' ('.$ac->liveryname.')'.$notes.'</option>';
                                         }
                                     ?>
                                 </select>
