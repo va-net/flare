@@ -1,7 +1,7 @@
 # Flare
 
 ![PHP Composer](https://github.com/VA-Net/Flare/workflows/PHP%20Composer/badge.svg)
-[![Discord](https://img.shields.io/discord/591914197219016707.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/cK2RcdT)
+[![Discord](https://img.shields.io/discord/768262837381365770.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/cK2RcdT)
 
 Modern and Responsive VA Crew Center - Designed for Infinite Flight and Integrated with VANet.
 
