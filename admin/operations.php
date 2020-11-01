@@ -569,7 +569,7 @@ $ACTIVE_CATEGORY = 'operations-management';
                                 Please note when you are importing aircraft, they will all be set to the default rank.<br /><br />
 
                                 Alternatively, you can import your routes from the phpVMS 
-                                format <a href="admin.php?page=opsmanage&section=phpvms">here</a>.
+                                format <a href="/admin/operations.php?section=phpvms">here</a>.
                             </p>
 
                             <ul class="nav nav-tabs nav-dark justify-content-center">
