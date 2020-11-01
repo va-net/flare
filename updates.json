@@ -598,5 +598,20 @@
         "deletedFiles": [],
         "queries": [],
         "newFolders": []
+    },
+    {
+        "tag": "v1.0.0",
+        "name": "Version 1",
+        "date": "2020-11-01",
+        "notes": "Flare has now been officially released!",
+        "prerelease": false,
+        "useUpdater": true,
+        "files": [
+            "routes.php",
+            "version.json"
+        ],
+        "deletedFiles": [],
+        "queries": [],
+        "newFolders": []
     }
 ]
