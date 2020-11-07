@@ -350,16 +350,25 @@ class User
     /**
      * @return int
      * @param int $id User ID
+     * @param int $limit Row Limit
      */
-    public function fetchPireps($id = null)
+    public function fetchPireps($id = null, $limit = null)
     {
 
         if ($id == null) {
             $id = $this->data()->id;
         }
 
-        return $this->_db->query('SELECT pireps.*, aircraft.name AS aircraft FROM pireps INNER JOIN aircraft ON pireps.aircraftid=aircraft.id WHERE pilotid = ? ORDER BY date DESC', array($id));
-        //return $this->_db->get('pireps', array('pilotid', '=', $id), array('date', 'DESC'));
+        if (!is_numeric($limit)) {
+            throw new Exception("Limit Parameter is NaN");
+        }
+
+        $sql = "SELECT pireps.*, aircraft.name AS aircraft FROM pireps INNER JOIN aircraft ON pireps.aircraftid=aircraft.id WHERE pilotid = ? ORDER BY date DESC";
+        if ($limit != null) {
+            $sql .= " LIMIT {$limit}";
+        }
+
+        return $this->_db->query($sql, array($id));
 
     }
     
@@ -370,25 +379,19 @@ class User
      */
     public function recentPireps($id = null, $num = 10) 
     {
-
         if (!$id && $this->isLoggedIn()) {
             $id = $this->data()->id;
         }
 
-        $results = $this->fetchPireps($id);
+        $results = $this->fetchPireps($id, $num)->results();
 
-        $x = 0;
-        $counter = 0;
-        $pireps = array();
-        $statuses = array('Pending', 'Approved', 'Denied');
-
-        if ($results->count() < 1) {
-            return false;
+        if (count($results) < 1) {
+            return [];
         }
 
-        $myPireps = $results->results();
-        foreach ($myPireps as $pirep) {
-            $newdata = array(
+        $pireps = array_map(function($pirep) {
+            $statuses = array('Pending', 'Approved', 'Denied');
+            return array(
                 'id' => $pirep->id,
                 'number' => $pirep->flightnum,
                 'departure' => $pirep->departure,
@@ -399,15 +402,8 @@ class User
                 'multi' => $pirep->multi,
                 'aircraft' => $pirep->aircraft,
             );
-            $pireps[$x] = $newdata;
-            $counter++;
-            if ($counter >= $num) {
-                break;
-            }
-            $x++;
-        }
+        }, $results);
         return $pireps;
-
     }
 
     /**

@@ -613,5 +613,24 @@
         "deletedFiles": [],
         "queries": [],
         "newFolders": []
+    },
+    {
+        "tag": "v1.0.1",
+        "name": "Version 1.0.1",
+        "date": "2020-11-7",
+        "notes": "Various Bug Fixes",
+        "prerelease": false,
+        "useUpdater": true,
+        "files": [
+            "admin/operations.php",
+            "admin/index.php",
+            "admin/plugins.php",
+            "update.php",
+            "classes/User.php",
+            "version.json"
+        ],
+        "deletedFiles": [],
+        "queries": [],
+        "newFolders": []
     }
 ]

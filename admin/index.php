@@ -82,6 +82,7 @@ $ACTIVE_CATEGORY = 'site-management';
                                         $allpireps = Pirep::fetchAll();
                                         
                                         foreach ($allpireps as $p) {
+                                            $p['date'] = date_format(date_create($p['date']), "Y-m-d");
                                             if (!array_key_exists($p['date'], $pirepsAssoc)) {
                                                 $pirepsAssoc[$p['date']] = 1;
                                             } else {
@@ -122,6 +123,7 @@ $ACTIVE_CATEGORY = 'site-management';
                                         $allpilots = $user->getAllUsers();
                                         
                                         foreach ($allpilots as $p) {
+                                            $p['joined'] = date_format(date_create($p['joined']), "Y-m-d");
                                             if (!array_key_exists($p['joined'], $pilotsAssoc)) {
                                                 $pilotsAssoc[$p['joined']] = 1;
                                             } else {
