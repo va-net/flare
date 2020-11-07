@@ -100,6 +100,9 @@ $ACTIVE_CATEGORY = 'plugins';
                                             preg_match_all('/\n.*/m', $plugins, $lines);
                                             foreach ($lines[0] as $l) {
                                                 $segments = explode("\t", $l);
+                                                $segments = array_map(function($x) {
+                                                    return trim($x);
+                                                }, $segments);
                                                 echo '<tr><td class="align-middle" data-toggle="tooltip" title="'.escape($segments[6]).'">';
                                                 echo $segments[0];
                                                 echo '</td><td class="align-middle">';
