@@ -625,7 +625,9 @@
             "admin/operations.php",
             "admin/index.php",
             "admin/plugins.php",
-            "update.php"
+            "update.php",
+            "classes/User.php",
+            "version.json"
         ],
         "deletedFiles": [],
         "queries": [],
