@@ -84,7 +84,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
     </ul>
     <ul class="navbar-nav ml-auto">
         <li class="nav-item mobile-hidden">
-            <a class="nav-link" href="#" id="myNotifications-btn" data-toggle="dropdown" data-target="myNotifications" aria-haspopup="true" aria-expanded="false" style="color: <?= $textcol ?>!important;"><i class="fa fa-bell"></i><span class="badge badge-icon badge-danger" style="font-size:10px;">3</span></a>
+            <a class="nav-link" href="#" id="myNotifications-btn" data-toggle="dropdown" data-target="myNotifications" aria-haspopup="true" aria-expanded="false" style="color: <?= $textcol ?>!important;"><i class="fa fa-bell"></i></a>
             <div class="dropdown-menu dropdown-menu-right m-2" id="myNotifications">
                 <span class="dropdown-item">
                     <i class="fa fa-check"></i>&nbsp;&nbsp;<b>PIREP Accepted</b><br />
