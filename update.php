@@ -238,7 +238,7 @@ if (Input::get('action') === 'editprofile') {
         Redirect::to('/admin/recruitment.php');
     }
 
-    Events::trigger('user/accepted', Input::get('accept'));
+    Events::trigger('user/accepted', [Input::get('accept')]);
 
     Session::flash('success', 'Application Accepted Successfully!');
     Redirect::to('/admin/recruitment.php');
@@ -314,7 +314,7 @@ if (Input::get('action') === 'editprofile') {
         'content' => Input::get('content'),
         'author' => Input::get('author')
     ));
-    Session::flash('success', 'News Article Added Successfully! ');
+    Session::flash('success', 'News Article Added Successfully!');
     Redirect::to('/admin/news.php');
 } elseif (Input::get('action') === 'deleteaircraft') {
     if (!$user->hasPermission('opsmanage')) {
