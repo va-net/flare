@@ -122,3 +122,9 @@ table {
 .spinner-custom {
     color: <?= Config::get('site/colour_main_hex') ?>;
 }
+
+.badge-icon {
+    position: relative;
+    top: -10px;
+    left: -5px;
+}
