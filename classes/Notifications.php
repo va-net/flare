@@ -41,7 +41,8 @@ class Notifications {
 
         if (!is_numeric($limit)) throw new Exception("Parameter Limit must be Numeric");
 
-        $sql = "SELECT * FROM notifications WHERE pilotid=? OR pilotid=0 ORDER BY datetime DESC LIMIT {$limit}";
+        $sql = "SELECT *, DATE_FORMAT(CONVERT_TZ(`datetime`, @@session.time_zone, '+00:00'), '%Y-%m-%dT%TZ') AS formattedDate FROM notifications 
+                WHERE pilotid=? OR pilotid=0 ORDER BY datetime DESC LIMIT {$limit}";
         
         return self::$_db->query($sql, [$userId])->results();
     }
@@ -125,6 +126,7 @@ class Notifications {
      */
     private static function handlePirep($ev)
     {
+        self::init();
         $args = $ev->params;
         if ($ev->event == 'pirep/accepted') {
             $pirep = self::$_db->get('pireps', ['id', '=', $args['id']])->results();

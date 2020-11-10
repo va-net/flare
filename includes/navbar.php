@@ -89,7 +89,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                 <?php
                 $notifications = array_map(function($n) {
                     return '<div class="dropdown-item">
-                        <small class="d-block m-0 p-0"><small class="moment">'.$n->datetime.'</small></small>
+                        <small class="d-block m-0 p-0"><small class="moment">'.$n->formattedDate.'</small></small>
                         <span class="d-block m-0 p-0"><i class="fa '.$n->icon.'"></i>&nbsp;&nbsp;<b>'.$n->subject.'</b></span>
                         <small class="d-block m-0 p-0">'.$n->content.'</small>
                     </div>';
