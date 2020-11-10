@@ -632,5 +632,23 @@
         "deletedFiles": [],
         "queries": [],
         "newFolders": []
+    },
+    {
+        "tag": "v1.1.0-beta1",
+        "name": "Version 1.1.0 Beta 1",
+        "date": "2020-11-11",
+        "notes": "Added Notifications System",
+        "prerelease": true,
+        "useUpdater": true,
+        "files": [
+            "TODO",
+            "version.json"
+        ],
+        "deletedFiles": [],
+        "queries": [
+            "CREATE TABLE `notifications` ( `id` INT NOT NULL AUTO_INCREMENT , `pilotid` INT NOT NULL , `icon` VARCHAR(20) NOT NULL , `subject` VARCHAR(20) NOT NULL , `content` VARCHAR(60) NOT NULL , `datetime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , PRIMARY KEY (`id`));",
+            "TODO"
+        ],
+        "newFolders": []
     }
 ]
