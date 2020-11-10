@@ -20,6 +20,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 <script src="https://kit.fontawesome.com/a076d05399.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.21/datatables.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 <script>
   $(document).ready(function() {
     $('[data-toggle="tooltip"]').tooltip(); 
@@ -41,6 +42,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
       "info": false,
       "pageLength": 10,
       "lengthChange": false,
+    });
+
+    $(".moment").each(function(item) {
+      var m = moment($(this).text());
+      $(this).text(m.format('LLL'));
     });
   });
 </script>
