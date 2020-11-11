@@ -344,7 +344,7 @@ if (Input::get('action') === 'editprofile') {
     Session::flash('success', 'Aircraft Updated Successfully!');
     Redirect::to('/admin/operations.php?section=fleet');
 } elseif (Input::get('action') === 'setuppireps') {
-    if (!Pirep::setup(Input::get('callsign'), $user->data()->id)) {
+    if (!VANet::setupPireps(Input::get('callsign'), $user->data()->id)) {
         $server = 'casual';
         $force = Config::get('FORCE_SERVER');
         if ($force != 0 && $force != 'casual') $server = $force;

@@ -87,6 +87,43 @@ class VANet
     }
 
     /**
+     * @return bool
+     * @param string $callsign Pilot Callsign
+     * @param int $id Pilot ID
+     */
+    public static function setupPireps($callsign, $id) 
+    {
+        $db = DB::getInstance();
+
+        $server = 'casual';
+        $force = Config::get('FORCE_SERVER');
+        if ($force != 0 && $force != 'casual') $server = $force;
+
+        $curl = new Curl;
+        $request = $curl->get(Config::get('vanet/base_url').'/api/userid', array(
+            'apikey' => Config::get('vanet/api_key'),
+            'callsign' => $callsign,
+            'server' => $server
+        ));
+        $response = Json::decode($request->body);
+        if (array_key_exists('status', $response)) {
+            if ($response['status'] == 404) {
+                return false;
+            }
+        }
+
+        if (!$db->update('pilots', $id, 'id', array(
+            'ifuserid' => $response['data']
+        ))) {
+            return false;
+        }
+
+        Events::trigger('pirep/setup', ["pilot" => $id, "userid" => $response["data"], "method" => 0]);
+        
+        return true;
+    }
+
+    /**
      * @return array
      * @param string $icao ICAO Code
      */
