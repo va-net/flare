@@ -632,5 +632,52 @@
         "deletedFiles": [],
         "queries": [],
         "newFolders": []
+    },
+    {
+        "tag": "v1.1.0-beta1",
+        "name": "Version 1.1.0 Beta 1",
+        "date": "2020-11-11",
+        "notes": "Added Notifications System, Optimized Page Loading, Various Bug Fixes",
+        "prerelease": true,
+        "useUpdater": true,
+        "files": [
+            "assets/style.css.php",
+            "includes/navbar.php",
+            "update.php",
+            "includes/header.php",
+            "classes/Notifications.php",
+            "core/init.php",
+            "admin/users.php",
+            "classes/Pirep.php",
+            "classes/VANet.php",
+            "pireps.php",
+            "routes.php",
+            "includes/menus.php",
+            "acars.php",
+            "admin/codeshares.php",
+            "admin/events.php",
+            "admin/index.php",
+            "admin/multipliers.php",
+            "admin/news.php",
+            "admin/operations.php",
+            "admin/pireps.php",
+            "admin/recruitment.php",
+            "admin/site.php",
+            "admin/staff.php",
+            "admin/stats.php",
+            "apply.php",
+            "classes/Page.php",
+            "events.php",
+            "home.php",
+            "index.php",
+            "map.php",
+            "version.json"
+        ],
+        "deletedFiles": [],
+        "queries": [
+            "CREATE TABLE `notifications` ( `id` INT NOT NULL AUTO_INCREMENT , `pilotid` INT NOT NULL , `icon` VARCHAR(20) NOT NULL , `subject` VARCHAR(20) NOT NULL , `content` VARCHAR(60) NOT NULL , `datetime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , PRIMARY KEY (`id`));",
+            "TODO"
+        ],
+        "newFolders": []
     }
 ]

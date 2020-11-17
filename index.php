@@ -14,6 +14,9 @@ if (!file_exists('./core/config.php')) {
 }
 
 Page::setTitle('Login - '.Config::get('va/name'));
+Page::excludeAsset('datatables');
+Page::excludeAsset('chartjs');
+Page::excludeAsset('momentjs');
 
 $user = new User();
 if ($user->isLoggedIn()) {
