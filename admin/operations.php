@@ -12,7 +12,6 @@ require_once '../core/init.php';
 $user = new User();
 
 Page::setTitle('Operations Admin - '.Config::get('va/name'));
-Page::excludeAsset('chartjs');
 
 if (!$user->isLoggedIn()) {
     Redirect::to('/index.php');
@@ -680,9 +679,6 @@ $ACTIVE_CATEGORY = 'operations-management';
                                     $routesArray = [];
                                     foreach ($routelines[0] as $l) {
                                         $segments = preg_split('/, ?/', $l);
-                                        if (strpos($segments[10], ".") === FALSE && strpos($segments[10], ":") === FALSE) {
-                                            $segments[10] .= ".00";
-                                        }
                                         array_push($routesArray, array(
                                             "fltnum" => $segments[1],
                                             "dep" => $segments[2],
@@ -706,23 +702,22 @@ $ACTIVE_CATEGORY = 'operations-management';
                                     $j = 0;
                                     $doneAircraft = [];
                                     echo '<table class="w-100 mb-2">';
-                                    $i = 0;
-                                    foreach ($routesArray as $r) {
+                                    for ($j=0; $j<$i-1; $j++) {
+                                        $r = $routesArray[$j];
                                         if (!in_array($r['aircraftid'], $doneAircraft)) {
                                             echo '<tr class="border-bottom border-top"><td class="align-middle p-2"><b>';
                                             echo $r['aircraftid'];
                                             echo '</b></td><td class="align-middle py-2">';
-                                            echo '<input hidden name="rego'.$i.'" value="'.$r["aircraftid"].'" />';
-                                            echo '<select required class="form-control mb-2 aircraftSelect" name="aircraft'.$i.'" id="'.$i.'">';
+                                            echo '<input hidden name="rego'.$j.'" value="'.$r["aircraftid"].'" />';
+                                            echo '<select required class="form-control mb-2 aircraftSelect" name="aircraft'.$j.'" id="'.$j.'">';
                                             echo '<option value>Aircraft Type</option>';
                                             echo $aircraftOptions;
                                             echo '</select>';
-                                            echo '<select required class="form-control" name="livery'.$i.'" id="livery'.$i.'">';
+                                            echo '<select required class="form-control" name="livery'.$j.'" id="livery'.$j.'">';
                                             echo '<option value>Select an Aircraft to Get Liveries</option>';
                                             echo '</select>';
                                             echo '</td></tr>';
                                             array_push($doneAircraft, $r['aircraftid']);
-                                            $i++;
                                         }
                                     }
                                     echo '</table>';
@@ -735,7 +730,7 @@ $ACTIVE_CATEGORY = 'operations-management';
                                                 var id = $(this).attr("id");
                                                 $("#livery" + id).html("<option value>Loading...</option>");
                                                 $.ajax({
-                                                    url: "/vanet.php",
+                                                    url: "vanet.php",
                                                     type: "POST",
                                                     data: { method: "liveriesforaircraft", data: $(this).val() },
                                                     success: function(html){

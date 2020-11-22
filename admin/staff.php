@@ -12,7 +12,6 @@ require_once '../core/init.php';
 $user = new User();
 
 Page::setTitle('Staff Admin - '.Config::get('va/name'));
-Page::excludeAsset('chartjs');
 
 if (!$user->isLoggedIn()) {
     Redirect::to('/index.php');

@@ -12,7 +12,6 @@ require_once './core/init.php';
 $user = new User();
 
 Page::setTitle('PIREPs - ' . Config::get('va/name'));
-Page::excludeAsset('chartjs');
 
 if (!$user->isLoggedIn()) {
     Redirect::to('index.php');
@@ -219,10 +218,10 @@ if (!$user->isLoggedIn()) {
                                                 }
 
                                                 $(document).ready(function() {
-                                                    $("#flightTimeHrs").keyup(function() {
+                                                    $("#flightTimeHrs").on('change', function() {
                                                         formatFlightTime();
                                                     });
-                                                    $("#flightTimeMins").keyup(function() {
+                                                    $("#flightTimeMins").on('change', function() {
                                                         formatFlightTime();
                                                     });
                                                     reverseFormatFlightTime();
@@ -270,34 +269,16 @@ if (!$user->isLoggedIn()) {
                         <?php else: ?>
                             <h3>Setup PIREPs</h3>
                             <?php
-                            $ifc = explode('/', $user->data()->ifc)[4];
-                            $setupIfc = VANet::setupPirepsIfc($ifc, $user->data()->id);
-                            if ($setupIfc):
-                                Session::flash('successrecent', 'PIREPs were set up using your IFC Username. No further action is required.');
-                                ?>
-                                <script>window.location.href="/pireps.php?page=<?= Input::get('page') ?>";</script>
-                            <?php 
-                            else:
                                 $server = 'casual';
                                 $force = Config::get('FORCE_SERVER');
                                 if ($force != 0 && $force != 'casual') $server = $force;
-                                ?>
-                                <p>
-                                    Before you can start filing PIREPs, we need to grab a bit of data from Infinite Flight. 
-                                    As you're flying anonymously or haven't linked your IFC Account to your IF Account, 
-                                    we couldn't grab this information in the background.
-                                </p>
-                                <p>
-                                    Please spawn in on the <?= ucfirst($server); ?> Server, and ensure that you <b>set your 
-                                    callsign to your assigned one (<?= $user->data()->callsign ?>, if you've forgotten!).</b> 
-                                    Then, click the button below.
-                                </p>
-                                <form method="post" action="update.php">
-                                    <input hidden name="action" value="setuppireps" />
-                                    <input hidden name="callsign" value="<?= $user->data()->callsign ?>" />
-                                    <input type="submit" class="btn text-light bg-custom" value="Find Me">
-                                </form>
-                            <?php endif; ?>
+                            ?>
+                            <p>Before you can start filing PIREPs, we need to grab a bit of data from Infinite Flight. Please spawn in on the <?= ucfirst($server); ?> Server, and ensure that you <b>set your callsign to your assigned one (<?= $user->data()->callsign ?>, if you've forgotten!).</b> Then, click the button below.</p>
+                            <form method="post" action="update.php">
+                                <input hidden name="action" value="setuppireps" />
+                                <input hidden name="callsign" value="<?= $user->data()->callsign ?>" />
+                                <input type="submit" class="btn text-light bg-custom" value="Find Me">
+                            </form>
                         <?php endif; ?>
                     </div>
                 </div>

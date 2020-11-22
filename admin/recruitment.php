@@ -10,7 +10,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 require_once '../core/init.php';
 
 $user = new User();
-Page::excludeAsset('chartjs');
 
 Page::setTitle('Recruitment Admin - '.Config::get('va/name'));
 

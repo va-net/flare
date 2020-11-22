@@ -11,9 +11,6 @@ require_once './core/init.php';
 use RegRev\RegRev;
 
 Page::setTitle('Apply - '.Config::get('va/name'));
-Page::excludeAsset('datatables');
-Page::excludeAsset('chartjs');
-Page::excludeAsset('momentjs');
 
 $user = new User();
 if ($user->isLoggedIn()) {
