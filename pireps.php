@@ -218,10 +218,10 @@ if (!$user->isLoggedIn()) {
                                                 }
 
                                                 $(document).ready(function() {
-                                                    $("#flightTimeHrs").keyup(function() {
+                                                    $("#flightTimeHrs").on('change', function() {
                                                         formatFlightTime();
                                                     });
-                                                    $("#flightTimeMins").keyup(function() {
+                                                    $("#flightTimeMins").on('change', function() {
                                                         formatFlightTime();
                                                     });
                                                     reverseFormatFlightTime();
