@@ -238,7 +238,7 @@ if (Input::get('action') === 'editprofile') {
         Redirect::to('/admin/recruitment.php');
     }
 
-    Events::trigger('user/accepted', [Input::get('accept')]);
+    Events::trigger('user/accepted', Input::get('accept'));
 
     Session::flash('success', 'Application Accepted Successfully!');
     Redirect::to('/admin/recruitment.php');
@@ -314,7 +314,7 @@ if (Input::get('action') === 'editprofile') {
         'content' => Input::get('content'),
         'author' => Input::get('author')
     ));
-    Session::flash('success', 'News Article Added Successfully!');
+    Session::flash('success', 'News Article Added Successfully! ');
     Redirect::to('/admin/news.php');
 } elseif (Input::get('action') === 'deleteaircraft') {
     if (!$user->hasPermission('opsmanage')) {
@@ -344,7 +344,7 @@ if (Input::get('action') === 'editprofile') {
     Session::flash('success', 'Aircraft Updated Successfully!');
     Redirect::to('/admin/operations.php?section=fleet');
 } elseif (Input::get('action') === 'setuppireps') {
-    if (!VANet::setupPireps(Input::get('callsign'), $user->data()->id)) {
+    if (!Pirep::setup(Input::get('callsign'), $user->data()->id)) {
         $server = 'casual';
         $force = Config::get('FORCE_SERVER');
         if ($force != 0 && $force != 'casual') $server = $force;
@@ -923,7 +923,6 @@ if (Input::get('action') === 'editprofile') {
 
     for ($i=0; $i<$count; $i++) {
         $item = Input::get('livery'.$i);
-        if (empty($item)) continue;
         $aircraft = false;
         foreach ($allaircraft as $a) {
             if ($a->ifliveryid == $item) $aircraft = $a;
@@ -932,7 +931,6 @@ if (Input::get('action') === 'editprofile') {
         if ($aircraft === FALSE) {
             Aircraft::add($item, $firstRank);
             $aircraft = Aircraft::findAircraft($item);
-            array_push($allaircraft, $aircraft);
         }
 
         $routes = str_replace(Input::get('rego'.$i), $aircraft->id, $routes);
@@ -940,7 +938,7 @@ if (Input::get('action') === 'editprofile') {
 
     $routes = Json::decode($routes);
 
-    $sql = "INSERT INTO routes (fltnum, dep, arr, duration, aircraftid) VALUES";
+    $sql = "INSERT INTO routes (fltnum, dep, arr, duration, aircraftid, notes) VALUES\n";
     $params = array();
     $j = 0;
     foreach ($routes as $item) {
@@ -948,11 +946,11 @@ if (Input::get('action') === 'editprofile') {
             $sql = trim($sql, ',');
             $ret = $db->query($sql, $params);
             if ($ret->error()) {
-                Session::flash('error', "Failed to Import Routes");
+                Session::flash('error', "Error Importing Routes");
                 Redirect::to('/admin/operations.php?section=phpvms');
                 die();
             }
-            $sql = "INSERT INTO routes (fltnum, dep, arr, duration, aircraftid) VALUES";
+            $sql = "INSERT INTO routes (fltnum, dep, arr, duration, aircraftid, notes) VALUES";
             $params = array();
         }
 
@@ -962,6 +960,7 @@ if (Input::get('action') === 'editprofile') {
         array_push($params, $item["arr"]);
         array_push($params, $item["duration"]);
         array_push($params, $item["aircraftid"]);
+        array_push($params, Input::get('rego'.$i));
         
         $j++;
     }
@@ -969,20 +968,9 @@ if (Input::get('action') === 'editprofile') {
     $sql = trim($sql, ',');
     $ret = $db->query($sql, $params);
     if ($ret->error()) {
-        foreach ($params as $pm) {
-            $rpl = $pm;
-            if (gettype($pm) == 'string') {
-                $rpl = "'{$pm}'";
-            }
-            $q = '?';
-            $one = 1;
-            $from = '/'.preg_quote('?', '/').'/';
-            $sql = preg_replace($from, $rpl, $sql, 1);
-        }
-        print($sql);
+        Session::flash('error', "Error Importing Routes");
+        Redirect::to('/admin/operations.php?section=import');
         die();
-        Session::flash('error', "Failed to Import Routes");
-        Redirect::to('/admin/operations.php?section=phpvms');
     }
 
     Events::trigger('route/imported');

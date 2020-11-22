@@ -12,7 +12,6 @@ require_once '../core/init.php';
 $user = new User();
 
 Page::setTitle('Site Dashboard - '.Config::get('va/name'));
-Page::excludeAsset('datatables');
 
 if (!$user->isLoggedIn()) {
     Redirect::to('/index.php');

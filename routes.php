@@ -12,7 +12,6 @@ require_once './core/init.php';
 $user = new User();
 
 Page::setTitle('Routes - '.Config::get('va/name'));
-Page::excludeAsset('chartjs');
 
 if (!$user->isLoggedIn()) {
     Redirect::to('index.php');
@@ -84,7 +83,7 @@ if (!$user->isLoggedIn()) {
                         </form>
                     <?php else: ?>
                         <a href="routes.php" class="btn bg-custom mb-2">New Search</a>
-                        <table class="table table-striped datatable-nosearch">
+                        <table class="table table-striped">
                             <thead class="bg-custom">
                                 <tr>
                                     <th class="mobile-hidden">Flight Number</th>

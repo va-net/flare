@@ -82,18 +82,18 @@ $GLOBALS['admin-menu']["Site Management"] = array(
         "permission" => "admin",
         "needsGold" => false
     ],
-    "Manage News" => [
-        "link" => "/admin/news.php",
-        "icon" => "fa-newspaper",
-        "permission" => "newsmanage",
-        "needsGold" => false
-    ],
     "Site Settings" => [
         "link" => "/admin/site.php",
         "icon" => "fa-cog",
         "permission" => "opsmanage",
         "needsGold" => false
     ],
+    "Manage News" => [
+        "link" => "/admin/news.php",
+        "icon" => "fa-newspaper",
+        "permission" => "newsmanage",
+        "needsGold" => false
+    ]
 );
 
 $GLOBALS['admin-menu']["Plugins"] = array(

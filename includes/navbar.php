@@ -82,23 +82,4 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
             </li>
         <?php endif; ?>
     </ul>
-    <?php if ($user->isLoggedIn()): ?>
-        <ul class="navbar-nav ml-auto">
-            <li class="nav-item mobile-hidden">
-                <a class="nav-link" href="#" id="myNotifications-btn" data-toggle="dropdown" data-target="myNotifications" aria-haspopup="true" aria-expanded="false" style="color: <?= $textcol ?>!important;"><i class="fa fa-bell"></i></a>
-                <div class="dropdown-menu dropdown-menu-right m-2 shadow-lg" id="myNotifications">
-                    <?php
-                    $notifications = array_map(function($n) {
-                        return '<div class="dropdown-item">
-                            <small class="d-block m-0 p-0"><small class="moment">'.$n->formattedDate.'</small></small>
-                            <span class="d-block m-0 p-0"><i class="fa '.$n->icon.'"></i>&nbsp;&nbsp;<b>'.$n->subject.'</b></span>
-                            <small class="d-block m-0 p-0">'.$n->content.'</small>
-                        </div>';
-                    }, Notifications::mine($user->data()->id));
-                    echo implode('<div class="dropdown-divider"></div>', $notifications);
-                    ?>
-                </div>
-            </li>
-        </ul>
-    <?php endif; ?>
 </div>

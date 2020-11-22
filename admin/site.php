@@ -12,8 +12,6 @@ require_once '../core/init.php';
 $user = new User();
 
 Page::setTitle('Site Admin - '.Config::get('va/name'));
-Page::excludeAsset('datatables');
-Page::excludeAsset('chartjs');
 
 if (!$user->isLoggedIn()) {
     Redirect::to('/index.php');
