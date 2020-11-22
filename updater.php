@@ -42,7 +42,7 @@ foreach (array_reverse($releases) as $r) {
     if (!$currentFound && $r["tag_name"] == $current["tag"]) {
         $currentFound = true;
     } elseif ($currentFound && $next == null) {
-        if ($current["prerelease"]) {
+        if (Config::get('CHECK_PRERELEASE') == 1) {
             $next = $r;
             break;
         } elseif (!$r["prerelease"]) {
