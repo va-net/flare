@@ -364,5 +364,22 @@
         "deletedFiles": [],
         "queries": [],
         "newFolders": []
+    },
+    {
+        "tag": "v1.0.2",
+        "name": "Version 1.0.2",
+        "date": "2020-11-22",
+        "notes": "Various Bug Fixes",
+        "prerelease": false,
+        "useUpdater": true,
+        "files": [
+            "updater.php",
+            "pireps.php",
+            "update.php",
+            "version.json"
+        ],
+        "deletedFiles": [],
+        "queries": [],
+        "newFolders": []
     }
 ]
