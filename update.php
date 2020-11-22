@@ -1030,8 +1030,12 @@ if (Input::get('action') === 'editprofile') {
     foreach ($pluginadv["installation"]["files"] as $f) {
         $f = str_replace("/", $slash, $f);
         if (file_exists(__DIR__.$slash.$f)) {
-            Session::flash('error', 'File "'.$f.'" already exists.');
-            Redirect::to('/admin/plugins.php');
+            if (unlink(__DIR__.$slash.$f) !== TRUE) {
+                Session::flash('error', 'File "'.$f.'" already exists, failed to delete it.');
+                Redirect::to('/admin/plugins.php');
+            }
+
+            Logger::log('File "'.__DIR__.$slash.$f.'" was deleted while installing plugin ' + $pluginbasic["name"]);
         }
     }
     foreach ($pluginadv["installation"]["files"] as $f) {
@@ -1081,7 +1085,10 @@ if (Input::get('action') === 'editprofile') {
     foreach ($theplugin["installation"]["files"] as $file) {
         $file = str_replace("/", $slash, $file);
         $path = __DIR__.$slash.$file;
-        unlink($path);
+        if (unlink($path) === FALSE) {
+            Session::flash('error', 'Failed to remove file - '.$path);
+            Redirect::to('/admin/plugins.php?tab=installed');
+        }
     }
 
     Session::flash('success', 'Plugin Removed');
