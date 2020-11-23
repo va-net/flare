@@ -134,14 +134,14 @@ class Notifications {
             $pirep = $pirep[0];
             $content = "Your PIREP from {$pirep->departure} to {$pirep->arrival} was Accepted";
             if (strlen($content) > 60) return;
-            self::notify(0, "fa-check", "PIREP Accepted", $content);
+            self::notify($pirep->pilotid, "fa-check", "PIREP Accepted", $content);
         } else {
             $pirep = self::$_db->get('pireps', ['id', '=', $args['id']])->results();
             if (count($pirep) == 0) return;
             $pirep = $pirep[0];
             $content = "Your PIREP from {$pirep->departure} to {$pirep->arrival} was Denied";
             if (strlen($content) > 60) return;
-            self::notify(0, "fa-times", "PIREP Denied", $content);
+            self::notify($pirep->pilotid, "fa-times", "PIREP Denied", $content);
         }
     }
 
