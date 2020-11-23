@@ -95,7 +95,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                             <small class="d-block m-0 p-0">'.$n->content.'</small>
                         </div>';
                     }, Notifications::mine($user->data()->id));
-                    echo implode('<div class="dropdown-divider"></div>', $notifications);
+                    if (count($notifications) != 0) {
+                        echo implode('<div class="dropdown-divider"></div>', $notifications);
+                    } else {
+                        echo '<div class="dropdown-item">No Notifications Yet!</div>';
+                    }
                     ?>
                 </div>
             </li>
