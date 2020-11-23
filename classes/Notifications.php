@@ -93,7 +93,7 @@ class Notifications {
         $vaname = Config::get('va/name');
         $content = "Welcome to {$vaname}! We hope you enjoy your stay.";
         if (strlen($content) > 60) return;
-        self::notify($args[0], "fa-smile-beam", $content);
+        self::notify($args[0], "fa-smile-beam", "Welcome!", $content);
     }
 
     /**
