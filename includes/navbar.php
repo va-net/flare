@@ -91,8 +91,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                     $notifications = array_map(function($n) {
                         return '<div class="dropdown-item">
                             <small class="d-block m-0 p-0"><small class="moment">'.$n->formattedDate.'</small></small>
-                            <span class="d-block m-0 p-0"><i class="fa '.$n->icon.'"></i>&nbsp;&nbsp;<b>'.$n->subject.'</b></span>
-                            <small class="d-block m-0 p-0">'.$n->content.'</small>
+                            <span class="d-block m-0 p-0"><i class="fa '.$n->icon.'"></i>&nbsp;&nbsp;<b>'.escape($n->subject).'</b></span>
+                            <small class="d-block m-0 p-0">'.escape($n->content).'</small>
                         </div>';
                     }, Notifications::mine($user->data()->id));
                     if (count($notifications) != 0) {
