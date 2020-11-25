@@ -11,6 +11,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 class Pirep
 {
 
+    /**
+     * @var DB
+     */
     private static $_db;
 
     private static function init()
@@ -223,5 +226,30 @@ class Pirep
         }
 
         return $ret->first();
+    }
+
+    /**
+     * @return object|bool
+     * @param int $id PIREP ID
+     * @param int $pilot Pilot ID
+     */
+    public static function find($id, $pilot = null) 
+    {
+        self::init();
+
+        $pirep = self::$_db->get('pireps', ['id', '=', $id]);
+        if ($pirep->count() == 0) {
+            return false;
+        }
+
+        if ($pilot == null) {
+            return $pirep->first();
+        }
+
+        if ($pirep->first()->pilotid == $pilot) {
+            return $pirep->first();
+        }
+
+        return false;
     }
 }
