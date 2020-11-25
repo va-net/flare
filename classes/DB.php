@@ -261,7 +261,7 @@ class DB
     }
 
     /**
-     * @return array
+     * @return DB
      * @param string $table Table Name
      */
     public function getAll($table) 
