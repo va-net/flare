@@ -1118,4 +1118,15 @@ if (Input::get('action') === 'editprofile') {
 
     Session::flash('success', 'Logs Cleared');
     Redirect::to('/admin/site.php?tab=maintenance');
+} elseif (Input::get('action') === 'announce') {
+    if (!$user->hasPermission('usermanage')) {
+        Redirect::to('home.php');
+        die();
+    }
+
+    $title = escape(Input::get('title'));
+    $content = escape(Input::get('content'));
+    Notifications::notify(0, "fa-bullhorn", $title, $content);
+    Session::flash('sucess', 'Announcement Made');
+    Redirect::to('/admin/users.php');
 }

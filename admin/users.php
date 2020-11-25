@@ -55,7 +55,7 @@ $ACTIVE_CATEGORY = 'user-management';
                         <p>
                             <span class="text-primary cursor-pointer" id="toggle-inactive" data-state="0">Hide Inactive Users</span>
                         </p>
-                        <table class="table table-striped datatable">
+                        <table class="table datatable">
                             <thead class="bg-custom">
                                 <tr>
                                     <th>Callsign</th>
@@ -99,7 +99,10 @@ $ACTIVE_CATEGORY = 'user-management';
                                 ?>
                             </tbody>
                         </table>
-                        <div class="modal fade" id="delconfirmmodal" tabindex="-1" role="dialog" aria-labelledby="delconfirmmodallabel" aria-hidden="true">
+                        <p>
+                            <span class="text-primary cursor-pointer font-weight-bold" data-toggle="modal" data-target="#broadcastmodal">Make Announcement</span>
+                        </p>
+                        <div class="modal fade" id="delconfirmmodal" tabindex="-1" role="dialog" aria-hidden="true">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -119,7 +122,7 @@ $ACTIVE_CATEGORY = 'user-management';
                                 </div>
                             </div>
                         </div>
-                        <div class="modal fade" id="usermodal" tabindex="-1" role="dialog" aria-labelledby="pirep'.$x.'label" aria-hidden="true">
+                        <div class="modal fade" id="usermodal" tabindex="-1" role="dialog" aria-hidden="true">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -209,6 +212,33 @@ $ACTIVE_CATEGORY = 'user-management';
                                                 </select>
                                             </div>
                                             <input type="submit" class="btn bg-custom" value="Save">
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal fade" id="broadcastmodal" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Make Announcement</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>Your announcement will be sent as a notification to all users.</p>
+                                        <form action="/update.php" method="post">
+                                            <input hidden name="action" value="announce" />
+                                            <div class="form-group">
+                                                <label for="">Title</label>
+                                                <input required type="text" class="form-control" name="title" maxlength="20" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="">Content</label>
+                                                <input required type="text" class="form-control" name="content" maxlength="60" />
+                                            </div>
+                                            <input type="submit" class="btn bg-custom" value="Submit">
                                         </form>
                                     </div>
                                 </div>
