@@ -39,12 +39,16 @@ switch (Input::get('page')) {
         Installer::showTemplate('db-setup');
         break;
     case 'db-install':
+        $host = trim(Input::get('db-host'));
+        if ($host == 'locahost') {
+            $host = '127.0.0.1';
+        }
         if (!Installer::appendConfig(array(
-            'DB_HOST' => Input::get('db-host'),
-            'DB_USER' => Input::get('db-user'),
+            'DB_HOST' => $host,
+            'DB_USER' => trim(Input::get('db-user')),
             'DB_PASS' => Input::get('db-pass'),
-            'DB_NAME' => Input::get('db-name'),
-            'DB_PORT' => Input::get('db-port')
+            'DB_NAME' => trim(Input::get('db-name')),
+            'DB_PORT' => trim(Input::get('db-port')),
         ))) {
             Session::flash('error', 'Whoops! Flare couldn\'t connect to the database. Please try again.');
             Redirect::to('?page=db-setup');
