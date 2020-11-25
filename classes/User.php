@@ -283,8 +283,7 @@ class User
                 'id' => $r->id,
                 'notes' => $r->notes
             );
-            $aircraft[$x] = $newdata;
-            $x++;
+            array_push($x, $newdata);
         }
         return $aircraft;
 
@@ -348,7 +347,7 @@ class User
     }
 
     /**
-     * @return int
+     * @return object
      * @param int $id User ID
      * @param int $limit Row Limit
      */
@@ -359,7 +358,7 @@ class User
             $id = $this->data()->id;
         }
 
-        if (!is_numeric($limit)) {
+        if (!is_numeric($limit) && $limit != null) {
             throw new Exception("Limit Parameter is NaN");
         }
 
