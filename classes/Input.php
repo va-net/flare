@@ -39,11 +39,21 @@ class Input {
      */
     public static function get($item) {
         if (self::$_PUT == null) {
-            parse_str(file_get_contents("php://input"), self::$_PUT);
+            switch (getallheaders()['Content-Type']) {
+                case 'application/json':
+                    self::$_PUT = Json::decode(file_get_contents("php://input"));
+                    break;
+                case 'x-www-form-urlencoded':
+                    self::$_PUT = parse_str(file_get_contents('php://input'));
+                    break;
+                default:
+                    self::$_PUT = parse_str(file_get_contents('php://input'));
+                    break;
+            }
         }
         if (isset($_POST[$item])) {
             return $_POST[$item];
-        } elseif (isset($_PUT[$item])) {
+        } elseif (isset(self::$_PUT[$item])) {
             return self::$_PUT[$item];
         } elseif (isset($_GET[$item])) {
             return $_GET[$item];

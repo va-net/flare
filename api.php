@@ -107,7 +107,7 @@ if ($user->isLoggedIn()) {
     $_apiUser = $check;
 } elseif (array_key_exists('Authorization', $_headers) && explode(' ', $_headers['Authorization'])[0] == 'Basic') {
     // Basic HTTP Auth
-    $check = Api::processBasic($_headers['Authorization']);
+    $check = Api::processBasic(explode(' ', $_headers['Authorization'])[1]);
     if ($check === FALSE) {
         unauthorized();
     }
@@ -189,10 +189,7 @@ Router::add('/pireps/([0-9]*)', function($pirepId) {
         accessDenied();
     }
     
-    $pirep = Pirep::find($pirepId, $_apiUser->id);
-    if ($pirep === FALSE) {
-        notFound();
-    }
+    $pirep = [];
 
     $pirep = (array)$pirep;
     if (!empty(Input::get('flightnum'))) $pirep["flightnum"] = Input::get('flightnum');
@@ -208,7 +205,7 @@ Router::add('/pireps/([0-9]*)', function($pirepId) {
 }, 'put');
 
 // File PIREP
-Router::add('/pireps', function() {
+Router::add('/pireps', function() {     
     global $_authType, $user;
     if ($_authType == AuthType::ApiKey) {
         accessDenied();
@@ -324,7 +321,7 @@ Router::add('/about', function() {
             "transfer_flights" => intval($_apiUser->transflights),
             "violation_landing" => $_apiUser->violand,
             "grade" => $_apiUser->grade,
-            "joined" => date_format(date_create($_apiUser->joined), 'c'),
+            "joined" => date_format(date_create($_apiUser->joined), 'Y-m-d'),
         ],
     ]);
 });
@@ -336,32 +333,35 @@ Router::add('/about', function() {
         accessDenied();
     }
 
-    $csPattern = Config::get('VA_CALLSIGN_FORMAT');
-    if (!Regex::match($csPattern, Input::get('callsign'))) {
-        badReq(ErrorCode::CallsignNotValid);
+    if (!empty(Input::get('callsign'))) {
+        $csPattern = Config::get('VA_CALLSIGN_FORMAT');
+        if (!Regex::match($csPattern, Input::get('callsign'))) {
+            badReq(ErrorCode::CallsignNotValid);
+        }
+
+        if (!Callsign::assigned(Input::get('callsign'), $_apiUser->id)) {
+            badReq(ErrorCode::CallsignTaken);
+        }
     }
 
-    if (!Callsign::assigned(Input::get('callsign'), $_apiUser->id)) {
-        badReq(ErrorCode::CallsignTaken);
-    }
+    $updUser = [];
+    if (!empty(Input::get('callsign'))) $updUser['callsign'] = Input::get('callsign');
+    if (!empty(Input::get('name'))) $updUser['name'] = Input::get('name');
+    if (!empty(Input::get('email'))) $updUser['email'] = Input::get('email');
+    if (!empty(Input::get('ifc'))) $updUser['ifc'] = Input::get('ifc');
     
     try {
-        $user->update([
-            "callsign" => Input::get('callsign'),
-            "name" => Input::get('name'),
-            "email" => Input::get('email'),
-            "ifc" => Input::get('ifc'),
-        ]);
+        $user->update($updUser);
         echo Json::encode([
             "status" => ErrorCode::NoError,
-            "result" => "Profile Updated",
+            "result" => null,
         ]);
     } catch (Exception $e) {
         internalError();
     }
 }, 'put');
 
-// View All Events (TODO: Test This)
+// View All Events
 Router::add('/events', function() {
     if (!VANet::isGold()) badReq(ErrorCode::VaNotGold);
 
@@ -374,7 +374,7 @@ Router::add('/events', function() {
     ]);
 });
 
-// View Specific Event (TODO: Test This)
+// View Specific Event
 Router::add('/events/([0-9a-zA-z]{8}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{12})', function($eventId) {
     if (!VANet::isGold()) badReq(ErrorCode::VaNotGold);
     
@@ -453,10 +453,11 @@ Router::add('/news/([0-9]+)', function($newsId) {
         accessDenied();
     }
 
-    News::edit($newsId, [
-        "subject" => Input::get('subject'),
-        "content" => Input::get('content'),
-    ]);
+    $updNews = [];
+    if (!empty(Input::get('subject'))) $updNews["subject"] = Input::get('subject');
+    if (!empty(Input::get('content'))) $updNews["content"] = Input::get('content');
+
+    News::edit($newsId, $updNews);
     echo Json::encode([
         "status" => ErrorCode::NoError,
         "result" => null,
