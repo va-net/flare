@@ -347,4 +347,17 @@ Router::add('/about', function() {
     }
 }, 'put');
 
+// View All Events
+Router::add('/events', function() {
+    if (!VANet::isGold()) badReq(ErrorCode::VaNotGold);
+
+    $events = array_filter(VANet::getEvents(), function($e) {
+        return $e["visible"];
+    });
+    echo Json::encode([
+        "status" => ErrorCode::NoError,
+        "result" => $events,
+    ]);
+});
+
 Router::run('/api.php');
