@@ -11,13 +11,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 class News
 {
 
+    /**
+     * @var DB
+     */
     private static $_db;
 
     private static function init()
     {
-
         self::$_db = DB::getInstance();
-
     }
 
     /**
@@ -25,7 +26,6 @@ class News
      */
     public static function get()
     {
-
         self::init();
 
         $result = self::$_db->get('news', array('status', '=', 1), array('dateposted', 'DESC'));
@@ -49,7 +49,6 @@ class News
             $x++;
         }
         return $news;
-
     }
 
     /**
@@ -58,7 +57,6 @@ class News
      */
     public static function archive($id)
     {
-
         self::init();
 
         self::$_db->update('news', $id, 'id', array(
@@ -66,7 +64,6 @@ class News
         ));
 
         Events::trigger('news/archived', ['id' => $id]);
-
     }
 
     /**
@@ -76,13 +73,11 @@ class News
      */
     public static function edit($id, $fields) 
     {
-
         self::init();
 
         self::$_db->update('news', $id, 'id', $fields);
         $fields["id"] = $id;
         Events::trigger('news/updated', $fields);
-
     }
 
     /**
@@ -91,12 +86,25 @@ class News
      */
     public static function add($fields) 
     {
-
         self::init();
 
         self::$_db->insert('news', $fields);
         Events::trigger('news/added', $fields);
+    }
 
+    /**
+     * @return object|bool
+     * @param int $id News ID
+     */
+    public static function find($id) 
+    {
+        self::init();
+        $ret = self::$_db->get('news', ['id', '=', $id]);
+        if ($ret->count() == 0) {
+            return false;
+        }
+
+        return $ret->first();
     }
 
 }

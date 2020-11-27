@@ -373,4 +373,39 @@ Router::add('/events/([0-9a-zA-z]{8}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4
     ]);
 });
 
+// View All News
+Router::add('/news', function() {
+    $news = News::get();
+
+    $i = 0;
+    foreach ($news as $n) {
+        foreach ($n as $key => $val) {
+            if (is_numeric($val)) $news[$i][$key] = intval($val);
+            if ($key == 'dateposted') $news[$i][$key] = date_format(date_create($val), 'Y-m-d');
+        }
+        $i++;
+    }
+    echo Json::encode([
+        "status" => ErrorCode::NoError,
+        "result" => $news,
+    ]);
+});
+
+// View Specific News Item
+Router::add('/news/([0-9]+)', function($newsId) {
+    $article = News::find($newsId);
+    if ($article === FALSE) notFound();
+
+    $article->dateposted = date_format(date_create($article->dateposted), "Y-m-d");
+    foreach ($article as $key => $val) {
+        if (is_numeric($val)) $article->$key = intval($val);
+        if ($key == 'dateposted') $article->$key = date_format(date_create($val), "Y-m-d");
+    }
+
+    echo Json::encode([
+        "status" => ErrorCode::NoError,
+        "result" => $article,
+    ]);
+});
+
 Router::run('/api.php');
