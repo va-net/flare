@@ -479,4 +479,37 @@ Router::add('/news/([0-9]+)', function($newsId) {
     ]);
 }, 'delete');
 
+// View All Routes
+Router::add('/routes', function() {
+    $routes = array_map(function($r) {
+        unset($r->liveryid);
+        $r = (array)$r;
+        foreach ($r as $key => $val) {
+            if (is_numeric($val) && $key != 'fltnum') $r[$key] = intval($val);
+        }
+
+        return $r;
+    }, Route::fetchAll()->results());
+    echo Json::encode([
+        "status" => ErrorCode::NoError,
+        "result" => $routes,
+    ]);
+});
+
+// View Specific Route
+Router::add('/routes/([0-9]+)', function($routeId) {
+    $route = Route::find($routeId);
+    if ($route->count() == 0) notFound();
+
+    $selectedRoute = $route->first();
+    $selectedRoute->duration = intval($selectedRoute->duration);
+    $selectedRoute->id = intval($selectedRoute->id);
+    unset($selectedRoute->aircraftid);
+
+    echo Json::encode([
+        "status" => ErrorCode::NoError,
+        "result" => $selectedRoute,
+    ]);
+});
+
 Router::run('/api.php');

@@ -75,9 +75,9 @@ class Route
         self::init();
 
         $query = 'SELECT routes.fltnum, routes.dep, routes.arr, routes.duration, routes.id, routes.aircraftid, 
-        aircraft.name AS aircraft FROM routes INNER JOIN aircraft ON aircraft.id = routes.aircraftid WHERE routed.id=?';
+        aircraft.name AS aircraft FROM routes INNER JOIN aircraft ON aircraft.id = routes.aircraftid WHERE routes.id=?';
         
-        return $db->query($query, array($id));
+        return self::$_db->query($query, array($id));
     }
 
     /**
