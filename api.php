@@ -347,7 +347,7 @@ Router::add('/about', function() {
     }
 }, 'put');
 
-// View All Events
+// View All Events (TODO: Test This)
 Router::add('/events', function() {
     if (!VANet::isGold()) badReq(ErrorCode::VaNotGold);
 
@@ -360,6 +360,7 @@ Router::add('/events', function() {
     ]);
 });
 
+// View Specific Event (TODO: Test This)
 Router::add('/events/([0-9a-zA-z]{8}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{12})', function($eventId) {
     if (!VANet::isGold()) badReq(ErrorCode::VaNotGold);
     
