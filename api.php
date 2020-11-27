@@ -360,4 +360,16 @@ Router::add('/events', function() {
     ]);
 });
 
+Router::add('/events/([0-9a-zA-z]{8}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{12})', function($eventId) {
+    if (!VANet::isGold()) badReq(ErrorCode::VaNotGold);
+    
+    $event = VANet::findEvent($eventId);
+    if ($event === FALSE) notFound();
+
+    echo Json::encode([
+        "status" => ErrorCode::NoError,
+        "result" => $event,
+    ]);
+});
+
 Router::run('/api.php');
