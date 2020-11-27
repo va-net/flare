@@ -22,10 +22,13 @@ abstract class ErrorCode {
     const NoError = 0;
     const Unauthorized = 1;
     const NotFound = 2;
-    const BadAuthMethod = 3;
+    const AccessDenied = 3;
     const InternalServerError = 4;
     const CallsignNotValid = 5;
     const CallsignTaken = 6;
+    const MultiplierNotFound = 9;
+    const RankNotSufficent = 10;
+    const VaNotGold = 11;
 }
 
 function unauthorized() {
@@ -59,6 +62,15 @@ function notFound() {
     http_response_code(404);
     echo Json::encode([
         "status" => ErrorCode::NotFound,
+        "result" => null
+    ]);
+    die();
+}
+
+function accessDenied() {
+    http_response_code(403);
+    echo Json::encode([
+        "status" => ErrorCode::AccessDenied,
         "result" => null
     ]);
     die();
@@ -110,6 +122,7 @@ if ($user->isLoggedIn()) {
     unauthorized();
 }
 
+// View All PIREPs for User
 Router::add('/pireps', function() {
     global $user, $_apiUser;
     $res = [
@@ -132,7 +145,8 @@ Router::add('/pireps', function() {
     echo Json::encode($res);
 });
 
-Router::add("/pireps/([0-9]*)", function($pirepId) {
+// View Specific PIREP
+Router::add('/pireps/([0-9]+)', function($pirepId) {
     global $_apiUser;
     
     $pirep = Pirep::find($pirepId, $_apiUser->id);
@@ -154,6 +168,134 @@ Router::add("/pireps/([0-9]*)", function($pirepId) {
     ]);
 });
 
+// Edit PIREP
+Router::add('/pireps/([0-9]*)', function($pirepId) {
+    global $_apiUser, $_authType;
+    if ($_authType == AuthType::ApiKey) {
+        accessDenied();
+    }
+    
+    $pirep = Pirep::find($pirepId, $_apiUser->id);
+    if ($pirep === FALSE) {
+        notFound();
+    }
+
+    $pirep = (array)$pirep;
+    if (!empty(Input::get('flightnum'))) $pirep["flightnum"] = Input::get('flightnum');
+    if (!empty(Input::get('departure'))) $pirep["departure"] = Input::get('departure');
+    if (!empty(Input::get('arrival'))) $pirep["arrival"] = Input::get('arrival');
+    if (!empty(Input::get('date'))) $pirep["date"] = Input::get('date');
+
+    $res = Pirep::update($pirepId, $pirep) ? ErrorCode::NoError : ErrorCode::InternalServerError;
+    echo Json::encode([
+        "status" => $res,
+        "result" => null,
+    ]);
+}, 'put');
+
+// File PIREP
+Router::add('/pireps', function() {
+    global $_authType, $user;
+    if ($_authType == AuthType::ApiKey) {
+        accessDenied();
+    }
+
+    $multi = "None";
+    $finalFTime = Time::strToSecs(Input::get('flighttime'));
+
+    if (!empty(Input::get('multi'))) {
+        $multiplier = Pirep::findMultiplier(Input::get('multi'));
+        if (!$multiplier) {
+            badReq(ErrorCode::MultiplierNotFound);
+        }
+
+        $multi = $multiplier->name;
+        $finalFTime *= $multiplier->multiplier;
+    }
+
+    $allowedaircraft = $user->getAvailableAircraft();
+    $allowed = false;
+    foreach ($allowedaircraft as $a) {
+        if ($a["id"] == Input::get('aircraft')) {
+            $allowed = true;
+        }
+    }
+
+    if (!$allowed) {
+        badReq(ErrorCode::RankNotSufficent);
+    }
+
+    $response = VANet::sendPirep(array (
+        'AircraftID' => Aircraft::idToLiveryId(Input::get('aircraft')),
+        'Arrival' => Input::get('arr'),
+        'DateTime' => Input::get('date'),
+        'Departure' => Input::get('dep'),
+        'FlightTime' => Time::strToSecs(Input::get('ftime')),
+        'FuelUsed' => Input::get('fuel'),
+        'PilotId' => $user->data()->ifuserid
+    ));
+
+    $response = Json::decode($response->body);
+    if ($response['success'] != true) {
+        internalError();
+    }
+
+    if (!Pirep::file(array(
+        'flightnum' => Input::get('flightnum'),
+        'departure' => Input::get('departure'),
+        'arrival' => Input::get('arrival'),
+        'flighttime' => $finalFTime,
+        'pilotid' => $user->data()->id,
+        'date' => Input::get('date'),
+        'aircraftid' => Input::get('aircraft'),
+        'multi' => $multi
+    ))) {
+        internalError();
+    } else {
+        echo Json::encode([
+            "status" => ErrorCode::NoError,
+            "result" => null,
+        ]);
+    }
+}, 'post');
+
+// Accept PIREP
+Router::add('/pireps/accept/([0-9]+)', function($pirepId) {
+    global $_authType, $user;
+    if ($_authType == AuthType::ApiKey) {
+        accessDenied();
+    }
+
+    if (!$user->hasPermission('pirepmanage') || !$user->hasPermission('admin')) {
+        accessDenied();
+    }
+
+    Pirep::accept($pirepId);
+    echo Json::encode([
+        "status" => ErrorCode::NoError,
+        "result" => null,
+    ]);
+});
+
+// Deny PIREP
+Router::add('/pireps/deny/([0-9]+)', function($pirepId) {
+    global $_authType, $user;
+    if ($_authType == AuthType::ApiKey) {
+        accessDenied();
+    }
+
+    if (!$user->hasPermission('pirepmanage') || !$user->hasPermission('admin')) {
+        accessDenied();
+    }
+
+    Pirep::decline($pirepId);
+    echo Json::encode([
+        "status" => ErrorCode::NoError,
+        "result" => null,
+    ]);
+});
+
+// View User Info
 Router::add('/about', function() {
     global $_apiUser, $_authType;
     echo Json::encode([
@@ -173,10 +315,11 @@ Router::add('/about', function() {
     ]);
 });
 
+// Update User Info
 Router::add('/about', function() {
     global $_authType, $user, $_apiUser;
     if ($_authType == AuthType::ApiKey) {
-        badReq(ErrorCode::BadAuthMethod);
+        accessDenied();
     }
 
     $csPattern = Config::get('VA_CALLSIGN_FORMAT');
