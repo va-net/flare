@@ -514,4 +514,68 @@ Router::add('/routes/([0-9]+)', function($routeId) {
     ]);
 });
 
+// Add Route
+Router::add('/routes', function() {
+    global $_authType, $user;
+    if ($_authType == AuthType::ApiKey) {
+        accessDenied();
+    }
+    if (!$user->hasPermission('opsmanage') || !$user->hasPermission('admin')) {
+        accessDenied();
+    }
+
+    Route::add([
+        Input::get('fltnum'),
+        Input::get('dep'),
+        Input::get('arr'),
+        Input::get('duration'),
+        Input::get('aircraftid'),
+    ]);
+    echo Json::encode([
+        "status" => ErrorCode::NoError,
+        "result" => null,
+    ]);
+}, 'post');
+
+// Edit Route
+Router::add('/routes/([0-9]+)', function($routeId) {
+    global $_authType, $user;
+    if ($_authType == AuthType::ApiKey) {
+        accessDenied();
+    }
+    if (!$user->hasPermission('opsmanage') || !$user->hasPermission('admin')) {
+        accessDenied();
+    }
+
+    $updRoute = [];
+    if (!empty(Input::get('fltnum'))) $updRoute['fltnum'] = Input::get('fltnum');
+    if (!empty(Input::get('arr'))) $updRoute['arr'] = Input::get('arr');
+    if (!empty(Input::get('dep'))) $updRoute['dep'] = Input::get('dep');
+    if (!empty(Input::get('duration'))) $updRoute['duration'] = Input::get('duration');
+    if (!empty(Input::get('aircraftid'))) $updRoute['aircraftid'] = Input::get('aircraftid');
+
+    Route::update($routeId, $updRoute);
+    echo Json::encode([
+        "status" => ErrorCode::NoError,
+        "result" => null,
+    ]);
+}, 'put');
+
+// Delete Route
+Router::add('/routes/([0-9]+)', function($routeId) {
+    global $_authType, $user;
+    if ($_authType == AuthType::ApiKey) {
+        accessDenied();
+    }
+    if (!$user->hasPermission('opsmanage') || !$user->hasPermission('admin')) {
+        accessDenied();
+    }
+
+    Route::delete($routeId);
+    echo Json::encode([
+        "status" => ErrorCode::NoError,
+        "result" => null,
+    ]);
+}, 'delete');
+
 Router::run('/api.php');
