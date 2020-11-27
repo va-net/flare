@@ -85,8 +85,6 @@ if (Input::get('action') === 'editprofile') {
         Redirect::to('pireps.php?page=new');
     }
 
-    $curl = new Curl;
-
     $response = VANet::sendPirep(array (
         'AircraftID' => Aircraft::idToLiveryId(Input::get('aircraft')),
         'Arrival' => Input::get('arr'),
