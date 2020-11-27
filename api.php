@@ -463,6 +463,7 @@ Router::add('/news/([0-9]+)', function($newsId) {
     ]);
 }, 'put');
 
+// Delete News Item
 Router::add('/news/([0-9]+)', function($newsId) {
     global $_authType, $user;
     if ($_authType == AuthType::ApiKey) {
