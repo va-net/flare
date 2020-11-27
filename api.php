@@ -29,6 +29,7 @@ abstract class ErrorCode {
     const MultiplierNotFound = 9;
     const RankNotSufficent = 10;
     const VaNotGold = 11;
+    const MethodNotAllowed = 12;
 }
 
 function unauthorized() {
@@ -121,6 +122,19 @@ if ($user->isLoggedIn()) {
 } else {
     unauthorized();
 }
+
+// Not Found
+Router::pathNotFound('notFound');
+
+// Method Not Allowed
+Router::methodNotAllowed(function() {
+    http_response_code(405);
+    echo Json::encode([
+        "status" => ErrorCode::MethodNotAllowed,
+        "result" => null
+    ]);
+    die();
+});
 
 // View All PIREPs for User
 Router::add('/pireps', function() {
