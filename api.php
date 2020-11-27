@@ -408,4 +408,61 @@ Router::add('/news/([0-9]+)', function($newsId) {
     ]);
 });
 
+// Add News Item
+Router::add('/news', function() {
+    global $_authType, $user;
+    if ($_authType == AuthType::ApiKey) {
+        accessDenied();
+    }
+    if (!$user->hasPermission('newsmanage') || !$user->hasPermission('admin')) {
+        accessDenied();
+    }
+
+    News::add([
+        "subject" => Input::get('subject'),
+        "content" => Input::get('content'),
+        "author" => $user->data()->name,
+    ]);
+    echo Json::encode([
+        "status" => ErrorCode::NoError,
+        "result" => null,
+    ]);
+}, 'post');
+
+// Edit News Item
+Router::add('/news/([0-9]+)', function($newsId) {
+    global $_authType, $user;
+    if ($_authType == AuthType::ApiKey) {
+        accessDenied();
+    }
+    if (!$user->hasPermission('newsmanage') || !$user->hasPermission('admin')) {
+        accessDenied();
+    }
+
+    News::edit($newsId, [
+        "subject" => Input::get('subject'),
+        "content" => Input::get('content'),
+    ]);
+    echo Json::encode([
+        "status" => ErrorCode::NoError,
+        "result" => null,
+    ]);
+}, 'put');
+
+Router::add('/news/([0-9]+)', function($newsId) {
+    global $_authType, $user;
+    if ($_authType == AuthType::ApiKey) {
+        accessDenied();
+    }
+    if (!$user->hasPermission('newsmanage') || !$user->hasPermission('admin')) {
+        accessDenied();
+    }
+
+    News::archive($newsId);
+    echo Json::encode([
+        "status" => ErrorCode::NoError,
+        "result" => null,
+    ]);
+}, 'delete');
+
 Router::run('/api.php');
