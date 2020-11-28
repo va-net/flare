@@ -651,4 +651,22 @@ Router::add('/ranks', function() {
     ]);
 });
 
+Router::add('/ranks/([0-9]+)', function($rankId) {
+    $r = Rank::find($rankId);
+    if ($r === FALSE) {
+        notFound();
+    }
+
+    foreach ($r as $key => $val) {
+        if (is_numeric($val)) {
+            $r->$key = intval($val);
+        }
+    }
+
+    echo Json::encode([
+        "status" => ErrorCode::NoError,
+        "result" => $r,
+    ]);
+});
+
 Router::run('/api.php');

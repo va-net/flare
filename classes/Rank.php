@@ -11,6 +11,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 class Rank
 {
 
+    /**
+     * @var DB
+     */
     private static $_db;
 
     private static function init()
@@ -144,6 +147,20 @@ class Rank
         $rank = self::$_db->get('ranks', array('id', '=', $id));
         return $rank->first()->name;
 
+    }
+
+    /**
+     * @return object|bool
+     * @param int $id Rank ID
+     */
+    public static function find($id)
+    {
+        self::init();
+
+        $ret = self::$_db->get('ranks', ['id', '=', $id]);
+        if ($ret->count() == 0) return false;
+        
+        return $ret->first();
     }
     
     /**
