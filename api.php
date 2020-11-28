@@ -578,4 +578,40 @@ Router::add('/routes/([0-9]+)', function($routeId) {
     ]);
 }, 'delete');
 
+Router::add('/aircraft', function() {
+    $allaircraft = array_map(function($a) {
+        unset($a->status);
+        foreach ($a as $key => $val) {
+            if (is_numeric($val)) {
+                $a->$key = intval($val);
+            }
+        }
+
+        return $a;
+    }, Aircraft::fetchActiveAircraft()->results());
+
+    echo Json::encode([
+        "status" => ErrorCode::NoError,
+        "result" => $allaircraft,
+    ]);
+});
+
+Router::add('/aircraft/([0-9]+)', function($aircraftId) {
+    $a = Aircraft::fetch($aircraftId);
+    if ($a === FALSE) {
+        notFound();
+    }
+
+    unset($a->status);
+    foreach ($a as $key => $val) {
+        if (is_numeric($val)) {
+            $a->$key = intval($val);
+        }
+    }
+    echo Json::encode([
+        "status" => ErrorCode::NoError,
+        "result" => $a,
+    ]);
+});
+
 Router::run('/api.php');
