@@ -44,10 +44,10 @@ class Input {
                     self::$_PUT = Json::decode(file_get_contents("php://input"));
                     break;
                 case 'x-www-form-urlencoded':
-                    self::$_PUT = parse_str(file_get_contents('php://input'));
+                    parse_str(file_get_contents('php://input'), self::$_PUT);
                     break;
                 default:
-                    self::$_PUT = parse_str(file_get_contents('php://input'));
+                    parse_str(file_get_contents('php://input'), self::$_PUT);
                     break;
             }
         }
