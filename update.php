@@ -123,10 +123,7 @@ if (Input::get('action') === 'editprofile') {
         'flightnum' => Input::get('fnum'),
         'departure' => Input::get('dep'),
         'arrival' => Input::get('arr'),
-        'pilotid' => $user->data()->id,
         'date' => Input::get('date'),
-        'aircraftid' => Input::get('aircraft'),
-        'multi' => Input::get('multi')
     ))) {
         Session::flash('errorrecent', 'There was an Error Editing the PIREP.');
         Redirect::to('pireps.php');

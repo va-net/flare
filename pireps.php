@@ -134,26 +134,6 @@ if (!$user->isLoggedIn()) {
                                                                 <label for="arr">Arrival</label>
                                                                 <input required maxlength="4" minlength="4" type="text" value="'.$pirep['arrival'].'" class="form-control" name="arr">
                                                             </div>
-                                                            <div class="form-group">
-                                                                <label for="aircraft">Aircraft</label>
-                                                                <select class="form-control" name="aircraft" required>
-                                                                    <option value>Select</option>
-                                                                    ';
-                                                                    $aircraftlist = $user->getAvailableAircraft();
-                                                                    foreach($aircraftlist as $aircraft) {
-                                                                        if ($aircraft['name'] === $pirep['aircraft']) {
-                                                                            echo '<option selected="selected">'.$aircraft['name'].'</option>';
-                                                                            continue;
-                                                                        }
-                                                                        echo '<option>'.$aircraft['name'].'</option>';
-                                                                    }
-                                                                    echo '
-                                                                </select>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label for="multi">Multiplier number (if applicable)</label>
-                                                                <input required type="number" class="form-control" maxlength="6" minlength="6" id="multi" name="multi" value="'.$pirep['multi'].'">
-                                                            </div>
                                                             <input type="submit" class="btn bg-custom" value="Save">    
                                                         </form>                                      
                                                     </div>
