@@ -38,17 +38,22 @@ class Input {
      * @param string|int $item Item Key to Get
      */
     public static function get($item) {
-        if (self::$_PUT == null) {
-            switch (getallheaders()['Content-Type']) {
-                case 'application/json':
-                    self::$_PUT = Json::decode(file_get_contents("php://input"));
-                    break;
-                case 'x-www-form-urlencoded':
-                    parse_str(file_get_contents('php://input'), self::$_PUT);
-                    break;
-                default:
-                    parse_str(file_get_contents('php://input'), self::$_PUT);
-                    break;
+        $headers = getallheaders();
+        if (!isset($headers['Content-Type'])) {
+            self::$_PUT = [];
+        } else {
+            if (self::$_PUT == null) {
+                switch ($headers['Content-Type']) {
+                    case 'application/json':
+                        self::$_PUT = Json::decode(file_get_contents("php://input"));
+                        break;
+                    case 'x-www-form-urlencoded':
+                        parse_str(file_get_contents('php://input'), self::$_PUT);
+                        break;
+                    default:
+                        parse_str(file_get_contents('php://input'), self::$_PUT);
+                        break;
+                }
             }
         }
         if (isset($_POST[$item])) {

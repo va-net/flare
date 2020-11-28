@@ -675,22 +675,22 @@ $ACTIVE_CATEGORY = 'operations-management';
                                         die();
                                     }
                                     $routes = file_get_contents($file["tmp_name"]);
-                                    preg_match_all('/\n.*/m', $routes, $routelines);
-
-                                    $routesArray = [];
-                                    foreach ($routelines[0] as $l) {
-                                        $segments = preg_split('/, ?/', $l);
+                                    preg_match_all('/\r?\n.*/m', $routes, $routelines);
+                                    $routesArray = array_map(function($l) {
+                                        $l = trim($l);
+                                        $segments = str_getcsv($l);
                                         if (strpos($segments[10], ".") === FALSE && strpos($segments[10], ":") === FALSE) {
                                             $segments[10] .= ".00";
                                         }
-                                        array_push($routesArray, array(
+
+                                        return array(
                                             "fltnum" => $segments[1],
                                             "dep" => $segments[2],
                                             "arr" => $segments[3],
                                             "duration" => Time::strToSecs(str_replace('.', ':', $segments[10])),
                                             "aircraftid" => $segments[5]
-                                        ));
-                                    }
+                                        );
+                                    }, $routelines[0]);
 
                                     $routesJson = Json::encode($routesArray);
 
