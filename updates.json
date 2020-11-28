@@ -428,5 +428,33 @@
             "TODO"
         ],
         "newFolders": []
+    },
+    {
+        "tag": "v1.1.0-beta2",
+        "name": "Version 1.1.0 Beta 2",
+        "date": "2020-11-28",
+        "notes": "Various Bug Fixes, Added API, Added Annoucements, Fixed phpVMS Import Issues, Fixed PIREP Edit Issues",
+        "prerelease": true,
+        "useUpdater": true,
+        "files": [
+            "includes/navbar.php",
+            "classes/Notifications.php",
+            "classes/User.php",
+            "classes/Pirep.php",
+            "classes/Input.php",
+            "api.php",
+            "classes/Api.php",
+            "classes/Router.php",
+            "admin/users.php",
+            "update.php",
+            "classes/News.php",
+            "classes/Route.php",
+            "classes/Aircraft.php",
+            "admin/operations.php",
+            "version.json"
+        ],
+        "deletedFiles": [],
+        "queries": [],
+        "newFolders": []
     }
 ]
