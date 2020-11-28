@@ -614,4 +614,24 @@ Router::add('/aircraft/([0-9]+)', function($aircraftId) {
     ]);
 });
 
+Router::add('/notifications', function() {
+    global $_apiUser;
+    $notifications = array_map(function($n) {
+        $n->datetime = $n->formattedDate;
+        unset($n->formattedDate);
+        unset($n->pilotid);
+        foreach ($n as $key => $val) {
+            if (is_numeric($val)) {
+                $n->$key = intval($val);
+            }
+        }
+
+        return $n;
+    }, Notifications::mine($_apiUser->id));
+    echo Json::encode([
+        "status" => ErrorCode::NoError,
+        "result" => $notifications,
+    ]);
+});
+
 Router::run('/api.php');
