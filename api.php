@@ -634,4 +634,21 @@ Router::add('/notifications', function() {
     ]);
 });
 
+Router::add('/ranks', function() {
+    $ranks = array_map(function($r) {
+        foreach ($r as $key => $val) {
+            if (is_numeric($val)) {
+                $r->$key = intval($val);
+            }
+        }
+
+        return $r;
+    }, Rank::fetchAllNames()->results());
+
+    echo Json::encode([
+        "status" => ErrorCode::NoError,
+        "result" => $ranks,
+    ]);
+});
+
 Router::run('/api.php');
