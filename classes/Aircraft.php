@@ -312,15 +312,16 @@ class Aircraft
     }
 
     /**
-     * @return string
+     * @return object|bool
      * @param int $id Aircraft ID
      */
-    public static function idToName($id)
+    public static function fetch($id)
     {
 
         self::init();
         $result = self::$_db->get('aircraft', array('id', '=', $id));
-        return $result->first()->name;
+        if ($result->count() == 0) return false;
+        return $result->first();
 
     }
 

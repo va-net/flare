@@ -11,6 +11,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 class Input {
 
     /**
+     * @var array
+     */
+    private static $_PUT = null;
+
+    /**
      * @return bool
      * @param string $type GET or POST
      */
@@ -33,8 +38,23 @@ class Input {
      * @param string|int $item Item Key to Get
      */
     public static function get($item) {
+        if (self::$_PUT == null) {
+            switch (getallheaders()['Content-Type']) {
+                case 'application/json':
+                    self::$_PUT = Json::decode(file_get_contents("php://input"));
+                    break;
+                case 'x-www-form-urlencoded':
+                    parse_str(file_get_contents('php://input'), self::$_PUT);
+                    break;
+                default:
+                    parse_str(file_get_contents('php://input'), self::$_PUT);
+                    break;
+            }
+        }
         if (isset($_POST[$item])) {
             return $_POST[$item];
+        } elseif (isset(self::$_PUT[$item])) {
+            return self::$_PUT[$item];
         } elseif (isset($_GET[$item])) {
             return $_GET[$item];
         }
