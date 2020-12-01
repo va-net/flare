@@ -49,7 +49,10 @@ class Route
 
         self::init();
 
-        return self::$_db->query("SELECT routes.*, aircraft.name AS aircraft, aircraft.liveryname AS livery, aircraft.ifliveryid AS liveryid FROM routes INNER JOIN aircraft ON routes.aircraftid=aircraft.id;");
+        $sql = "SELECT routes.*, aircraft.name AS aircraft, aircraft.liveryname AS livery, 
+        aircraft.ifliveryid AS liveryid FROM routes 
+        INNER JOIN aircraft ON routes.aircraftid=aircraft.id;";
+        return self::$_db->query($sql);
 
     }
 

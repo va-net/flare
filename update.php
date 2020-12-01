@@ -377,7 +377,8 @@ if (Input::get('action') === 'editprofile') {
         "dep" => Input::get('dep'),
         "arr" => Input::get('arr'),
         "aircraftid" => Input::get('aircraft'),
-        "duration" => Time::strToSecs(Input::get('duration'))
+        "duration" => Time::strToSecs(Input::get('duration')),
+        "notes" => Input::get('notes'),
     ));
 
     if ($ret === FALSE) {

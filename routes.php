@@ -87,11 +87,12 @@ if (!$user->isLoggedIn()) {
                         <table class="table table-striped datatable-nosearch">
                             <thead class="bg-custom">
                                 <tr>
-                                    <th class="mobile-hidden">Flight Number</th>
-                                    <th>Departure</th>
-                                    <th>Arrival</th>
+                                    <th class="mobile-hidden">#</th>
+                                    <th>Dep<span class="mobile-hidden">arture</span></th>
+                                    <th>Arr<span class="mobile-hidden">ival</span></th>
                                     <th class="mobile-hidden">Aircraft</th>
                                     <th class="mobile-hidden">Duration</th>
+                                    <th class="mobile-hidden">Notes</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -131,7 +132,8 @@ if (!$user->isLoggedIn()) {
                                         }
                                     }
                                     $query = 'SELECT routes.fltnum, routes.dep, routes.arr, routes.duration, routes.id, routes.aircraftid, 
-                                    aircraft.name AS aircraft, aircraft.liveryname AS livery FROM routes INNER JOIN aircraft ON aircraft.id = routes.aircraftid';
+                                    aircraft.name AS aircraft, aircraft.liveryname AS livery, routes.notes 
+                                    FROM routes INNER JOIN aircraft ON aircraft.id = routes.aircraftid';
                                     $i = 0;
                                     foreach ($searchwhere as $cond) {
                                         if ($i == 0) {
@@ -155,6 +157,8 @@ if (!$user->isLoggedIn()) {
                                         echo $route->aircraft.' ('.$route->livery.')';
                                         echo '</td><td class="align-middle mobile-hidden">';
                                         echo Time::secsToString($route->duration);
+                                        echo '</td><td class="align-middle">';
+                                        echo $route->notes;
                                         echo '</td><td class="align-middle">';
                                         $link = "pireps.php?page=new&fnum={$route->fltnum}&dep={$route->dep}&arr={$route->arr}&aircraft={$route->aircraft}";
                                         echo '<a href="'.$link.'" class="btn bg-custom"><i class="fa fa-plane"></i></a>';

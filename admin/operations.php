@@ -347,7 +347,8 @@ $ACTIVE_CATEGORY = 'operations-management';
                                         echo '<button class="btn bg-custom editRoute" 
                                         data-id="'.$route->id.'" data-fltnum="'.$route->fltnum.'" 
                                         data-dep="'.$route->dep.'" data-arr="'.$route->arr.'" 
-                                        data-duration="'.Time::secsToString($route->duration).'" data-aircraft="'.$route->aircraftid.'" 
+                                        data-duration="'.Time::secsToString($route->duration).'" 
+                                        data-aircraft="'.$route->aircraftid.'" data-notes="'.escape($route->notes).'"
                                         ><i class="fa fa-edit"></i></button>';
                                         echo '&nbsp;<button value="'.$route->id.'" form="deleteroute" type="submit" class="btn btn-danger text-light" name="delete"><i class="fa fa-trash"></i></button>';
                                         echo '</td></tr>';
@@ -432,6 +433,10 @@ $ACTIVE_CATEGORY = 'operations-management';
                                                         ?>
                                                     </select>
                                                 </div>
+                                                <div class="form-group">
+                                                    <label for="notes">Notes</label>
+                                                    <input type="text" name="notes" id="routeedit-notes" class="form-control" />
+                                                </div>
                                                 <input type="submit" class="btn bg-custom" value="Save" />
                                             </form>
                                         </div>
@@ -450,6 +455,7 @@ $ACTIVE_CATEGORY = 'operations-management';
                                     var arr = $(this).data('arr');
                                     var duration = $(this).data('duration');
                                     var aircraft = $(this).data('aircraft');
+                                    var notes = $(this).data('notes');
 
                                     $("#routeedit-id").val(id);
                                     $("#routeedit-fltnum").val(fltnum);
@@ -458,6 +464,7 @@ $ACTIVE_CATEGORY = 'operations-management';
                                     $("#routeedit-duration").val(duration);
                                     reverseFormatEditFlightTime();
                                     $("#routeedit-aircraft").val(aircraft);
+                                    $("#routeedit-notes").val(notes);
 
                                     $("#routeedit").modal('show');
                                 });

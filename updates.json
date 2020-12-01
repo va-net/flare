@@ -456,5 +456,19 @@
         "deletedFiles": [],
         "queries": [],
         "newFolders": []
+    },
+    {
+        "tag": "v1.1.0-beta3",
+        "name": "Version 1.1.0 Beta 3",
+        "date": "2020-12-01",
+        "notes": "TODO",
+        "prerelease": true,
+        "useUpdater": true,
+        "files": [],
+        "deletedFiles": [],
+        "queries": [
+            "ALTER TABLE `routes` ADD `notes` TEXT NULL DEFAULT NULL"
+        ],
+        "newFolders": []
     }
 ]
