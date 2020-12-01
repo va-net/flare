@@ -283,7 +283,7 @@ class User
                 'id' => $r->id,
                 'notes' => $r->notes
             );
-            array_push($x, $newdata);
+            array_push($aircraft, $newdata);
         }
         return $aircraft;
 
