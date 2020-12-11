@@ -133,11 +133,20 @@ class Pirep
 
         self::init();
 
+        $usr = new User;
+        $pirep = Pirep::find($id);
+        if (!$pirep) return;
+
+        $beforeRank = $usr->rank($pirep->pilotid, true);
         self::$_db->update('pireps', $id, 'id', array(
             'status' => 1
         ));
+        $afterRank = $usr->rank($pirep->pilotid, true);
 
-        Events::trigger('pirep/accepted', ["id" => $id]);
+        if ($beforeRank != $afterRank) {
+            Events::trigger('user/promoted', ["pilot" => $pirep->pilotid, "rank" => $afterRank]);
+        }
+        Events::trigger('pirep/accepted', $pirep);
 
     }
 
