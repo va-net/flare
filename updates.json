@@ -460,11 +460,20 @@
     {
         "tag": "v1.1.0-beta3",
         "name": "Version 1.1.0 Beta 3",
-        "date": "2020-12-01",
-        "notes": "TODO",
+        "date": "2020-12-12",
+        "notes": "Added Route Comments, Added Promotion Notifications, Various Bug Fixes",
         "prerelease": true,
         "useUpdater": true,
-        "files": [],
+        "files": [
+            "classes/User.php",
+            "admin/operations.php",
+            "classes/Route.php",
+            "pireps.php",
+            "update.php",
+            "classes/Pirep.php",
+            "classes/Notifications.php",
+            "admin/users.php"
+        ],
         "deletedFiles": [],
         "queries": [
             "ALTER TABLE `routes` ADD `notes` TEXT NULL DEFAULT NULL"
