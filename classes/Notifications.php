@@ -24,6 +24,7 @@ class Notifications {
         "news/added" => "handleNewsAdded",
         "pirep/accepted" => "handlePirep",
         "pirep/denied" => "handlePirep",
+        "user/promoted" => "handlePromotion",
     ];
 
     private static function init()
@@ -143,6 +144,19 @@ class Notifications {
             if (strlen($content) > 60) return;
             self::notify($pirep->pilotid, "fa-times", "PIREP Denied", $content);
         }
+    }
+
+    private static function handlePromotion($ev) 
+    {
+        self::init();
+        $usr = (new User)->getUser($ev->params['pilot']);
+        $rnk = Rank::find($ev->params['rank']);
+        $content = "{$usr->name} was just promoted to {$rnk->name}. Congratulations!";
+        if (strlen($content) > 60) {
+            $content = "{$usr->name} was just promoted to {$rnk->name}";
+            if (strlen($content) > 60) return;
+        }
+        self::notify(0, "fa-medal", "Promotion", $content);
     }
 
 }
