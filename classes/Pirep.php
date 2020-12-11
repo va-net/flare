@@ -66,27 +66,11 @@ class Pirep
 
         self::init();
 
-        $result = self::$_db->getAll('pireps');
-
-        $x = 0;
-        $pireps = array();
-
-        while ($x < $result->count()) {
-            $newdata = array(
-                'id' => $result->results()[$x]->id,
-                'flightnum' => $result->results()[$x]->flightnum,
-                'departure' => $result->results()[$x]->departure,
-                'arrival' => $result->results()[$x]->arrival,
-                'flighttime' => $result->results()[$x]->flighttime,
-                'pilotid' => $result->results()[$x]->pilotid,
-                'date' => $result->results()[$x]->date,
-                'aircraftid' => $result->results()[$x]->flighttime,
-                'multi' => $result->results()[$x]->multi,
-                'status' => $result->results()[$x]->status,
-            );
-            $pireps[$x] = $newdata;
-            $x++;
-        }
+        $sql = "SELECT pireps.*, pilots.name AS pilotname, aircraft.name AS aircraftname FROM (pireps INNER JOIN pilots ON pireps.pilotid=pilots.id) INNER JOIN aircraft ON pireps.aircraftid=aircraft.id";
+        $result = self::$_db->query($sql)->results();
+        $pireps = array_map(function($p) {
+            return (array)$p;
+        }, $result);
         return $pireps;
 
     }
