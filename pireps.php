@@ -48,11 +48,11 @@ if (!$user->isLoggedIn()) {
                     <div id="loader-wrapper"><div id="loader" class="spinner-border spinner-border-sm spinner-custom"></div></div>
                     <div class="loaded">
                         <?php
-                        if (Session::exists('errorrecent')) {
-                            echo '<div class="alert alert-danger text-center">Error: '.Session::flash('errorrecent').'</div>';
+                        if (Session::exists('error')) {
+                            echo '<div class="alert alert-danger text-center">Error: '.Session::flash('error').'</div>';
                         }
-                        if (Session::exists('successrecent')) {
-                            echo '<div class="alert alert-success text-center">'.Session::flash('successrecent').'</div>';
+                        if (Session::exists('success')) {
+                            echo '<div class="alert alert-success text-center">'.Session::flash('success').'</div>';
                         }
                         ?>
                         <?php if ($user->data()->ifuserid != null): ?>
@@ -253,7 +253,7 @@ if (!$user->isLoggedIn()) {
                             $ifc = explode('/', $user->data()->ifc)[4];
                             $setupIfc = VANet::setupPirepsIfc($ifc, $user->data()->id);
                             if ($setupIfc):
-                                Session::flash('successrecent', 'PIREPs were set up using your IFC Username. No further action is required.');
+                                Session::flash('success', 'PIREPs were set up using your IFC Username. No further action is required.');
                                 ?>
                                 <script>window.location.href="/pireps.php?page=<?= Input::get('page') ?>";</script>
                             <?php 

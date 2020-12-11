@@ -125,10 +125,10 @@ if (Input::get('action') === 'editprofile') {
         'arrival' => Input::get('arr'),
         'date' => Input::get('date'),
     ))) {
-        Session::flash('errorrecent', 'There was an Error Editing the PIREP.');
+        Session::flash('error', 'There was an Error Editing the PIREP.');
         Redirect::to('pireps.php');
     } else {
-        Session::flash('successrecent', 'PIREP Edited successfully!');
+        Session::flash('success', 'PIREP Edited successfully!');
         Redirect::to('pireps.php');
     }
 } elseif (Input::get('action') === 'edituser') {
