@@ -290,10 +290,10 @@ $ACTIVE_CATEGORY = 'operations-management';
                                                         }
 
                                                         $(document).ready(function() {
-                                                            $("#flightTimeHrs").keyup(function() {
+                                                            $("#flightTimeHrs").on('change', function() {
                                                                 formatFlightTime();
                                                             });
-                                                            $("#flightTimeMins").keyup(function() {
+                                                            $("#flightTimeMins").on('change', function() {
                                                                 formatFlightTime();
                                                             });
                                                             reverseFormatFlightTime();
@@ -409,10 +409,10 @@ $ACTIVE_CATEGORY = 'operations-management';
                                                         }
 
                                                         $(document).ready(function() {
-                                                            $("#routeedit-hrs").keyup(function() {
+                                                            $("#routeedit-hrs").on('change', function() {
                                                                 formatEditFlightTime();
                                                             });
-                                                            $("#routeedit-mins").keyup(function() {
+                                                            $("#routeedit-mins").on('change', function() {
                                                                 formatEditFlightTime();
                                                             });
                                                             reverseFormatEditFlightTime();
