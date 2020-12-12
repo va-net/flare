@@ -152,7 +152,7 @@ if (Input::get('action') === 'editprofile') {
     if (!$isAdmin && Input::get('admin') == 1) {
         Permissions::give(Input::get('id'), 'admin');
     } elseif ($isAdmin && Input::get('admin') == 0) {
-        Permissions::revoke(Input::get('id'), 'admin');
+        Permissions::revokeAll(Input::get('id'));
     }
 
     $user->update(array(

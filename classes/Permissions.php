@@ -20,6 +20,9 @@ class Permissions
         'opsmanage' => 'Operations Management',
         'statsviewing' => 'View Statistics',
     );
+    /**
+     * @var DB
+     */
     private static $_db;
 
     private static function init() 
@@ -101,9 +104,21 @@ class Permissions
         }
 
         $res = self::give($userid, 'admin');
-        if (!res) {
+        if (!$res) {
             throw new Exception("Could not Give Permission Admin (admin)");
         }
+    }
+
+    /**
+     * @return null
+     * @param int $userid User ID
+     */
+    public static function revokeAll($userid)
+    {
+        self::init();
+
+        self::$_db->delete('permissions', ['userid', '=', $userid]);
+        Events::trigger('permission/revoked', ["userid" => $userid, "name" => "*"]);
     }
 
     /**
