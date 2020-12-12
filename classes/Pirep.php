@@ -49,7 +49,7 @@ class Pirep
 
         self::init();
 
-        if(!self::$_db->update('pireps', $id, 'id', $fields)) {
+        if(self::$_db->update('pireps', $id, 'id', $fields)->error()) {
             return false;
         }
         $fields["id"] = $id;

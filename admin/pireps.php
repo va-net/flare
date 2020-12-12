@@ -126,7 +126,7 @@ $ACTIVE_CATEGORY = 'pirep-management';
                                             <th class="mobile-hidden">Pilot</th>
                                             <th>Dep<span class="mobile-hidden">arture</span></th>
                                             <th>Arr<span class="mobile-hidden">ival</span></th>
-                                            <th class="mobile-hidden">Aircraft</th>
+                                            <th class="mobile-hidden">Status</th>
                                             <th><span class="mobile-hidden">Actions</span></th>
                                         </tr>
                                     </thead>
@@ -157,14 +157,141 @@ $ACTIVE_CATEGORY = 'pirep-management';
                                                 echo '</td><td class="align-middle">';
                                                 echo $a['arrival'];
                                                 echo '</td><td class="align-middle mobile-hidden">';
-                                                echo $a['aircraftname'];
+                                                $s = $statuses[$a['status']];
+                                                echo '<span class="badge badge-'.$s['badge'].'">'.$s['text'].'</span>';
                                                 echo '</td><td class="align-middle">';
-                                                echo 'SOON';
+                                                echo '<button class="btn bg-custom editpirepbtn" data-pirep=\''.json_encode($a).'\'><i class="fa fa-edit"></i></button>';
                                                 echo '</td></tr>';
                                             }
                                         ?>
                                     </tbody>
                                 </table>
+
+                                <!-- Edit PIREP Modal -->
+                                <div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="editpirep-modal">
+                                    <div class="modal-dialog modal-lg">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Edit PIREP</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form action="/update.php" method="post">
+                                                    <input hidden name="action" value="editpirepadmin">
+                                                    <input hidden name="id" id="editpirep-id">
+                                                    <div class="form-group">
+                                                        <label for="editpirep-date">Date of Flight</label>
+                                                        <input required type="date" class="form-control" name="date" id="editpirep-date">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="editpirep-fnum">Flight Number</label>
+                                                        <input required type="number" min="1" class="form-control" name="fnum" id="editpirep-fnum">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="editpirep-dep">Departure</label>
+                                                        <input required maxlength="4" minlength="4" type="text" id="editpirep-dep" class="form-control" name="dep">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="editpirep-arr">Arrival</label>
+                                                        <input required maxlength="4" minlength="4" type="text" id="editpirep-arr" class="form-control" name="arr">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="">Flight Time</label>
+                                                        <div class="row">
+                                                            <div class="col-sm-6">
+                                                                <input required type="number" min="0" id="editpirep-ftime-hrs" class="form-control" placeholder="Hours" />
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <input required type="number" min="0" id="editpirep-ftime-mins" class="form-control" placeholder="Minutes" />
+                                                            </div>
+                                                        </div>
+                                                        <input hidden name="ftime" id="editpirep-ftime" class="form-control" required />
+                                                        <script>
+                                                            function formatFlightTime() {
+                                                                var hrs = $("#editpirep-ftime-hrs").val();
+                                                                var mins = $("#editpirep-ftime-mins").val();
+                                                                $("#editpirep-ftime").val(hrs + ":" + mins);
+                                                            }
+
+                                                            function reverseFormatFlightTime() {
+                                                                var formatted = $("#editpirep-ftime").val();
+                                                                if (formatted != '') {
+                                                                    var split = formatted.split(":");
+                                                                    var hrs = split[0];
+                                                                    var mins = split[1];
+                                                                    $("#editpirep-ftime-hrs").val(hrs);
+                                                                    $("#editpirep-ftime-mins").val(mins);
+                                                                }
+                                                            }
+
+                                                            $(document).ready(function() {
+                                                                $("#editpirep-ftime-hrs").on('change', function() {
+                                                                    formatFlightTime();
+                                                                });
+                                                                $("#editpirep-ftime-mins").on('change', function() {
+                                                                    formatFlightTime();
+                                                                });
+                                                                reverseFormatFlightTime();
+                                                            });
+                                                        </script>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="editpirep-ac">Aircraft</label>
+                                                        <select required class="form-control" name="aircraft" id="editpirep-ac">
+                                                            <?php
+                                                                $allaircraft = Aircraft::fetchActiveAircraft()->results();
+                                                                foreach ($allaircraft as $aircraft) {
+                                                                    $notes = $aircraft->notes == null ? '' : ' - '.$aircraft->notes;
+                                                                    echo '<option value="'.$aircraft->id.'">'.$aircraft->name.' ('.$aircraft->liveryname.')'.$notes.'</option>';
+                                                                }
+                                                            ?>
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="editpirep-status">Status</label>
+                                                        <select required class="form-control" name="status" id="editpirep-status">
+                                                            <option value="0">Pending</option>
+                                                            <option value="1">Accepted</option>
+                                                            <option value="2">Denied</option>
+                                                        </select>
+                                                    </div>
+                                                    <input type="submit" class="btn bg-custom" value="Save">    
+                                                </form>                                      
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Edit PIREP Script -->
+                                <script>
+                                    $(document).ready(function() {
+                                        $(".editpirepbtn").click(function() {
+                                            var pirep = $(this).data('pirep');
+                                            $("#editpirep-id").val(pirep.id);
+                                            $("#editpirep-date").val(pirep.date);
+                                            $("#editpirep-fnum").val(pirep.flightnum);
+                                            $("#editpirep-dep").val(pirep.departure);
+                                            $("#editpirep-arr").val(pirep.arrival);
+                                            $("#editpirep-ac").val(pirep.aircraftid);
+                                            $("#editpirep-status").val(pirep.status);
+
+                                            var hrs = Math.floor(pirep.flighttime / 3600);
+                                            if (hrs < 10) {
+                                                hrs = `0${hrs}`;
+                                            }
+                                            $("#editpirep-ftime-hrs").val(hrs);
+                                            var mins = Math.floor((pirep.flighttime - hrs * 3600) / 60);
+                                            if (mins < 10) {
+                                                mins = `0${mins}`;
+                                            }
+                                            $("#editpirep-ftime-mins").val(mins);
+                                            formatFlightTime();
+                                            $("#editpirep-modal").modal('show');
+                                        });
+                                    });
+                                </script>
                             </div>
                         </div>
                     </div>

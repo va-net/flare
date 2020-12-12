@@ -1125,4 +1125,26 @@ if (Input::get('action') === 'editprofile') {
     Notifications::notify(0, "fa-bullhorn", $title, $content);
     Session::flash('sucess', 'Announcement Made');
     Redirect::to('/admin/users.php');
+} elseif (Input::get('action') === 'editpirepadmin') {
+    if (!$user->hasPermission('pirepmanage')) {
+        Redirect::to('home.php');
+        die();
+    }
+
+    $data = array(
+        'flightnum' => Input::get('fnum'),
+        'departure' => Input::get('dep'),
+        'arrival' => Input::get('arr'),
+        'date' => Input::get('date'),
+        'flighttime' => Time::strToSecs(Input::get('ftime')),
+        'aircraftid' => Input::get('aircraft'),
+        'status' => Input::get('status'),
+    );
+    if (!Pirep::update(Input::get('id'), $data)) {
+        Session::flash('error', 'There was an Error Editing the PIREP');
+        Redirect::to('/admin/pireps.php?tab=all');
+    } else {
+        Session::flash('success', 'PIREP Edited Successfully!');
+        Redirect::to('/admin/pireps.php?tab=all');
+    }
 }
