@@ -119,17 +119,28 @@ if (Input::get('action') === 'editprofile') {
         Redirect::to('pireps.php?page=recents');
     }
 } elseif (Input::get('action') === 'editpirep') {
-    if (!Pirep::update(Input::get('id'), array(
+    $pirep = Pirep::find(Input::get('id'));
+    if ($pirep === FALSE) {
+        Session::flash('error', 'PIREP Not Found');
+        Redirect::to('pireps.php?page=recents');
+    }
+    if ($pirep->pilotid != $user->data()->id) {
+        Session::flash('error', 'There was an Error Editing the PIREP.');
+        Redirect::to('pireps.php?page=recents');
+    }
+
+    $data = array(
         'flightnum' => Input::get('fnum'),
         'departure' => Input::get('dep'),
         'arrival' => Input::get('arr'),
         'date' => Input::get('date'),
-    ))) {
+    );
+    if (!Pirep::update(Input::get('id'), $data)) {
         Session::flash('error', 'There was an Error Editing the PIREP.');
-        Redirect::to('pireps.php');
+        Redirect::to('pireps.php?page=recents');
     } else {
         Session::flash('success', 'PIREP Edited successfully!');
-        Redirect::to('pireps.php');
+        Redirect::to('pireps.php?page=recents');
     }
 } elseif (Input::get('action') === 'edituser') {
     if (!$user->hasPermission('usermanage')) {
