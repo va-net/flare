@@ -46,6 +46,10 @@ if (Input::get('method') === 'events-table') {
     header("Content-Type: application/json");
     echo Json::encode($event);
 } elseif (Input::get('method') === 'acars' && !empty(Input::get('server'))) {
+    if (Input::get('server') == 'casual') {
+        echo '<div class="alert alert-dabger">ACARS is not currently available on the Casual Server</div>';
+        die();
+    }
     $response = VANet::runAcars(Input::get('server'));
     if (array_key_exists('status', $response)) {
         if ($response['status'] == 404 || $response['status'] == 409) {

@@ -48,13 +48,12 @@ if (!$user->isLoggedIn()) {
                                     <?php
                                         $server = Config::get('FORCE_SERVER');
 
-                                        if ($server === 0 || $server === 'casual') {
+                                        if ($server == 0 || $server == 'casual') {
                                             echo '<div class="form-group">';
                                             echo '<label for="acars-server">Select Server</label>';
                                             echo '<select class="form-control" id="acars-server">';
-                                            echo '<option value="casual">Casual Server</option>';
                                             echo '<option value="training">Training Server</option>';
-                                            echo '<option value="expert" selected>Expert Server</option>';
+                                            echo '<option value="expert">Expert Server</option>';
                                             echo '</select>';
                                             echo '</div>';
                                         } else {
