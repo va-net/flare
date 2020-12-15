@@ -365,7 +365,18 @@ if (Input::get('action') === 'editprofile') {
         die();
     }
 
-    Route::add(array(Input::get('fltnum'), Input::get('dep'), Input::get('arr'), Time::strToSecs(Input::get('duration')), Input::get('aircraft')));
+    $notes = empty(Input::get('notes')) ? null : Input::get('notes');
+    Route::add([
+        "fltnum" => Input::get('fltnum'), 
+        "dep" => Input::get('dep'), 
+        "arr" => Input::get('arr'), 
+        "duration" => Time::strToSecs(Input::get('duration')), 
+        "notes" => $notes,
+    ]);
+    $id = Route::lastId();
+    foreach (explode(',', Input::get('aircraft')) as $acId) {
+        Route::addAircraft($id, $acId);
+    }
     Session::flash('success', 'Route Added Successfully!');
     Redirect::to('/admin/operations.php?section=routes');
 } elseif (Input::get('action') === 'deleteroute') {
@@ -382,12 +393,30 @@ if (Input::get('action') === 'editprofile') {
         Redirect::to('home.php');
         die();
     }
-    
+
+    $oldAc = array_map(function($a) {
+        return $a->id;
+    }, Route::aircraft(Input::get('id')));
+    $newAc = explode(',', Input::get('aircraft'));
+    if ($oldAc != $newAc) {
+        foreach ($oldAc as $o) {
+            if (!in_array($o, $newAc)) {
+                // Been Removed
+                Route::removeAircraft(Input::get('id'), $o);
+            }
+        }
+        foreach ($newAc as $n) {
+            if (!in_array($n, $oldAc)) {
+                // Been Added
+                Route::addAircraft(Input::get('id'), $n);
+            }
+        }
+    }
+
     $ret = Route::update(Input::get('id'), array(
         "fltnum" => Input::get('fltnum'),
         "dep" => Input::get('dep'),
         "arr" => Input::get('arr'),
-        "aircraftid" => Input::get('aircraft'),
         "duration" => Time::strToSecs(Input::get('duration')),
         "notes" => Input::get('notes'),
     ));
@@ -652,6 +681,7 @@ if (Input::get('action') === 'editprofile') {
             }
         }
 
+        // TODO: Need to fix this
         $acId = $db->query("SELECT * FROM aircraft WHERE ifliveryid= ?", array($aircraft["liveryID"]));
         if ($acId->count() === 0) {
             $rank = $db->query("SELECT * FROM ranks ORDER BY timereq ASC")->first();
@@ -762,21 +792,22 @@ if (Input::get('action') === 'editprofile') {
 } elseif (Input::get('action') === 'exportroutes') {
     header('Content-Type: application/json');
 
-    $routes = Route::fetchAll()->results();
-    $ret = array();
-    foreach ($routes as $r) {
-        array_push($ret, array(
-            "fltnum" => $r->fltnum,
-            "dep" => $r->dep,
-            "arr" => $r->arr,
-            "duration" => $r->duration,
-            "aircraftid" => $r->liveryid
-        ));
-    }
+    $routes = Route::fetchAll();
+    $data = array_map(function($r) {
+        return [
+            "fltnum" => $r['fltnum'],
+            "dep" => $r['dep'],
+            "arr" => $r['arr'],
+            "duration" => $r['duration'],
+            "aircraft" => array_map(function($a) {
+                return $a['liveryid'];
+            }, $r['aircraft'])
+        ];
+    }, $routes);
 
     Events::trigger('route/exported');
 
-    echo Json::encode($ret, true);
+    echo Json::encode($data, true);
 } elseif (Input::get('action') === 'exportaircraft') {
     header('Content-Type: application/json');
 
@@ -1054,7 +1085,7 @@ if (Input::get('action') === 'editprofile') {
                 Redirect::to('/admin/plugins.php');
             }
 
-            Logger::log('File "'.__DIR__.$slash.$f.'" was deleted while installing plugin ' + $pluginbasic["name"]);
+            Logger::log('File "'.__DIR__.$slash.$f.'" was deleted while installing plugin '.$pluginbasic["name"]);
         }
     }
     foreach ($pluginadv["installation"]["files"] as $f) {
