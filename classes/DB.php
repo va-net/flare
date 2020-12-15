@@ -247,7 +247,7 @@ class DB
     }
 
     /**
-     * @return object
+     * @return object|bool
      */
     public function first()
     {
