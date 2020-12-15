@@ -34,8 +34,8 @@ if (!$user->isLoggedIn()) {
             <div class="col-lg-9 main-content">
                 <div id="loader-wrapper"><div id="loader" class="spinner-border spinner-border-sm spinner-custom"></div></div>
                 <div class="loaded">
-                    <h3>Route Search</h3>
                     <?php if (empty(Input::get('action'))): ?>
+                        <h3>Route Search</h3>
                         <form method="get">
                             <input hidden name="action" value="search" />
                             <div class="form-group">
@@ -82,18 +82,18 @@ if (!$user->isLoggedIn()) {
                             </div>
                             <input type="submit" class="btn bg-custom" value="Search" />
                         </form>
-                    <?php else: ?>
+                    <?php elseif (Input::get('action') == 'search'): ?>
+                        <h3>Route Search</h3>
                         <a href="routes.php" class="btn bg-custom mb-2">New Search</a>
                         <table class="table table-striped datatable-nosearch">
                             <thead class="bg-custom">
                                 <tr>
                                     <th class="mobile-hidden">#</th>
-                                    <th>Dep<span class="mobile-hidden">arture</span></th>
-                                    <th>Arr<span class="mobile-hidden">ival</span></th>
-                                    <th class="mobile-hidden">Aircraft</th>
+                                    <th>Departure</th>
+                                    <th>Arrival</th>
                                     <th class="mobile-hidden">Duration</th>
                                     <th class="mobile-hidden">Notes</th>
-                                    <th></th>
+                                    <th><span class="mobile-hidden">Actions</span></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -113,7 +113,7 @@ if (!$user->isLoggedIn()) {
                                         array_push($stmts, Input::get('fltnum'));
                                     }
                                     if (!empty(Input::get('aircraft'))) {
-                                        array_push($searchwhere, 'aircraftid = ?');
+                                        array_push($searchwhere, '? IN (SELECT aircraftid FROM route_aircraft WHERE routeid=routes.id)');
                                         array_push($stmts, Input::get('aircraft'));
                                     }
                                     if (!empty(Input::get('duration')) || Input::get('duration') === '0') {
@@ -131,9 +131,7 @@ if (!$user->isLoggedIn()) {
                                             array_push($stmts, (Input::get('duration') + 1) * 3600);
                                         }
                                     }
-                                    $query = 'SELECT routes.fltnum, routes.dep, routes.arr, routes.duration, routes.id, routes.aircraftid, 
-                                    aircraft.name AS aircraft, aircraft.liveryname AS livery, routes.notes 
-                                    FROM routes INNER JOIN aircraft ON aircraft.id = routes.aircraftid';
+                                    $query = 'SELECT routes.fltnum, routes.dep, routes.arr, routes.duration, routes.id, routes.notes FROM routes';
                                     $i = 0;
                                     foreach ($searchwhere as $cond) {
                                         if ($i == 0) {
@@ -154,14 +152,13 @@ if (!$user->isLoggedIn()) {
                                         echo '</td><td class="align-middle">';
                                         echo $route->arr;
                                         echo '</td><td class="align-middle mobile-hidden">';
-                                        echo $route->aircraft.' ('.$route->livery.')';
-                                        echo '</td><td class="align-middle mobile-hidden">';
                                         echo Time::secsToString($route->duration);
-                                        echo '</td><td class="align-middle">';
+                                        echo '</td><td class="align-middle mobile-hidden">';
                                         echo $route->notes;
                                         echo '</td><td class="align-middle">';
-                                        $link = "pireps.php?page=new&fnum={$route->fltnum}&dep={$route->dep}&arr={$route->arr}&aircraft={$route->aircraft}";
-                                        echo '<a href="'.$link.'" class="btn bg-custom"><i class="fa fa-plane"></i></a>';
+                                        $link = "pireps.php?page=new&fnum={$route->fltnum}&dep={$route->dep}&arr={$route->arr}";
+                                        echo '<a href="'.$link.'" class="btn bg-custom"><i class="fa fa-plane"></i></a>&nbsp;';
+                                        echo '<a href="/routes/php?action=route&route='.$route->id.'" class="btn bg-custom"><i class="fa fa-plus"></i></a>';
                                         echo '</td></tr>';
                                     }
                                 ?>

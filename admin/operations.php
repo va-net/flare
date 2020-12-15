@@ -13,6 +13,10 @@ $user = new User();
 
 Page::setTitle('Operations Admin - '.Config::get('va/name'));
 Page::excludeAsset('chartjs');
+Page::registerAsset('bootstrap-select', [
+    '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />',
+    '<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>',
+]);
 
 if (!$user->isLoggedIn()) {
     Redirect::to('/index.php');
@@ -302,7 +306,7 @@ $ACTIVE_CATEGORY = 'operations-management';
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="">Aircraft</label>
-                                                    <select class="form-control" name="aircraft" required>
+                                                    <select multiple class="form-control selectpicker" id="addroute-aircraft" required>
                                                         <option value>Select</option>
                                                         <?php
                                                         $all = Aircraft::fetchActiveAircraft()->results();
@@ -313,6 +317,11 @@ $ACTIVE_CATEGORY = 'operations-management';
                                                         }
                                                         ?>
                                                     </select>
+                                                    <input requried hidden name="aircraft" id="addroute-aircraft-actual" />
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="">Notes</label>
+                                                    <input type="text" name="notes" class="form-control" />
                                                 </div>
                                                 <input type="submit" class="btn bg-custom" value="Add Route" />
                                             </form>
@@ -326,31 +335,24 @@ $ACTIVE_CATEGORY = 'operations-management';
                                         <th class="mobile-hidden">Flight Number</th>
                                         <th>Departure</th>
                                         <th>Arrival</th>
-                                        <th class="mobile-hidden">Aircraft</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php 
-                                    $all = Route::fetchAll()->results();
+                                    $all = Route::fetchAll();
 
-                                    foreach ($all as $route) {
+                                    foreach ($all as $id => $route) {
+                                        $route['id'] = $id;
                                         echo '<tr><td class="align-middle mobile-hidden">';
-                                        echo $route->fltnum;
+                                        echo $route['fltnum'];
                                         echo '</td><td class="align-middle">';
-                                        echo $route->dep;
+                                        echo $route['dep'];
                                         echo '</td><td class="align-middle">';
-                                        echo $route->arr;
-                                        echo '</td><td class="align-middle mobile-hidden">';
-                                        echo $route->aircraft.'<span class="mobile-hidden"> ('.$route->livery.')</span>';
+                                        echo $route['arr'];
                                         echo '</td><td class="align-middle">';
-                                        echo '<button class="btn bg-custom editRoute" 
-                                        data-id="'.$route->id.'" data-fltnum="'.$route->fltnum.'" 
-                                        data-dep="'.$route->dep.'" data-arr="'.$route->arr.'" 
-                                        data-duration="'.Time::secsToString($route->duration).'" 
-                                        data-aircraft="'.$route->aircraftid.'" data-notes="'.escape($route->notes).'"
-                                        ><i class="fa fa-edit"></i></button>';
-                                        echo '&nbsp;<button value="'.$route->id.'" form="deleteroute" type="submit" class="btn btn-danger text-light" name="delete"><i class="fa fa-trash"></i></button>';
+                                        echo '<button class="btn bg-custom editRoute" data-route=\''.Json::encode($route).'\'><i class="fa fa-edit"></i></button>';
+                                        echo '&nbsp;<button value="'.$id.'" form="deleteroute" type="submit" class="btn btn-danger text-light" name="delete"><i class="fa fa-trash"></i></button>';
                                         echo '</td></tr>';
                                     }
                                     ?>
@@ -421,7 +423,7 @@ $ACTIVE_CATEGORY = 'operations-management';
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="aircraft">Aircraft</label>
-                                                    <select class="form-control" id="routeedit-aircraft" name="aircraft" required>
+                                                    <select multiple class="form-control selectpicker" data-live-search="true" id="routeedit-aircraft" required>
                                                         <option value>Select</option>
                                                         <?php
                                                         $aircraft = Aircraft::fetchAllAircraft()->results();
@@ -432,6 +434,7 @@ $ACTIVE_CATEGORY = 'operations-management';
                                                         }
                                                         ?>
                                                     </select>
+                                                    <input requried hidden name="aircraft" id="routeedit-aircraft-actual" />
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="notes">Notes</label>
@@ -449,13 +452,16 @@ $ACTIVE_CATEGORY = 'operations-management';
                             </form>
                             <script>
                                 $(".editRoute").click(function() {
-                                    var id = $(this).data('id');
-                                    var fltnum = $(this).data('fltnum');
-                                    var dep = $(this).data('dep');
-                                    var arr = $(this).data('arr');
-                                    var duration = $(this).data('duration');
-                                    var aircraft = $(this).data('aircraft');
-                                    var notes = $(this).data('notes');
+                                    var route = $(this).data('route');
+                                    var id = route.id;
+                                    var fltnum = route.fltnum;
+                                    var dep = route.dep;
+                                    var arr = route.arr;
+                                    var duration = Math.floor(route.duration / 3600) + ':' + Math.floor(route.duration % 3600 / 60);
+                                    var aircraft = route.aircraft.map(function(a) {
+                                        return a.id;
+                                    });
+                                    var notes = route.notes;
 
                                     $("#routeedit-id").val(id);
                                     $("#routeedit-fltnum").val(fltnum);
@@ -463,10 +469,18 @@ $ACTIVE_CATEGORY = 'operations-management';
                                     $("#routeedit-arr").val(arr);
                                     $("#routeedit-duration").val(duration);
                                     reverseFormatEditFlightTime();
-                                    $("#routeedit-aircraft").val(aircraft);
+                                    $("#routeedit-aircraft").selectpicker('val', aircraft);
                                     $("#routeedit-notes").val(notes);
 
                                     $("#routeedit").modal('show');
+                                });
+                                $("#routeedit-aircraft").on('changed.bs.select', function() {
+                                    var acs = $("#routeedit-aircraft").val();
+                                    $("#routeedit-aircraft-actual").val(acs.join(','));
+                                });
+                                $("#addroute-aircraft").on('changed.bs.select', function() {
+                                    var acs = $("#addroute-aircraft").val();
+                                    $("#addroute-aircraft-actual").val(acs.join(','));
                                 });
                             </script>
                         <?php elseif (Input::get('section') === 'ranks'): ?>

@@ -10,7 +10,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 class Route
 {
-
+    /**
+     * @var DB
+     */
     private static $_db;
     
     private static function init()
@@ -29,30 +31,53 @@ class Route
 
         self::init();
 
-        $data = array(
-            'fltnum' => $fields[0], 
-            'dep' => $fields[1],
-            'arr' => $fields[2],
-            'duration' => $fields[3],
-            'aircraftid' => $fields[4]
-        );
-        self::$_db->insert('routes', $data);
-        Events::trigger('route/added', $data);
+        self::$_db->insert('routes', $fields);
+        Events::trigger('route/added', $fields);
         
     }
 
     /**
-     * @return DB
+     * @return array
      */
     public static function fetchAll()
     {
         self::init();
 
-        $sql = "SELECT routes.*, aircraft.name AS aircraft, aircraft.liveryname AS livery, 
-        aircraft.ifliveryid AS liveryid FROM routes 
-        INNER JOIN aircraft ON routes.aircraftid=aircraft.id;";
-        return self::$_db->query($sql);
+        $ret = [];
+        $sql = "SELECT DISTINCT r.*, a.name AS aircraft_name, a.liveryname AS aircraft_livery, a.ifaircraftid AS aircraft_liveryid, a.id AS aircraft_id
+        FROM (
+            route_aircraft ra INNER JOIN aircraft a ON a.id=ra.aircraftid
+        ) INNER JOIN routes r ON r.id=ra.routeid";
+        $data = self::$_db->query($sql)->results();
+        foreach ($data as $d) {
+            if (gettype($d->id) != 'string') $d->id = strval($d->id);
+            if (!array_key_exists($d->id, $ret)) {
+                $ret[$d->id] = [
+                    "fltnum" => $d->fltnum,
+                    "dep" => $d->dep,
+                    "arr" => $d->arr,
+                    "duration" => $d->duration,
+                    "notes" => $d->notes,
+                    "aircraft" => [
+                        [
+                            "id" => $d->aircraft_id,
+                            "name" => $d->aircraft_name,
+                            "livery" => $d->aircraft_livery,
+                            "liveryid" => $d->aircraft_liveryid,
+                        ],
+                    ],
+                ];
+            } else {
+                $ret[$d->id]['aircraft'][] = [
+                    "id" => $d->aircraft_id,
+                    "name" => $d->aircraft_name,
+                    "livery" => $d->aircraft_livery,
+                    "liveryid" => $d->aircraft_liveryid,
+                ];
+            }
+        }
 
+        return $ret;
     }
 
     /**
@@ -93,6 +118,51 @@ class Route
         Events::trigger('route/updated', $fields);
 
         return !($ret->error());
+    }
+
+    /**
+     * @return array
+     * @param int $id Route ID
+     */
+    public static function aircraft($id)
+    {
+        self::init();
+        $sql = "SELECT * FROM aircraft WHERE id IN (SELECT aircraftid FROM route_aircraft WHERE routeid=?)";
+        $res = self::$_db->query($sql, [$id])->results();
+        return $res;
+    }
+
+    /**
+     * @return null
+     * @param int $routeid Route ID
+     * @param int $aircraft Aircraft ID, null to remove all aircraft
+     */
+    public static function removeAircraft($routeid, $aircraft = null)
+    {
+        self::init();
+
+        if ($aircraft != null) {
+            $sql = "DELETE FROM route_aircraft WHERE routeid=? AND aircraftid=?";
+            self::$_db->query($sql, [$routeid, $aircraft]);
+            return;
+        }
+
+        self::$_db->delete('route_aircraft', ['routeid', '=', $routeid]);
+    }
+
+    /**
+     * @return null
+     * @param int $routeid Route ID
+     * @param int $aircraft Aircraft ID
+     */
+    public static function addAircraft($routeid, $aircraft)
+    {
+        self::init();
+
+        self::$_db->insert('route_aircraft', [
+            "routeid" => $routeid,
+            "aircraftid" => $aircraft,
+        ]);
     }
 
     /**

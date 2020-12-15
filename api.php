@@ -483,15 +483,18 @@ Router::add('/news/([0-9]+)', function($newsId) {
 
 // View All Routes
 Router::add('/routes', function() {
+    // TODO: Fix This
     $routes = array_map(function($r) {
-        unset($r->liveryid);
-        $r = (array)$r;
+        $r['aircraft'] = array_map(function($a) {
+            unset($a['liveryid']);
+            return $a;
+        }, $r['aircraft']);
         foreach ($r as $key => $val) {
             if (is_numeric($val) && $key != 'fltnum') $r[$key] = intval($val);
         }
 
         return $r;
-    }, Route::fetchAll()->results());
+    }, Route::fetchAll());
     echo Json::encode([
         "status" => ErrorCode::NoError,
         "result" => $routes,
@@ -500,6 +503,7 @@ Router::add('/routes', function() {
 
 // View Specific Route
 Router::add('/routes/([0-9]+)', function($routeId) {
+    // TODO: Account for Multiple Aircraft
     $route = Route::find($routeId);
     if ($route->count() == 0) notFound();
 
@@ -524,6 +528,7 @@ Router::add('/routes', function() {
         accessDenied();
     }
 
+    // TODO: Make This Assoc and Account for Multiple Aircraft
     Route::add([
         Input::get('fltnum'),
         Input::get('dep'),
@@ -539,6 +544,7 @@ Router::add('/routes', function() {
 
 // Edit Route
 Router::add('/routes/([0-9]+)', function($routeId) {
+    // TODO: Account for Multiple Aircraft
     global $_authType, $user;
     if ($_authType == AuthType::ApiKey) {
         accessDenied();
@@ -572,6 +578,7 @@ Router::add('/routes/([0-9]+)', function($routeId) {
     }
 
     Route::delete($routeId);
+    Route::removeAircraft($routeId);
     echo Json::encode([
         "status" => ErrorCode::NoError,
         "result" => null,
