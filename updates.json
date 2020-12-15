@@ -171,6 +171,10 @@
             "admin/plugins.php",
             "admin/site.php",
             "classes/Plugin.php",
+            "classes/User.php",
+            "pireps.php",
+            "classes/Notifications.php",
+            "admin/users.php",
             "updater.php",
             "version.json"
         ],
