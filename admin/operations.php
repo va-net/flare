@@ -239,7 +239,7 @@ $ACTIVE_CATEGORY = 'operations-management';
                             <p>Here you can Manage your VA's Routes.</p>
                             <button type="button" class="btn bg-custom mb-2" data-toggle="modal" data-target="#addRoute">Add Route</button>
                             <div id="addRoute" class="modal fade" role="dialog">
-                                <div class="modal-dialog">
+                                <div class="modal-dialog modal-lg">
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <h4 class="modal-title">Add Route</h4>
@@ -357,7 +357,7 @@ $ACTIVE_CATEGORY = 'operations-management';
                                 </tbody>
                             </table>
                             <div id="routeedit" class="modal fade" role="dialog">
-                                <div class="modal-dialog">
+                                <div class="modal-dialog modal-lg">
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <h4 class="modal-title">Edit Route</h4>
