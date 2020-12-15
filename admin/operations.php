@@ -250,7 +250,7 @@ $ACTIVE_CATEGORY = 'operations-management';
                                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                                         </div>
                                         <div class="modal-body">
-                                            <form action="/update.php" method="post">
+                                            <form action="/update.php" method="post" id="addroute-form">
                                                 <input hidden name="action" value="addroute">
                                                 <div class="form-group">
                                                     <label for="">Departure Airport</label>
@@ -306,7 +306,7 @@ $ACTIVE_CATEGORY = 'operations-management';
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="">Aircraft</label>
-                                                    <select multiple class="form-control selectpicker" id="addroute-aircraft" required>
+                                                    <select multiple class="form-control selectpicker" id="addroute-aircraft" data-live-search="true" required>
                                                         <option value>Select</option>
                                                         <?php
                                                         $all = Aircraft::fetchActiveAircraft()->results();
@@ -366,7 +366,7 @@ $ACTIVE_CATEGORY = 'operations-management';
                                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                                         </div>
                                         <div class="modal-body">
-                                            <form action="/update.php" method="post">
+                                            <form action="/update.php" method="post" id="routeedit-form">
                                                 <input hidden name="action" value="editroute">
                                                 <input hidden name="id" id="routeedit-id" />
                                                 <div class="form-group">
@@ -481,6 +481,19 @@ $ACTIVE_CATEGORY = 'operations-management';
                                 $("#addroute-aircraft").on('changed.bs.select', function() {
                                     var acs = $("#addroute-aircraft").val();
                                     $("#addroute-aircraft-actual").val(acs.join(','));
+                                });
+                                $("#addroute-form").submit(function(e) {
+                                    if ($("#addroute-aircraft-actual").val().length < 1) {
+                                        e.preventDefault();
+                                        alert('You must select at least one aircraft!');
+                                    }
+                                });
+                                $("#routeedit-form").submit(function(e) {
+                                    console.log($("#routeedit-aircraft-actual").val());
+                                    if ($("#routeedit-aircraft-actual").val().length < 1) {
+                                        e.preventDefault();
+                                        alert('You must select at least one aircraft!');
+                                    }
                                 });
                             </script>
                         <?php elseif (Input::get('section') === 'ranks'): ?>
