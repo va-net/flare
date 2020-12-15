@@ -172,7 +172,10 @@ class Route
     {
         self::init();
         $sql = "SELECT id FROM routes ORDER BY id DESC LIMIT 1";
-        return self::$_db->query($sql)->first()->id;
+        $res = self::$_db->query($sql)->first();
+        if ($res === FALSE) return 0;
+        
+        return $res->id;
     }
 
     /**
