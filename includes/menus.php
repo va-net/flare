@@ -91,7 +91,7 @@ $GLOBALS['admin-menu']["Site Management"] = array(
     "Site Settings" => [
         "link" => "/admin/site.php",
         "icon" => "fa-cog",
-        "permission" => "opsmanage",
+        "permission" => "site",
         "needsGold" => false
     ],
 );
@@ -100,7 +100,7 @@ $GLOBALS['admin-menu']["Plugins"] = array(
     "Manage Plugins" => [
         "link" => "/admin/plugins.php",
         "icon" => "fa-plug",
-        "permission" => "admin",
+        "permission" => "site",
         "needsGold" => false
     ],
 );
