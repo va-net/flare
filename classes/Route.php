@@ -47,7 +47,7 @@ class Route
         $sql = "SELECT DISTINCT r.*, a.name AS aircraft_name, a.liveryname AS aircraft_livery, a.ifaircraftid AS aircraft_liveryid, a.id AS aircraft_id
         FROM (
             route_aircraft ra INNER JOIN aircraft a ON a.id=ra.aircraftid
-        ) INNER JOIN routes r ON r.id=ra.routeid";
+        ) RIGHT JOIN routes r ON r.id=ra.routeid";
         $data = self::$_db->query($sql)->results();
         foreach ($data as $d) {
             if (gettype($d->id) != 'string') $d->id = strval($d->id);
