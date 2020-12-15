@@ -655,11 +655,9 @@ if (Input::get('action') === 'editprofile') {
     $data = Json::decode(file_get_contents($file["tmp_name"]));
     $db = DB::getInstance();
 
-    $sql = "INSERT INTO routes (fltnum, dep, arr, duration, aircraftid) VALUES\n";
+    $sql = "INSERT INTO routes (fltnum, dep, arr, duration) VALUES\n";
     $params = array();
     $i = 0;
-
-    $allaircraft = Aircraft::fetchAllLiveriesFromVANet();
 
     foreach ($data as $item) {
         if ($i % 50 == 0 && $i != 0) {
@@ -670,25 +668,8 @@ if (Input::get('action') === 'editprofile') {
                 Redirect::to('/admin/operations.php?section=import');
                 die();
             }
-            $sql = "INSERT INTO routes (fltnum, dep, arr, duration, aircraftid) VALUES";
+            $sql = "INSERT INTO routes (fltnum, dep, arr, duration) VALUES";
             $params = array();
-        }
-
-        $aircraft = null;
-        foreach ($allaircraft as $ac) {
-            if ($ac["liveryID"] == $item["aircraftid"]) {
-                $aircraft = $ac;
-            }
-        }
-
-        // TODO: Need to fix this
-        $acId = $db->query("SELECT * FROM aircraft WHERE ifliveryid= ?", array($aircraft["liveryID"]));
-        if ($acId->count() === 0) {
-            $rank = $db->query("SELECT * FROM ranks ORDER BY timereq ASC")->first();
-            Aircraft::add($aircraft["liveryID"], $rank->id);
-            $acId = $db->query("SELECT * FROM aircraft WHERE ifliveryid= ?", array($aircraft["liveryID"]))->first()->id;
-        } else {
-            $acId = $acId->first()->id;
         }
 
         $sql .= "\n(?, ?, ?, ?, ?),";
@@ -696,7 +677,6 @@ if (Input::get('action') === 'editprofile') {
         array_push($params, $item["dep"]);
         array_push($params, $item["arr"]);
         array_push($params, $item["duration"]);
-        array_push($params, $acId);
         
         $i++;
     }
