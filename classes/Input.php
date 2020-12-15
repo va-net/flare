@@ -34,7 +34,7 @@ class Input {
     }
 
     /**
-     * @return string
+     * @return mixed
      * @param string|int $item Item Key to Get
      */
     public static function get($item) {

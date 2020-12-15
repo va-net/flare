@@ -483,18 +483,23 @@ Router::add('/news/([0-9]+)', function($newsId) {
 
 // View All Routes
 Router::add('/routes', function() {
-    // TODO: Fix This
-    $routes = array_map(function($r) {
+    $data = Route::fetchAll();
+    $routes = [];
+    foreach ($data as $id => $r) {
         $r['aircraft'] = array_map(function($a) {
             unset($a['liveryid']);
+            $a['id'] = intval($a['id']);
             return $a;
         }, $r['aircraft']);
+
+        $r = array_reverse($r);
+        $r['id'] = $id;
         foreach ($r as $key => $val) {
             if (is_numeric($val) && $key != 'fltnum') $r[$key] = intval($val);
         }
 
-        return $r;
-    }, Route::fetchAll());
+        $routes[] = array_reverse($r);
+    }
     echo Json::encode([
         "status" => ErrorCode::NoError,
         "result" => $routes,
@@ -503,18 +508,23 @@ Router::add('/routes', function() {
 
 // View Specific Route
 Router::add('/routes/([0-9]+)', function($routeId) {
-    // TODO: Account for Multiple Aircraft
     $route = Route::find($routeId);
-    if ($route->count() == 0) notFound();
+    if ($route === FALSE) notFound();
 
-    $selectedRoute = $route->first();
-    $selectedRoute->duration = intval($selectedRoute->duration);
-    $selectedRoute->id = intval($selectedRoute->id);
-    unset($selectedRoute->aircraftid);
+    $route->aircraft = array_map(function($a) {
+        return [
+            "id" => $a->id,
+            "name" => $a->name,
+            "livery" => $a->liveryname,
+        ];
+    }, Route::aircraft($routeId));
+    $route->duration = intval($route->duration);
+    $route->id = intval($route->id);
+    unset($route->aircraftid);
 
     echo Json::encode([
         "status" => ErrorCode::NoError,
-        "result" => $selectedRoute,
+        "result" => $route,
     ]);
 });
 
@@ -528,14 +538,16 @@ Router::add('/routes', function() {
         accessDenied();
     }
 
-    // TODO: Make This Assoc and Account for Multiple Aircraft
     Route::add([
-        Input::get('fltnum'),
-        Input::get('dep'),
-        Input::get('arr'),
-        Input::get('duration'),
-        Input::get('aircraftid'),
+        "fltnum" => Input::get('fltnum'),
+        "dep" => Input::get('dep'),
+        "arr" => Input::get('arr'),
+        "duration" => Input::get('duration'),
     ]);
+    $routeId = Route::lastId();
+    foreach (Input::get('aircraft') as $a) {
+        Route::addAircraft($routeId, $a);
+    }
     echo Json::encode([
         "status" => ErrorCode::NoError,
         "result" => null,
@@ -544,7 +556,6 @@ Router::add('/routes', function() {
 
 // Edit Route
 Router::add('/routes/([0-9]+)', function($routeId) {
-    // TODO: Account for Multiple Aircraft
     global $_authType, $user;
     if ($_authType == AuthType::ApiKey) {
         accessDenied();
@@ -558,7 +569,6 @@ Router::add('/routes/([0-9]+)', function($routeId) {
     if (!empty(Input::get('arr'))) $updRoute['arr'] = Input::get('arr');
     if (!empty(Input::get('dep'))) $updRoute['dep'] = Input::get('dep');
     if (!empty(Input::get('duration'))) $updRoute['duration'] = Input::get('duration');
-    if (!empty(Input::get('aircraftid'))) $updRoute['aircraftid'] = Input::get('aircraftid');
 
     Route::update($routeId, $updRoute);
     echo Json::encode([
