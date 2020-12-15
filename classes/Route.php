@@ -46,7 +46,6 @@ class Route
      */
     public static function fetchAll()
     {
-
         self::init();
 
         $sql = "SELECT routes.*, aircraft.name AS aircraft, aircraft.liveryname AS livery, 
@@ -70,17 +69,14 @@ class Route
     }
 
     /**
-     * @return DB
+     * @return object|bool
      * @param int $id Route ID
      */
     public static function find($id)
     {
         self::init();
-
-        $query = 'SELECT routes.fltnum, routes.dep, routes.arr, routes.duration, routes.id, routes.aircraftid, 
-        aircraft.name AS aircraft FROM routes INNER JOIN aircraft ON aircraft.id = routes.aircraftid WHERE routes.id=?';
         
-        return self::$_db->query($query, array($id));
+        return self::$_db->get('routes', ['id', '=', $id])->first();
     }
 
     /**
@@ -97,6 +93,31 @@ class Route
         Events::trigger('route/updated', $fields);
 
         return !($ret->error());
+    }
+
+    /**
+     * @return int
+     */
+    public static function lastId()
+    {
+        self::init();
+        $sql = "SELECT id FROM routes ORDER BY id DESC LIMIT 1";
+        return self::$_db->query($sql)->first()->id;
+    }
+
+    /**
+     * @return array
+     * @param int $fltnum Flight Number
+     */
+    public static function pireps($fltnum)
+    {
+        self::init();
+
+        $sql = "SELECT pireps.*, pilots.name AS pilotname, aircraft.name AS aircraftname FROM (
+                    pireps INNER JOIN pilots ON pireps.pilotid=pilots.id
+                ) INNER JOIN aircraft ON pireps.aircraftid=aircraft.id 
+                WHERE pireps.flightnum=? AND pireps.status=1";
+        return self::$_db->query($sql, [$fltnum])->results();
     }
 
 }
