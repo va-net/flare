@@ -164,6 +164,77 @@ if (!$user->isLoggedIn()) {
                                 ?>
                             </tbody>
                         </table>
+                    <?php elseif (Input::get('action') == 'route'): ?>
+                        <h3>View Route</h3>
+                        <hr />
+                        <?php 
+                            $route = Route::find(Input::get('route')); 
+                            if ($route !== FALSE) {
+                                $aircraft = Route::aircraft(Input::get('route'));
+                                $pireps = Route::pireps($route->fltnum);
+                            }
+                        ?>
+
+                        <?php if ($route !== FALSE): ?>
+                            <div class="row text-left">
+                                <div class="col-md">
+                                    <h4>Basic Info</h4>
+                                    <ul>
+                                        <li>
+                                            <b>Flight Number:</b> <?= $route->fltnum ?>
+                                        </li>
+                                        <li>
+                                            <b>Departure:</b> <?= $route->dep ?>
+                                        </li>
+                                        <li>
+                                            <b>Arrival:</b> <?= $route->arr ?>
+                                        </li>
+                                        <li>
+                                            <b>Approx. Duration:</b> <?= Time::secsToString($route->duration) ?>
+                                        </li>
+                                        <li>
+                                            <b>Notes:</b> <?= empty($route->notes) ? 'N/A' : escape($route->notes) ?>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="col-md">
+                                    <h4>Aircraft</h4>
+                                    <ul>
+                                        <?php
+                                            foreach ($aircraft as $a) {
+                                                echo "<li>{$a->name} ({$a->liveryname})</li>";
+                                            }
+                                        ?>
+                                    </ul>
+                                </div>
+                            </div>
+                            <hr />
+                            <h4>Previous PIREPs</h4>
+                            <table class="table table-striped datatable-nosearch">
+                                <thead class="bg-custom">
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Pilot</th>
+                                        <th>Aircraft</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                        foreach ($pireps as $p) {
+                                            echo '<tr><td>';
+                                            echo $p->date;
+                                            echo '</td><td>';
+                                            echo $p->pilotname;
+                                            echo '</td><td>';
+                                            echo $p->aircraftname;
+                                            echo '</td></tr>';
+                                        }
+                                    ?>
+                                </tbody>
+                            </table>
+                        <?php else: ?>
+                            <p>Route Not Found</p>
+                        <?php endif; ?>
                     <?php endif; ?>
                 </div>
             </div>
