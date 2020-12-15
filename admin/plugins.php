@@ -15,7 +15,7 @@ Page::setTitle('Plugins - '.Config::get('va/name'));
 
 if (!$user->isLoggedIn()) {
     Redirect::to('/index.php');
-} elseif (!$user->hasPermission('admin')) { // TODO: Make this its own permission
+} elseif (!$user->hasPermission('site')) {
     Redirect::to('/home.php');
 }
 

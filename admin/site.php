@@ -17,7 +17,7 @@ Page::excludeAsset('chartjs');
 
 if (!$user->isLoggedIn()) {
     Redirect::to('/index.php');
-} elseif (!$user->hasPermission('opsmanage') || !$user->hasPermission('admin')) { // TODO: Need a specific permission for this
+} elseif (!$user->hasPermission('site') || !$user->hasPermission('admin')) {
     Redirect::to('/home.php');
 }
 

@@ -19,6 +19,7 @@ class Permissions
         'newsmanage' => 'News Management',
         'opsmanage' => 'Operations Management',
         'statsviewing' => 'View Statistics',
+        'site' => 'Manage Site',
     );
     /**
      * @var DB

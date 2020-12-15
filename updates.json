@@ -161,8 +161,9 @@
         "deletedFiles": [],
         "queries": [
             "CREATE TABLE `route_aircraft` ( `id` INT NOT NULL AUTO_INCREMENT , `routeid` INT NOT NULL , `aircraftid` INT NOT NULL , PRIMARY KEY (`id`))",
-            "INSERT INTO route_aircraft (routeid, aircraftid) SELECT id, aircraftid FROM routes",
-            "ALTER TABLE `routes` DROP `aircraftid`"
+            "INSERT INTO `route_aircraft` (`routeid`, `aircraftid`) SELECT `id`, `aircraftid` FROM `routes`",
+            "ALTER TABLE `routes` DROP `aircraftid`",
+            "INSERT INTO `permissions` (`name`, `userid`) VALUES ('site', 1)"
         ],
         "newFolders": []
     }
