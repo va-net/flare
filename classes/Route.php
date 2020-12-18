@@ -44,7 +44,7 @@ class Route
         self::init();
 
         $ret = [];
-        $sql = "SELECT DISTINCT r.*, a.name AS aircraft_name, a.liveryname AS aircraft_livery, a.ifaircraftid AS aircraft_liveryid, a.id AS aircraft_id
+        $sql = "SELECT DISTINCT r.*, a.name AS aircraft_name, a.liveryname AS aircraft_livery, a.ifliveryid AS aircraft_liveryid, a.id AS aircraft_id
         FROM (
             route_aircraft ra INNER JOIN aircraft a ON a.id=ra.aircraftid
         ) RIGHT JOIN routes r ON r.id=ra.routeid";

@@ -648,26 +648,35 @@ if (Input::get('action') === 'editprofile') {
     $inputRoutes = explode(",", Input::get('routes'));
 
     $db = DB::getInstance();
+    $dbRoutes = array_values(Route::fetchAll());
     foreach ($inputRoutes as $input) {
         $input = trim($input);
-        $query = $db->query('SELECT routes.*, aircraft.ifliveryid AS liveryid FROM routes INNER JOIN aircraft ON routes.aircraftid=aircraft.id WHERE routes.fltnum=?', array($input));
-        if ($query->count() === 0) {
+        $r = array_filter($dbRoutes, function($rt) {
+            global $input;
+            return $rt['fltnum'] == $input;
+        });
+        if (count($r) === 0) {
             Session::flash('error', 'Could not Find Route '.$input);
             Redirect::to('/admin/codeshares.php');
-            die();
-        } elseif ($query->count() > 1) {
+        }
+        if (count($r) > 1) {
             Session::flash('error', 'There\'s More than One Route with the Flight Number '.$input);
             Redirect::to('/admin/codeshares.php');
-            die();
+        } 
+        $rr = array_reverse($r);
+        $rItem = array_pop($rr);
+        if (count($rItem['aircraft']) < 1) {
+            Session::flash('error', 'This route does not have any aircraft attached - '.$input);
+            Redirect::to('/admin/codeshares.php');
         }
 
-        $route = $query->first();
+        $route = $rItem;
         array_push($routes, array(
-            "flightNum" => $route->fltnum,
-            "departure" => $route->dep,
-            "arrival" => $route->arr,
-            "aircraftID" => $route->liveryid,
-            "flightTime" => $route->duration
+            "flightNum" => $route['fltnum'],
+            "departure" => $route['dep'],
+            "arrival" => $route['arr'],
+            "aircraftID" => $route['aircraft'][0]['liveryid'],
+            "flightTime" => $route['duration']
         ));
     }
 
