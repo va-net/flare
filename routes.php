@@ -158,7 +158,7 @@ if (!$user->isLoggedIn()) {
                                         echo '</td><td class="align-middle">';
                                         $link = "pireps.php?page=new&fnum={$route->fltnum}&dep={$route->dep}&arr={$route->arr}";
                                         echo '<a href="'.$link.'" class="btn bg-custom"><i class="fa fa-plane"></i></a>&nbsp;';
-                                        echo '<a href="/routes/php?action=route&route='.$route->id.'" class="btn bg-custom"><i class="fa fa-plus"></i></a>';
+                                        echo '<a href="/routes.php?action=route&route='.$route->id.'" class="btn bg-custom"><i class="fa fa-plus"></i></a>';
                                         echo '</td></tr>';
                                     }
                                 ?>
