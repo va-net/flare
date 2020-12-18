@@ -104,7 +104,7 @@ class Aircraft
 
         self::init();
 
-        return self::$_db->query("SELECT aircraft.*, ranks.name AS rank FROM aircraft INNER JOIN ranks ON aircraft.rankreq=ranks.id WHERE status=1 ORDER BY aircraft.name ASC;");
+        return self::$_db->query("SELECT aircraft.*, ranks.name AS `rank` FROM aircraft INNER JOIN ranks ON aircraft.rankreq=ranks.id WHERE status=1 ORDER BY aircraft.name ASC;");
 
     }
 
