@@ -52,20 +52,21 @@ class Route
         foreach ($data as $d) {
             if (gettype($d->id) != 'string') $d->id = strval($d->id);
             if (!array_key_exists($d->id, $ret)) {
+                $ac = $d->aircraft_name == null ? [] : [
+                    [
+                        "id" => $d->aircraft_id,
+                        "name" => $d->aircraft_name,
+                        "livery" => $d->aircraft_livery,
+                        "liveryid" => $d->aircraft_liveryid,
+                    ],
+                ];
                 $ret[$d->id] = [
                     "fltnum" => $d->fltnum,
                     "dep" => $d->dep,
                     "arr" => $d->arr,
                     "duration" => $d->duration,
                     "notes" => $d->notes,
-                    "aircraft" => [
-                        [
-                            "id" => $d->aircraft_id,
-                            "name" => $d->aircraft_name,
-                            "livery" => $d->aircraft_livery,
-                            "liveryid" => $d->aircraft_liveryid,
-                        ],
-                    ],
+                    "aircraft" => $ac,
                 ];
             } else {
                 $ret[$d->id]['aircraft'][] = [
