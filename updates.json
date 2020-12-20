@@ -186,5 +186,31 @@
             "INSERT INTO `permissions` (`name`, `userid`) VALUES ('site', 1)"
         ],
         "newFolders": []
+    },
+    {
+        "tag": "v1.1.0-beta5",
+        "name": "Version 1.1.0 Beta 5",
+        "date": "2020-12-20",
+        "notes": "Various Bug Fixes, Security Improvements, Added Logging for Failed DB Queries",
+        "prerelease": true,
+        "useUpdater": true,
+        "files": [
+            "acars.php",
+            "vanet.php",
+            "classes/Route.php",
+            "update.php",
+            "classes/Aircraft.php",
+            "routes.php",
+            "admin/pireps.php",
+            ".htaccess",
+            "api.php",
+            "classes/DB.php",
+            "pireps.php",
+            "updater.php",
+            "version.json"
+        ],
+        "deletedFiles": [],
+        "queries": [],
+        "newFolders": []
     }
 ]
