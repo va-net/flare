@@ -45,6 +45,7 @@ foreach (array_reverse($releases) as $r) {
     } elseif ($currentFound && $next == null) {
         if (Config::get('CHECK_PRERELEASE') == 1) {
             $next = $r;
+            $BRANCH = "beta";
             break;
         } elseif (!$r["prerelease"]) {
             $next = $r;
