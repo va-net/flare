@@ -187,7 +187,7 @@ $ACTIVE_CATEGORY = 'pirep-management';
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="editpirep-fnum">Flight Number</label>
-                                                        <input required type="number" min="1" class="form-control" name="fnum" id="editpirep-fnum">
+                                                        <input required type="text" class="form-control" name="fnum" id="editpirep-fnum">
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="editpirep-dep">Departure</label>
