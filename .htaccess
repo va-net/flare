@@ -1,0 +1,4 @@
+Redirect /core/ /
+Redirect /includes/ /
+Redirect /classes/ /
+Redirect /vendor/ /
