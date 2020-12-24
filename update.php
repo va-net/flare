@@ -8,6 +8,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 require_once './core/init.php';
+
 use RegRev\RegRev;
 
 $user = new User();
@@ -23,7 +24,7 @@ if (Input::get('action') === 'editprofile') {
         Session::flash('error', 'Callsign is Already Taken!');
         Redirect::to('/home.php');
     } elseif (!Regex::match($csPattern, Input::get('callsign'))) {
-        Session::flash('error', 'Callsign does not match the required format! Try <b>'.RegRev::generate($trimmedPattern).'</b> instead.');
+        Session::flash('error', 'Callsign does not match the required format! Try <b>' . RegRev::generate($trimmedPattern) . '</b> instead.');
         Redirect::to('/home.php');
     } else {
         try {
@@ -85,7 +86,7 @@ if (Input::get('action') === 'editprofile') {
         Redirect::to('pireps.php?page=new');
     }
 
-    $response = VANet::sendPirep(array (
+    $response = VANet::sendPirep(array(
         'AircraftID' => Aircraft::idToLiveryId(Input::get('aircraft')),
         'Arrival' => Input::get('arr'),
         'DateTime' => Input::get('date'),
@@ -345,7 +346,7 @@ if (Input::get('action') === 'editprofile') {
         Redirect::to('home.php');
         die();
     }
-    
+
     Aircraft::update(Input::get('rank'), Input::get('notes'), Input::get('id'));
     Session::flash('success', 'Aircraft Updated Successfully!');
     Redirect::to('/admin/operations.php?section=fleet');
@@ -354,7 +355,7 @@ if (Input::get('action') === 'editprofile') {
         $server = 'casual';
         $force = Config::get('FORCE_SERVER');
         if ($force != 0 && $force != 'casual') $server = $force;
-        Session::flash('errorrecent', 'There was an Error Connecting to Infinite Flight. Ensure you are spawned in on the <b>'.ucfirst($server).' Server, and have set your callsign to \''.$user->data()->callsign.'\'</b>!');
+        Session::flash('errorrecent', 'There was an Error Connecting to Infinite Flight. Ensure you are spawned in on the <b>' . ucfirst($server) . ' Server, and have set your callsign to \'' . $user->data()->callsign . '\'</b>!');
         Redirect::to('pireps.php?page=new');
     }
     Session::flash('successrecent', 'PIREPs Setup Successfully! You can now File PIREPs.');
@@ -367,10 +368,10 @@ if (Input::get('action') === 'editprofile') {
 
     $notes = empty(Input::get('notes')) ? null : Input::get('notes');
     Route::add([
-        "fltnum" => Input::get('fltnum'), 
-        "dep" => Input::get('dep'), 
-        "arr" => Input::get('arr'), 
-        "duration" => Time::strToSecs(Input::get('duration')), 
+        "fltnum" => Input::get('fltnum'),
+        "dep" => Input::get('dep'),
+        "arr" => Input::get('arr'),
+        "duration" => Time::strToSecs(Input::get('duration')),
         "notes" => $notes,
     ]);
     $id = Route::lastId();
@@ -394,7 +395,7 @@ if (Input::get('action') === 'editprofile') {
         die();
     }
 
-    $oldAc = array_map(function($a) {
+    $oldAc = array_map(function ($a) {
         return $a->id;
     }, Route::aircraft(Input::get('id')));
     $newAc = explode(',', Input::get('aircraft'));
@@ -467,7 +468,7 @@ if (Input::get('action') === 'editprofile') {
         Redirect::to('/admin/operations.php?section=ranks');
     } else {
         Session::flash('success', 'Rank Deleted Successfully!');
-    Redirect::to('/admin/operations.php?section=ranks');
+        Redirect::to('/admin/operations.php?section=ranks');
     }
 } elseif (Input::get('action') === 'setdesign') {
     if (!$user->hasPermission('opsmanage')) {
@@ -478,7 +479,7 @@ if (Input::get('action') === 'editprofile') {
     if (
         !Config::replaceColour(trim(Input::get('hexcol'), "#"), trim(Input::get('textcol'), "#"))
         || !Config::replaceCss(Input::get('customcss'))
-        ) {
+    ) {
         Session::flash('error', 'There was an Error Updating the Design');
         Redirect::to('/admin/site.php');
         die();
@@ -491,13 +492,14 @@ if (Input::get('action') === 'editprofile') {
         die();
     }
 
-    if (!Config::replace('name', Input::get('vaname')) 
-        || !Config::replace('identifier', Input::get('vaabbrv')) 
+    if (
+        !Config::replace('name', Input::get('vaname'))
+        || !Config::replace('identifier', Input::get('vaabbrv'))
         || !Config::replace("FORCE_SERVER", Input::get('forceserv'))
         || !Config::replace("CHECK_PRERELEASE", Input::get('checkpre'))
         || !Config::replace("VA_CALLSIGN_FORMAT", Input::get('vaident'))
         || !Config::replace("VA_LOGO_URL", Input::get('valogo'))
-        ) {
+    ) {
         Session::flash('error', 'There was an error updating the Settings');
         Redirect::to('/admin/site.php?tab=settings');
         die();
@@ -509,7 +511,7 @@ if (Input::get('action') === 'editprofile') {
         Redirect::to('home.php');
         die();
     }
-    
+
     if (!Config::replace('api_key', trim(Input::get('vanetkey')))) {
         Session::flash('error', 'There was an error updating the config file!');
         Redirect::to('/admin/site.php?tab=vanet');
@@ -534,7 +536,7 @@ if (Input::get('action') === 'editprofile') {
         $vis = 'false';
     }
 
-    $datetime = Input::get('date').' '.substr(Input::get('time'), 0, 2).':'.substr(Input::get('time'), 2, 2);
+    $datetime = Input::get('date') . ' ' . substr(Input::get('time'), 0, 2) . ':' . substr(Input::get('time'), 2, 2);
 
     try {
         VANet::createEvent(array(
@@ -558,18 +560,18 @@ if (Input::get('action') === 'editprofile') {
 } elseif (Input::get('action') === 'eventsignup') {
     $uData = $user->data();
     if (VANet::isSignedUp($uData->ifuserid, Input::get('event')) != false) {
-        Redirect::to('events.php?page=view&event='.urlencode(Input::get('event')));
+        Redirect::to('events.php?page=view&event=' . urlencode(Input::get('event')));
         die();
     }
 
     $ret = VANet::eventSignUp($uData->ifuserid, Input::get('gate'));
     if ($ret === 400) {
         Session::flash("error", "Event is Corrupted. Please contact your VA.");
-        Redirect::to('events.php?page=view&event='.urlencode(Input::get('event')));
+        Redirect::to('events.php?page=view&event=' . urlencode(Input::get('event')));
         die();
     } elseif ($ret === 404) {
         Session::flash('error', 'Slot Not Found. Are you messing with us? :/');
-        Redirect::to('events.php?page=view&event='.urlencode(Input::get('event')));
+        Redirect::to('events.php?page=view&event=' . urlencode(Input::get('event')));
         die();
     } elseif ($ret === 409) {
         Session::flash("error", "Rats! Someone got to that gate before you. Please try again.");
@@ -577,7 +579,7 @@ if (Input::get('action') === 'editprofile') {
         die();
     } elseif ($ret === true) {
         Session::flash('success', 'Gate Reserved Successfully!');
-        Redirect::to('events.php?page=view&event='.urlencode(Input::get('event')));
+        Redirect::to('events.php?page=view&event=' . urlencode(Input::get('event')));
         die();
     }
 } elseif (Input::get('action') === 'vacateslot') {
@@ -586,11 +588,11 @@ if (Input::get('action') === 'editprofile') {
     $ret = VANet::eventPullOut(Input::get('gate'), Input::get('event'), $uData->ifuserid);
 
     if ($ret === 400) {
-        Redirect::to('events.php?page=view&event='.urlencode(Input::get('event')));
+        Redirect::to('events.php?page=view&event=' . urlencode(Input::get('event')));
         die();
     } elseif ($ret === 404) {
         Session::flash('error', 'Slot Not Found. Are you messing with us? :/');
-        Redirect::to('events.php?page=view&event='.urlencode(Input::get('event')));
+        Redirect::to('events.php?page=view&event=' . urlencode(Input::get('event')));
         die();
     } elseif ($ret === 409) {
         Session::flash("error", "Event is Corrupted. Please contact your VA.");
@@ -598,7 +600,7 @@ if (Input::get('action') === 'editprofile') {
         die();
     } elseif ($ret === true) {
         Session::flash('success', 'Slot Vacated Successfully!');
-        Redirect::to('events.php?page=view&event='.urlencode(Input::get('event')));
+        Redirect::to('events.php?page=view&event=' . urlencode(Input::get('event')));
         die();
     }
 } elseif (Input::get('action') === 'deleteevent') {
@@ -651,22 +653,22 @@ if (Input::get('action') === 'editprofile') {
     $dbRoutes = array_values(Route::fetchAll());
     foreach ($inputRoutes as $input) {
         $input = trim($input);
-        $r = array_filter($dbRoutes, function($rt) {
+        $r = array_filter($dbRoutes, function ($rt) {
             global $input;
             return $rt['fltnum'] == $input;
         });
         if (count($r) === 0) {
-            Session::flash('error', 'Could not Find Route '.$input);
+            Session::flash('error', 'Could not Find Route ' . $input);
             Redirect::to('/admin/codeshares.php');
         }
         if (count($r) > 1) {
-            Session::flash('error', 'There\'s More than One Route with the Flight Number '.$input);
+            Session::flash('error', 'There\'s More than One Route with the Flight Number ' . $input);
             Redirect::to('/admin/codeshares.php');
-        } 
+        }
         $rr = array_reverse($r);
         $rItem = array_pop($rr);
         if (count($rItem['aircraft']) < 1) {
-            Session::flash('error', 'This route does not have any aircraft attached - '.$input);
+            Session::flash('error', 'This route does not have any aircraft attached - ' . $input);
             Redirect::to('/admin/codeshares.php');
         }
 
@@ -760,7 +762,7 @@ if (Input::get('action') === 'editprofile') {
         $fltnum = preg_replace('/^[a-z]+/i', '', $route["flightNum"]);
 
         $sql .= "\n(?, ?, ?, ?, ?),";
-        array_push($params, $codeshare["veFrom"]["code"].$fltnum);
+        array_push($params, $codeshare["veFrom"]["code"] . $fltnum);
         array_push($params, $route["departure"]);
         array_push($params, $route["arrival"]);
         array_push($params, $route["flightTime"]);
@@ -786,8 +788,8 @@ if (Input::get('action') === 'editprofile') {
     $allaircraft = Aircraft::fetchActiveAircraft()->results();
     $firstRank = $db->query("SELECT * FROM ranks ORDER BY timereq ASC LIMIT 1")->first()->id;
 
-    for ($i=0; $i<$count; $i++) {
-        $item = Input::get('livery'.$i);
+    for ($i = 0; $i < $count; $i++) {
+        $item = Input::get('livery' . $i);
         if (empty($item)) continue;
         $aircraft = false;
         foreach ($allaircraft as $a) {
@@ -800,7 +802,7 @@ if (Input::get('action') === 'editprofile') {
             array_push($allaircraft, $aircraft);
         }
 
-        $routes = str_replace(Input::get('rego'.$i), $aircraft->id, $routes);
+        $routes = str_replace(Input::get('rego' . $i), $aircraft->id, $routes);
     }
 
     $routes = Json::decode($routes);
@@ -827,7 +829,7 @@ if (Input::get('action') === 'editprofile') {
         array_push($params, $item["arr"]);
         array_push($params, $item["duration"]);
         array_push($params, $item["aircraftid"]);
-        
+
         $j++;
     }
 
@@ -841,11 +843,9 @@ if (Input::get('action') === 'editprofile') {
             }
             $q = '?';
             $one = 1;
-            $from = '/'.preg_quote('?', '/').'/';
+            $from = '/' . preg_quote('?', '/') . '/';
             $sql = preg_replace($from, $rpl, $sql, 1);
         }
-        print($sql);
-        die();
         Session::flash('error', "Failed to Import Routes");
         Redirect::to('/admin/operations.php?section=phpvms');
     }
@@ -869,9 +869,9 @@ if (Input::get('action') === 'editprofile') {
 
     $url = "https://raw.githubusercontent.com/va-net/flare-plugins/{$GH_BRANCH}/plugins.tsv";
     $opts = array(
-        'http'=>array(
-            'method'=>"GET",
-            'header'=>"User-Agent: va-net\r\n"
+        'http' => array(
+            'method' => "GET",
+            'header' => "User-Agent: va-net\r\n"
         )
     );
     $context = stream_context_create($opts);
@@ -881,7 +881,7 @@ if (Input::get('action') === 'editprofile') {
     foreach ($lines[0] as $l) {
         $l = trim($l);
         $l = explode("\t", $l);
-        if ($pluginbasic == null && $l[1] == Input::get('plugin') ) {
+        if ($pluginbasic == null && $l[1] == Input::get('plugin')) {
             $pluginbasic = array(
                 "name" => $l[0],
                 "slug" => $l[1],
@@ -897,7 +897,7 @@ if (Input::get('action') === 'editprofile') {
     $pluginbasic["slug"] = strtolower($pluginbasic["slug"]);
 
     $version = Updater::getVersion();
-    $pluginadv = Json::decode(file_get_contents("https://raw.githubusercontent.com/va-net/flare-plugins/{$GH_BRANCH}/".$pluginbasic["slug"]."/plugin.json", false, $context));
+    $pluginadv = Json::decode(file_get_contents("https://raw.githubusercontent.com/va-net/flare-plugins/{$GH_BRANCH}/" . $pluginbasic["slug"] . "/plugin.json", false, $context));
     // Removed for now while we troubleshoot. Couldn't get a consistent repro.
     // if (!in_array($version["tag"], $pluginadv["compatability"]) && $version["prerelease"] == false) {
     //     Session::flash('error', 'This plugin does not support this version of Flare.');
@@ -906,19 +906,19 @@ if (Input::get('action') === 'editprofile') {
 
     foreach ($pluginadv["installation"]["files"] as $f) {
         $f = str_replace("/", $slash, $f);
-        if (file_exists(__DIR__.$slash.$f)) {
-            if (unlink(__DIR__.$slash.$f) !== TRUE) {
-                Session::flash('error', 'File "'.$f.'" already exists, failed to delete it.');
+        if (file_exists(__DIR__ . $slash . $f)) {
+            if (unlink(__DIR__ . $slash . $f) !== TRUE) {
+                Session::flash('error', 'File "' . $f . '" already exists, failed to delete it.');
                 Redirect::to('/admin/plugins.php');
             }
 
-            Logger::log('File "'.__DIR__.$slash.$f.'" was deleted while installing plugin '.$pluginbasic["name"]);
+            Logger::log('File "' . __DIR__ . $slash . $f . '" was deleted while installing plugin ' . $pluginbasic["name"]);
         }
     }
     foreach ($pluginadv["installation"]["files"] as $f) {
-        $data = file_get_contents("https://raw.githubusercontent.com/va-net/flare-plugins/master/".$pluginbasic["slug"]."/".$f, false, $context);
+        $data = file_get_contents("https://raw.githubusercontent.com/va-net/flare-plugins/master/" . $pluginbasic["slug"] . "/" . $f, false, $context);
         $f = str_replace("/", $slash, $f);
-        file_put_contents(__DIR__.$slash.$f, $data);
+        file_put_contents(__DIR__ . $slash . $f, $data);
     }
 
     $db = DB::getInstance();
@@ -946,11 +946,11 @@ if (Input::get('action') === 'editprofile') {
     foreach ($INSTALLED_PLUGINS as $p) {
         if ($theplugin == null && $p["name"] == Input::get('plugin')) {
             $theplugin = $p;
-            $INSTALLED_PLUGINS = array_filter($INSTALLED_PLUGINS, function($item) {
+            $INSTALLED_PLUGINS = array_filter($INSTALLED_PLUGINS, function ($item) {
                 global $theplugin;
                 if ($item == $theplugin) {
                     return false;
-                } 
+                }
 
                 return true;
             });
@@ -961,9 +961,9 @@ if (Input::get('action') === 'editprofile') {
 
     foreach ($theplugin["installation"]["files"] as $file) {
         $file = str_replace("/", $slash, $file);
-        $path = __DIR__.$slash.$file;
+        $path = __DIR__ . $slash . $file;
         if (unlink($path) === FALSE) {
-            Session::flash('error', 'Failed to remove file - '.$path);
+            Session::flash('error', 'Failed to remove file - ' . $path);
             Redirect::to('/admin/plugins.php?tab=installed');
         }
     }
