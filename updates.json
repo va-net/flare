@@ -92,8 +92,7 @@
         ],
         "deletedFiles": [],
         "queries": [
-            "CREATE TABLE `notifications` ( `id` INT NOT NULL AUTO_INCREMENT , `pilotid` INT NOT NULL , `icon` VARCHAR(20) NOT NULL , `subject` VARCHAR(20) NOT NULL , `content` VARCHAR(60) NOT NULL , `datetime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , PRIMARY KEY (`id`));",
-            "TODO"
+            "CREATE TABLE IF NOT EXISTS `notifications` ( `id` INT NOT NULL AUTO_INCREMENT , `pilotid` INT NOT NULL , `icon` VARCHAR(20) NOT NULL , `subject` VARCHAR(20) NOT NULL , `content` VARCHAR(60) NOT NULL , `datetime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , PRIMARY KEY (`id`));"
         ],
         "newFolders": []
     },
@@ -208,6 +207,24 @@
             "pireps.php",
             "updater.php",
             "version.json"
+        ],
+        "deletedFiles": [],
+        "queries": [],
+        "newFolders": []
+    },
+    {
+        "tag": "v1.1.0-beta6",
+        "name": "Version 1.1.0 Beta 6",
+        "date": "2020-12-25",
+        "notes": "Various Bug Fixes, Prepared updater for RTM",
+        "prerelease": true,
+        "useUpdater": true,
+        "files": [
+            "update.php",
+            "classes/DB.php",
+            "admin/recruitment.php",
+            "vanet.php",
+            "updater.php"
         ],
         "deletedFiles": [],
         "queries": [],
