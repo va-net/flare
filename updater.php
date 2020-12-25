@@ -28,9 +28,9 @@ $current = Updater::getVersion();
 
 // Get Releases
 $opts = array(
-    'http'=>array(
-        'method'=>"GET",
-        'header'=>"User-Agent: va-net\r\n"
+    'http' => array(
+        'method' => "GET",
+        'header' => "User-Agent: va-net\r\n"
     )
 );
 $context = stream_context_create($opts);
@@ -75,7 +75,7 @@ foreach ($tags as $t) {
 }
 
 // Get the updates.json file
-$updateData = @file_get_contents($RAW_URL.$BRANCH."/updates.json");
+$updateData = @file_get_contents($RAW_URL . $BRANCH . "/updates.json");
 // Check Release is Compatible
 if ($updateData === FALSE) {
     echo "This Version of Flare does not support the Updater.";
@@ -110,13 +110,13 @@ if (strpos(strtolower(php_uname('s')), "window") !== FALSE) {
 }
 
 // Run DB Queries
-if (count($nextUpdate["queries"]) != 0) {
+if (count($nextUpdate["queries"]) != 0 && !($current["prerelease"] && !$next["prerelease"])) {
     $db = DB::getInstance();
     foreach ($nextUpdate["queries"] as $q) {
         if ($q == 'TODO') continue;
         $db->query($q);
         if ($db->error()) {
-            echo "Error Running Query ".$q;
+            echo "Error Running Query " . $q;
             die();
         }
     }
@@ -127,9 +127,9 @@ echo "Updated Database Successfully<br />";
 if (array_key_exists('newFolders', $nextUpdate)) {
     foreach ($nextUpdate['newFolders'] as $dir) {
         $dir = str_replace("/", $slash, $dir);
-        if (!file_exists(__DIR__.$slash.$dir)) {
-            if (mkdir(__DIR__.$slash.$dir) === FALSE) {
-                echo "Error Creating Directory ".$dir;
+        if (!file_exists(__DIR__ . $slash . $dir)) {
+            if (mkdir(__DIR__ . $slash . $dir) === FALSE) {
+                echo "Error Creating Directory " . $dir;
                 die();
             }
         }
@@ -138,28 +138,30 @@ if (array_key_exists('newFolders', $nextUpdate)) {
 
 // Update Files
 foreach ($nextUpdate["files"] as $file) {
-    $fileData = file_get_contents($RAW_URL.urlencode($nextTag["commit"]["sha"])."/".urlencode($file));
-    $file = str_replace("/", $slash, $file); 
-    if ($fileData === FALSE || file_put_contents(__DIR__.$slash.$file, $fileData) === FALSE) {
-        echo "Error Updating File ".$file;
+    $fileData = file_get_contents($RAW_URL . urlencode($nextTag["commit"]["sha"]) . "/" . urlencode($file));
+    $file = str_replace("/", $slash, $file);
+    if ($fileData === FALSE || file_put_contents(__DIR__ . $slash . $file, $fileData) === FALSE) {
+        echo "Error Updating File " . $file;
         die();
     }
 }
 echo "Updated Files Successfully<br />";
 
 // Delete Files to Delete
-foreach ($nextUpdate["deletedFiles"] as $delFile) {
-    if (!unlink(__DIR__.$slash.$delFile)) {
-        echo "There was an error deleting ".$delFile;
+if (!($current["prerelease"] && !$next["prerelease"])) {
+    foreach ($nextUpdate["deletedFiles"] as $delFile) {
+        if (!unlink(__DIR__ . $slash . $delFile)) {
+            echo "There was an error deleting " . $delFile;
+        }
     }
+    echo "Deleted Removed Files Successfully<br />";
 }
-echo "Deleted Removed Files Successfully<br />";
 
 // Update Version File
-$vData = file_get_contents($RAW_URL.urlencode($nextTag["commit"]["sha"])."/version.json");
-file_put_contents(__DIR__.$slash."version.json", $vData);
+$vData = file_get_contents($RAW_URL . urlencode($nextTag["commit"]["sha"]) . "/version.json");
+file_put_contents(__DIR__ . $slash . "version.json", $vData);
 echo "Updated Version File<br />";
 
 Events::trigger('site/updated', $nextUpdate);
 
-echo "<br />Flare has been Updated to ".$nextUpdate["name"]." (".$nextUpdate["tag"].")";
+echo "<br />Flare has been Updated to " . $nextUpdate["name"] . " (" . $nextUpdate["tag"] . ")";
