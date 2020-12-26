@@ -187,7 +187,7 @@ $ACTIVE_CATEGORY = 'pirep-management';
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="editpirep-fnum">Flight Number</label>
-                                                        <input required type="number" min="1" class="form-control" name="fnum" id="editpirep-fnum">
+                                                        <input required type="text" class="form-control" name="fnum" id="editpirep-fnum">
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="editpirep-dep">Departure</label>
@@ -266,30 +266,28 @@ $ACTIVE_CATEGORY = 'pirep-management';
 
                                 <!-- Edit PIREP Script -->
                                 <script>
-                                    $(document).ready(function() {
-                                        $(".editpirepbtn").click(function() {
-                                            var pirep = $(this).data('pirep');
-                                            $("#editpirep-id").val(pirep.id);
-                                            $("#editpirep-date").val(pirep.date);
-                                            $("#editpirep-fnum").val(pirep.flightnum);
-                                            $("#editpirep-dep").val(pirep.departure);
-                                            $("#editpirep-arr").val(pirep.arrival);
-                                            $("#editpirep-ac").val(pirep.aircraftid);
-                                            $("#editpirep-status").val(pirep.status);
+                                    $(".editpirepbtn").click(function() {
+                                        var pirep = $(this).data('pirep');
+                                        $("#editpirep-id").val(pirep.id);
+                                        $("#editpirep-date").val(pirep.date);
+                                        $("#editpirep-fnum").val(pirep.flightnum);
+                                        $("#editpirep-dep").val(pirep.departure);
+                                        $("#editpirep-arr").val(pirep.arrival);
+                                        $("#editpirep-ac").val(pirep.aircraftid);
+                                        $("#editpirep-status").val(pirep.status);
 
-                                            var hrs = Math.floor(pirep.flighttime / 3600);
-                                            if (hrs < 10) {
-                                                hrs = `0${hrs}`;
-                                            }
-                                            $("#editpirep-ftime-hrs").val(hrs);
-                                            var mins = Math.floor((pirep.flighttime - hrs * 3600) / 60);
-                                            if (mins < 10) {
-                                                mins = `0${mins}`;
-                                            }
-                                            $("#editpirep-ftime-mins").val(mins);
-                                            formatFlightTime();
-                                            $("#editpirep-modal").modal('show');
-                                        });
+                                        var hrs = Math.floor(pirep.flighttime / 3600);
+                                        if (hrs < 10) {
+                                            hrs = `0${hrs}`;
+                                        }
+                                        $("#editpirep-ftime-hrs").val(hrs);
+                                        var mins = Math.floor((pirep.flighttime - hrs * 3600) / 60);
+                                        if (mins < 10) {
+                                            mins = `0${mins}`;
+                                        }
+                                        $("#editpirep-ftime-mins").val(mins);
+                                        formatFlightTime();
+                                        $("#editpirep-modal").modal('show');
                                     });
                                 </script>
                             </div>

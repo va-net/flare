@@ -124,7 +124,7 @@ if (!$user->isLoggedIn()) {
                                                             </div>
                                                             <div class="form-group">
                                                                 <label for="fnum">Flight Number</label>
-                                                                <input required type="number" min="1" class="form-control" name="fnum" value="'.$pirep['number'].'">
+                                                                <input required type="text" class="form-control" name="fnum" value="'.$pirep['number'].'">
                                                             </div>
                                                             <div class="form-group">
                                                                 <label for="dep">Departure</label>

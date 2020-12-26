@@ -8,48 +8,45 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-class DB 
+class DB
 {
 
     private static $_instance = null;
-    private $_pdo, 
-            $_query, 
-            $_error = false, 
-            $_results, 
-            $_count = 0;
+    private $_pdo,
+        $_query,
+        $_error = false,
+        $_results,
+        $_count = 0;
 
-    private function __construct() 
+    private function __construct()
     {
 
         try {
-            $this->_pdo = new PDO('mysql:host='.Config::get('mysql/host').';dbname='.Config::get('mysql/db').';port='.Config::get('mysql/port'), Config::get('mysql/username'), Config::get('mysql/password'));
-        } catch(PDOException $e) {
+            $this->_pdo = new PDO('mysql:host=' . Config::get('mysql/host') . ';dbname=' . Config::get('mysql/db') . ';port=' . Config::get('mysql/port'), Config::get('mysql/username'), Config::get('mysql/password'));
+        } catch (PDOException $e) {
             die($e->getMessage());
         }
-
     }
 
     /**
      * @return DB
      */
-    public static function getInstance() 
+    public static function getInstance()
     {
 
         if (!isset(self::$_instance)) {
             self::$_instance = new DB();
         }
         return self::$_instance;
-
     }
 
     /**
      * @return DB
      */
-    public static function newInstance() 
+    public static function newInstance()
     {
 
         return new DB();
-
     }
     /**
      * @return DB
@@ -73,15 +70,14 @@ class DB
                 $this->_results = $this->_query->fetchAll(PDO::FETCH_OBJ);
                 $this->_count = $this->_query->rowCount();
             } else {
+                Events::trigger('db/query-failed', ["query" => $this->_query->queryString, "params" => $params]);
                 $this->_error = true;
                 $this->_results = [];
                 $this->_count = 0;
             }
-
         }
 
         return $this;
-
     }
 
     /**
@@ -96,12 +92,11 @@ class DB
             return $this;
         }
         return $this;
-
     }
 
-    private function action($action, $table, $where = array(), $order = false) 
+    private function action($action, $table, $where = array(), $order = false)
     {
-    
+
         if (count($where) === 3) {
             $operators = array('=', '<', '>', '<=', '>=');
 
@@ -125,7 +120,6 @@ class DB
         }
 
         return $this;
-        
     }
 
     /**
@@ -135,7 +129,6 @@ class DB
     {
 
         return $this->_error;
-        
     }
 
     /**
@@ -148,7 +141,6 @@ class DB
     {
 
         return $this->action('SELECT *', $table, $where, $order);
-
     }
 
     /**
@@ -156,11 +148,10 @@ class DB
      * @param string $table Table Name
      * @param array $where Where Clause
      */
-    public function delete($table, $where) 
+    public function delete($table, $where)
     {
 
         return $this->action('DELETE', $table, $where);
-
     }
 
     /**
@@ -175,7 +166,7 @@ class DB
         $values = '';
         $x = 1;
 
-        foreach($fields as $field) {
+        foreach ($fields as $field) {
             $values .= '?';
 
             if ($x < count($fields)) {
@@ -191,7 +182,6 @@ class DB
         }
 
         return $this;
-
     }
 
     /**
@@ -207,7 +197,7 @@ class DB
         $set = '';
         $x = 1;
 
-        foreach($fields as $name => $value) {
+        foreach ($fields as $name => $value) {
             $set .= "{$name} = ?";
 
             if ($x < count($fields)) {
@@ -223,7 +213,6 @@ class DB
         }
 
         return $this;
-
     }
 
     /**
@@ -233,7 +222,6 @@ class DB
     {
 
         return $this->_count;
-
     }
 
     /**
@@ -243,7 +231,6 @@ class DB
     {
 
         return $this->_results;
-
     }
 
     /**
@@ -257,18 +244,15 @@ class DB
         }
 
         return false;
-
     }
 
     /**
      * @return DB
      * @param string $table Table Name
      */
-    public function getAll($table) 
+    public function getAll($table)
     {
 
         return $this->query("SELECT * FROM {$table}");
-
     }
-
 }

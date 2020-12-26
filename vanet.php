@@ -23,7 +23,7 @@ if (Input::get('method') === 'events-table') {
             echo '</td><td class="align-middle">';
             echo $event["departureAirport"];
             echo '</td><td class="align-middle">';
-            echo '<a href="events.php?page=view&event='.urlencode($event["id"]).'" class="btn bg-custom">View</button>';
+            echo '<a href="events.php?page=view&event=' . urlencode($event["id"]) . '" class="btn bg-custom">View</button>';
             echo '</td></tr>';
         }
     }
@@ -35,10 +35,10 @@ if (Input::get('method') === 'events-table') {
         echo '</td><td class="align-middle">';
         echo $event["departureAirport"];
         echo '</td><td class="align-middle">';
-        echo '<button class="btn btn-primary editEvent" data-name="'.$event["name"].'" data-desc="'.str_replace('"', '', $event["description"]).'" 
-        data-dep="'.$event["departureAirport"].'" data-arr="'.$event["arrivalAirport"].'" data-aircraft="'.$event["aircraft"]["liveryID"].'" 
-        data-vis="'.$event["visible"].'" data-server="'.$event["server"].'" data-id="'.$event["id"].'"><i class="fa fa-edit"></i></button>';
-        echo '&nbsp;<button data-id="'.$event['id'].'" class="btn btn-danger text-light deleteEvent"><i class="fa fa-trash"></i></button>';
+        echo '<button class="btn btn-primary editEvent" data-name="' . $event["name"] . '" data-desc="' . str_replace('"', '', $event["description"]) . '" 
+        data-dep="' . $event["departureAirport"] . '" data-arr="' . $event["arrivalAirport"] . '" data-aircraft="' . $event["aircraft"]["liveryID"] . '" 
+        data-vis="' . $event["visible"] . '" data-server="' . $event["server"] . '" data-id="' . $event["id"] . '"><i class="fa fa-edit"></i></button>';
+        echo '&nbsp;<button data-id="' . $event['id'] . '" class="btn btn-danger text-light deleteEvent"><i class="fa fa-trash"></i></button>';
         echo '</td></tr>';
     }
 } elseif (Input::get('method') === 'event' && !empty(Input::get('data'))) {
@@ -46,6 +46,10 @@ if (Input::get('method') === 'events-table') {
     header("Content-Type: application/json");
     echo Json::encode($event);
 } elseif (Input::get('method') === 'acars' && !empty(Input::get('server'))) {
+    if (Input::get('server') == 'casual') {
+        echo '<div class="alert alert-dabger">ACARS is not currently available on the Casual Server</div>';
+        die();
+    }
     $response = VANet::runAcars(Input::get('server'));
     if (array_key_exists('status', $response)) {
         if ($response['status'] == 404 || $response['status'] == 409) {
@@ -57,7 +61,7 @@ if (Input::get('method') === 'events-table') {
     echo '<p>Nice! We\'ve found you. If you\'ve finished your flight and at the gate, go ahead and fill out the details below. 
     If not, reload the page once you\'re done and click that button again.</p>';
 
-    
+
     $aircraft = Aircraft::findAircraft($response["aircraft"]);
     if (!$aircraft) {
         echo '<div class="alert alert-warning">You\'re Flying an Aircraft that isn\'t in this VA\'s Fleet!</div>';
@@ -67,14 +71,14 @@ if (Input::get('method') === 'events-table') {
     echo '<form action="update.php" method="post">';
     echo '
     <input hidden value="filepirep" name="action" />
-    <input hidden value="'.date("Y-m-d").'" name="date" />
-    <input hidden value="'.Time::secsToString($response["flightTime"]).'" name="ftime" />
-    <input hidden value="'.$aircraft->id.'" name="aircraft" />
+    <input hidden value="' . date("Y-m-d") . '" name="date" />
+    <input hidden value="' . Time::secsToString($response["flightTime"]) . '" name="ftime" />
+    <input hidden value="' . $aircraft->id . '" name="aircraft" />
     ';
 
     // Check VANet was able to determine departure ICAO
     if ($response["departure"] != null) {
-        echo '<input hidden value="'.$response["departure"].'" name="dep" />';
+        echo '<input hidden value="' . $response["departure"] . '" name="dep" />';
     } else {
         // ICAO could not be determined. Show UI for input
         echo '
@@ -87,7 +91,7 @@ if (Input::get('method') === 'events-table') {
 
     // Check VANet was able to determine arrival ICAO
     if ($response["arrival"] != null) {
-        echo '<input hidden value="'.$response["arrival"].'" name="arr" />';
+        echo '<input hidden value="' . $response["arrival"] . '" name="arr" />';
     } else {
         // ICAO could not be determined. Show UI for input
         echo '
@@ -101,7 +105,7 @@ if (Input::get('method') === 'events-table') {
     echo '
     <div class="form-group">
         <label for="fnum">Flight Number</label>
-        <input required type="number" min="1" class="form-control" name="fnum" />
+        <input required type="text" class="form-control" name="fnum" />
     </div>
 
     <div class="form-group">
@@ -121,7 +125,7 @@ if (Input::get('method') === 'events-table') {
 } elseif (Input::get('method') === 'liveriesforaircraft' && !empty(Input::get('data'))) {
     $all = Aircraft::fetchLiveryIdsForAircraft(Input::get('data'));
     foreach ($all as $name => $id) {
-        echo '<option value="'.$id.'">'.$name.'</option>';
+        echo '<option value="' . $id . '">' . $name . '</option>';
     }
 } elseif (Input::get('method') === 'codeshares' && $user->hasPermission('opsmanage')) {
     $all = VANet::getCodeshares();
@@ -131,13 +135,13 @@ if (Input::get('method') === 'events-table') {
             continue;
         }
         echo '<tr><td class="align-middle">';
-        echo $codeshare["veFrom"]["code"].' ('.$codeshare["veFrom"]["codeshareId"].')';
+        echo $codeshare["veFrom"]["code"] . ' (' . $codeshare["veFrom"]["codeshareId"] . ')';
         echo '</td><td class="align-middle mobile-hidden">';
         echo $codeshare["message"];
         echo '</td><td class="align-middle">';
         echo count($codeshare["routes"]);
         echo '</td><td class="align-middle">';
-        echo '<button value="'.$codeshare['id'].'" form="importcodeshare" type="submit" class="btn bg-custom text-light" name="id"><i class="fa fa-file-download"></i></button>';
-        echo '&nbsp;<button class="btn btn-danger deleteCodeshare" data-id="'.$codeshare["id"].'"><i class="fa fa-trash"></i></button>';
+        echo '<button value="' . $codeshare['id'] . '" form="importcodeshare" type="submit" class="btn bg-custom text-light" name="id"><i class="fa fa-file-download"></i></button>';
+        echo '&nbsp;<button class="btn btn-danger deleteCodeshare" data-id="' . $codeshare["id"] . '"><i class="fa fa-trash"></i></button>';
     }
 }

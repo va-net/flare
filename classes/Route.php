@@ -44,7 +44,7 @@ class Route
         self::init();
 
         $ret = [];
-        $sql = "SELECT DISTINCT r.*, a.name AS aircraft_name, a.liveryname AS aircraft_livery, a.ifaircraftid AS aircraft_liveryid, a.id AS aircraft_id
+        $sql = "SELECT DISTINCT r.*, a.name AS aircraft_name, a.liveryname AS aircraft_livery, a.ifliveryid AS aircraft_liveryid, a.id AS aircraft_id
         FROM (
             route_aircraft ra INNER JOIN aircraft a ON a.id=ra.aircraftid
         ) RIGHT JOIN routes r ON r.id=ra.routeid";
@@ -52,20 +52,21 @@ class Route
         foreach ($data as $d) {
             if (gettype($d->id) != 'string') $d->id = strval($d->id);
             if (!array_key_exists($d->id, $ret)) {
+                $ac = $d->aircraft_name == null ? [] : [
+                    [
+                        "id" => $d->aircraft_id,
+                        "name" => $d->aircraft_name,
+                        "livery" => $d->aircraft_livery,
+                        "liveryid" => $d->aircraft_liveryid,
+                    ],
+                ];
                 $ret[$d->id] = [
                     "fltnum" => $d->fltnum,
                     "dep" => $d->dep,
                     "arr" => $d->arr,
                     "duration" => $d->duration,
                     "notes" => $d->notes,
-                    "aircraft" => [
-                        [
-                            "id" => $d->aircraft_id,
-                            "name" => $d->aircraft_name,
-                            "livery" => $d->aircraft_livery,
-                            "liveryid" => $d->aircraft_liveryid,
-                        ],
-                    ],
+                    "aircraft" => $ac,
                 ];
             } else {
                 $ret[$d->id]['aircraft'][] = [

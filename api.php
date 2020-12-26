@@ -686,4 +686,22 @@ Router::add('/ranks/([0-9]+)', function($rankId) {
     ]);
 });
 
+Router::add('/logs/(.+)', function($logName) {
+    global $_authType, $user;
+    if ($_authType == AuthType::ApiKey) {
+        accessDenied();
+    }
+    if (!$user->hasPermission('site')) {
+        accessDenied();
+    }
+
+    header('Content-Type: text/plain');
+    if (!file_exists("core/logs/{$logName}.log")) {
+        http_response_code(404);
+        echo 'Not Found';
+        die();
+    }
+    echo file_get_contents("core/logs/{$logName}.log");
+});
+
 Router::run('/api.php');
