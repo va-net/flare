@@ -82,7 +82,14 @@ CREATE TABLE IF NOT EXISTS `routes` (
   `dep` varchar(4) NOT NULL,
   `arr` varchar(4) NOT NULL,
   `duration` int(11) NOT NULL,
-  `aircraftid` int(11) NOT NULL,
+  `notes` text NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+);
+
+CREATE TABLE IF NOT EXISTS `route_aircraft` ( 
+  `id` INT NOT NULL AUTO_INCREMENT, 
+  `routeid` INT NOT NULL, 
+  `aircraftid` INT NOT NULL, 
   PRIMARY KEY (`id`)
 );
 
@@ -109,6 +116,16 @@ CREATE TABLE IF NOT EXISTS `options` (
   `name` varchar(120) NOT NULL, 
   `value` text NOT NULL, 
   PRIMARY KEY (`name`)
+);
+
+CREATE TABLE IF NOT EXISTS `notifications` ( 
+  `id` INT NOT NULL AUTO_INCREMENT, 
+  `pilotid` INT NOT NULL, 
+  `icon` VARCHAR(20) NOT NULL, 
+  `subject` VARCHAR(20) NOT NULL, 
+  `content` VARCHAR(60) NOT NULL, 
+  `datetime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, 
+  PRIMARY KEY (`id`)
 );
 
 INSERT INTO `options` (`name`, `value`) VALUES ('FORCE_SERVER', '0');
