@@ -141,7 +141,10 @@ class Aircraft
 
         self::init();
 
-        return self::$_db->query('SELECT * FROM aircraft WHERE rankreq <= ? AND status = 1 ORDER BY name ASC', array($rankid));
+        $sql = 'SELECT aircraft.*, ranks.timereq FROM aircraft 
+        INNER JOIN ranks ON ranks.id=aircraft.rankreq WHERE timereq <= (SELECT timereq FROM ranks WHERE id=?) 
+        AND `status` = 1 ORDER BY `name` ASC';
+        return self::$_db->query($sql, [$rankid]);
 
     }
 
