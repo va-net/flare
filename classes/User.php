@@ -458,7 +458,7 @@ class User
         $results = $db->query($sql)->results();
 
         $usersarray = array();
-        $statuses = array('Pending', 'Active', 'Inactive');
+        $statuses = array('Pending', 'Active', 'Inactive', 'Declined');
         $x = 0;
         $admins = Permissions::usersWith('admin');
         $admins = array_map(function($item) { return $item->id; }, $admins);
