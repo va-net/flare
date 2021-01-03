@@ -141,10 +141,15 @@ $ACTIVE_CATEGORY = 'site-management';
                                     </div>
                                     <div class="form-group">
                                         <label for="">Check for Beta Updates?</label>
-                                        <select requried class="form-control" name="checkpre" id="check-prerelease">
+                                        <select requried class="form-control" name="checkpre" id="check-prerelease" <?= $ver["prerelease"] ? 'disabled' : '' ?>>
                                             <option value="0">No (Recommended for Production Sites)</option>
                                             <option value="1">Yes</option>
                                         </select>
+                                        <?php
+                                        if ($ver["prerelease"]) {
+                                            echo '<p>You cannot leave the beta while on a beta release as it may cause future conflicts.</p>';
+                                        }
+                                        ?>
                                         <script>
                                             $("#check-prerelease").val('<?= Config::get("CHECK_PRERELEASE"); ?>');
                                         </script>
