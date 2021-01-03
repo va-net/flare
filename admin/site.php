@@ -11,7 +11,7 @@ require_once '../core/init.php';
 
 $user = new User();
 
-Page::setTitle('Site Admin - '.Config::get('va/name'));
+Page::setTitle('Site Admin - ' . Config::get('va/name'));
 Page::excludeAsset('datatables');
 Page::excludeAsset('chartjs');
 
@@ -25,9 +25,11 @@ $ACTIVE_CATEGORY = 'site-management';
 ?>
 <!DOCTYPE html>
 <html>
+
 <head>
     <?php include '../includes/header.php'; ?>
 </head>
+
 <body>
     <nav class="navbar navbar-dark navbar-expand-lg bg-custom">
         <?php include '../includes/navbar.php'; ?>
@@ -37,14 +39,16 @@ $ACTIVE_CATEGORY = 'site-management';
             <div class="row m-0 p-0">
                 <?php include '../includes/sidebar.php'; ?>
                 <div class="col-lg-9 main-content">
-                    <div id="loader-wrapper"><div id="loader" class="spinner-border spinner-border-sm spinner-custom"></div></div>
+                    <div id="loader-wrapper">
+                        <div id="loader" class="spinner-border spinner-border-sm spinner-custom"></div>
+                    </div>
                     <div class="loaded">
                         <?php
-                            $tab = "settings";
-                            if (!empty(Input::get('tab'))) {
-                                $tab = Input::get('tab');
-                            }
-                            $ACTIVE_CATEGORY = 'site-management'; 
+                        $tab = "settings";
+                        if (!empty(Input::get('tab'))) {
+                            $tab = Input::get('tab');
+                        }
+                        $ACTIVE_CATEGORY = 'site-management';
                         ?>
                         <script>
                             $(document).ready(function() {
@@ -52,15 +56,15 @@ $ACTIVE_CATEGORY = 'site-management';
                             });
                         </script>
                         <?php
-                        if (file_exists(__DIR__.'/../install/install.php') && !file_exists(__DIR__.'/../.development')) {
+                        if (file_exists(__DIR__ . '/../install/install.php') && !file_exists(__DIR__ . '/../.development')) {
                             echo '<div class="alert alert-danger text-center">The Install Folder still Exists! Please delete it immediately, it poses a severe security risk.</div>';
                         }
-                        
+
                         if (Session::exists('error')) {
-                            echo '<div class="alert alert-danger text-center">Error: '.Session::flash('error').'</div>';
+                            echo '<div class="alert alert-danger text-center">Error: ' . Session::flash('error') . '</div>';
                         }
                         if (Session::exists('success')) {
-                            echo '<div class="alert alert-success text-center">'.Session::flash('success').'</div>';
+                            echo '<div class="alert alert-success text-center">' . Session::flash('success') . '</div>';
                         }
 
                         $ver = Updater::getVersion();
@@ -110,8 +114,8 @@ $ACTIVE_CATEGORY = 'site-management';
                                         <label for="">VA Callsign RegEx&nbsp;&nbsp;<i class="fa fa-question-circle" data-toggle="tooltip" title="RegEx is a way to match complex text formats"></i></label>
                                         <input required type="text" class="form-control" name="vaident" id="vaident" value="<?= Config::get('VA_CALLSIGN_FORMAT') ?>" />
                                         <small class="text-muted">
-                                            <b>Pre-fill:</b> 
-                                            <span class="text-primary cursor-pointer" id="prefill-va">Airline 123VA</span> | 
+                                            <b>Pre-fill:</b>
+                                            <span class="text-primary cursor-pointer" id="prefill-va">Airline 123VA</span> |
                                             <span class="text-primary cursor-pointer" id="prefill-any">Any Callsign</span>
                                         </small>
                                     </div>
@@ -207,7 +211,7 @@ $ACTIVE_CATEGORY = 'site-management';
                                     </tr>
                                     <tr>
                                         <th>VANet Gold</th>
-                                        <td><?= VANet::isGold() ? 'Yes': 'No' ?></td>
+                                        <td><?= VANet::isGold() ? 'Yes' : 'No' ?></td>
                                     </tr>
                                     <tr>
                                         <th>Force Server</th>
@@ -240,6 +244,16 @@ $ACTIVE_CATEGORY = 'site-management';
                                             <input type="submit" class="btn bg-custom" value="Clear Old Logs" />
                                         </form>
                                     </div>
+                                    <div class="col-lg">
+                                        <button class="btn bg-custom" id="repair-btn">Repair Site</button>
+                                    </div>
+                                    <script>
+                                        $("#repair-btn").click(function() {
+                                            $.get('/admin/repair.php', function() {
+                                                alert('Repair attempted successfully');
+                                            });
+                                        });
+                                    </script>
                                 </div>
                             </div>
                             <div id="updates" class="tab-pane container-fluid p-3 fade">
@@ -248,13 +262,13 @@ $ACTIVE_CATEGORY = 'site-management';
                                     <b>You are on Flare <?php echo $ver["tag"]; ?></b>
                                     <br />
                                     <?php
-                                        if (!$update) {
-                                            echo "Flare is Up-to-Date!";
-                                        } else {
-                                            echo "<span id=\"updateAvail\">An update to Flare ".$update["tag"]." is available<br /></span>";
-                                            echo '<button class="btn bg-custom" id="updateNow">Update Now</button>';
-                                            echo '<p id="updateResult"></p>';
-                                        }
+                                    if (!$update) {
+                                        echo "Flare is Up-to-Date!";
+                                    } else {
+                                        echo "<span id=\"updateAvail\">An update to Flare " . $update["tag"] . " is available<br /></span>";
+                                        echo '<button class="btn bg-custom" id="updateNow">Update Now</button>';
+                                        echo '<p id="updateResult"></p>';
+                                    }
                                     ?>
                                 </p>
                                 <script>
@@ -278,7 +292,7 @@ $ACTIVE_CATEGORY = 'site-management';
 
                         <style>
                             .nav-tabs .nav-link {
-                                color: #000!important;
+                                color: #000 !important;
                             }
                         </style>
                     </div>
@@ -295,4 +309,5 @@ $ACTIVE_CATEGORY = 'site-management';
         });
     </script>
 </body>
+
 </html>
