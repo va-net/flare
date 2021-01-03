@@ -6,10 +6,7 @@
         "notes": "Flare has now been officially released!",
         "prerelease": false,
         "useUpdater": true,
-        "files": [
-            "routes.php",
-            "version.json"
-        ],
+        "files": ["routes.php", "version.json"],
         "deletedFiles": [],
         "queries": [],
         "newFolders": []
@@ -40,12 +37,7 @@
         "notes": "Various Bug Fixes",
         "prerelease": false,
         "useUpdater": true,
-        "files": [
-            "updater.php",
-            "pireps.php",
-            "update.php",
-            "version.json"
-        ],
+        "files": ["updater.php", "pireps.php", "update.php", "version.json"],
         "deletedFiles": [],
         "queries": [],
         "newFolders": []
@@ -142,9 +134,7 @@
             "admin/users.php"
         ],
         "deletedFiles": [],
-        "queries": [
-            "ALTER TABLE `routes` ADD `notes` TEXT NULL DEFAULT NULL"
-        ],
+        "queries": ["ALTER TABLE `routes` ADD `notes` TEXT NULL DEFAULT NULL"],
         "newFolders": []
     },
     {
@@ -293,6 +283,18 @@
             "ALTER TABLE `routes` DROP `aircraftid`",
             "INSERT INTO `permissions` (`name`, `userid`) VALUES ('site', 1)"
         ],
+        "deletedFiles": [],
+        "newFolders": []
+    },
+    {
+        "tag": "v1.1.1",
+        "name": "Version 1.1.1",
+        "date": "2021-01-03",
+        "notes": "Various Bug Fixes",
+        "prerelease": false,
+        "useUpdater": true,
+        "files": ["admin/repair.php", "admin/site.php", "classes/Plugin.php"],
+        "queries": [],
         "deletedFiles": [],
         "newFolders": []
     }
