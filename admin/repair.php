@@ -1,4 +1,5 @@
 <?php
+require_once '../core/init.php';
 $db = DB::getInstance();
 
 $test = $db->query("SELECT `notes` FROM `routes`");
