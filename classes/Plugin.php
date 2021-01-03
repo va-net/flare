@@ -1,12 +1,15 @@
 <?php
 
-class Plugin {
+class Plugin
+{
     /**
      * @return null
      * @param string $label Menu Item Label
      * @param array $data Meny Item Data
      */
-    public static function pilotMenu($label, $data) {
+    public static function pilotMenu($label, $data)
+    {
+        if (!isset($data["needsGold"])) $data["needsGold"] = false;
         $GLOBALS['pilot-menu'][$label] = $data;
     }
 
@@ -15,7 +18,9 @@ class Plugin {
      * @param string $label Menu Item Label
      * @param array $data Meny Item Data
      */
-    public static function adminMenu($label, $data) {
+    public static function adminMenu($label, $data)
+    {
+        if (!isset($data["needsGold"])) $data["needsGold"] = false;
         $GLOBALS['admin-menu']['Plugins'][$label] = $data;
     }
 
