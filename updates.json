@@ -297,5 +297,17 @@
         "queries": [],
         "deletedFiles": [],
         "newFolders": []
+    },
+    {
+        "tag": "v1.1.2",
+        "name": "Version 1.1.2",
+        "date": "2021-01-08",
+        "notes": "Various Bug Fixes",
+        "prerelease": false,
+        "useUpdater": true,
+        "files": ["admin/repair.php", "core/init.php", "update.php"],
+        "queries": [],
+        "deletedFiles": [],
+        "newFolders": []
     }
 ]
