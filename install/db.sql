@@ -128,6 +128,13 @@ CREATE TABLE IF NOT EXISTS `notifications` (
   PRIMARY KEY (`id`)
 );
 
+CREATE TABLE `cache` ( 
+  `name` VARCHAR(120) NOT NULL, 
+  `value` TEXT NOT NULL, 
+  `expiry` DATETIME NULL, 
+  PRIMARY KEY (`name`)
+);
+
 INSERT INTO `options` (`name`, `value`) VALUES ('FORCE_SERVER', '0');
 INSERT INTO `options` (`name`, `value`) VALUES ('CHECK_PRERELEASE', '0');
 INSERT INTO `options` (`name`, `value`) VALUES ('TEXT_COLOUR', '#fff');
