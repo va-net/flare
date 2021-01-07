@@ -10,3 +10,8 @@ if ($test->error()) {
 if (Config::get('CHECK_PRERELEASE') == 0 && Updater::getVersion()["prerelease"]) {
     Config::replace('CHECK_PRERELEASE', 1);
 }
+
+$pluginsPath = __DIR__ . "{$slash}..${slash}plugins.json";
+$plugins = Json::decode(file_get_contents($pluginsPath));
+$plugins = array_unique($plugins);
+file_put_contents($pluginsPath, Json::encode($plugins));
