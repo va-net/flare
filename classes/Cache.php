@@ -27,7 +27,7 @@ class Cache
     public static function get($key)
     {
         self::init();
-        $res = self::$_db->query("SELECT * FROM `cache` WHERE `name`=? AND `expiry` > NOW()", [$key]);
+        $res = self::$_db->query("SELECT * FROM `cache` WHERE `name`=? AND (`expiry` > NOW() OR `expiry`=null)", [$key]);
         if ($res->count() < 1) return '';
 
         return $res->first()->value;
@@ -52,6 +52,6 @@ class Cache
     public static function clean()
     {
         self::init();
-        self::$_db->query("DELETE FROM `cache` WHERE `expiry` < NOW()");
+        self::$_db->query("DELETE FROM `cache` WHERE `expiry` < NOW() AND `expiry`!=null");
     }
 }
