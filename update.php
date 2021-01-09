@@ -506,19 +506,27 @@ if (Input::get('action') === 'editprofile') {
     }
     Session::flash('success', 'VA Settings Changed Successfully!');
     Redirect::to('/admin/site.php?tab=settings');
-} elseif (Input::get('action') === 'vanetupdate') {
     if (!$user->hasPermission('opsmanage')) {
+} elseif (Input::get('action') === 'interactionupdate') {
         Redirect::to('home.php');
         die();
     }
 
+    $oldAnalytics = Config::get('MASTER_API_KEY') == '' ? 0 : 1;
+    if ($oldAnalytics == 1 && Input::get('analytics') == 0) {
+        Analytics::unregister();
+    } elseif ($oldAnalytics == 0 && Input::get('analytics') == 1) {
+        Analytics::register();
+    }
+
     if (!Config::replace('api_key', trim(Input::get('vanetkey')))) {
-        Session::flash('error', 'There was an error updating the config file!');
-        Redirect::to('/admin/site.php?tab=vanet');
+        Session::flash('error', 'There was an error updating the settings!');
+        Redirect::to('/admin/site.php?tab=interaction');
         die();
     }
-    Session::flash('success', 'VANet API Key changed Successfully.');
-    Redirect::to('/admin/site.php?tab=vanet');
+
+    Session::flash('success', 'Settings Updated');
+    Redirect::to('/admin/site.php?tab=interaction');
 } elseif (Input::get('action') === 'addevent') {
     if (!$user->hasPermission('opsmanage')) {
         Redirect::to('home.php');
