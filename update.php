@@ -806,8 +806,9 @@ if (Input::get('action') === 'editprofile') {
     }
 
     $routes = Json::decode($routes);
+    $lastId = Route::lastId();
 
-    $sql = "INSERT INTO routes (fltnum, dep, arr, duration, aircraftid) VALUES";
+    $sql = "INSERT INTO routes (id, fltnum, dep, arr, duration) VALUES";
     $params = array();
     $j = 0;
     foreach ($routes as $item) {
@@ -824,11 +825,12 @@ if (Input::get('action') === 'editprofile') {
         }
 
         $sql .= "\n(?, ?, ?, ?, ?),";
+        array_push($params, $lastId + $j + 1);
         array_push($params, $item["fltnum"]);
         array_push($params, $item["dep"]);
         array_push($params, $item["arr"]);
         array_push($params, $item["duration"]);
-        array_push($params, $item["aircraftid"]);
+        Route::addAircraft($lastId + $j + 1, $item["aircraftid"]);
 
         $j++;
     }

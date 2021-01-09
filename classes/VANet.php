@@ -17,8 +17,17 @@ class VANet
      */
     public static function myInfo($key = null)
     {
+        $wasNull = false;
         if ($key == null) {
+            $wasNull = true;
             $key = Config::get('vanet/api_key');
+        }
+
+        if ($wasNull) {
+            $cache = Cache::get('myinfo');
+            if ($cache != '') {
+                return Json::decode($cache);
+            }
         }
 
         $curl = new Curl;
@@ -26,6 +35,9 @@ class VANet
         $response = $curl->get('https://vanet.app/api/myinfo/bykey', array(
             'apikey' => $key
         ));
+        if ($wasNull) {
+            Cache::set('myinfo', $response->body, date("Y-m-d H:i:s", strtotime('+24 hours')));
+        }
         return Json::decode($response->body);
     }
 
@@ -33,7 +45,7 @@ class VANet
      * @return bool
      * @param string $key VANet API Key
      */
-    public static function isGold($key = null) 
+    public static function isGold($key = null)
     {
 
         if ($key == null) {
@@ -46,7 +58,6 @@ class VANet
             return false;
         }
         return true;
-
     }
 
     /**
@@ -65,13 +76,12 @@ class VANet
             return false;
         }
         return true;
-
     }
 
     /**
      * @return array|bool
      */
-    public static function getStats() 
+    public static function getStats()
     {
         $key = Config::get('vanet/api_key');
 
@@ -91,7 +101,7 @@ class VANet
      * @param string $callsign Pilot Callsign
      * @param int $id Pilot ID
      */
-    public static function setupPireps($callsign, $id) 
+    public static function setupPireps($callsign, $id)
     {
         $db = DB::getInstance();
 
@@ -100,7 +110,7 @@ class VANet
         if ($force != 0 && $force != 'casual') $server = $force;
 
         $curl = new Curl;
-        $request = $curl->get(Config::get('vanet/base_url').'/api/userid', array(
+        $request = $curl->get(Config::get('vanet/base_url') . '/api/userid', array(
             'apikey' => Config::get('vanet/api_key'),
             'callsign' => $callsign,
             'server' => $server
@@ -119,7 +129,7 @@ class VANet
         }
 
         Events::trigger('pirep/setup', ["pilot" => $id, "userid" => $response["data"], "method" => 0]);
-        
+
         return true;
     }
 
@@ -133,7 +143,7 @@ class VANet
         $db = DB::getInstance();
 
         $curl = new Curl;
-        $request = $curl->get(Config::get('vanet/base_url').'/api/userid/ifc', [
+        $request = $curl->get(Config::get('vanet/base_url') . '/api/userid/ifc', [
             'apikey' => Config::get('vanet/api_key'),
             'ifc' => $ifc,
         ]);
@@ -157,12 +167,12 @@ class VANet
      * @return array
      * @param string $icao ICAO Code
      */
-    public static function getAirport($icao) 
+    public static function getAirport($icao)
     {
         $key = Config::get('vanet/api_key');
 
         $curl = new Curl;
-        $response = $curl->get(Config::get('vanet/base_url').'/api/airports/'.urlencode($icao), array(
+        $response = $curl->get(Config::get('vanet/base_url') . '/api/airports/' . urlencode($icao), array(
             'apikey' => $key
         ));
         return Json::decode($response->body);
@@ -172,10 +182,10 @@ class VANet
      * @return CurlResponse
      * @param array $fields PIREP Fields
      */
-    public static function sendPirep($fields) 
+    public static function sendPirep($fields)
     {
         $curl = new Curl;
-        return $curl->post(Config::get('vanet/base_url').'/api/flights/new?apikey='.Config::get('vanet/api_key'), $fields);
+        return $curl->post(Config::get('vanet/base_url') . '/api/flights/new?apikey=' . Config::get('vanet/api_key'), $fields);
     }
 
     /**
@@ -188,10 +198,10 @@ class VANet
         if (!self::isGold($key)) {
             return false;
         }
-        
-        $url = Config::get('vanet/base_url').'/api/events';
+
+        $url = Config::get('vanet/base_url') . '/api/events';
         if ($future) {
-            $url = Config::get('vanet/base_url').'/api/events/future';
+            $url = Config::get('vanet/base_url') . '/api/events/future';
         }
 
         $curl = new Curl;
@@ -205,7 +215,7 @@ class VANet
      * @return array|bool
      * @param string $id Event ID
      */
-    public static function findEvent($id) 
+    public static function findEvent($id)
     {
         $key = Config::get('vanet/api_key');
         if (!self::isGold($key)) {
@@ -213,7 +223,7 @@ class VANet
         }
 
         $curl = new Curl;
-        $response = $curl->get(Config::get('vanet/base_url').'/api/events/'.urlencode($id), array(
+        $response = $curl->get(Config::get('vanet/base_url') . '/api/events/' . urlencode($id), array(
             'apikey' => $key
         ));
         return Json::decode($response->body);
@@ -223,7 +233,7 @@ class VANet
      * @return bool
      * @param array $fields Event Fields
      */
-    public static function createEvent($fields) 
+    public static function createEvent($fields)
     {
         $key = Config::get('vanet/api_key');
         if (!self::isGold($key)) {
@@ -231,18 +241,18 @@ class VANet
         }
 
         $curl = new Curl;
-        $request = $curl->post(Config::get('vanet/base_url').'/api/events/new?apikey='.urlencode($key), $fields);
+        $request = $curl->post(Config::get('vanet/base_url') . '/api/events/new?apikey=' . urlencode($key), $fields);
         $response = Json::decode($request->body);
         if (array_key_exists("status", $response) || !$response["success"]) {
             return false;
         }
 
         Events::trigger('vanet/event/added', $fields);
-        
+
         return true;
     }
 
-    public static function eventSignUp($pilotUid, $gateId) 
+    public static function eventSignUp($pilotUid, $gateId)
     {
         $key = Config::get('vanet/api_key');
         if (!self::isGold($key)) {
@@ -250,7 +260,7 @@ class VANet
         }
 
         $curl = new Curl;
-        $request = $curl->get(Config::get('vanet/base_url').'/api/events/signup/'.$gateId.'/'.$pilotUid, array(
+        $request = $curl->get(Config::get('vanet/base_url') . '/api/events/signup/' . $gateId . '/' . $pilotUid, array(
             'apikey' => $key
         ));
         $response = Json::decode($request->body);
@@ -274,7 +284,7 @@ class VANet
      * @param string $eventId Event ID
      * @param string $pilotUid Pilot User ID
      */
-    public static function eventPullOut($slotId, $eventId, $pilotUid) 
+    public static function eventPullOut($slotId, $eventId, $pilotUid)
     {
         $key = Config::get('vanet/api_key');
         if (!self::isGold($key)) {
@@ -286,7 +296,7 @@ class VANet
         }
 
         $curl = new Curl;
-        $request = $curl->get(Config::get('vanet/base_url').'/api/events/signup/vacate/'.urlencode($slotId), array(
+        $request = $curl->get(Config::get('vanet/base_url') . '/api/events/signup/vacate/' . urlencode($slotId), array(
             'apikey' => $key,
         ));
         $response = Json::decode($request->body);
@@ -309,7 +319,7 @@ class VANet
      * @param string $pilotUid Pilot User ID
      * @param string $eventId Event ID
      */
-    public static function isSignedUp($pilotUid, $eventId) 
+    public static function isSignedUp($pilotUid, $eventId)
     {
         $key = Config::get('vanet/api_key');
         if (!self::isGold($key)) {
@@ -317,7 +327,7 @@ class VANet
         }
 
         $curl = new Curl;
-        $request = $curl->get(Config::get('vanet/base_url').'/api/events/'.urlencode($eventId), array(
+        $request = $curl->get(Config::get('vanet/base_url') . '/api/events/' . urlencode($eventId), array(
             'apikey' => $key,
         ));
         $response = Json::decode($request->body)["signups"];
@@ -326,7 +336,7 @@ class VANet
                 return $r["id"];
             }
         }
-        
+
         return false;
     }
 
@@ -334,7 +344,7 @@ class VANet
      * @return bool
      * @param string $eventId Event ID
      */
-    public static function deleteEvent($eventId) 
+    public static function deleteEvent($eventId)
     {
         $key = Config::get('vanet/api_key');
         if (!self::isGold($key)) {
@@ -342,7 +352,7 @@ class VANet
         }
 
         $curl = new Curl;
-        $curl->delete(Config::get('vanet/base_url').'/api/events/delete/'.urlencode($eventId).'?apikey='.urlencode($key));
+        $curl->delete(Config::get('vanet/base_url') . '/api/events/delete/' . urlencode($eventId) . '?apikey=' . urlencode($key));
         Events::trigger('vanet/event/deleted', ['id' => $eventId]);
         return true;
     }
@@ -352,7 +362,7 @@ class VANet
      * @param string $id Event ID
      * @param array $fields Updated Event Fields
      */
-    public static function editEvent($id, $fields) 
+    public static function editEvent($id, $fields)
     {
         $key = Config::get('vanet/api_key');
         if (!self::isGold($key)) {
@@ -360,7 +370,7 @@ class VANet
         }
 
         $curl = new Curl;
-        $response = $curl->put(Config::get('vanet/base_url').'/api/events/update/'.urlencode($id).'?apikey='.urlencode($key), $fields);
+        $response = $curl->put(Config::get('vanet/base_url') . '/api/events/update/' . urlencode($id) . '?apikey=' . urlencode($key), $fields);
         if (array_key_exists("status", Json::decode($response->body))) {
             return false;
         }
@@ -377,10 +387,10 @@ class VANet
      * @param string $callsign Pilot Callsign
      * $param string $uid Pilot User ID
      */
-    public static function runAcars($server, $callsign = null, $uid = null) 
+    public static function runAcars($server, $callsign = null, $uid = null)
     {
         if (!self::isGold()) return false;
-        
+
         $user = new User();
 
         if ($callsign == null) $callsign = $user->data()->callsign;
@@ -388,7 +398,7 @@ class VANet
         $key = Config::get('vanet/api_key');
 
         $curl = new Curl;
-        $request = $curl->get(Config::get('vanet/base_url').'/api/acars', array(
+        $request = $curl->get(Config::get('vanet/base_url') . '/api/acars', array(
             'callsign' => $callsign,
             'userid' => $uid,
             'server' => $server,
@@ -400,10 +410,10 @@ class VANet
     /**
      * @return array
      */
-    public static function getCodeshares() 
+    public static function getCodeshares()
     {
         $curl = new Curl;
-        $response = $curl->get(Config::get('vanet/base_url').'/api/codeshares', array(
+        $response = $curl->get(Config::get('vanet/base_url') . '/api/codeshares', array(
             'apikey' => Config::get('vanet/api_key')
         ));
         return Json::decode($response->body);
@@ -413,10 +423,10 @@ class VANet
      * @return bool
      * @param array $fields Codeshare Fields
      */
-    public static function sendCodeshare($fields) 
+    public static function sendCodeshare($fields)
     {
         $curl = new Curl;
-        $request = $curl->post(Config::get('vanet/base_url').'/api/codeshares/new?apikey='.urlencode(Config::get('vanet/api_key')), $fields);
+        $request = $curl->post(Config::get('vanet/base_url') . '/api/codeshares/new?apikey=' . urlencode(Config::get('vanet/api_key')), $fields);
         $response = Json::decode($request->body);
         if (array_key_exists("status", $response) || !$response["success"]) {
             return false;
@@ -431,10 +441,10 @@ class VANet
      * @return bool
      * @param string $id Codeshare ID
      */
-    public static function deleteCodeshare($id) 
+    public static function deleteCodeshare($id)
     {
         $curl = new Curl;
-        $request = $curl->delete(Config::get('vanet/base_url').'/api/codeshares/delete/'.urlencode($id).'?apikey='.urlencode(Config::get('vanet/api_key')));
+        $request = $curl->delete(Config::get('vanet/base_url') . '/api/codeshares/delete/' . urlencode($id) . '?apikey=' . urlencode(Config::get('vanet/api_key')));
         $response = Json::decode($request->body);
 
         if (array_key_exists("status", $response) || !$response["success"]) {
@@ -450,10 +460,10 @@ class VANet
      * @return array|bool
      * @param string $id Codeshare ID
      */
-    public static function findCodeshare($id) 
+    public static function findCodeshare($id)
     {
         $curl = new Curl;
-        $request = $curl->get(Config::get('vanet/base_url').'/api/codeshares/'.urlencode($id).'?apikey='.urlencode(Config::get('vanet/api_key')));
+        $request = $curl->get(Config::get('vanet/base_url') . '/api/codeshares/' . urlencode($id) . '?apikey=' . urlencode(Config::get('vanet/api_key')));
         $response = Json::decode($request->body);
 
         if (array_key_exists("status", $response)) {
