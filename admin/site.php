@@ -80,7 +80,7 @@ $ACTIVE_CATEGORY = 'site-management';
                                 <a class="nav-link" id="designlink" data-toggle="tab" href="#design">Site Design</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" id="vanetlink" data-toggle="tab" href="#vanet">VANet Settings</a>
+                                <a class="nav-link" id="interactionlink" data-toggle="tab" href="#interaction">Interaction Settings</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" id="maintenancelink" data-toggle="tab" href="#maint">Maintenance</a>
@@ -192,15 +192,23 @@ $ACTIVE_CATEGORY = 'site-management';
                                     <input type="submit" class="btn bg-custom" value="Save">
                                 </form>
                             </div>
-                            <div id="vanet" class="tab-pane container-fluid p-3 fade">
-                                <h4>VANet Settings</h4>
+                            <div id="interaction" class="tab-pane container-fluid p-3 fade">
+                                <h4>Interaction Settings</h4>
                                 <form action="/update.php" method="post">
-                                    <input hidden name="action" value="vanetupdate">
+                                    <input hidden name="action" value="interactionupdate">
                                     <div class="form-group">
                                         <label for="">VANet API Key</label>
                                         <input required type="text" class="form-control" name="vanetkey" value="<?= Config::get('vanet/api_key') ?>">
                                     </div>
-                                    <input type="submit" class="btn bg-custom" value="Save">
+                                    <div class="form-group">
+                                        <label for="">Send Analytics to Developers</label>
+                                        <select required class="form-control" name="analytics">
+                                            <option value="1">Yes (Recommended)</option>
+                                            <option value="0">No</option>
+                                        </select>
+                                        <small class="text-muted">If enabled, reports of errors will be sent to the developers of Flare to help with debugging.</small>
+                                    </div>
+                                    <input type="submit" class="btn bg-custom" value="Save" />
                                 </form>
                             </div>
                             <div id="debug" class="tab-pane container-fluid p-3 fade">

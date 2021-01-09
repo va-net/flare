@@ -2,7 +2,7 @@
 require_once '../core/init.php';
 $db = DB::getInstance();
 
-$test = $db->query("SELECT `notes` FROM `routes`");
+$test = $db->query("SELECT `notes` FROM `routes`", [], false);
 if ($test->error()) {
     $db->query("ALTER TABLE `routes` ADD `notes` TEXT NULL DEFAULT NULL");
 }

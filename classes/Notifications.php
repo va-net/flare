@@ -8,7 +8,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-class Notifications {
+class Notifications
+{
 
     /**
      * @var DB
@@ -44,8 +45,8 @@ class Notifications {
 
         $sql = "SELECT *, DATE_FORMAT(CONVERT_TZ(`datetime`, @@session.time_zone, '+00:00'), '%Y-%m-%dT%TZ') AS formattedDate FROM notifications 
                 WHERE pilotid=? OR pilotid=0 ORDER BY datetime DESC LIMIT {$limit}";
-        
-        return self::$_db->query($sql, [$userId])->results();
+
+        return self::$_db->query($sql, [$userId], true)->results();
     }
 
     /**
@@ -63,12 +64,12 @@ class Notifications {
         if (strlen($subject) > 20) throw new Exception("Parameter subject must be 20 Characters or Less");
         if (strlen($content) > 60) throw new Exception("Parameter content must be 60 Characters or Less");
 
-        $res = self::$_db->insert('notifications', [
+        self::$_db->insert('notifications', [
             'pilotid' => $pilot,
             'icon' => $icon,
             'subject' => $subject,
             'content' => $content,
-        ]);
+        ], true);
     }
 
     /* EVENT HANDLERS */
@@ -81,7 +82,7 @@ class Notifications {
     {
         if (!array_key_exists($ev->event, self::$_events)) return;
 
-        call_user_func_array('self::'.self::$_events[$ev->event], [$ev]);
+        call_user_func_array('self::' . self::$_events[$ev->event], [$ev]);
     }
 
     /**
@@ -146,7 +147,7 @@ class Notifications {
         }
     }
 
-    private static function handlePromotion($ev) 
+    private static function handlePromotion($ev)
     {
         self::init();
         $usr = (new User)->getUser($ev->params['pilot']);
@@ -158,5 +159,4 @@ class Notifications {
         }
         self::notify(0, "fa-medal", "Promotion", $content);
     }
-
 }
