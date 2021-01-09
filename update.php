@@ -471,7 +471,7 @@ if (Input::get('action') === 'editprofile') {
         Redirect::to('/admin/operations.php?section=ranks');
     }
 } elseif (Input::get('action') === 'setdesign') {
-    if (!$user->hasPermission('opsmanage')) {
+    if (!$user->hasPermission('site')) {
         Redirect::to('home.php');
         die();
     }
@@ -487,7 +487,7 @@ if (Input::get('action') === 'editprofile') {
     Session::flash('success', 'Design Updated Successfully! You may need to reload the page or clear your cache in order for it to show.');
     Redirect::to('/admin/site.php?page=design');
 } elseif (Input::get('action') === 'vasettingsupdate') {
-    if (!$user->hasPermission('opsmanage')) {
+    if (!$user->hasPermission('site')) {
         Redirect::to('home.php');
         die();
     }
@@ -506,8 +506,8 @@ if (Input::get('action') === 'editprofile') {
     }
     Session::flash('success', 'VA Settings Changed Successfully!');
     Redirect::to('/admin/site.php?tab=settings');
-} elseif (Input::get('action') === 'vanetupdate') {
-    if (!$user->hasPermission('opsmanage')) {
+} elseif (Input::get('action') === 'interactionupdate') {
+    if (!$user->hasPermission('site')) {
         Redirect::to('home.php');
         die();
     }
@@ -858,7 +858,7 @@ if (Input::get('action') === 'editprofile') {
     Session::flash('success', "Routes Imported Successfully!");
     Redirect::to('/admin/operations.php?section=routes');
 } elseif (Input::get('action') === 'installplugin') {
-    if (!$user->hasPermission('admin')) {
+    if (!$user->hasPermission('site')) {
         Redirect::to('home.php');
     }
 
@@ -935,7 +935,7 @@ if (Input::get('action') === 'editprofile') {
     Session::flash('success', 'Plugin Installed!');
     Redirect::to('/admin/plugins.php?tab=installed');
 } elseif (Input::get('action') === 'removeplugin') {
-    if (!$user->hasPermission('admin')) {
+    if (!$user->hasPermission('site')) {
         Redirect::to('home.php');
     }
 
@@ -973,7 +973,7 @@ if (Input::get('action') === 'editprofile') {
     Session::flash('success', 'Plugin Removed');
     Redirect::to('/admin/plugins.php?tab=installed');
 } elseif (Input::get('action') === 'clearlogs') {
-    if (!$user->hasPermission('opsmanage')) {
+    if (!$user->hasPermission('site')) {
         Redirect::to('home.php');
     }
 
