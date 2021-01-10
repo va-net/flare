@@ -820,18 +820,6 @@ if (Input::get('action') === 'editprofile') {
     $params = array();
     $j = 0;
     foreach ($routes as $item) {
-        if ($j % 50 == 0 && $j != 0) {
-            $sql = trim($sql, ',');
-            $ret = $db->query($sql, $params);
-            if ($ret->error()) {
-                Session::flash('error', "Failed to Import Routes");
-                Redirect::to('/admin/operations.php?section=phpvms');
-                die();
-            }
-            $sql = "INSERT INTO routes (fltnum, dep, arr, duration, aircraftid) VALUES";
-            $params = array();
-        }
-
         $sql .= "\n(?, ?, ?, ?, ?),";
         array_push($params, $lastId + $j + 1);
         array_push($params, $item["fltnum"]);
