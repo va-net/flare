@@ -128,7 +128,7 @@ CREATE TABLE IF NOT EXISTS `notifications` (
   PRIMARY KEY (`id`)
 );
 
-CREATE TABLE `cache` ( 
+CREATE TABLE IF NOT EXISTS `cache` ( 
   `name` VARCHAR(120) NOT NULL, 
   `value` TEXT NOT NULL, 
   `expiry` DATETIME NULL, 
