@@ -309,5 +309,33 @@
         "queries": [],
         "deletedFiles": [],
         "newFolders": []
+    },
+    {
+        "tag": "v1.2.0-beta1",
+        "name": "Version 1.2.0 Beta 1",
+        "date": "2021-01-10",
+        "notes": "Optimized Homepage, Added Caching to make Flare 10x faster (no exaggeration, for real), Added Error Reported (opt-in in Site Settings)",
+        "prerelease": true,
+        "useUpdater": true,
+        "files": [
+            "classes/User.php",
+            "home.php",
+            "admin/repair.php",
+            "classes/Aircraft.php",
+            "classes/Analytics.php",
+            "classes/DB.php",
+            "classes/Notifications.php",
+            "classes/Route.php",
+            "core/init.php",
+            "classes/Cache.php",
+            "classes/VANet.php",
+            "admin/site.php",
+            "update.php"
+        ],
+        "queries": [
+            "CREATE TABLE IF NOT EXISTS `cache` (`name` VARCHAR(120) NOT NULL, `value` TEXT NOT NULL, `expiry` DATETIME NULL, PRIMARY KEY (`name`))"
+        ],
+        "deletedFiles": [],
+        "newFolders": []
     }
 ]
