@@ -15,9 +15,24 @@ class Cache
      */
     private static $_db;
 
+    /**
+     * @var array
+     */
+    private static $_cache = null;
+
     private static function init()
     {
         self::$_db = DB::getInstance();
+        if (self::$_cache == null) {
+            $res = self::$_db->query("SELECT * FROM `cache` WHERE `expiry` > NOW() OR `expiry` = null", true)->results();
+            $keys = array_map(function ($row) {
+                return $row->name;
+            }, $res);
+            $vals = array_map(function ($row) {
+                return $row->value;
+            }, $res);
+            self::$_cache = array_combine($keys, $vals);
+        }
     }
 
     /**
@@ -27,10 +42,9 @@ class Cache
     public static function get($key)
     {
         self::init();
-        $res = self::$_db->query("SELECT * FROM `cache` WHERE `name`=? AND (`expiry` > NOW() OR `expiry`=null)", [$key], true);
-        if ($res->count() < 1) return '';
+        if (!isset(self::$_cache[$key])) return '';
 
-        return $res->first()->value;
+        return self::$_cache[$key];
     }
 
     /**
@@ -44,6 +58,7 @@ class Cache
         self::init();
         $sql = "INSERT INTO `cache` (`name`, `value`, `expiry`) VALUES(?, ?, ?) ON DUPLICATE KEY UPDATE `value`=?, `expiry`=?";
         self::$_db->query($sql, [$key, $val, $expiry, $val, $expiry], true);
+        if (self::$_cache != null) self::$_cache[$key] = $val;
     }
 
     /**
