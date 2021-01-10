@@ -62,6 +62,16 @@ class Cache
     }
 
     /**
+     * @return bool
+     * @param string $key Item Key
+     */
+    public static function exists($key)
+    {
+        self::init();
+        return isset(self::$_cache[$key]);
+    }
+
+    /**
      * @return null
      */
     public static function clean()
