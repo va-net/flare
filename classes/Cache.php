@@ -27,7 +27,7 @@ class Cache
     public static function get($key)
     {
         self::init();
-        $res = self::$_db->query("SELECT * FROM `cache` WHERE `name`=? AND (`expiry` > NOW() OR `expiry`=null)", [$key]);
+        $res = self::$_db->query("SELECT * FROM `cache` WHERE `name`=? AND (`expiry` > NOW() OR `expiry`=null)", [$key], true);
         if ($res->count() < 1) return '';
 
         return $res->first()->value;
@@ -43,7 +43,7 @@ class Cache
     {
         self::init();
         $sql = "INSERT INTO `cache` (`name`, `value`, `expiry`) VALUES(?, ?, ?) ON DUPLICATE KEY UPDATE `value`=?, `expiry`=?";
-        self::$_db->query($sql, [$key, $val, $expiry, $val, $expiry]);
+        self::$_db->query($sql, [$key, $val, $expiry, $val, $expiry], true);
     }
 
     /**
@@ -52,6 +52,15 @@ class Cache
     public static function clean()
     {
         self::init();
-        self::$_db->query("DELETE FROM `cache` WHERE `expiry` < NOW() AND `expiry`!=null");
+        self::$_db->query("DELETE FROM `cache` WHERE `expiry` < NOW() AND `expiry`!=null", [], true);
+    }
+
+    /**
+     * @return null
+     */
+    public static function clear()
+    {
+        self::init();
+        self::$_db->delete('cache', ['1', '=', '1'], true);
     }
 }
