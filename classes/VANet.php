@@ -53,6 +53,7 @@ class VANet
         }
 
         $myinfo = self::myInfo($key);
+        if ($myinfo == null) return false;
 
         if ($myinfo['tier'] != 'Gold') {
             return false;
@@ -115,6 +116,9 @@ class VANet
             'callsign' => $callsign,
             'server' => $server
         ));
+        if ($request->headers['Status-Code'] != 200) {
+            return false;
+        }
         $response = Json::decode($request->body);
         if (array_key_exists('status', $response)) {
             if ($response['status'] == 404) {
@@ -147,6 +151,9 @@ class VANet
             'apikey' => Config::get('vanet/api_key'),
             'ifc' => $ifc,
         ]);
+        if ($request->headers['Status-Code'] != 200) {
+            return false;
+        }
         $response = Json::decode($request->body);
         if (array_key_exists('status', $response) && $response['status'] == 404) {
             return false;
@@ -175,6 +182,9 @@ class VANet
         $response = $curl->get(Config::get('vanet/base_url') . '/api/airports/' . urlencode($icao), array(
             'apikey' => $key
         ));
+        if ($response->headers['Status-Code'] != 200) {
+            return false;
+        }
         return Json::decode($response->body);
     }
 
@@ -208,6 +218,9 @@ class VANet
         $response = $curl->get($url, array(
             'apikey' => $key
         ));
+        if ($response->headers['Status-Code'] != 200) {
+            return [];
+        }
         return Json::decode($response->body);
     }
 
@@ -226,6 +239,9 @@ class VANet
         $response = $curl->get(Config::get('vanet/base_url') . '/api/events/' . urlencode($id), array(
             'apikey' => $key
         ));
+        if ($response->headers['Status-Code'] != 200) {
+            return [];
+        }
         return Json::decode($response->body);
     }
 
@@ -416,6 +432,9 @@ class VANet
         $response = $curl->get(Config::get('vanet/base_url') . '/api/codeshares', array(
             'apikey' => Config::get('vanet/api_key')
         ));
+        if ($response->headers['Status-Code'] != 200) {
+            return [];
+        }
         return Json::decode($response->body);
     }
 
