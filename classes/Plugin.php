@@ -1,4 +1,11 @@
 <?php
+/*
+Flare, a fully featured and easy to use crew centre, designed for Infinite Flight.
+Copyright (C) 2020  Lucas Rebato
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
 
 class Plugin
 {
@@ -10,6 +17,7 @@ class Plugin
     public static function pilotMenu($label, $data)
     {
         if (!isset($data["needsGold"])) $data["needsGold"] = false;
+        if (!isset($data["badgeid"])) $data["badgeid"] = null;
         $GLOBALS['pilot-menu'][$label] = $data;
     }
 
@@ -21,6 +29,7 @@ class Plugin
     public static function adminMenu($label, $data)
     {
         if (!isset($data["needsGold"])) $data["needsGold"] = false;
+        if (!isset($data["badgeid"])) $data["badgeid"] = null;
         $GLOBALS['admin-menu']['Plugins'][$label] = $data;
     }
 
@@ -32,5 +41,17 @@ class Plugin
     public static function topMenu($label, $data)
     {
         $GLOBALS['top-menu'][$label] = $data;
+    }
+
+    /**
+     * @return null
+     * @param string $id Badge ID
+     * @param callback $action Badge Action
+     */
+    public static function registerBadge($id, $action)
+    {
+        $b = Page::$badges;
+        $b[$id] = $action;
+        Page::setBadges($b);
     }
 }

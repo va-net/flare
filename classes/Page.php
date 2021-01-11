@@ -32,6 +32,13 @@ class Page
     private static $_usedAssets = [];
     private static $_assetsMode = 0;
 
+    public static $badges = [
+        "codeshares" => "VANet::getCodeshareCount",
+        "recruitment" => "User::pendingCount",
+        "pireps" => "Pirep::pendingCount",
+        "settings" => "Updater::updateAvailable",
+    ];
+
     /**
      * @return null
      * @param string $title Title
@@ -68,7 +75,7 @@ class Page
         } else {
             throw new Exception("Invalid Assets Mode");
         }
-        
+
         self::$_assetsMode = $mode;
     }
 
@@ -131,4 +138,12 @@ class Page
         return array_key_exists($asset, self::$_usedAssets) || in_array($asset, array_values(self::$_usedAssets));
     }
 
+    /**
+     * @return null
+     * @param array $value New Value
+     */
+    public static function setBadges($value)
+    {
+        self::$badges = $value;
+    }
 }

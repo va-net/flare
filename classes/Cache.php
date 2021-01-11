@@ -24,7 +24,7 @@ class Cache
     {
         self::$_db = DB::getInstance();
         if (self::$_cache == null) {
-            $res = self::$_db->query("SELECT * FROM `cache` WHERE `expiry` > NOW() OR `expiry` = null", true)->results();
+            $res = self::$_db->query("SELECT * FROM `cache` WHERE `expiry` > NOW() OR `expiry` = null", [], true)->results();
             $keys = array_map(function ($row) {
                 return $row->name;
             }, $res);
@@ -69,6 +69,17 @@ class Cache
     {
         self::init();
         return isset(self::$_cache[$key]);
+    }
+
+    /**
+     * @return null
+     * @param string $key Item Key
+     */
+    public static function delete($key)
+    {
+        self::init();
+        self::$_db->delete('cache', ['name', '=', $key], true);
+        if (isset(self::$_cache[$key])) unset(self::$_cache[$key]);
     }
 
     /**

@@ -20,14 +20,13 @@ class Pirep
     {
 
         self::$_db = DB::newInstance();
-
     }
 
     /**
      * @return bool
      * @param array $fields PIREP Fields
      */
-    public static function file($fields = array()) 
+    public static function file($fields = array())
     {
 
         self::init();
@@ -36,7 +35,6 @@ class Pirep
         }
         Events::trigger('pirep/filed', $fields);
         return true;
-
     }
 
     /**
@@ -49,13 +47,12 @@ class Pirep
 
         self::init();
 
-        if(self::$_db->update('pireps', $id, 'id', $fields)->error()) {
+        if (self::$_db->update('pireps', $id, 'id', $fields)->error()) {
             return false;
         }
         $fields["id"] = $id;
         Events::trigger('pirep/updated', $fields);
         return true;
-
     }
 
     /**
@@ -68,11 +65,10 @@ class Pirep
 
         $sql = "SELECT pireps.*, pilots.name AS pilotname, aircraft.name AS aircraftname FROM (pireps INNER JOIN pilots ON pireps.pilotid=pilots.id) INNER JOIN aircraft ON pireps.aircraftid=aircraft.id";
         $result = self::$_db->query($sql)->results();
-        $pireps = array_map(function($p) {
+        $pireps = array_map(function ($p) {
             return (array)$p;
         }, $result);
         return $pireps;
-
     }
 
     /**
@@ -105,14 +101,22 @@ class Pirep
             $x++;
         }
         return $pireps;
+    }
 
+    /**
+     * @return int
+     */
+    public static function pendingCount()
+    {
+        self::init();
+        return intval(self::$_db->query("SELECT COUNT(id) AS result FROM `pireps` WHERE `status`=0")->first()->result);
     }
 
     /**
      * @return null
      * @param int $id PIREP ID
      */
-    public static function accept($id) 
+    public static function accept($id)
     {
 
         self::init();
@@ -131,14 +135,13 @@ class Pirep
             Events::trigger('user/promoted', ["pilot" => $pirep->pilotid, "rank" => $afterRank]);
         }
         Events::trigger('pirep/accepted', (array)$pirep);
-
     }
 
     /**
      * @return null
      * @param int $id PIREP ID
      */
-    public static function decline($id) 
+    public static function decline($id)
     {
 
         self::init();
@@ -147,13 +150,12 @@ class Pirep
             'status' => 2
         ));
         Events::trigger('pirep/denied', ["id" => $id]);
-
     }
 
     /**
      * @return array
      */
-    public static function fetchMultipliers() 
+    public static function fetchMultipliers()
     {
         self::init();
 
@@ -164,7 +166,7 @@ class Pirep
      * @return int
      * @param array $multis Array of Multipliers
      */
-    public static function generateMultiCode($multis = null) 
+    public static function generateMultiCode($multis = null)
     {
         if ($multis == null) {
             $multis = self::fetchMultipliers();
@@ -186,7 +188,7 @@ class Pirep
      * @return null
      * @param int $id Multiplier ID
      */
-    public static function deleteMultiplier($id) 
+    public static function deleteMultiplier($id)
     {
         self::init();
 
@@ -198,7 +200,7 @@ class Pirep
      * @return null
      * @param array $fields Multiplier Fields
      */
-    public static function addMultiplier($fields = array()) 
+    public static function addMultiplier($fields = array())
     {
         self::init();
 
@@ -210,7 +212,7 @@ class Pirep
      * @return bool|object
      * @param int $code Multiplier Code
      */
-    public static function findMultiplier($code) 
+    public static function findMultiplier($code)
     {
         self::init();
         $ret = self::$_db->get('multipliers', array('code', '=', $code));
@@ -226,7 +228,7 @@ class Pirep
      * @param int $id PIREP ID
      * @param int $pilot Pilot ID
      */
-    public static function find($id, $pilot = null) 
+    public static function find($id, $pilot = null)
     {
         self::init();
 
