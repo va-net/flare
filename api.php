@@ -772,10 +772,13 @@ Router::add('/menu/badges', function () {
             $ret = call_user_func($action);
             $res[$id] = $ret;
             if (gettype($ret) == 'boolean') {
-                $ret = $ret ? 1 : 0;
+                $ret = $ret ? 'bool_1' : 'bool_0';
             }
             Cache::set("badge_{$id}", $ret, date("Y-m-d H:i:s", strtotime('+48 hours')));
         } else {
+            if (strpos($cache, 'bool_') === 0) {
+                $cache = $cache == 'bool_1';
+            }
             $res[$id] = $cache;
         }
     }
