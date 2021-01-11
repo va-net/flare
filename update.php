@@ -228,6 +228,7 @@ if (Input::get('action') === 'editprofile') {
 
     Events::trigger('user/declined', ['id' => Input::get('id'), 'reason' => Input::get('declinereason')]);
 
+    Cache::delete('badge_recruitment');
     Session::flash('success', 'Application Declined Successfully');
     Redirect::to('/admin/recruitment.php');
 } elseif (Input::get('action') === 'acceptapplication') {
@@ -247,6 +248,7 @@ if (Input::get('action') === 'editprofile') {
 
     Events::trigger('user/accepted', [Input::get('accept')]);
 
+    Cache::delete('badge_recruitment');
     Session::flash('success', 'Application Accepted Successfully!');
     Redirect::to('/admin/recruitment.php');
 } elseif (Input::get('action') === 'acceptpirep') {
@@ -256,6 +258,7 @@ if (Input::get('action') === 'editprofile') {
     }
 
     Pirep::accept(Input::get('accept'));
+    Cache::delete('badge_pireps');
     Session::flash('success', 'PIREP Accepted Successfully!');
     Redirect::to('/admin/pireps.php');
 } elseif (Input::get('action') === 'declinepirep') {
@@ -265,6 +268,7 @@ if (Input::get('action') === 'editprofile') {
     }
 
     Pirep::decline(Input::get('decline'));
+    Cache::delete('badge_pireps');
     Session::flash('success', 'PIREP Declined Successfully');
     Redirect::to('/admin/pireps.php');
 } elseif (Input::get('action') === 'deletemulti') {
@@ -715,6 +719,7 @@ if (Input::get('action') === 'editprofile') {
         Redirect::to('/admin/codeshares.php');
         die();
     } else {
+        Cache::delete('badge_codeshares');
         Session::flash('success', "Codeshare Deleted Successfully!");
         Redirect::to('/admin/codeshares.php');
     }
@@ -786,6 +791,7 @@ if (Input::get('action') === 'editprofile') {
         die();
     }
     VANet::deleteCodeshare($codeshare["id"]);
+    Cache::delete('badge_codeshares');
     Session::flash('success', "Codeshare Routes Imported Successfully!");
     Redirect::to('/admin/operations.php?section=routes');
 } elseif (Input::get('action') === 'phpvms') {
@@ -1011,6 +1017,7 @@ if (Input::get('action') === 'editprofile') {
         Session::flash('error', 'There was an Error Editing the PIREP');
         Redirect::to('/admin/pireps.php?tab=all');
     } else {
+        Cache::delete('badge_pireps');
         Session::flash('success', 'PIREP Edited Successfully!');
         Redirect::to('/admin/pireps.php?tab=all');
     }

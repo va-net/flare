@@ -765,17 +765,16 @@ Router::add('/menu/badges', function () {
     $badges = Page::$badges;
     $res = [];
     foreach ($badges as $id => $action) {
-        if (!in_array($id, $ids)) continue;
-
         $cache = Cache::get("badge_{$id}");
         if ($cache == '') {
             $ret = call_user_func($action);
-            $res[$id] = $ret;
+            if (in_array($id, $ids)) $res[$id] = $ret;
+
             if (gettype($ret) == 'boolean') {
                 $ret = $ret ? 'bool_1' : 'bool_0';
             }
-            Cache::set("badge_{$id}", $ret, date("Y-m-d H:i:s", strtotime('+48 hours')));
-        } else {
+            Cache::set("badge_{$id}", $ret, date("Y-m-d H:i:s", strtotime('+24 hours')));
+        } elseif (in_array($id, $ids)) {
             if (strpos($cache, 'bool_') === 0) {
                 $cache = $cache == 'bool_1';
             }

@@ -53,3 +53,22 @@
     <br />
     <a href="/logout.php" class="panel-link"><i class="fa fa-sign-out-alt"></i>&nbsp;Log Out</a>
 </div>
+<script>
+    $.get('/api.php/menu/badges', function(data) {
+        var result = Object.entries(data.result);
+        for (var i = 0; i < result.length; i++) {
+            var id = result[i][0];
+            var badge = result[i][1];
+            if (typeof badge == 'boolean') {
+                if (badge) {
+                    badge = '<i class="fa fa-exclamation-circle"></i>';
+                } else {
+                    continue;
+                }
+            }
+            if (badge == 0) continue;
+            var e = $("[data-badge='" + id + "']");
+            e.html(e.html() + '&nbsp;<span class="badge badge-danger"><span class="align-middle">' + badge + '</span></span>');
+        }
+    })
+</script>
