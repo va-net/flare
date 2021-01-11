@@ -47,11 +47,6 @@ class VANet
      */
     public static function isGold($key = null)
     {
-
-        if ($key == null) {
-            $key = Config::get('vanet/api_key');
-        }
-
         $myinfo = self::myInfo($key);
         if ($myinfo == null) return false;
 
