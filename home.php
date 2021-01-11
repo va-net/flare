@@ -254,10 +254,16 @@ if (!$user->isLoggedIn()) {
     <script>
         <?php if ($IS_GOLD) : ?>
             // Load Events
-            $.post("/vanet.php", {
-                "method": "events-table"
-            }, function(data, status) {
-                $("#events-table").html(data);
+            $.get("/api.php/events", function(data) {
+                $("#events-table").html(data.result.map(function(e) {
+                    return `<tr><td class="align-middle">
+                    ${e.name}
+                    </td><td class="align-middle">
+                    ${e.departureAirport}
+                    </td><td class="align-middle">
+                    <a href="/events.php?page=view&event=${e.id}" class="btn bg-custom">View</button>
+                    </td></tr>`
+                }).join(''))
             });
         <?php endif; ?>
 
