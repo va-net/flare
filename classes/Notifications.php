@@ -46,7 +46,7 @@ class Notifications
         $sql = "SELECT *, DATE_FORMAT(CONVERT_TZ(`datetime`, @@session.time_zone, '+00:00'), '%Y-%m-%dT%TZ') AS formattedDate FROM notifications 
                 WHERE pilotid=? OR pilotid=0 ORDER BY datetime DESC LIMIT {$limit}";
 
-        return self::$_db->query($sql, [$userId], true)->results();
+        return self::$_db->query($sql, [$userId])->results();
     }
 
     /**
@@ -69,7 +69,7 @@ class Notifications
             'icon' => $icon,
             'subject' => $subject,
             'content' => $content,
-        ], true);
+        ]);
     }
 
     /* EVENT HANDLERS */
