@@ -70,5 +70,5 @@
             var e = $("[data-badge='" + id + "']");
             e.html(e.html() + '&nbsp;<span class="badge badge-danger"><span class="align-middle">' + badge + '</span></span>');
         }
-    })
+    });
 </script>
