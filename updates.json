@@ -337,5 +337,36 @@
         ],
         "deletedFiles": [],
         "newFolders": []
+    },
+    {
+        "tag": "v1.2.0-beta2",
+        "name": "Version 1.2.0 Beta 2",
+        "date": "2021-01-15",
+        "notes": "Added Menu Badges, Various bug fixes",
+        "prerelease": true,
+        "useUpdater": true,
+        "files": [
+            "update.php",
+            "admin/pireps.php",
+            "classes/Rank.php",
+            "classes/Events.php",
+            "classes/Analytics.php",
+            "classes/Cache.php",
+            "classes/VANet.php",
+            "api.php",
+            "classes/Page.php",
+            "classes/Pirep.php",
+            "classes/Plugin.php",
+            "classes/Updater.php",
+            "classes/User.php",
+            "includes/menus.php",
+            "includes/sidebar.php",
+            "updater.php",
+            "home.php",
+            "classes/Notifications.php"
+        ],
+        "queries": [],
+        "deletedFiles": [],
+        "newFolders": []
     }
 ]
