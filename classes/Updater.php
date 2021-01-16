@@ -33,6 +33,10 @@ class Updater
         $context = stream_context_create($opts);
         $releases = Json::decode(file_get_contents("https://api.github.com/repos/va-net/flare/releases", false, $context));
 
+        if ($releases == null) {
+            return false;
+        }
+
         $next = null;
         $currentFound = false;
         $current = self::getVersion();
