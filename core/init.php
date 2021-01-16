@@ -30,6 +30,7 @@ Events::listen('*', 'Logger::logEvent');
 Events::listen('*', 'Notifications::handleEvent');
 require_once __DIR__ . '/listeners.php';
 require_once __DIR__ . '/../functions/escape.php';
+require_once __DIR__ . '/../functions/daterange.php';
 require_once __DIR__ . '/../includes/menus.php';
 
 // Index installed plugins

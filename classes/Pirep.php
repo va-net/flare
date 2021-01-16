@@ -63,8 +63,24 @@ class Pirep
 
         self::init();
 
-        $sql = "SELECT pireps.*, pilots.name AS pilotname, aircraft.name AS aircraftname FROM (pireps INNER JOIN pilots ON pireps.pilotid=pilots.id) INNER JOIN aircraft ON pireps.aircraftid=aircraft.id";
+        $sql = "SELECT pireps.*, pilots.name AS pilotname, aircraft.name AS aircraftname FROM (pireps INNER JOIN pilots ON pireps.pilotid=pilots.id) INNER JOIN aircraft ON pireps.aircraftid=aircraft.id ORDER BY pireps.date DESC";
         $result = self::$_db->query($sql)->results();
+        $pireps = array_map(function ($p) {
+            return (array)$p;
+        }, $result);
+        return $pireps;
+    }
+
+    /**
+     * @return array
+     * @param int $days
+     */
+    public static function fetchPast($days)
+    {
+        self::init();
+
+        $sql = "SELECT pireps.*, pilots.name AS pilotname, aircraft.name AS aircraftname FROM (pireps INNER JOIN pilots ON pireps.pilotid=pilots.id) INNER JOIN aircraft ON pireps.aircraftid=aircraft.id WHERE DATEDIFF(NOW(), pireps.date) <= ? ORDER BY pireps.date ASC";
+        $result = self::$_db->query($sql, [$days], true)->results();
         $pireps = array_map(function ($p) {
             return (array)$p;
         }, $result);

@@ -439,7 +439,7 @@ class User
 
         $db = DB::newInstance();
 
-        $sql = "SELECT u.*, (SELECT SUM(flighttime) FROM pireps p WHERE p.pilotid=u.id AND status=1) flighttime FROM pilots u";
+        $sql = "SELECT u.*, (SELECT SUM(flighttime) FROM pireps p WHERE p.pilotid=u.id AND status=1) AS flighttime FROM pilots u";
         $results = $db->query($sql)->results();
 
         $usersarray = array();
@@ -549,5 +549,42 @@ class User
     {
         $db = DB::getInstance();
         return intval($db->query("SELECT COUNT(id) AS result FROM `pilots` WHERE `status`=0")->first()->result);
+    }
+
+    /**
+     * @return array
+     * @param int $days
+     */
+    public static function fetchPast($days)
+    {
+        $db = DB::getInstance();
+
+        $sql = "SELECT u.*, (SELECT SUM(flighttime) FROM pireps p WHERE p.pilotid=u.id AND status=1) AS flighttime FROM pilots u WHERE DATEDIFF(NOW(), u.joined) <= ? ORDER BY u.joined ASC";
+        $results = $db->query($sql, [$days], true)->results();
+
+        $usersarray = [];
+        $statuses = array('Pending', 'Active', 'Inactive', 'Declined');
+        $admins = Permissions::usersWith('admin');
+        $admins = array_map(function ($item) {
+            return $item->id;
+        }, $admins);
+        foreach ($results as $r) {
+            $newdata = array(
+                'id' => $r->id,
+                'callsign' => $r->callsign,
+                'name' => $r->name,
+                'email' => $r->email,
+                'ifc' => $r->ifc,
+                'status' => $statuses[$r->status],
+                'joined' => $r->joined,
+                'transhours' => $r->transhours,
+                'transflights' => $r->transflights,
+                'isAdmin' => in_array($r->id, $admins) ? 1 : 0,
+                'flighttime' => $r->flighttime == null ? 0 : $r->flighttime,
+            );
+            $usersarray[] = $newdata;
+        }
+
+        return $usersarray;
     }
 }
