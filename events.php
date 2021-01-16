@@ -95,11 +95,12 @@ if (!$user->isLoggedIn()) {
                                     ?>
 
                                     <?php if ($user->data()->ifuserid == null) : ?>
-                                        <p class="text-center"><b>
-                                                You have not set up PIREPs yet. You will need to do this before you can
-                                                view or register for this event.
+                                        <p class="text-center">
+                                            <b>
+                                                You have not set up PIREPs yet. You will need to do this before you can view or register for this event.
                                                 You can set up PIREPs <a href="pireps.php?page=new">here</a>.
-                                            </b></p>
+                                            </b>
+                                        </p>
                                     <?php else : ?>
                                         <div class="row">
                                             <div class="col-lg-6 px-5">
@@ -142,20 +143,45 @@ if (!$user->isLoggedIn()) {
                                                     </thead>
                                                     <tbody>
                                                         <?php
-                                                        $signedUp = VANet::isSignedUp($user->data()->ifuserid, Input::get('event'));
+                                                        $mygate = array_values(array_filter($event['signups'], function ($s) {
+                                                            global $user;
+                                                            return $s['pilotId'] == $user->data()->ifuserid;
+                                                        }));
+                                                        if (count($mygate) < 1) {
+                                                            $mygate = null;
+                                                        } else {
+                                                            $mygate = $mygate[0];
+                                                        }
+
+                                                        $pilotdata = array_filter($user->getAllUsers(), function ($u) {
+                                                            return $u['ifuserid'] != null;
+                                                        });
+                                                        $names = array_map(function ($p) {
+                                                            return $p['name'];
+                                                        }, $pilotdata);
+                                                        $ids = array_map(function ($p) {
+                                                            return $p['ifuserid'];
+                                                        }, $pilotdata);
+                                                        $pilots = array_combine($ids, $names);
+
 
                                                         foreach ($event["signups"] as $gate) {
+                                                            $pilotName = $gate['pilotName'];
+                                                            if ($pilotName === '' && isset($pilots[$gate['pilotId']])) {
+                                                                $pilotName = $pilots[$gate['pilotId']];
+                                                            } elseif ($pilotName === '') {
+                                                                $pilotName = $gate['pilotId'];
+                                                            }
+
                                                             echo '<tr><td class="align-middle">';
                                                             echo $gate["gate"];
                                                             echo '</td><td class="align-middle">';
-                                                            echo $gate["pilotName"];
+                                                            echo $pilotName;
                                                             echo '</td><td class="align-middle">';
-                                                            switch ($signedUp) {
-                                                                case false:
-                                                                    echo '<button value="' . $gate['id'] . '" form="signUp" type="submit" class="btn bg-custom text-light" name="gate">Sign Up</button>';
-                                                                    break;
-                                                                case $gate["id"]:
-                                                                    echo '<button value="' . $gate['id'] . '" form="vacate" type="submit" class="btn bg-custom text-light" name="gate">Pull Out</button>';
+                                                            if ($mygate != null && $mygate['id'] == $gate['id']) {
+                                                                echo '<button value="' . $gate['id'] . '" form="vacate" type="submit" class="btn bg-custom text-light" name="gate">Pull Out</button>';
+                                                            } elseif ($mygate == null && $gate['pilotId'] == null) {
+                                                                echo '<button value="' . $gate['id'] . '" form="signUp" type="submit" class="btn bg-custom text-light" name="gate">Sign Up</button>';
                                                             }
                                                             echo '</td></tr>';
                                                         }
