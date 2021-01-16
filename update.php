@@ -97,7 +97,7 @@ if (Input::get('action') === 'editprofile') {
     ));
 
     $response = Json::decode($response->body);
-    if ($response['success'] != true) {
+    if (!isset($response['success']) || $response['success'] != true) {
         Session::flash('error', 'There was an Error Connecting to VANet.');
         Redirect::to('pireps.php?page=new');
         die();
