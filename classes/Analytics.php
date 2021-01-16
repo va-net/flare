@@ -129,7 +129,7 @@ class Analytics
         $key = Config::get('MASTER_API_KEY');
         if ($key == '') return;
 
-        $url = self::$BASE . "/errors?site=" . $key;
+        $url = self::$BASE . "/instance?site=" . $key;
         $data = [
             "version" => $ev->params['tag']
         ];
