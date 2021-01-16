@@ -35,7 +35,7 @@
             foreach ($items as $label => $data) {
                 if ($user->hasPermission($data["permission"])) {
                     if ($IS_GOLD || !$data["needsGold"]) {
-                        $badge = $data["badgeid"] == null ? '' : $data["badgeid"];
+                        $badge = !isset($data["badgeid"]) || $data["badgeid"] == null ? '' : $data["badgeid"];
                         if ($j == 0) {
                             echo '&nbsp;&nbsp;<a href="' . $data["link"] . '" class="panel-link" data-badge="' . $badge . '"><i class="fa ' . $data['icon'] . '"></i>&nbsp;' . $label . '</a>';
                         } else {
