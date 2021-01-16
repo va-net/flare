@@ -11,7 +11,7 @@ require_once '../core/init.php';
 
 $user = new User();
 
-Page::setTitle('Users Admin - '.Config::get('va/name'));
+Page::setTitle('Users Admin - ' . Config::get('va/name'));
 Page::excludeAsset('chartjs');
 
 if (!$user->isLoggedIn()) {
@@ -24,9 +24,11 @@ $ACTIVE_CATEGORY = 'user-management';
 ?>
 <!DOCTYPE html>
 <html>
+
 <head>
     <?php include '../includes/header.php'; ?>
 </head>
+
 <body>
     <nav class="navbar navbar-dark navbar-expand-lg bg-custom">
         <?php include '../includes/navbar.php'; ?>
@@ -36,18 +38,20 @@ $ACTIVE_CATEGORY = 'user-management';
             <div class="row m-0 p-0">
                 <?php include '../includes/sidebar.php'; ?>
                 <div class="col-lg-9 main-content">
-                    <div id="loader-wrapper"><div id="loader" class="spinner-border spinner-border-sm spinner-custom"></div></div>
+                    <div id="loader-wrapper">
+                        <div id="loader" class="spinner-border spinner-border-sm spinner-custom"></div>
+                    </div>
                     <div class="loaded">
                         <?php
-                        if (file_exists(__DIR__.'/../install/install.php') && !file_exists(__DIR__.'/../.development')) {
+                        if (file_exists(__DIR__ . '/../install/install.php') && !file_exists(__DIR__ . '/../.development')) {
                             echo '<div class="alert alert-danger text-center">The Install Folder still Exists! Please delete it immediately, it poses a severe security risk.</div>';
                         }
-                        
+
                         if (Session::exists('error')) {
-                            echo '<div class="alert alert-danger text-center">Error: '.Session::flash('error').'</div>';
+                            echo '<div class="alert alert-danger text-center">Error: ' . Session::flash('error') . '</div>';
                         }
                         if (Session::exists('success')) {
-                            echo '<div class="alert alert-success text-center">'.Session::flash('success').'</div>';
+                            echo '<div class="alert alert-success text-center">' . Session::flash('success') . '</div>';
                         }
                         ?>
                         <h3>Manage Users</h3>
@@ -74,7 +78,7 @@ $ACTIVE_CATEGORY = 'user-management';
                                     if ($user['status'] == 'Inactive') {
                                         $rowClassName = 'inactive-row';
                                     }
-                                    echo '<tr class="'.$rowClassName.'"><td class="align-middle">';
+                                    echo '<tr class="' . $rowClassName . '"><td class="align-middle">';
                                     echo $user["callsign"];
                                     echo '</td><td class="mobile-hidden align-middle">';
                                     echo $user["name"];
@@ -83,15 +87,15 @@ $ACTIVE_CATEGORY = 'user-management';
                                     echo '</td><td class="align-middle">';
                                     echo $user["status"];
                                     echo '</td><td class="align-middle">';
-                                    echo '<button class="btn btn-primary text-light userEdit" data-callsign="'.$user['callsign'].'" 
-                                    data-name="'.$user['name'].'" data-email="'.$user['email'].'" data-ifc="'.$user['ifc'].'" 
-                                    data-joined="'.date_format(date_create($user['joined']), 'Y-m-d').'" data-status="'.$user['status'].'" 
-                                    data-id="'.$user['id'].'" data-thrs="'.Time::secsToString($user["transhours"]).'" 
-                                    data-admin="'.$user['isAdmin'].'" data-tflts="'.$user["transflights"].'"><i class="fa fa-edit"></i>
+                                    echo '<button class="btn btn-primary text-light userEdit" data-callsign="' . $user['callsign'] . '" 
+                                    data-name="' . $user['name'] . '" data-email="' . $user['email'] . '" data-ifc="' . $user['ifc'] . '" 
+                                    data-joined="' . date_format(date_create($user['joined']), 'Y-m-d') . '" data-status="' . $user['status'] . '" 
+                                    data-id="' . $user['id'] . '" data-thrs="' . Time::secsToString($user["transhours"]) . '" 
+                                    data-admin="' . $user['isAdmin'] . '" data-tflts="' . $user["transflights"] . '"><i class="fa fa-edit"></i>
                                     </button>';
                                     echo '&nbsp;<button id="delconfirmbtn" class="btn text-light btn-danger" 
                                     data-toggle="modal" data-target="#delconfirmmodal" 
-                                    data-callsign="'.$user['callsign'].'" data-id="'.$user['id'].'">
+                                    data-callsign="' . $user['callsign'] . '" data-id="' . $user['id'] . '">
                                     <i class="fa fa-trash"></i></button>';
                                     echo '</td>';
                                     $x++;
@@ -108,7 +112,7 @@ $ACTIVE_CATEGORY = 'user-management';
                                     <div class="modal-header">
                                         <h5 class="modal-title" id="exampleModalLabel">Confirm</h5>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
+                                            <span aria-hidden="true">&times;</span>
                                         </button>
                                     </div>
                                     <div class="modal-body">
@@ -128,7 +132,7 @@ $ACTIVE_CATEGORY = 'user-management';
                                     <div class="modal-header">
                                         <h5 class="modal-title" id="usermodal-title"></h5>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
+                                            <span aria-hidden="true">&times;</span>
                                         </button>
                                     </div>
                                     <div class="modal-body">
@@ -201,7 +205,12 @@ $ACTIVE_CATEGORY = 'user-management';
                                             </div>
                                             <div class="form-group">
                                                 <label for="usermodal-status">Status</label>
-                                                <input readonly type="text" value="" class="form-control" name="status" id="usermodal-status">
+                                                <select class="form-control" name="status" id="usermodal-status">
+                                                    <option>Pending</option>
+                                                    <option>Active</option>
+                                                    <option>Inactive</option>
+                                                    <option>Declined</option>
+                                                </select>
                                             </div>
                                             <div class="form-group">
                                                 <label for="usermodal-admin">Admin Status</label>
@@ -223,7 +232,7 @@ $ACTIVE_CATEGORY = 'user-management';
                                     <div class="modal-header">
                                         <h5 class="modal-title" id="exampleModalLabel">Make Announcement</h5>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
+                                            <span aria-hidden="true">&times;</span>
                                         </button>
                                     </div>
                                     <div class="modal-body">
@@ -317,4 +326,5 @@ $ACTIVE_CATEGORY = 'user-management';
         });
     </script>
 </body>
+
 </html>

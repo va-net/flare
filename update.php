@@ -156,6 +156,13 @@ if (Input::get('action') === 'editprofile') {
         Permissions::revokeAll(Input::get('id'));
     }
 
+    $statuses = [
+        "Pending" => 0,
+        "Active" => 1,
+        "Inactive" => 2,
+        "Declined" => 3,
+    ];
+
     $user->update(array(
         'callsign' => Input::get('callsign'),
         'name' => Input::get('name'),
@@ -163,6 +170,7 @@ if (Input::get('action') === 'editprofile') {
         'ifc' => Input::get('ifc'),
         'transhours' => Time::strToSecs(Input::get('transhours')),
         'transflights' => Input::get('transflights'),
+        'status' => $statuses[Input::get('status')]
     ), Input::get('id'));
     Session::flash('success', 'User Edited Successfully!');
     Redirect::to('/admin/users.php');
