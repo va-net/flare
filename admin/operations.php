@@ -11,7 +11,7 @@ require_once '../core/init.php';
 
 $user = new User();
 
-Page::setTitle('Operations Admin - '.Config::get('va/name'));
+Page::setTitle('Operations Admin - ' . Config::get('va/name'));
 Page::excludeAsset('chartjs');
 Page::registerAsset('bootstrap-select', [
     '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />',
@@ -28,9 +28,11 @@ $ACTIVE_CATEGORY = 'operations-management';
 ?>
 <!DOCTYPE html>
 <html>
+
 <head>
     <?php include '../includes/header.php'; ?>
 </head>
+
 <body>
     <nav class="navbar navbar-dark navbar-expand-lg bg-custom">
         <?php include '../includes/navbar.php'; ?>
@@ -40,21 +42,23 @@ $ACTIVE_CATEGORY = 'operations-management';
             <div class="row m-0 p-0">
                 <?php include '../includes/sidebar.php'; ?>
                 <div class="col-lg-9 main-content">
-                    <div id="loader-wrapper"><div id="loader" class="spinner-border spinner-border-sm spinner-custom"></div></div>
+                    <div id="loader-wrapper">
+                        <div id="loader" class="spinner-border spinner-border-sm spinner-custom"></div>
+                    </div>
                     <div class="loaded">
                         <?php
-                        if (file_exists(__DIR__.'/../install/install.php') && !file_exists(__DIR__.'/../.development')) {
+                        if (file_exists(__DIR__ . '/../install/install.php') && !file_exists(__DIR__ . '/../.development')) {
                             echo '<div class="alert alert-danger text-center">The Install Folder still Exists! Please delete it immediately, it poses a severe security risk.</div>';
                         }
-                        
+
                         if (Session::exists('error')) {
-                            echo '<div class="alert alert-danger text-center">Error: '.Session::flash('error').'</div>';
+                            echo '<div class="alert alert-danger text-center">Error: ' . Session::flash('error') . '</div>';
                         }
                         if (Session::exists('success')) {
-                            echo '<div class="alert alert-success text-center">'.Session::flash('success').'</div>';
+                            echo '<div class="alert alert-success text-center">' . Session::flash('success') . '</div>';
                         }
                         ?>
-                        <?php if (Input::get('section') === 'fleet'): ?>
+                        <?php if (Input::get('section') === 'fleet') : ?>
                             <h3>Fleet</h3>
                             <button type="button" class="btn bg-custom mb-2" data-toggle="modal" data-target="#addAircraft">Add Aircraft</button>
                             <div id="addAircraft" class="modal fade" role="dialog">
@@ -74,7 +78,7 @@ $ACTIVE_CATEGORY = 'operations-management';
                                                         <?php
                                                         $allac = Aircraft::fetchAllAircraftFromVANet();
                                                         foreach ($allac as $id => $name) {
-                                                            echo '<option value="'.$id.'">'.$name.'</option>';
+                                                            echo '<option value="' . $id . '">' . $name . '</option>';
                                                         }
                                                         ?>
                                                     </select>
@@ -90,14 +94,17 @@ $ACTIVE_CATEGORY = 'operations-management';
                                                         $.ajax({
                                                             url: "/vanet.php",
                                                             type: "POST",
-                                                            data: { method: "liveriesforaircraft", data: $(this).val() },
-                                                            success: function(html){
+                                                            data: {
+                                                                method: "liveriesforaircraft",
+                                                                data: $(this).val()
+                                                            },
+                                                            success: function(html) {
                                                                 $("#liveriesselect").empty();
                                                                 $("#liveriesselect").append("<option>Select</option>");
                                                                 $("#liveriesselect").append(html);
                                                             }
-                                                            });
                                                         });
+                                                    });
                                                 </script>
                                                 <div class="form-group">
                                                     <label for="rank">Minimum Rank</label>
@@ -107,7 +114,7 @@ $ACTIVE_CATEGORY = 'operations-management';
                                                         $ranks = Rank::fetchAllNames()->results();
 
                                                         foreach ($ranks as $rank) {
-                                                            echo '<option value="'.$rank->id.'">'.$rank->name.'</option>';
+                                                            echo '<option value="' . $rank->id . '">' . $rank->name . '</option>';
                                                         }
                                                         ?>
                                                     </select>
@@ -123,29 +130,29 @@ $ACTIVE_CATEGORY = 'operations-management';
                                 </div>
                             </div>
                             <div class="modal fade" id="confirmFleetDelete">
-                            <div class="modal-dialog modal-sm">
-                                <div class="modal-content">
+                                <div class="modal-dialog modal-sm">
+                                    <div class="modal-content">
 
-                                <div class="modal-header">
-                                    <h4 class="modal-title">Are You Sure?</h4>
-                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                </div>
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">Are You Sure?</h4>
+                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                        </div>
 
-                                <div class="modal-body">
-                                    Are you sure you want to delete this Aircraft?
-                                    <form id="deleteaircraft" action="/update.php" method="post">
-                                        <input hidden name="action" value="deleteaircraft" />
-                                        <input hidden name="delete" id="confirmFleetDelete-id" />
-                                        <input type="submit" class="btn btn-danger" value="Delete" />
-                                    </form>
-                                </div>
+                                        <div class="modal-body">
+                                            Are you sure you want to delete this Aircraft?
+                                            <form id="deleteaircraft" action="/update.php" method="post">
+                                                <input hidden name="action" value="deleteaircraft" />
+                                                <input hidden name="delete" id="confirmFleetDelete-id" />
+                                                <input type="submit" class="btn btn-danger" value="Delete" />
+                                            </form>
+                                        </div>
 
-                                <div class="modal-footer text-center justify-content-center">
-                                    <button type="button" class="btn bg-custom" data-dismiss="modal">Cancel</button>
-                                </div>
+                                        <div class="modal-footer text-center justify-content-center">
+                                            <button type="button" class="btn bg-custom" data-dismiss="modal">Cancel</button>
+                                        </div>
 
+                                    </div>
                                 </div>
-                            </div>
                             </div>
                             <form id="deleteaircraft" method="post" action="/update.php">
                                 <input hidden value="deleteaircraft" name="action">
@@ -160,7 +167,7 @@ $ACTIVE_CATEGORY = 'operations-management';
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php 
+                                    <?php
                                     $all = Aircraft::fetchActiveAircraft()->results();
                                     foreach ($all as $aircraft) {
                                         echo '<tr><td class="align-middle">';
@@ -170,9 +177,9 @@ $ACTIVE_CATEGORY = 'operations-management';
                                         echo '</td><td class="align-middle mobile-hidden">';
                                         echo $aircraft->rank;
                                         echo '</td><td class="align-middle">';
-                                        echo '&nbsp;<button data-id="'.$aircraft->id.'" class="btn btn-danger text-light deleteFleet"><i class="fa fa-trash"></i></button>';
-                                        echo '&nbsp;<button class="btn btn-primary editFleet" data-acName="'.$aircraft->name.' ('.$aircraft->liveryname.')'.'" 
-                                        data-rankReq="'.$aircraft->rankreq.'" data-id="'.$aircraft->id.'" data-notes="'.$aircraft->notes.'">
+                                        echo '&nbsp;<button data-id="' . $aircraft->id . '" class="btn btn-danger text-light deleteFleet"><i class="fa fa-trash"></i></button>';
+                                        echo '&nbsp;<button class="btn btn-primary editFleet" data-acName="' . $aircraft->name . ' (' . $aircraft->liveryname . ')' . '" 
+                                        data-rankReq="' . $aircraft->rankreq . '" data-id="' . $aircraft->id . '" data-notes="' . $aircraft->notes . '">
                                         <i class="fa fa-edit"></i></button>';
                                         echo '</td>';
                                     }
@@ -191,32 +198,32 @@ $ACTIVE_CATEGORY = 'operations-management';
                             <div class="modal fade" id="fleetedit">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h4 class="modal-title" id="fleetedit-title"></h4>
-                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form action="/update.php" method="post">
-                                            <input hidden name="action" value="editfleet" />
-                                            <input hidden name="id" id="fleetedit-id" />
-                                            <div class="form-group">
-                                                <label for="fleetedit-rank">Minimum Rank</label>
-                                                <select required class="form-control" name="rank" id="fleetedit-rank">
-                                                    <?php
+                                        <div class="modal-header">
+                                            <h4 class="modal-title" id="fleetedit-title"></h4>
+                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form action="/update.php" method="post">
+                                                <input hidden name="action" value="editfleet" />
+                                                <input hidden name="id" id="fleetedit-id" />
+                                                <div class="form-group">
+                                                    <label for="fleetedit-rank">Minimum Rank</label>
+                                                    <select required class="form-control" name="rank" id="fleetedit-rank">
+                                                        <?php
                                                         $ranks = Rank::fetchAllNames()->results();
                                                         foreach ($ranks as $r) {
-                                                            echo '<option id="fleetedot-rank-'.$r->id.'" value="'.$r->id.'">'.$r->name.'</option>';
+                                                            echo '<option id="fleetedot-rank-' . $r->id . '" value="' . $r->id . '">' . $r->name . '</option>';
                                                         }
-                                                    ?>
-                                                </select>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="fleetedit-notes">Notes</label>
-                                                <input type="text" class="form-control" maxlength="12" name="notes" id="fleetedit-notes" />
-                                            </div>
-                                            <input type="submit" class="btn bg-custom" value="Save" />
-                                        </form>
-                                    </div>
+                                                        ?>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="fleetedit-notes">Notes</label>
+                                                    <input type="text" class="form-control" maxlength="12" name="notes" id="fleetedit-notes" />
+                                                </div>
+                                                <input type="submit" class="btn bg-custom" value="Save" />
+                                            </form>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -227,7 +234,7 @@ $ACTIVE_CATEGORY = 'operations-management';
                                     var acRank = $(this).data('rankreq');
                                     var acId = $(this).data('id');
                                     var acNotes = $(this).data('notes');
-                                    
+
                                     $("#fleetedit-title").text("Edit Aircraft: " + acName);
                                     $("#fleetedit-id").val(acId);
                                     $("#fleetedit-rank").val(acRank);
@@ -236,7 +243,7 @@ $ACTIVE_CATEGORY = 'operations-management';
                                     $("#fleetedit").modal('show');
                                 });
                             </script>
-                        <?php elseif (Input::get('section') === 'routes'): ?>
+                        <?php elseif (Input::get('section') === 'routes') : ?>
                             <h3>Route Management</h3>
                             <p>Here you can Manage your VA's Routes.</p>
                             <button type="button" class="btn bg-custom mb-2" data-toggle="modal" data-target="#addRoute">Add Route</button>
@@ -310,8 +317,8 @@ $ACTIVE_CATEGORY = 'operations-management';
                                                         $all = Aircraft::fetchActiveAircraft()->results();
 
                                                         foreach ($all as $aircraft) {
-                                                            $notes = $aircraft->notes == null ? '' : ' - '.$aircraft->notes;
-                                                            echo '<option value="'.$aircraft->id.'">'.$aircraft->name.' ('.$aircraft->liveryname.')'.$notes.'</option>';
+                                                            $notes = $aircraft->notes == null ? '' : ' - ' . $aircraft->notes;
+                                                            echo '<option value="' . $aircraft->id . '">' . $aircraft->name . ' (' . $aircraft->liveryname . ')' . $notes . '</option>';
                                                         }
                                                         ?>
                                                     </select>
@@ -337,7 +344,7 @@ $ACTIVE_CATEGORY = 'operations-management';
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php 
+                                    <?php
                                     $all = Route::fetchAll();
 
                                     foreach ($all as $id => $route) {
@@ -349,8 +356,8 @@ $ACTIVE_CATEGORY = 'operations-management';
                                         echo '</td><td class="align-middle">';
                                         echo $route['arr'];
                                         echo '</td><td class="align-middle">';
-                                        echo '<button class="btn bg-custom editRoute" data-route=\''.Json::encode($route).'\'><i class="fa fa-edit"></i></button>';
-                                        echo '&nbsp;<button value="'.$id.'" form="deleteroute" type="submit" class="btn btn-danger text-light" name="delete"><i class="fa fa-trash"></i></button>';
+                                        echo '<button class="btn bg-custom editRoute" data-route=\'' . Json::encode($route) . '\'><i class="fa fa-edit"></i></button>';
+                                        echo '&nbsp;<button data-rid="' . $id . '" class="btn btn-danger deleteRoute"><i class="fa fa-trash"></i></button>';
                                         echo '</td></tr>';
                                     }
                                     ?>
@@ -427,8 +434,8 @@ $ACTIVE_CATEGORY = 'operations-management';
                                                         $aircraft = Aircraft::fetchAllAircraft()->results();
 
                                                         foreach ($aircraft as $a) {
-                                                            $notes = $a->notes == null ? '' : ' - '.$a->notes;
-                                                            echo '<option value="'.$a->id.'">'.$a->name.' ('.$a->liveryname.')'.$notes.'</option>';
+                                                            $notes = $a->notes == null ? '' : ' - ' . $a->notes;
+                                                            echo '<option value="' . $a->id . '">' . $a->name . ' (' . $a->liveryname . ')' . $notes . '</option>';
                                                         }
                                                         ?>
                                                     </select>
@@ -446,7 +453,8 @@ $ACTIVE_CATEGORY = 'operations-management';
                             </div>
                             <a href="?page=opsmanage&section=phpvms">Import Routes</a>
                             <form id="deleteroute" method="post" action="/update.php">
-                                <input hidden value="deleteroute" name="action">
+                                <input hidden value="deleteroute" name="action" />
+                                <input hidden name="delete" id="deleteroute-id" />
                             </form>
                             <script>
                                 $(".editRoute").click(function() {
@@ -487,14 +495,21 @@ $ACTIVE_CATEGORY = 'operations-management';
                                     }
                                 });
                                 $("#routeedit-form").submit(function(e) {
-                                    console.log($("#routeedit-aircraft-actual").val());
                                     if ($("#routeedit-aircraft-actual").val().length < 1) {
                                         e.preventDefault();
                                         alert('You must select at least one aircraft!');
                                     }
                                 });
+                                $(".deleteRoute").click(function() {
+                                    var conf = confirm('Are you sure you want to delete this route?');
+                                    if (!conf) return;
+
+                                    var id = $(this).data('rid');
+                                    $("#deleteroute-id").val(id);
+                                    $("#deleteroute").submit();
+                                });
                             </script>
-                        <?php elseif (Input::get('section') === 'ranks'): ?>
+                        <?php elseif (Input::get('section') === 'ranks') : ?>
                             <h3>Manage Ranks</h3>
                             <p>Here you can Manage the Ranks that your pilots can be Awarded.</p>
                             <button type="button" class="btn bg-custom mb-2" data-toggle="modal" data-target="#addRank">Add Rank</button>
@@ -536,7 +551,7 @@ $ACTIVE_CATEGORY = 'operations-management';
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php 
+                                    <?php
                                     $all = Rank::fetchAllNames()->results();
                                     foreach ($all as $rank) {
                                         echo '<tr><td class="align-middle">';
@@ -545,11 +560,11 @@ $ACTIVE_CATEGORY = 'operations-management';
                                         echo Time::secsToString($rank->timereq);
                                         echo '</td><td class="align-middle">';
                                         echo '<button class="btn btn-primary text-light editRank" 
-                                        data-id="'.$rank->id.'" data-name="'.$rank->name.'" 
-                                        data-minhrs="'.($rank->timereq / 3600).'">
+                                        data-id="' . $rank->id . '" data-name="' . $rank->name . '" 
+                                        data-minhrs="' . ($rank->timereq / 3600) . '">
                                         <i class="fa fa-edit"></i></button>';
                                         echo '&nbsp;<button class="btn btn-danger text-light" 
-                                        value="'.$rank->id.'" form="delrank" name="delete">
+                                        value="' . $rank->id . '" form="delrank" name="delete">
                                         <i class="fa fa-trash"></i></button>';
                                         echo '</td></tr>';
                                     }
@@ -595,12 +610,12 @@ $ACTIVE_CATEGORY = 'operations-management';
                                     $("#rankmodal").modal("show");
                                 });
                             </script>
-                        <?php elseif (Input::get('section') === 'phpvms'): ?>
+                        <?php elseif (Input::get('section') === 'phpvms') : ?>
                             <h3>phpVMS Importer</h3>
                             <p>
-                                Here, you can import your routes from phpVMS. 
+                                Here, you can import your routes from phpVMS.
                             </p>
-                            <?php if (empty(Input::get('action'))): ?>
+                            <?php if (empty(Input::get('action'))) : ?>
                                 <form method="post" enctype="multipart/form-data">
                                     <input hidden name="action" value="phpvms" />
                                     <div class="custom-file mb-2">
@@ -620,74 +635,74 @@ $ACTIVE_CATEGORY = 'operations-management';
                                         $(this).siblings("#aircraft-upload-label").addClass("selected").html(fileName);
                                     });
                                 </script>
-                            <?php else: ?>
+                            <?php else : ?>
                                 <p>
                                     So we can import everything correctly, please select the aircraft type and livery for each registration.
                                     These aircraft will be added with the lowest rank if they do not already exist in your VA's database.
                                 </p>
                                 <?php
-                                    $file = Input::getFile('routes-upload');
-                                    if ($file["error"] == 1 || $file["error"] === TRUE) {
-                                        Session::flash('error', 'Upload failed. Maybe your file is too big?');
-                                        echo '<script>window.location.href= "admin.php?page=opsmanage&section=phpvms";</script>';
-                                        die();
-                                    }
-                                    $routes = file_get_contents($file["tmp_name"]);
-                                    preg_match_all('/\r?\n.*/m', $routes, $routelines);
-                                    $routesArray = array_map(function($l) {
-                                        $l = trim($l);
-                                        $segments = str_getcsv($l);
-                                        if (strpos($segments[10], ".") === FALSE && strpos($segments[10], ":") === FALSE) {
-                                            $segments[10] .= ".00";
-                                        }
-
-                                        return array(
-                                            "fltnum" => $segments[1],
-                                            "dep" => $segments[2],
-                                            "arr" => $segments[3],
-                                            "duration" => Time::strToSecs(str_replace('.', ':', $segments[10])),
-                                            "aircraftid" => $segments[5]
-                                        );
-                                    }, $routelines[0]);
-
-                                    $routesJson = Json::encode($routesArray);
-
-                                    $allAircraft = Aircraft::fetchAllAircraftFromVANet();
-                                    $aircraftOptions = "";
-                                    foreach ($allAircraft as $id => $name) {
-                                        $aircraftOptions .= '<option value="'.$id.'">'.$name.'</option>';
+                                $file = Input::getFile('routes-upload');
+                                if ($file["error"] == 1 || $file["error"] === TRUE) {
+                                    Session::flash('error', 'Upload failed. Maybe your file is too big?');
+                                    echo '<script>window.location.href= "admin.php?page=opsmanage&section=phpvms";</script>';
+                                    die();
+                                }
+                                $routes = file_get_contents($file["tmp_name"]);
+                                preg_match_all('/\r?\n.*/m', $routes, $routelines);
+                                $routesArray = array_map(function ($l) {
+                                    $l = trim($l);
+                                    $segments = str_getcsv($l);
+                                    if (strpos($segments[10], ".") === FALSE && strpos($segments[10], ":") === FALSE) {
+                                        $segments[10] .= ".00";
                                     }
 
-                                    echo '<form action="/update.php" method="post">';
-                                    echo '<input hidden name="action" value="phpvms" />';
-                                    echo "<input hidden name='rJson' value='$routesJson' />";
-                                    $j = 0;
-                                    $doneAircraft = [];
-                                    echo '<table class="w-100 mb-2">';
-                                    $i = 0;
-                                    foreach ($routesArray as $r) {
-                                        if (!in_array($r['aircraftid'], $doneAircraft)) {
-                                            echo '<tr class="border-bottom border-top"><td class="align-middle p-2"><b>';
-                                            echo $r['aircraftid'];
-                                            echo '</b></td><td class="align-middle py-2">';
-                                            echo '<input hidden name="rego'.$i.'" value="'.$r["aircraftid"].'" />';
-                                            echo '<select required class="form-control mb-2 aircraftSelect" name="aircraft'.$i.'" id="'.$i.'">';
-                                            echo '<option value>Aircraft Type</option>';
-                                            echo $aircraftOptions;
-                                            echo '</select>';
-                                            echo '<select required class="form-control" name="livery'.$i.'" id="livery'.$i.'">';
-                                            echo '<option value>Select an Aircraft to Get Liveries</option>';
-                                            echo '</select>';
-                                            echo '</td></tr>';
-                                            array_push($doneAircraft, $r['aircraftid']);
-                                            $i++;
-                                        }
-                                    }
-                                    echo '</table>';
-                                    echo '<input type="submit" class="btn bg-custom" value="Import Now" />';
-                                    echo '</form>';
+                                    return array(
+                                        "fltnum" => $segments[1],
+                                        "dep" => $segments[2],
+                                        "arr" => $segments[3],
+                                        "duration" => Time::strToSecs(str_replace('.', ':', $segments[10])),
+                                        "aircraftid" => $segments[5]
+                                    );
+                                }, $routelines[0]);
 
-                                    echo '<script>
+                                $routesJson = Json::encode($routesArray);
+
+                                $allAircraft = Aircraft::fetchAllAircraftFromVANet();
+                                $aircraftOptions = "";
+                                foreach ($allAircraft as $id => $name) {
+                                    $aircraftOptions .= '<option value="' . $id . '">' . $name . '</option>';
+                                }
+
+                                echo '<form action="/update.php" method="post">';
+                                echo '<input hidden name="action" value="phpvms" />';
+                                echo "<input hidden name='rJson' value='$routesJson' />";
+                                $j = 0;
+                                $doneAircraft = [];
+                                echo '<table class="w-100 mb-2">';
+                                $i = 0;
+                                foreach ($routesArray as $r) {
+                                    if (!in_array($r['aircraftid'], $doneAircraft)) {
+                                        echo '<tr class="border-bottom border-top"><td class="align-middle p-2"><b>';
+                                        echo $r['aircraftid'];
+                                        echo '</b></td><td class="align-middle py-2">';
+                                        echo '<input hidden name="rego' . $i . '" value="' . $r["aircraftid"] . '" />';
+                                        echo '<select required class="form-control mb-2 aircraftSelect" name="aircraft' . $i . '" id="' . $i . '">';
+                                        echo '<option value>Aircraft Type</option>';
+                                        echo $aircraftOptions;
+                                        echo '</select>';
+                                        echo '<select required class="form-control" name="livery' . $i . '" id="livery' . $i . '">';
+                                        echo '<option value>Select an Aircraft to Get Liveries</option>';
+                                        echo '</select>';
+                                        echo '</td></tr>';
+                                        array_push($doneAircraft, $r['aircraftid']);
+                                        $i++;
+                                    }
+                                }
+                                echo '</table>';
+                                echo '<input type="submit" class="btn bg-custom" value="Import Now" />';
+                                echo '</form>';
+
+                                echo '<script>
                                         $(document).ready(function() {
                                             $(".aircraftSelect").change(function() {
                                                 var id = $(this).attr("id");
@@ -722,4 +737,5 @@ $ACTIVE_CATEGORY = 'operations-management';
         });
     </script>
 </body>
+
 </html>
