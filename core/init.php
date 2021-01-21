@@ -48,4 +48,4 @@ foreach ($INSTALLED_PLUGINS as $p) {
 Events::listen('db/query-failed', 'Analytics::reportDbError');
 Events::listen('site/updated', 'Analytics::reportUpdate');
 set_error_handler('Analytics::reportError', E_ALL);
-set_exception_handler('Analytics::reportException');
+// set_exception_handler('Analytics::reportException');
