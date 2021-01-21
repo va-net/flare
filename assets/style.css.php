@@ -33,11 +33,6 @@ header("Content-type: text/css; charset: UTF-8");
     .ck-editor__editable_inline {
         min-height: 300px;
     }
-    .publicform {
-        margin-left: 20%;
-        margin-right: 20%;
-        width: 60%;
-    }
 }
 
 * {

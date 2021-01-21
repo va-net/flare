@@ -13,7 +13,7 @@ if (!file_exists('./core/config.php')) {
     Redirect::to('./install/install.php');
 }
 
-Page::setTitle('Login - '.Config::get('va/name'));
+Page::setTitle('Login - ' . Config::get('va/name'));
 Page::excludeAsset('datatables');
 Page::excludeAsset('chartjs');
 Page::excludeAsset('momentjs');
@@ -44,8 +44,7 @@ if (Input::exists()) {
             } else {
                 $user->logout();
                 Session::flash('error', 'Login Failed. Your application may still be pending or it may have been denied. Please contact us for more details if you believe this is an error.');
-            } 
-
+            }
         } else {
             foreach ($validation->errors() as $error) {
                 echo $error, '<br>';
@@ -56,21 +55,23 @@ if (Input::exists()) {
 ?>
 <!DOCTYPE html>
 <html>
+
 <head>
     <?php include './includes/header.php'; ?>
 </head>
+
 <body>
     <style>
         #loader {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        z-index: 1;
-        width: 150px;
-        height: 150px;
-        margin: -75px 0 0 -75px;
-        width: 120px;
-        height: 120px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            z-index: 1;
+            width: 150px;
+            height: 150px;
+            margin: -75px 0 0 -75px;
+            width: 120px;
+            height: 120px;
         }
     </style>
 
@@ -81,33 +82,24 @@ if (Input::exists()) {
         <div class="container-fluid mt-4 text-center" style="overflow: auto;">
             <h1 class="text-center pb-0 mb-0"><?= escape(Config::get('va/name')) ?></h1>
             <h3 class="text-center py-0 my-0">Pilot Login<br><br></h3>
-            <div class="container-fluid justify-content-center">
+            <div class="container justify-content-center">
                 <?php
-                    if (Session::exists('error')) {
-                        echo '<div class="alert alert-danger text-center">Error: '.Session::flash('error').'</div>';
-                    }
-                    if (Session::exists('success')) {
-                        echo '<div class="alert alert-success text-center">'.Session::flash('success').'</div>';
-                    }
-                ?>
-                <form method="post" action="">
-                    <input hidden name="action" value="authenticate">
-                    <div class="form-group text-center">
-                        <label for="email">Email Address</label>
-                        <input class="form-control publicform" type="email" id="email" name="email">
-                    </div>
+                if (Session::exists('error')) {
+                    echo '<div class="alert alert-danger text-center">Error: ' . Session::flash('error') . '</div>';
+                }
+                if (Session::exists('success')) {
+                    echo '<div class="alert alert-success text-center">' . Session::flash('success') . '</div>';
+                }
 
-                    <div class="form-group text-center">
-                        <label for="pass">Password</label>
-                        <input class="form-control publicform" type="password" id="pass" name="password">
-                    </div>
-                    <input class="form-control" type="hidden" name="token" value="<?= Token::generate(); ?>">
-                    <div class="row">
-                        <div class="col text-center">
-                            <input type="submit" class="btn ml-auto mr-auto display-block bg-custom" value="Log In">
-                        </div>
-                    </div>
-                </form>
+                $form = new Form();
+                $form->setAction('')
+                    ->setSubmitText('Log In')
+                    ->addField('text', true, false, '', 'action', 'authenticate', [], 'login_action')
+                    ->addField('email', false, true, 'Email Address', 'email', '', [], 'login_email')
+                    ->addField('password', false, true, 'Password', 'password', '', [], 'login_pass')
+                    ->addField('hidden', true, true, '', 'token', Token::generate(), [], 'login_token')
+                    ->render();
+                ?>
             </div>
             <footer class="container-fluid text-center">
                 <?php include './includes/footer.php'; ?>
@@ -115,4 +107,5 @@ if (Input::exists()) {
         </div>
     </div>
 </body>
+
 </html>
