@@ -28,12 +28,20 @@ if (Input::get('action') === 'editprofile') {
         Redirect::to('/home.php');
     } else {
         try {
-            $user->update(array(
-                'name' => Input::get('name'),
-                'callsign' => Input::get('callsign'),
-                'email' => Input::get('email'),
-                'ifc' => Input::get('ifc')
-            ));
+            if (Config::get('AUTO_CALLSIGNS') == 1) {
+                $user->update(array(
+                    'name' => Input::get('name'),
+                    'email' => Input::get('email'),
+                    'ifc' => Input::get('ifc')
+                ));
+            } else {
+                $user->update(array(
+                    'name' => Input::get('name'),
+                    'callsign' => Input::get('callsign'),
+                    'email' => Input::get('email'),
+                    'ifc' => Input::get('ifc')
+                ));
+            }
         } catch (Exception $e) {
             Session::flash('error', $e->getMessage());
             Redirect::to('home.php');

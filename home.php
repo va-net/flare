@@ -92,7 +92,7 @@ if (!$user->isLoggedIn()) {
                                                     <label for="name">Name</label>
                                                     <input type="text" maxlegnth="120" name="name" id="name" class="form-control" required value="<?= escape($user->data()->name) ?>">
                                                 </div>
-                                                <?php if (Config::get('AUTO_CALLSIGNS') != 0) : ?>
+                                                <?php if (Config::get('AUTO_CALLSIGNS') != 1) : ?>
                                                     <div class="form-group">
                                                         <label for="callsign">Callsign</label>
                                                         <input type="text" name="callsign" id="callsign" class="form-control" required value="<?= escape($user->data()->callsign) ?>">
