@@ -142,11 +142,11 @@ $ACTIVE_CATEGORY = 'site-management';
                                         </select>
                                         <?php
                                         if ($ver["prerelease"]) {
-                                            echo '<p>You cannot leave the beta while on a beta release as it may cause future conflicts.</p>';
+                                            echo '<small class="text-muted">You cannot leave the beta while on a beta release as it may cause future conflicts.</small>';
                                         }
                                         ?>
                                         <script>
-                                            $("#check-prerelease").val('<?= Config::get("CHECK_PRERELEASE"); ?>');
+                                            $("#check-prerelease").val('<?= Config::get("CHECK_PRERELEASE") ?>');
                                         </script>
                                         <small class="text-muted">Beta Pushes are often unstable and may break your site.</small>
                                     </div>
