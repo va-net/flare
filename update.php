@@ -124,6 +124,7 @@ if (Input::get('action') === 'editprofile') {
         Session::flash('error', 'There was an Error Filing the PIREP.');
         Redirect::to('pireps.php?page=recents');
     } else {
+        Cache::delete('badge_pireps');
         Session::flash('success', 'PIREP Filed Successfully!');
         Redirect::to('pireps.php?page=recents');
     }

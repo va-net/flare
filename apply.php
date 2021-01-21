@@ -98,6 +98,7 @@ if (Token::check(Input::get('token')) && Input::exists()) {
         } catch (Exception $e) {
             die($e->getMessage());
         }
+        Cache::delete('badge_recruitment');
         Session::flash('success', 'Your application has been submitted! You will be contacted by a staff member in the coming weeks regarding the status of your application.');
         Redirect::to('index.php');
     } elseif (!$validate->passed()) {
