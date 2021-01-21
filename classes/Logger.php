@@ -65,7 +65,7 @@ class Logger
             if (strpos($l, '.') == 0) continue;
             $lDate = new DateTime(str_replace('.log', '', $l));
             $diff = $lDate->diff($now);
-            if ($diff->days < $days) {
+            if ($diff->days > $days) {
                 unlink($path);
             }
         }
