@@ -230,10 +230,16 @@ $ACTIVE_CATEGORY = 'site-management';
                                         </form>
                                     </div>
                                     <div class="col-lg">
-                                        <form action="update.php" method="post">
+                                        <form action="/update.php" method="post">
                                             <input hidden name="action" value="clearlogs" />
                                             <input hidden name="period" value="30" />
                                             <input type="submit" class="btn bg-custom" value="Clear Old Logs" />
+                                        </form>
+                                    </div>
+                                    <div class="col-lg">
+                                        <form action="/update.php" method="post">
+                                            <input hidden name="action" value="clearcache" />
+                                            <input type="submit" class="btn bg-custom" value="Clear Cache" />
                                         </form>
                                     </div>
                                     <div class="col-lg">

@@ -1039,4 +1039,12 @@ if (Input::get('action') === 'editprofile') {
         Session::flash('success', 'PIREP Edited Successfully!');
         Redirect::to('/admin/pireps.php?tab=all');
     }
+} elseif (Input::get('action') === 'clearcache') {
+    if (!$user->hasPermission('site')) {
+        Redirect::to('home.php');
+    }
+
+    Cache::clear();
+    Session::flash('success', 'Cache Cleared');
+    Redirect::to('/admin/site.php?tab=maintenance');
 }
