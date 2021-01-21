@@ -24,6 +24,26 @@ if ($user->isLoggedIn()) {
 $csPattern = Config::get('VA_CALLSIGN_FORMAT');
 $trimmedPattern = preg_replace("/\/[a-z]*$/", '', preg_replace("/^\//", '', $csPattern));
 
+$filledCallsign = '';
+$callsigns = Callsign::all();
+if (empty(Input::get('callsign')) && $trimmedPattern != '.*') {
+    if (count($callsigns) < 1) {
+        $filledCallsign = RegRev::generate($trimmedPattern);
+    } else {
+        $filledCallsign = $callsigns[0];
+        $i = 0;
+        while (in_array($filledCallsign, $callsigns) && $i < 50) {
+            $filledCallsign = RegRev::generate($trimmedPattern);
+            $i++;
+        }
+        if (in_array($filledCallsign, $callsigns)) {
+            $filledCallsign = '';
+        }
+    }
+} else {
+    $filledCallsign = Input::get('callsign');
+}
+
 if (Token::check(Input::get('token')) && Input::exists()) {
     $validate = new Validate();
     $validation = $validate->check($_POST, array(
@@ -95,20 +115,6 @@ if (Token::check(Input::get('token')) && Input::exists()) {
 </head>
 
 <body>
-    <style>
-        #loader {
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            z-index: 1;
-            width: 150px;
-            height: 150px;
-            margin: -75px 0 0 -75px;
-            width: 120px;
-            height: 120px;
-        }
-    </style>
-
     <nav class="navbar navbar-dark navbar-expand-lg bg-custom">
         <?php include './includes/navbar.php'; ?>
     </nav>
@@ -145,7 +151,7 @@ if (Token::check(Input::get('token')) && Input::exists()) {
 
                     <div class="form-group text-center">
                         <label for="callsign">Callsign</label>
-                        <input required class="form-control publicform" type="text" id="callsign" name="callsign" value="<?= escape(empty(Input::get('callsign')) && $trimmedPattern != ".*" ? RegRev::generate($trimmedPattern) : Input::get('callsign')) ?>">
+                        <input required class="form-control publicform" type="text" id="callsign" name="callsign" value="<?= $filledCallsign ?>" <?= Config::get('AUTO_CALLSIGNS') == 1 && $filledCallsign != '' ? 'readonly' : '' ?>>
                     </div>
 
                     <div class="form-group text-center">

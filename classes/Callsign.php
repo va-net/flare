@@ -11,13 +11,15 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 class Callsign
 {
 
+    /**
+     * @var DB
+     */
     private static $_db;
 
     private static function init()
     {
 
         self::$_db = DB::getInstance();
-
     }
 
     /**
@@ -37,4 +39,15 @@ class Callsign
         return false;
     }
 
+    /**
+     * @return array
+     */
+    public static function all()
+    {
+        self::init();
+        $result = self::$_db->query("SELECT `callsign` FROM `pilots`")->results();
+        return array_map(function ($u) {
+            return $u->callsign;
+        }, $result);
+    }
 }

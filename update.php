@@ -511,8 +511,9 @@ if (Input::get('action') === 'editprofile') {
         || !Config::replace("CHECK_PRERELEASE", Input::get('checkpre'))
         || !Config::replace("VA_CALLSIGN_FORMAT", Input::get('vaident'))
         || !Config::replace("VA_LOGO_URL", Input::get('valogo'))
+        || !Config::replace("AUTO_CALLSIGNS", Input::get('autocallsign'))
     ) {
-        Session::flash('error', 'There was an error updating the Settings');
+        Session::flash('error', 'There was an error updating your settings');
         Redirect::to('/admin/site.php?tab=settings');
         die();
     }
