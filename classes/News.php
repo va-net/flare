@@ -52,7 +52,7 @@ class News
     }
 
     /**
-     * @return null
+     * @return void
      * @param int $id Article ID
      */
     public static function archive($id)
@@ -67,11 +67,11 @@ class News
     }
 
     /**
-     * @return null
+     * @return void
      * @param int $id Article ID
      * @param array $fields Updated Article Fields
      */
-    public static function edit($id, $fields) 
+    public static function edit($id, $fields)
     {
         self::init();
 
@@ -81,10 +81,10 @@ class News
     }
 
     /**
-     * @return null
+     * @return void
      * @param array $fields Article Fields
      */
-    public static function add($fields) 
+    public static function add($fields)
     {
         self::init();
 
@@ -96,7 +96,7 @@ class News
      * @return object|bool
      * @param int $id News ID
      */
-    public static function find($id) 
+    public static function find($id)
     {
         self::init();
         $ret = self::$_db->get('news', ['id', '=', $id]);
@@ -106,5 +106,4 @@ class News
 
         return $ret->first();
     }
-
 }

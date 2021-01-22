@@ -8,13 +8,15 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-class Redirect {
+class Redirect
+{
 
     /**
-     * @return null
+     * @return void
      * @param int|string Redirect URL/Response Code
      */
-    public static function to($location = null) {
+    public static function to($location = null)
+    {
         if ($location) {
             if (is_numeric($location)) {
                 switch ($location) {
@@ -23,9 +25,8 @@ class Redirect {
                         break;
                 }
             }
-            header('Location: '.$location);
+            header('Location: ' . $location);
             exit();
         }
     }
-
 }

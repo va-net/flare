@@ -69,7 +69,7 @@ class Rank
     }
 
     /**
-     * @return null
+     * @return void
      * @param string $name Rank Name
      * @param int $timereq Flight Time Required in Seconds
      */
@@ -88,7 +88,7 @@ class Rank
     }
 
     /**
-     * @return null
+     * @return void
      * @param int $id Rank ID
      * @param array $fields Updated Rank Fields
      */

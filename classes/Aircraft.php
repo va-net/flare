@@ -172,7 +172,7 @@ class Aircraft
     }
 
     /**
-     * @return null
+     * @return void
      * @param int $id Aircraft ID
      */
     public static function archive($id)
@@ -207,7 +207,7 @@ class Aircraft
     }
 
     /**
-     * @return null
+     * @return void
      * @param string $liveryId Livery ID
      * @param int $rank Rank ID
      * @param string $notes Notes
@@ -231,7 +231,7 @@ class Aircraft
     }
 
     /**
-     * @return null
+     * @return void
      * @param int $rankId Updated Rank ID
      * @param string $notes Updated Notes
      * @param int $aircraftId Aircraft ID

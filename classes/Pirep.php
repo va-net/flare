@@ -129,7 +129,7 @@ class Pirep
     }
 
     /**
-     * @return null
+     * @return void
      * @param int $id PIREP ID
      */
     public static function accept($id)
@@ -154,7 +154,7 @@ class Pirep
     }
 
     /**
-     * @return null
+     * @return void
      * @param int $id PIREP ID
      */
     public static function decline($id)
@@ -201,7 +201,7 @@ class Pirep
     }
 
     /**
-     * @return null
+     * @return void
      * @param int $id Multiplier ID
      */
     public static function deleteMultiplier($id)
@@ -213,7 +213,7 @@ class Pirep
     }
 
     /**
-     * @return null
+     * @return void
      * @param array $fields Multiplier Fields
      */
     public static function addMultiplier($fields = array())

@@ -10,7 +10,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 class Plugin
 {
     /**
-     * @return null
+     * @return void
      * @param string $label Menu Item Label
      * @param array $data Meny Item Data
      */
@@ -22,7 +22,7 @@ class Plugin
     }
 
     /**
-     * @return null
+     * @return void
      * @param string $label Menu Item Label
      * @param array $data Meny Item Data
      */
@@ -34,7 +34,7 @@ class Plugin
     }
 
     /**
-     * @return null
+     * @return void
      * @param string $label Menu Item Label
      * @param array $data Menu Item Data
      */
@@ -44,7 +44,7 @@ class Plugin
     }
 
     /**
-     * @return null
+     * @return void
      * @param string $id Badge ID
      * @param callback $action Badge Action
      */

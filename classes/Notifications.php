@@ -50,7 +50,7 @@ class Notifications
     }
 
     /**
-     * @return null
+     * @return void
      * @param int $pilot Pilot ID
      * @param string $icon Icon
      * @param string $subject Notification Subject
@@ -75,7 +75,7 @@ class Notifications
     /* EVENT HANDLERS */
 
     /**
-     * @return null
+     * @return void
      * @param Event $ev
      */
     public static function handleEvent($ev)
@@ -86,7 +86,7 @@ class Notifications
     }
 
     /**
-     * @return null
+     * @return void
      * @param Event $ev
      */
     private static function handleUserAccepted($ev)
@@ -99,7 +99,7 @@ class Notifications
     }
 
     /**
-     * @return null
+     * @return void
      * @param Event $ev
      */
     private static function handleEventAdded($ev)
@@ -111,7 +111,7 @@ class Notifications
     }
 
     /**
-     * @return null
+     * @return void
      * @param Event $ev
      */
     private static function handleNewsAdded($ev)
@@ -123,7 +123,7 @@ class Notifications
     }
 
     /**
-     * @return null
+     * @return void
      * @param Event $ev
      */
     private static function handlePirep($ev)

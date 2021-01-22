@@ -22,7 +22,7 @@ class Route
     }
 
     /**
-     * @return null
+     * @return void
      * @param array $fields Route Fields
      */
     public static function add($fields)
@@ -80,7 +80,7 @@ class Route
     }
 
     /**
-     * @return null
+     * @return void
      * @param int $id Route ID
      */
     public static function delete($id)
@@ -132,7 +132,7 @@ class Route
     }
 
     /**
-     * @return null
+     * @return void
      * @param int $routeid Route ID
      * @param int $aircraft Aircraft ID, null to remove all aircraft
      */
@@ -150,7 +150,7 @@ class Route
     }
 
     /**
-     * @return null
+     * @return void
      * @param int $routeid Route ID
      * @param int $aircraft Aircraft ID
      */

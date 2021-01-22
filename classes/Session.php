@@ -8,14 +8,16 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-class Session {
+class Session
+{
 
     /**
      * @return string
      * @param string $name Variable Name
      * @param mixed $value Variable Value
      */
-    public static function create($name, $value){
+    public static function create($name, $value)
+    {
         $_SESSION[$name] = $value;
         return $value;
     }
@@ -24,15 +26,17 @@ class Session {
      * @return bool
      * @param string $name Variable Name
      */
-    public static function exists($name) {
+    public static function exists($name)
+    {
         return isset($_SESSION[$name]) ? true : false;
     }
 
     /**
-     * @return null
+     * @return void
      * @param string $name Variable Name
      */
-    public static function delete($name) {
+    public static function delete($name)
+    {
         if (self::exists($name)) {
             unset($_SESSION[$name]);
         }
@@ -42,7 +46,8 @@ class Session {
      * @return mixed
      * @param string $name Variable Name
      */
-    public static function get($name) {
+    public static function get($name)
+    {
         return $_SESSION[$name];
     }
 
@@ -51,7 +56,8 @@ class Session {
      * @param string $name Flash Type
      * @param string $content Flash Content
      */
-    public static function flash($name, $content = '') {
+    public static function flash($name, $content = '')
+    {
         if (self::exists($name)) {
             $session = self::get($name);
             self::delete($name);
@@ -62,5 +68,4 @@ class Session {
             return $session;
         }
     }
-
 }

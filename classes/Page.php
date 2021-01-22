@@ -40,7 +40,7 @@ class Page
     ];
 
     /**
-     * @return null
+     * @return void
      * @param string $title Title
      */
     public static function setTitle($title)
@@ -63,7 +63,7 @@ class Page
     }
 
     /**
-     * @return null
+     * @return void
      * @param int $mode 0 = Exclude to Remove, 1 = Include to Use
      */
     public static function assetsMode($mode)
@@ -80,7 +80,7 @@ class Page
     }
 
     /**
-     * @return null
+     * @return void
      * @param string $asset Key of Asset to Include
      */
     public static function includeAsset($asset)
@@ -95,7 +95,7 @@ class Page
     }
 
     /**
-     * @return null
+     * @return void
      * @param string $asset Key of Asset to Exclude
      */
     public static function excludeAsset($asset)
@@ -112,7 +112,7 @@ class Page
     }
 
     /**
-     * @return null
+     * @return void
      * @param string $key Asset Key
      * @param array $tags Asset HTML Tags
      */
@@ -139,7 +139,7 @@ class Page
     }
 
     /**
-     * @return null
+     * @return void
      * @param array $value New Value
      */
     public static function setBadges($value)

@@ -51,7 +51,7 @@ class Cache
      * @param string $key Item Key
      * @param string $val Item Value
      * @param string $expiry Item Expiry
-     * @return null
+     * @return void
      */
     public static function set($key, $val, $expiry)
     {
@@ -72,7 +72,7 @@ class Cache
     }
 
     /**
-     * @return null
+     * @return void
      * @param string $key Item Key
      */
     public static function delete($key)
@@ -83,7 +83,7 @@ class Cache
     }
 
     /**
-     * @return null
+     * @return void
      */
     public static function clean()
     {
@@ -92,7 +92,7 @@ class Cache
     }
 
     /**
-     * @return null
+     * @return void
      */
     public static function clear()
     {

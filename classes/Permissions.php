@@ -26,7 +26,7 @@ class Permissions
      */
     private static $_db;
 
-    private static function init() 
+    private static function init()
     {
         self::$_db = DB::getInstance();
     }
@@ -92,7 +92,7 @@ class Permissions
     }
 
     /**
-     * @return null
+     * @return void
      * @param int $userid User ID
      */
     public static function giveAll($userid)
@@ -111,7 +111,7 @@ class Permissions
     }
 
     /**
-     * @return null
+     * @return void
      * @param int $userid User ID
      */
     public static function revokeAll($userid)
@@ -133,5 +133,4 @@ class Permissions
         $sql = "SELECT u.* FROM pilots u WHERE u.id IN (SELECT p.userid FROM permissions p WHERE name=?)";
         return self::$_db->query($sql, [$perm])->results();
     }
-
 }

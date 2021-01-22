@@ -43,7 +43,7 @@ class User
     }
 
     /**
-     * @return null
+     * @return void
      * @param array $fields User Fields
      */
     public function create($fields)
@@ -151,7 +151,7 @@ class User
     }
 
     /**
-     * @return null
+     * @return void
      */
     public function logout()
     {
@@ -162,7 +162,7 @@ class User
     }
 
     /**
-     * @return null
+     * @return void
      * @param array $fields Updated User Fields
      * @param int $id User ID
      */

@@ -14,7 +14,7 @@ class Analytics
 
     /**
      * @param Event $ev
-     * @return null
+     * @return void
      */
     public static function reportDbError($ev)
     {
@@ -43,7 +43,7 @@ class Analytics
 
     /**
      * @param Exception $ex
-     * @return null
+     * @return void
      */
     public static function reportException($ex)
     {
@@ -125,7 +125,7 @@ class Analytics
 
     /**
      * @param Event $ev
-     * @return null
+     * @return void
      */
     public static function reportUpdate($ev)
     {
@@ -150,7 +150,7 @@ class Analytics
     }
 
     /**
-     * @return null
+     * @return void
      */
     public static function register()
     {
@@ -177,7 +177,7 @@ class Analytics
     }
 
     /**
-     * @return null
+     * @return void
      */
     public static function unregister()
     {

@@ -30,7 +30,7 @@ class Events
     }
 
     /**
-     * @return null
+     * @return void
      * @param string $listener Listener ID
      */
     public static function unlisten($listener)
@@ -40,7 +40,7 @@ class Events
     }
 
     /**
-     * @return null
+     * @return void
      * @param string $event Event ID
      * @param array $args Event Arguments
      */

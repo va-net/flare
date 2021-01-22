@@ -13,7 +13,7 @@ class Logger
     private static $_logDir = __DIR__ . '/../core/logs';
 
     /**
-     * @return null
+     * @return void
      * @param Event $event
      */
     public static function logEvent($event)
@@ -24,7 +24,7 @@ class Logger
     }
 
     /**
-     * @return null
+     * @return void
      * @param string $log Log Text
      */
     public static function log($log)
@@ -53,7 +53,7 @@ class Logger
     }
 
     /**
-     * @return null
+     * @return void
      * @param int $days Maximum Log Age
      */
     public static function clearOld($days = 30)
@@ -74,7 +74,7 @@ class Logger
     }
 
     /**
-     * @return null
+     * @return void
      */
     public static function clearAll()
     {

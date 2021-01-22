@@ -16,7 +16,7 @@ class Config
     private static $_dbConfig = [];
 
     /**
-     * @return null
+     * @return void
      * @param bool $force Force Reload
      */
     private static function loadDbConf($force = false)
