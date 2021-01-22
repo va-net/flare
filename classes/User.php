@@ -439,7 +439,7 @@ class User
 
         $db = DB::newInstance();
 
-        $sql = "SELECT u.*, (SELECT SUM(flighttime) FROM pireps p WHERE p.pilotid=u.id AND status=1) AS flighttime FROM pilots u";
+        $sql = "SELECT u.*, (SELECT SUM(flighttime) FROM pireps p WHERE p.pilotid=u.id AND `status`=1) AS flighttime FROM pilots u";
         $results = $db->query($sql)->results();
 
         $usersarray = array();
