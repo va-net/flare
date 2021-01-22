@@ -38,8 +38,7 @@ CREATE TABLE IF NOT EXISTS `pilots` (
   `notes` varchar(1200) NOT NULL DEFAULT '',
   `status` int(3) NOT NULL DEFAULT '0',
   `joined` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `callsign` (`callsign`)
+  PRIMARY KEY (`id`)
 );
 
 CREATE TABLE IF NOT EXISTS `permissions` (

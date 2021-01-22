@@ -226,5 +226,17 @@
         ],
         "deletedFiles": [],
         "newFolders": ["core/logs"]
+    },
+    {
+        "tag": "v1.2.0-beta4",
+        "name": "Version 1.2.0 Beta 4",
+        "date": "2021-01-22",
+        "notes": "TODO",
+        "prerelease": true,
+        "useUpdater": true,
+        "files": ["TODO"],
+        "queries": ["ALTER TABLE `pilots` DROP INDEX `callsign`"],
+        "deletedFiles": [],
+        "newFolders": []
     }
 ]

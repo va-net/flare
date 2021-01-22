@@ -348,7 +348,7 @@ Router::add('/about', function () {
             badReq(ErrorCode::CallsignNotValid);
         }
 
-        if (!Callsign::assigned(Input::get('callsign'), $_apiUser->id)) {
+        if (Callsign::assigned(Input::get('callsign'), $_apiUser->id)) {
             badReq(ErrorCode::CallsignTaken);
         }
     }

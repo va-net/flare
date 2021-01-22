@@ -44,7 +44,7 @@ if (empty(Input::get('callsign')) && $trimmedPattern != '.*') {
     $filledCallsign = Input::get('callsign');
 }
 
-if (Token::check(Input::get('token')) && Input::exists()) {
+if (Input::exists() && Token::check(Input::get('token'))) {
     $validate = new Validate();
     $validation = $validate->check($_POST, array(
         'name' => array(
@@ -62,8 +62,7 @@ if (Token::check(Input::get('token')) && Input::exists()) {
         ),
         'callsign' => array(
             'required' => true,
-            'max' => 120,
-            'unique' => 'pilots'
+            'max' => 120
         ),
         'violand' => array(
             'required' => true
@@ -82,7 +81,8 @@ if (Token::check(Input::get('token')) && Input::exists()) {
         )
     ));
 
-    if ($validate->passed() && Regex::match($csPattern, Input::get('callsign'))) {
+    $assigned = Callsign::assigned(Input::get('callsign'), 0);
+    if ($validate->passed() && Regex::match($csPattern, Input::get('callsign')) && !$assigned) {
         $user = new User();
         try {
             $user->create(array(
@@ -103,6 +103,8 @@ if (Token::check(Input::get('token')) && Input::exists()) {
         Redirect::to('index.php');
     } elseif (!$validate->passed()) {
         Session::flash('error', $validate->errors()[0]);
+    } elseif ($assigned) {
+        Session::flash('error', 'That callsign is already taken');
     } else {
         Session::flash('error', 'Your Callsign is in an Invalid Format');
     }

@@ -20,7 +20,7 @@ if (Input::get('action') === 'editprofile') {
     $csPattern = Config::get('VA_CALLSIGN_FORMAT');
     $trimmedPattern = preg_replace("/\/[a-z]*$/", '', preg_replace("/^\//", '', $csPattern));
 
-    if (!Callsign::assigned(Input::get('callsign'), $user->data()->id)) {
+    if (Callsign::assigned(Input::get('callsign'), $user->data()->id)) {
         Session::flash('error', 'Callsign is Already Taken!');
         Redirect::to('/home.php');
     } elseif (!Regex::match($csPattern, Input::get('callsign'))) {
