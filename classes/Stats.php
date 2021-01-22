@@ -8,13 +8,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-class Stats {
+class Stats
+{
     /**
      * @var DB
      */
     private static $_db;
 
-    private static function init() 
+    private static function init()
     {
         self::$_db = DB::getInstance();
     }
@@ -23,11 +24,10 @@ class Stats {
      * @return int
      * @param int $days Time Period
      */
-    public static function totalHours($days = null) 
+    public static function totalHours($days = null)
     {
         self::init();
-        $transhours;
-        $transflights;
+        $transhours = 0;
 
         if ($days == null) {
             $transhours = self::$_db->query('SELECT SUM(transhours) AS trans FROM pilots')->first()->trans;
@@ -38,7 +38,7 @@ class Stats {
         }
 
         if ($filedhours == null) $filedhours = 0;
-        
+
         return $transhours + $filedhours;
     }
 
@@ -46,7 +46,7 @@ class Stats {
      * @return int
      * @param int $days Time Period
      */
-    public static function totalFlights($days = null) 
+    public static function totalFlights($days = null)
     {
         self::init();
 
@@ -57,7 +57,7 @@ class Stats {
             $transflights = self::$_db->query('SELECT SUM(pilots.transflights) AS trans FROM pilots')->first()->trans;
             $filedflights = self::$_db->query('SELECT COUNT(pireps.id) AS pireps FROM pireps WHERE status=1 AND DATEDIFF(NOW(), date) <= ?', [$days])->first()->pireps;
         }
-        
+
         return $transflights + $filedflights;
     }
 
@@ -70,14 +70,14 @@ class Stats {
         self::init();
 
         $pilots = self::$_db->query("SELECT COUNT(id) AS applied FROM pilots WHERE DATEDIFF(NOW(), joined) < ?", [$days])->first()->applied;
-        
+
         return $pilots;
     }
 
     /**
      * @return int
      */
-    public static function numPilots() 
+    public static function numPilots()
     {
         self::init();
 
@@ -87,7 +87,7 @@ class Stats {
     /**
      * @return int
      */
-    public static function numRoutes() 
+    public static function numRoutes()
     {
         self::init();
 
@@ -100,11 +100,11 @@ class Stats {
      * @param string $order Sort Order
      * @param int $limit Records to Return
      */
-    public static function pilotLeaderboard($limit, $field, $order = 'DESC')
+    public static function pilotLeaderboard($limit, $field, $order = 'DESC', $days = 7)
     {
         self::init();
 
-        $sql = "SELECT u.*, (SELECT SUM(flighttime) FROM pireps p WHERE p.pilotid=u.id AND status=1) AS flighttime FROM pilots u WHERE status=1 ORDER BY {$field} {$order} LIMIT {$limit}";
-        return self::$_db->query($sql)->results();
+        $sql = "SELECT u.*, (SELECT SUM(flighttime) FROM pireps p WHERE p.pilotid=u.id AND `status`=1 AND DATEDIFF(NOW(), p.date) <= ?) AS flighttime FROM pilots u WHERE `status`=1 ORDER BY {$field} {$order} LIMIT {$limit}";
+        return self::$_db->query($sql, [$days])->results();
     }
 }
