@@ -60,6 +60,9 @@ class Analytics
         $erl->setAccessible(true);
         $erc = $er->getProperty('code');
         $erc->setAccessible(true);
+        if (strpos($erf->getValue($ex), 'plugin') !== FALSE) {
+            return;
+        }
         $data = [
             "type" => 1,
             "code" => $erc->getValue($ex),
