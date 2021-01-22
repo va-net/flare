@@ -16,6 +16,9 @@ if (!$user->isLoggedIn()) {
 
 if (Input::get('method') === 'events-table') {
     $all = VANet::getEvents();
+    if ($all == null) {
+        die();
+    }
     foreach ($all as $event) {
         if ($event["visible"]) {
             echo '<tr><td class="align-middle">';
