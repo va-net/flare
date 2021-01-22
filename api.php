@@ -749,7 +749,7 @@ Router::add('/menu/badges', function () {
     foreach ($GLOBALS['admin-menu'] as $cName => $cData) {
         foreach ($cData as $name => $data) {
             if ($user->hasPermission($data["permission"])) {
-                if (($IS_GOLD || !$data["needsGold"]) && $data["badgeid"] != null) {
+                if (($IS_GOLD || !$data["needsGold"]) && isset($data["badgeid"]) && $data["badgeid"] != null) {
                     $ids[] = $data["badgeid"];
                 }
             }
