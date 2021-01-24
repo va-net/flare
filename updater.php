@@ -163,6 +163,6 @@ file_put_contents(__DIR__ . $slash . "version.json", $vData);
 echo "Updated Version File<br />";
 
 Events::trigger('site/updated', $nextUpdate);
-Cache::delete('badge_settings');
+Cache::clear();
 
 echo "<br />Flare has been Updated to " . $nextUpdate["name"] . " (" . $nextUpdate["tag"] . ")";
