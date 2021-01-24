@@ -14,11 +14,7 @@ if (!$user->isLoggedIn()) {
     Redirect::to('index.php');
 }
 
-if (Input::get('method') === 'event' && !empty(Input::get('data'))) {
-    $event = VANet::findEvent(Input::get('event'));
-    header("Content-Type: application/json");
-    echo Json::encode($event);
-} elseif (Input::get('method') === 'acars' && !empty(Input::get('server'))) {
+if (Input::get('method') === 'acars' && !empty(Input::get('server'))) {
     if (Input::get('server') == 'casual') {
         echo '<div class="alert alert-dabger">ACARS is not currently available on the Casual Server</div>';
         die();
