@@ -265,7 +265,7 @@ if (!$user->isLoggedIn()) {
                     </td><td class="align-middle">
                     <a href="/events.php?page=view&event=${e.id}" class="btn bg-custom">View</button>
                     </td></tr>`
-                }).join(''))
+                }).join(''));
             });
         <?php endif; ?>
 

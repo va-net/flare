@@ -14,23 +14,7 @@ if (!$user->isLoggedIn()) {
     Redirect::to('index.php');
 }
 
-if (Input::get('method') === 'events-table') {
-    $all = VANet::getEvents();
-    if ($all == null) {
-        die();
-    }
-    foreach ($all as $event) {
-        if ($event["visible"]) {
-            echo '<tr><td class="align-middle">';
-            echo $event["name"];
-            echo '</td><td class="align-middle">';
-            echo $event["departureAirport"];
-            echo '</td><td class="align-middle">';
-            echo '<a href="events.php?page=view&event=' . urlencode($event["id"]) . '" class="btn bg-custom">View</button>';
-            echo '</td></tr>';
-        }
-    }
-} elseif (Input::get('method') === 'events-admin' && $user->hasPermission('opsmanage')) {
+if (Input::get('method') === 'events-admin' && $user->hasPermission('opsmanage')) {
     $all = VANet::getEvents();
     foreach ($all as $event) {
         echo '<tr><td class="align-middle">';
