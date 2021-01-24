@@ -51,24 +51,18 @@ class Analytics
         if ($key == '') return;
 
         $url = self::$BASE . "/errors?site=" . $key;
-        $er = new ReflectionClass($ex);
-        $erm = $er->getProperty('message');
-        $erm->setAccessible(true);
-        $erf = $er->getProperty('file');
-        $erf->setAccessible(true);
-        $erl = $er->getProperty('line');
-        $erl->setAccessible(true);
-        $erc = $er->getProperty('code');
-        $erc->setAccessible(true);
-        if (strpos($erf->getValue($ex), 'plugin') !== FALSE) {
+        $excluded = self::excludedFiles();
+        $fname = explode('/', $ex->getFile());
+        if (in_array($fname[count($fname) - 1], $excluded)) {
             return;
         }
+
         $data = [
             "type" => 1,
-            "code" => $erc->getValue($ex),
-            "message" => $erm->getValue($ex),
-            "file" => $erf->getValue($ex),
-            "line" => $erl->getValue($ex),
+            "code" => $ex->getCode(),
+            "message" => $ex->getMessage(),
+            "file" => $ex->getFile(),
+            "line" => $ex->getLine(),
             "data" => [
                 "version" => Updater::getVersion()["tag"]
             ],
@@ -96,6 +90,12 @@ class Analytics
     {
         $key = Config::get('MASTER_API_KEY');
         if ($key == '') return;
+
+        $excluded = self::excludedFiles();
+        $fname = explode('/', $eFile);
+        if (in_array($fname[count($fname) - 1], $excluded)) {
+            return;
+        }
 
         $url = self::$BASE . "/errors?site=" . $key;
         $data = [
@@ -207,5 +207,22 @@ class Analytics
             isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? 'https' : 'http',
             $_SERVER['SERVER_NAME']
         );
+    }
+
+    /**
+     * @return string[]
+     */
+    private static function excludedFiles()
+    {
+        $plugins = Json::decode(file_get_contents(__DIR__ . '/../plugins.json'));
+        $files = [];
+        foreach ($plugins as $p) {
+            foreach ($p['installation']['files'] as $f) {
+                $name = explode('/', $f);
+                $files[] = $name[count($name) - 1];
+            }
+        }
+
+        return $files;
     }
 }
