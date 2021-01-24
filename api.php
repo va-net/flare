@@ -372,10 +372,12 @@ Router::add('/about', function () {
 
 // View All Events
 Router::add('/events', function () {
+    global $user;
     if (!VANet::isGold()) badReq(ErrorCode::VaNotGold);
 
     $events = array_filter(VANet::getEvents(), function ($e) {
-        return $e["visible"];
+        global $user;
+        return $e["visible"] || $user->hasPermission('opsmanage');
     });
     echo Json::encode([
         "status" => ErrorCode::NoError,

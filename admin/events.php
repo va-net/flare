@@ -11,7 +11,7 @@ require_once '../core/init.php';
 
 $user = new User();
 
-Page::setTitle('Events Admin - '.Config::get('va/name'));
+Page::setTitle('Events Admin - ' . Config::get('va/name'));
 Page::excludeAsset('datatables');
 Page::excludeAsset('chartjs');
 
@@ -25,9 +25,11 @@ $ACTIVE_CATEGORY = 'operations-management';
 ?>
 <!DOCTYPE html>
 <html>
+
 <head>
     <?php include '../includes/header.php'; ?>
 </head>
+
 <body>
     <nav class="navbar navbar-dark navbar-expand-lg bg-custom">
         <?php include '../includes/navbar.php'; ?>
@@ -37,134 +39,138 @@ $ACTIVE_CATEGORY = 'operations-management';
             <div class="row m-0 p-0">
                 <?php include '../includes/sidebar.php'; ?>
                 <div class="col-lg-9 main-content">
-                    <div id="loader-wrapper"><div id="loader" class="spinner-border spinner-border-sm spinner-custom"></div></div>
+                    <div id="loader-wrapper">
+                        <div id="loader" class="spinner-border spinner-border-sm spinner-custom"></div>
+                    </div>
                     <div class="loaded">
                         <?php
-                        if (file_exists(__DIR__.'/../install/install.php') && !file_exists(__DIR__.'/../.development')) {
+                        if (file_exists(__DIR__ . '/../install/install.php') && !file_exists(__DIR__ . '/../.development')) {
                             echo '<div class="alert alert-danger text-center">The Install Folder still Exists! Please delete it immediately, it poses a severe security risk.</div>';
                         }
-                        
+
                         if (Session::exists('error')) {
-                            echo '<div class="alert alert-danger text-center">Error: '.Session::flash('error').'</div>';
+                            echo '<div class="alert alert-danger text-center">Error: ' . Session::flash('error') . '</div>';
                         }
                         if (Session::exists('success')) {
-                            echo '<div class="alert alert-success text-center">'.Session::flash('success').'</div>';
+                            echo '<div class="alert alert-success text-center">' . Session::flash('success') . '</div>';
                         }
                         ?>
                         <h3>Manage Events</h3>
                         <button type="button" class="btn bg-custom mb-2" data-toggle="modal" data-target="#newevent">New Event</button>
 
                         <div class="modal fade" id="confirmEventDelete">
-                        <div class="modal-dialog modal-sm">
-                            <div class="modal-content">
+                            <div class="modal-dialog modal-sm">
+                                <div class="modal-content">
 
-                            <div class="modal-header">
-                                <h4 class="modal-title">Are You Sure?</h4>
-                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            </div>
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Are You Sure?</h4>
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    </div>
 
-                            <div class="modal-body">
-                                Are you sure you want to delete this Event?
-                                <form id="deleteevent" action="/update.php" method="post">
-                                    <input hidden name="action" value="deleteevent" />
-                                    <input hidden name="delete" id="confirmEventDelete-id" />
-                                    <input type="submit" class="btn btn-danger" value="Delete" />
-                                </form>
-                            </div>
+                                    <div class="modal-body">
+                                        Are you sure you want to delete this Event?
+                                        <form id="deleteevent" action="/update.php" method="post">
+                                            <input hidden name="action" value="deleteevent" />
+                                            <input hidden name="delete" id="confirmEventDelete-id" />
+                                            <input type="submit" class="btn btn-danger" value="Delete" />
+                                        </form>
+                                    </div>
 
-                            <div class="modal-footer text-center justify-content-center">
-                                <button type="button" class="btn bg-custom" data-dismiss="modal">Cancel</button>
-                            </div>
+                                    <div class="modal-footer text-center justify-content-center">
+                                        <button type="button" class="btn bg-custom" data-dismiss="modal">Cancel</button>
+                                    </div>
 
+                                </div>
                             </div>
-                        </div>
                         </div>
 
                         <!-- Add Event Modal -->
                         <div class="modal fade" id="newevent">
-                        <div class="modal-dialog modal-lg">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h4 class="modal-title">Add Event</h4>
-                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                </div>
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Add Event</h4>
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    </div>
 
-                                <div class="modal-body">
-                                    <form action="/update.php" method="post">
-                                        <input hidden name="action" value="addevent" />
-                                        <div class="form-group">
-                                            <label for="event-name">Event Name</label>
-                                            <input required type="text" class="form-control" name="name" id="event-name" />
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="event-description">Event Description</label>
-                                            <textarea required class="form-control" name="description" id="event-description"></textarea>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="event-date">Event Date</label>
-                                            <input required type="date" class="form-control" name="date" id="event-date" min="<?= date("Y-m-d"); ?>" />
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="event-time">Event Time</label>
-                                            <select required class="form-control" name="time" id="event-time">
-                                                <option value>Select</option>
-                                                <?php
-                                                    $times = ["00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", 
-                                                    "18", "19", "20", "21", "22", "23"];
+                                    <div class="modal-body">
+                                        <form action="/update.php" method="post">
+                                            <input hidden name="action" value="addevent" />
+                                            <div class="form-group">
+                                                <label for="event-name">Event Name</label>
+                                                <input required type="text" class="form-control" name="name" id="event-name" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="event-description">Event Description</label>
+                                                <textarea required class="form-control" name="description" id="event-description"></textarea>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="event-date">Event Date</label>
+                                                <input required type="date" class="form-control" name="date" id="event-date" min="<?= date("Y-m-d"); ?>" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="event-time">Event Time</label>
+                                                <select required class="form-control" name="time" id="event-time">
+                                                    <option value>Select</option>
+                                                    <?php
+                                                    $times = [
+                                                        "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17",
+                                                        "18", "19", "20", "21", "22", "23"
+                                                    ];
                                                     foreach ($times as $t) {
-                                                        echo '<option value="'.$t.'00'.'">'.$t.'00Z</option>';
-                                                        echo '<option value="'.$t.'30'.'">'.$t.'30Z</option>';
+                                                        echo '<option value="' . $t . '00' . '">' . $t . '00Z</option>';
+                                                        echo '<option value="' . $t . '30' . '">' . $t . '30Z</option>';
                                                     }
-                                                ?>
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="event-dep">Departure ICAO</label>
-                                            <input required type="text" class="form-control" name="dep" id="event-dep" />
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="event-arr">Arrival ICAO</label>
-                                            <input required type="text" class="form-control" name="arr" id="event-arr" />
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="event-aircraft">Aircraft</label>
-                                            <select required class="form-control" name="aircraft" id="event-aircraft">
-                                                <option value>Select</option>
-                                                <?php
+                                                    ?>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="event-dep">Departure ICAO</label>
+                                                <input required type="text" class="form-control" name="dep" id="event-dep" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="event-arr">Arrival ICAO</label>
+                                                <input required type="text" class="form-control" name="arr" id="event-arr" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="event-aircraft">Aircraft</label>
+                                                <select required class="form-control" name="aircraft" id="event-aircraft">
+                                                    <option value>Select</option>
+                                                    <?php
                                                     $activeAircraft = Aircraft::fetchActiveAircraft()->results();
                                                     foreach ($activeAircraft as $aircraft) {
-                                                        echo '<option value="'.$aircraft->ifliveryid.'">'.$aircraft->name.' ('.$aircraft->liveryname.')</option>';
+                                                        echo '<option value="' . $aircraft->ifliveryid . '">' . $aircraft->name . ' (' . $aircraft->liveryname . ')</option>';
                                                     }
-                                                ?>
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="event-vis">Visible to Pilots?</label>
-                                            <select required class="form-control" name="visible" id="event-vis">
-                                                <option value="1">Yes</option>
-                                                <option value="0">No</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="event-serv">Event Server</label>
-                                            <select required class="form-control" name="server" id="event-serv">
-                                                <option value>Select</option>
-                                                <option value="casual">Casual Server</option>
-                                                <option value="training">Training Server</option>
-                                                <option value="expert">Expert Server</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="event-gates">Gate Names</label>
-                                            <input required type="text" class="form-control" name="gates" id="event-gates" />
-                                            <small class="text-muted">Comma-Separated List of Gate Names</small>
-                                        </div>
-                                        
-                                        <input type="submit" class="btn bg-custom" value="Add Event" />
-                                    </form>
+                                                    ?>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="event-vis">Visible to Pilots?</label>
+                                                <select required class="form-control" name="visible" id="event-vis">
+                                                    <option value="1">Yes</option>
+                                                    <option value="0">No</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="event-serv">Event Server</label>
+                                                <select required class="form-control" name="server" id="event-serv">
+                                                    <option value>Select</option>
+                                                    <option value="casual">Casual Server</option>
+                                                    <option value="training">Training Server</option>
+                                                    <option value="expert">Expert Server</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="event-gates">Gate Names</label>
+                                                <input required type="text" class="form-control" name="gates" id="event-gates" />
+                                                <small class="text-muted">Comma-Separated List of Gate Names</small>
+                                            </div>
+
+                                            <input type="submit" class="btn bg-custom" value="Add Event" />
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
                         </div>
 
                         <table class="table table-striped">
@@ -176,14 +182,25 @@ $ACTIVE_CATEGORY = 'operations-management';
                                 </tr>
                             </thead>
                             <tbody id="events-table">
-                                <tr><td colspan="3">Loading...</td></tr>
+                                <tr>
+                                    <td colspan="3">Loading...</td>
+                                </tr>
                             </tbody>
                         </table>
                         <script>
-                            $.post("/vanet.php", {
-                                "method": "events-admin"
-                            }, function (data, status) {
-                                $("#events-table").html(data);
+                            $.get("/api.php/events", function(data) {
+                                $("#events-table").html(data.result.map(function(e) {
+                                    return `<tr><td class="align-middle">
+                                    ${e.name}
+                                    </td><td class="align-middle">
+                                    ${e.departureAirport}
+                                    </td><td class="align-middle">
+                                    <button class="btn btn-primary editEvent" data-name="${e.name}" data-desc="${e.description.replace('"', "'")}" 
+                                    data-dep="'${e.departureAirport}" data-arr="${e.arrivalAirport}" data-aircraft="${e.aircraft.liveryID}" 
+                                    data-vis="${e.visible ? 1 : 0}" data-server="${e.server}" data-id="${e.id}"><i class="fa fa-edit"></i></button>
+                                    &nbsp;<button data-id="${e.id}" class="btn btn-danger text-light deleteEvent"><i class="fa fa-trash"></i></button>
+                                    </td></tr>`;
+                                }).join(''));
                                 $(".deleteEvent").click(function() {
                                     var id = $(this).data('id');
                                     $("#confirmEventDelete-id").val(id);
@@ -215,67 +232,67 @@ $ACTIVE_CATEGORY = 'operations-management';
 
                         <!-- Edit Event Modal -->
                         <div class="modal fade" id="editevent">
-                        <div class="modal-dialog modal-lg">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h4 class="modal-title" id="editevent-title">Edit Event</h4>
-                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                </div>
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title" id="editevent-title">Edit Event</h4>
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    </div>
 
-                                <div class="modal-body">
-                                    <form action="/update.php" method="post">
-                                        <input hidden name="action" value="editevent" />
-                                        <input hidden name="id" id="editevent-id" />
-                                        <div class="form-group">
-                                            <label for="editevent-name">Event Name</label>
-                                            <input required type="text" class="form-control" name="name" id="editevent-name" />
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="editevent-description">Event Description</label>
-                                            <textarea required class="form-control" name="description" id="editevent-description"></textarea>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="editevent-dep">Departure ICAO</label>
-                                            <input required type="text" class="form-control" name="dep" id="editevent-dep" />
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="editevent-arr">Arrival ICAO</label>
-                                            <input required type="text" class="form-control" name="arr" id="editevent-arr" />
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="editevent-aircraft">Aircraft</label>
-                                            <select required class="form-control" name="aircraft" id="editevent-aircraft">
-                                                <option value>Select</option>
-                                                <?php
+                                    <div class="modal-body">
+                                        <form action="/update.php" method="post">
+                                            <input hidden name="action" value="editevent" />
+                                            <input hidden name="id" id="editevent-id" />
+                                            <div class="form-group">
+                                                <label for="editevent-name">Event Name</label>
+                                                <input required type="text" class="form-control" name="name" id="editevent-name" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="editevent-description">Event Description</label>
+                                                <textarea required class="form-control" name="description" id="editevent-description"></textarea>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="editevent-dep">Departure ICAO</label>
+                                                <input required type="text" class="form-control" name="dep" id="editevent-dep" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="editevent-arr">Arrival ICAO</label>
+                                                <input required type="text" class="form-control" name="arr" id="editevent-arr" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="editevent-aircraft">Aircraft</label>
+                                                <select required class="form-control" name="aircraft" id="editevent-aircraft">
+                                                    <option value>Select</option>
+                                                    <?php
                                                     $activeAircraft = Aircraft::fetchActiveAircraft()->results();
                                                     foreach ($activeAircraft as $aircraft) {
-                                                        echo '<option value="'.$aircraft->ifliveryid.'">'.$aircraft->name.' ('.$aircraft->liveryname.')</option>';
+                                                        echo '<option value="' . $aircraft->ifliveryid . '">' . $aircraft->name . ' (' . $aircraft->liveryname . ')</option>';
                                                     }
-                                                ?>
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="editevent-vis">Visible to Pilots?</label>
-                                            <select required class="form-control" name="visible" id="editevent-vis">
-                                                <option value="1">Yes</option>
-                                                <option value="0">No</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="editevent-serv">Event Server</label>
-                                            <select required class="form-control" name="server" id="editevent-serv">
-                                                <option value>Select</option>
-                                                <option value="casual">Casual Server</option>
-                                                <option value="training">Training Server</option>
-                                                <option value="expert">Expert Server</option>
-                                            </select>
-                                        </div>
-                                        
-                                        <input type="submit" class="btn bg-custom" value="Save" />
-                                    </form>
+                                                    ?>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="editevent-vis">Visible to Pilots?</label>
+                                                <select required class="form-control" name="visible" id="editevent-vis">
+                                                    <option value="1">Yes</option>
+                                                    <option value="0">No</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="editevent-serv">Event Server</label>
+                                                <select required class="form-control" name="server" id="editevent-serv">
+                                                    <option value>Select</option>
+                                                    <option value="casual">Casual Server</option>
+                                                    <option value="training">Training Server</option>
+                                                    <option value="expert">Expert Server</option>
+                                                </select>
+                                            </div>
+
+                                            <input type="submit" class="btn bg-custom" value="Save" />
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
                         </div>
                     </div>
                 </div>
@@ -291,4 +308,5 @@ $ACTIVE_CATEGORY = 'operations-management';
         });
     </script>
 </body>
+
 </html>
