@@ -14,38 +14,7 @@ if (!$user->isLoggedIn()) {
     Redirect::to('index.php');
 }
 
-if (Input::get('method') === 'events-table') {
-    $all = VANet::getEvents();
-    foreach ($all as $event) {
-        if ($event["visible"]) {
-            echo '<tr><td class="align-middle">';
-            echo $event["name"];
-            echo '</td><td class="align-middle">';
-            echo $event["departureAirport"];
-            echo '</td><td class="align-middle">';
-            echo '<a href="events.php?page=view&event=' . urlencode($event["id"]) . '" class="btn bg-custom">View</button>';
-            echo '</td></tr>';
-        }
-    }
-} elseif (Input::get('method') === 'events-admin' && $user->hasPermission('opsmanage')) {
-    $all = VANet::getEvents();
-    foreach ($all as $event) {
-        echo '<tr><td class="align-middle">';
-        echo $event["name"];
-        echo '</td><td class="align-middle">';
-        echo $event["departureAirport"];
-        echo '</td><td class="align-middle">';
-        echo '<button class="btn btn-primary editEvent" data-name="' . $event["name"] . '" data-desc="' . str_replace('"', '', $event["description"]) . '" 
-        data-dep="' . $event["departureAirport"] . '" data-arr="' . $event["arrivalAirport"] . '" data-aircraft="' . $event["aircraft"]["liveryID"] . '" 
-        data-vis="' . $event["visible"] . '" data-server="' . $event["server"] . '" data-id="' . $event["id"] . '"><i class="fa fa-edit"></i></button>';
-        echo '&nbsp;<button data-id="' . $event['id'] . '" class="btn btn-danger text-light deleteEvent"><i class="fa fa-trash"></i></button>';
-        echo '</td></tr>';
-    }
-} elseif (Input::get('method') === 'event' && !empty(Input::get('data'))) {
-    $event = VANet::findEvent(Input::get('event'));
-    header("Content-Type: application/json");
-    echo Json::encode($event);
-} elseif (Input::get('method') === 'acars' && !empty(Input::get('server'))) {
+if (Input::get('method') === 'acars' && !empty(Input::get('server'))) {
     if (Input::get('server') == 'casual') {
         echo '<div class="alert alert-dabger">ACARS is not currently available on the Casual Server</div>';
         die();

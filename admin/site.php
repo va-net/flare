@@ -80,16 +80,11 @@ $ACTIVE_CATEGORY = 'site-management';
                                 <a class="nav-link" id="designlink" data-toggle="tab" href="#design">Site Design</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" id="vanetlink" data-toggle="tab" href="#vanet">VANet Settings</a>
+                                <a class="nav-link" id="interactionlink" data-toggle="tab" href="#interaction">Connectivity</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" id="maintenancelink" data-toggle="tab" href="#maint">Maintenance</a>
                             </li>
-                            <?php if (Config::get('CHECK_PRERELEASE') == 1) { ?>
-                                <li class="nav-item">
-                                    <a class="nav-link" id="debuglink" data-toggle="tab" href="#debug">Debugging Info</a>
-                                </li>
-                            <?php } ?>
                             <li class="nav-item">
                                 <?php $updateAlert = $update ? ' <span class="text-danger"><i class="fa fa-exclamation-circle"></i></span>' : ''; ?>
                                 <a class="nav-link" id="updateslink" data-toggle="tab" href="#updates">Updates<?= $updateAlert ?></a>
@@ -140,6 +135,16 @@ $ACTIVE_CATEGORY = 'site-management';
                                         <small class="text-muted">This will force all operations (PIREP lookups, ACARS, etc) to be on this server. If turned off, pilots will be able to choose.</small>
                                     </div>
                                     <div class="form-group">
+                                        <label for="">Automatically Assign Callsigns</label>
+                                        <select requried class="form-control" name="autocallsign" id="autocallsign">
+                                            <option value="0">No</option>
+                                            <option value="1">Yes</option>
+                                        </select>
+                                        <script>
+                                            $("#autocallsign").val('<?= Config::get("AUTO_CALLSIGNS") ?>');
+                                        </script>
+                                    </div>
+                                    <div class="form-group">
                                         <label for="">Check for Beta Updates?</label>
                                         <select requried class="form-control" name="checkpre" id="check-prerelease" <?= $ver["prerelease"] ? 'disabled' : '' ?>>
                                             <option value="0">No (Recommended for Production Sites)</option>
@@ -147,11 +152,11 @@ $ACTIVE_CATEGORY = 'site-management';
                                         </select>
                                         <?php
                                         if ($ver["prerelease"]) {
-                                            echo '<p>You cannot leave the beta while on a beta release as it may cause future conflicts.</p>';
+                                            echo '<small class="text-muted">You cannot leave the beta while on a beta release as it may cause future conflicts.</small>';
                                         }
                                         ?>
                                         <script>
-                                            $("#check-prerelease").val('<?= Config::get("CHECK_PRERELEASE"); ?>');
+                                            $("#check-prerelease").val('<?= Config::get("CHECK_PRERELEASE") ?>');
                                         </script>
                                         <small class="text-muted">Beta Pushes are often unstable and may break your site.</small>
                                     </div>
@@ -192,45 +197,27 @@ $ACTIVE_CATEGORY = 'site-management';
                                     <input type="submit" class="btn bg-custom" value="Save">
                                 </form>
                             </div>
-                            <div id="vanet" class="tab-pane container-fluid p-3 fade">
-                                <h4>VANet Settings</h4>
+                            <div id="interaction" class="tab-pane container-fluid p-3 fade">
+                                <h4>Connectivity Settings</h4>
                                 <form action="/update.php" method="post">
-                                    <input hidden name="action" value="vanetupdate">
+                                    <input hidden name="action" value="interactionupdate">
                                     <div class="form-group">
                                         <label for="">VANet API Key</label>
                                         <input required type="text" class="form-control" name="vanetkey" value="<?= Config::get('vanet/api_key') ?>">
                                     </div>
-                                    <input type="submit" class="btn bg-custom" value="Save">
+                                    <div class="form-group">
+                                        <label for="">Send Analytics to Developers</label>
+                                        <select required class="form-control" name="analytics" id="analyticsdrop">
+                                            <option value="1">Yes (Recommended)</option>
+                                            <option value="0">No</option>
+                                        </select>
+                                        <script>
+                                            $("#analyticsdrop").val('<?= Config::get('MASTER_API_KEY') == '' ? 0 : 1 ?>');
+                                        </script>
+                                        <small class="text-muted">If enabled, reports of errors will be sent to the developers of Flare to help with debugging.</small>
+                                    </div>
+                                    <input type="submit" class="btn bg-custom" value="Save" />
                                 </form>
-                            </div>
-                            <div id="debug" class="tab-pane container-fluid p-3 fade">
-                                <h4>Debugging Information</h4>
-                                <p>
-                                    This screen is shown to VAs running a pre-release version of Flare only. It contains information to help the
-                                    Flare developers reproduce any issues you may have.
-                                </p>
-                                <table class="table">
-                                    <tr>
-                                        <th>DB Port</th>
-                                        <td><?= Config::get('mysql/port'); ?></td>
-                                    </tr>
-                                    <tr>
-                                        <th>VANet Gold</th>
-                                        <td><?= VANet::isGold() ? 'Yes' : 'No' ?></td>
-                                    </tr>
-                                    <tr>
-                                        <th>Force Server</th>
-                                        <td><?= Config::get('FORCE_SERVER') == 0 ? 'None' : Config::get('FORCE_SERVER') ?></td>
-                                    </tr>
-                                    <tr>
-                                        <th>Callsign Format</th>
-                                        <td><?= Config::get('VA_CALLSIGN_FORMAT') ?></td>
-                                    </tr>
-                                    <tr>
-                                        <th>Version</th>
-                                        <td><?= Updater::getVersion()["tag"]; ?></td>
-                                    </tr>
-                                </table>
                             </div>
                             <div id="maint" class="tab-pane container-fluid p-3 fade">
                                 <h4>Site Maintenance</h4>
@@ -243,10 +230,16 @@ $ACTIVE_CATEGORY = 'site-management';
                                         </form>
                                     </div>
                                     <div class="col-lg">
-                                        <form action="update.php" method="post">
+                                        <form action="/update.php" method="post">
                                             <input hidden name="action" value="clearlogs" />
                                             <input hidden name="period" value="30" />
                                             <input type="submit" class="btn bg-custom" value="Clear Old Logs" />
+                                        </form>
+                                    </div>
+                                    <div class="col-lg">
+                                        <form action="/update.php" method="post">
+                                            <input hidden name="action" value="clearcache" />
+                                            <input type="submit" class="btn bg-custom" value="Clear Cache" />
                                         </form>
                                     </div>
                                     <div class="col-lg">

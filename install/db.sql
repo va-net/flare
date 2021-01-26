@@ -38,8 +38,7 @@ CREATE TABLE IF NOT EXISTS `pilots` (
   `notes` varchar(1200) NOT NULL DEFAULT '',
   `status` int(3) NOT NULL DEFAULT '0',
   `joined` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `callsign` (`callsign`)
+  PRIMARY KEY (`id`)
 );
 
 CREATE TABLE IF NOT EXISTS `permissions` (
@@ -128,7 +127,15 @@ CREATE TABLE IF NOT EXISTS `notifications` (
   PRIMARY KEY (`id`)
 );
 
+CREATE TABLE IF NOT EXISTS `cache` ( 
+  `name` VARCHAR(120) NOT NULL, 
+  `value` TEXT NOT NULL, 
+  `expiry` DATETIME NULL, 
+  PRIMARY KEY (`name`)
+);
+
 INSERT INTO `options` (`name`, `value`) VALUES ('FORCE_SERVER', '0');
 INSERT INTO `options` (`name`, `value`) VALUES ('CHECK_PRERELEASE', '0');
 INSERT INTO `options` (`name`, `value`) VALUES ('TEXT_COLOUR', '#fff');
 INSERT INTO `options` (`name`, `value`) VALUES ('VA_CALLSIGN_FORMAT', '/.*/i');
+INSERT INTO `options` (`name`, `value`) VALUES ('AUTO_CALLSIGNS', '0');

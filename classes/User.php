@@ -12,14 +12,14 @@ class User
 {
 
     private $_db,
-            $_data,
-            $_sessionName,
-            $_cookieName,
-            $_isLoggedIn,
-            $_permissions;
+        $_data,
+        $_sessionName,
+        $_cookieName,
+        $_isLoggedIn,
+        $_permissions;
 
 
-    public function __construct($user = null) 
+    public function __construct($user = null)
     {
 
         $this->_db = DB::getInstance();
@@ -29,25 +29,24 @@ class User
 
         if (!$user) {
             if (Session::exists($this->_sessionName)) {
-               $user = Session::get($this->_sessionName);
+                $user = Session::get($this->_sessionName);
 
-               if ($this->find($user)) {
-                   $this->_isLoggedIn = true;
-               } else {
-                   $this->logout();
-               }
+                if ($this->find($user)) {
+                    $this->_isLoggedIn = true;
+                } else {
+                    $this->logout();
+                }
             }
         } else {
             $this->find($user);
         }
-
     }
 
     /**
-     * @return null
+     * @return void
      * @param array $fields User Fields
      */
-    public function create($fields) 
+    public function create($fields)
     {
 
         if (!$this->_db->insert('pilots', $fields)) {
@@ -55,14 +54,13 @@ class User
         }
 
         Events::trigger('user/created', $fields);
-
     }
 
     /**
      * @return bool
      * @param int|string $user Email or User ID
      */
-    public function find($user = null) 
+    public function find($user = null)
     {
 
         if ($user) {
@@ -79,7 +77,6 @@ class User
             }
         }
         return false;
-
     }
 
     /**
@@ -88,16 +85,17 @@ class User
      * @param string $password
      * @param bool $remember
      */
-    public function login($username = null, $password = null, $remember = false) {
-        $user = $this->find($username);     
-        
+    public function login($username = null, $password = null, $remember = false)
+    {
+        $user = $this->find($username);
+
         if (!$username && !$password && $this->exists()) {
             Session::create($this->_sessionName, $this->data()->id);
         } else {
-            $user = $this->find($username);    
+            $user = $this->find($username);
 
             if ($user) {
-                if(Hash::check($password, $this->data()->password)) {
+                if (Hash::check($password, $this->data()->password)) {
                     Session::create($this->_sessionName, $this->data()->id);
 
                     if ($remember) {
@@ -114,7 +112,6 @@ class User
                         }
 
                         Cookie::create($this->_cookieName, $hash, Config::get('remember/cookie_expiry'));
-
                     }
                     Events::trigger('user/logged-in', (array)$this->data());
                     return true;
@@ -124,7 +121,6 @@ class User
         $_SESSION = array();
         Events::trigger('user/login-failed');
         return false;
-
     }
 
     /**
@@ -134,47 +130,43 @@ class User
     {
 
         return (!empty($this->_data)) ? true : false;
-
     }
 
     /**
      * @return object
      */
-    public function data() 
+    public function data()
     {
 
         return $this->_data;
-
     }
 
     /**
      * @return bool
      */
-    public function isLoggedIn() 
+    public function isLoggedIn()
     {
 
         return $this->_isLoggedIn;
-
     }
 
     /**
-     * @return null
+     * @return void
      */
-    public function logout() 
+    public function logout()
     {
 
         Session::delete($this->_sessionName);
         Cookie::delete($this->_cookieName);
         Events::trigger('user/logged-out', (array)$this->data());
-
     }
 
     /**
-     * @return null
+     * @return void
      * @param array $fields Updated User Fields
      * @param int $id User ID
      */
-    public function update($fields = array(), $id = null) 
+    public function update($fields = array(), $id = null)
     {
 
         if (!$id && $this->isLoggedIn()) {
@@ -187,7 +179,6 @@ class User
 
         $fields["id"] = $id;
         Events::trigger('user/updated', $fields);
-
     }
 
     /**
@@ -195,7 +186,7 @@ class User
      * @param string $key Permission Name
      * @param int $id User ID
      */
-    public function hasPermission($key, $id = null) 
+    public function hasPermission($key, $id = null)
     {
 
         if (!$id && $this->isLoggedIn()) {
@@ -211,12 +202,11 @@ class User
                 array_push($permissions, $p->name);
             }
         }
-        
+
         if (in_array($key, $permissions)) {
             return true;
         }
         return false;
-
     }
 
     /**
@@ -224,7 +214,7 @@ class User
      * @param int $id User ID
      * @param bool $returnid Whether to Return the Rank ID
      */
-    public function rank($id = null, $returnid = false) 
+    public function rank($id = null, $returnid = false)
     {
 
         if (!$id && $this->isLoggedIn()) {
@@ -238,14 +228,14 @@ class User
         }
 
         return Rank::calc($time);
-
     }
 
     /**
      * @return object
      * @param int $id User ID
      */
-    public function nextrank($id = null) {
+    public function nextrank($id = null)
+    {
         if (!$id && $this->isLoggedIn()) {
             $id = $this->data()->id;
         }
@@ -286,7 +276,6 @@ class User
             array_push($aircraft, $newdata);
         }
         return $aircraft;
-
     }
 
     /**
@@ -317,7 +306,6 @@ class User
         }
 
         return $time;
-
     }
 
     /**
@@ -341,7 +329,7 @@ class User
             $user = $this->_db->get('pilots', array('id', '=', $id));
             $trans = $result->first()->transflights;
         }
-        
+
         $total = $trans + $filed;
         return $total;
     }
@@ -368,15 +356,14 @@ class User
         }
 
         return $this->_db->query($sql, array($id));
-
     }
-    
+
     /**
      * @return array
      * @param int $id User ID
      * @param int $num Number of PIREPs to Return
      */
-    public function recentPireps($id = null, $num = 10) 
+    public function recentPireps($id = null, $num = 10)
     {
         if (!$id && $this->isLoggedIn()) {
             $id = $this->data()->id;
@@ -388,7 +375,7 @@ class User
             return [];
         }
 
-        $pireps = array_map(function($pirep) {
+        $pireps = array_map(function ($pirep) {
             $statuses = array('Pending', 'Approved', 'Denied');
             return array(
                 'id' => $pirep->id,
@@ -417,7 +404,6 @@ class User
         }
 
         return $this->_db->query('SELECT * FROM pireps WHERE pilotid = ? AND status = ?', array($id, 1));
-
     }
 
     /**
@@ -443,7 +429,6 @@ class User
             $x++;
         }
         return $total;
-
     }
 
     /**
@@ -454,14 +439,16 @@ class User
 
         $db = DB::newInstance();
 
-        $sql = "SELECT u.*, (SELECT SUM(flighttime) FROM pireps p WHERE p.pilotid=u.id AND status=1) flighttime FROM pilots u";
+        $sql = "SELECT u.*, (SELECT SUM(flighttime) FROM pireps p WHERE p.pilotid=u.id AND `status`=1) AS flighttime FROM pilots u";
         $results = $db->query($sql)->results();
 
         $usersarray = array();
-        $statuses = array('Pending', 'Active', 'Inactive');
+        $statuses = array('Pending', 'Active', 'Inactive', 'Declined');
         $x = 0;
         $admins = Permissions::usersWith('admin');
-        $admins = array_map(function($item) { return $item->id; }, $admins);
+        $admins = array_map(function ($item) {
+            return $item->id;
+        }, $admins);
         foreach ($results as $r) {
             $newdata = array(
                 'id' => $r->id,
@@ -475,13 +462,13 @@ class User
                 'transflights' => $r->transflights,
                 'isAdmin' => in_array($r->id, $admins) ? 1 : 0,
                 'flighttime' => $r->flighttime == null ? 0 : $r->flighttime,
+                'ifuserid' => $r->ifuserid,
             );
             $usersarray[$x] = $newdata;
             $x++;
         }
 
         return $usersarray;
-
     }
 
     /**
@@ -531,7 +518,6 @@ class User
         }
 
         return $usersarray;
-
     }
 
     /**
@@ -544,18 +530,62 @@ class User
         $result = $this->_db->get('pilots', array('id', '=', $id));
         $result =  $result->first();
         return $result->callsign;
-
     }
 
     /**
      * @return object
      * @param int $id User ID
      */
-    public function getUser($id) 
+    public function getUser($id)
     {
         $ret = $this->_db->get('pilots', array('id', '=', $id))->first();
 
         return $ret;
     }
 
+    /**
+     * @return int
+     */
+    public static function pendingCount()
+    {
+        $db = DB::getInstance();
+        return intval($db->query("SELECT COUNT(id) AS result FROM `pilots` WHERE `status`=0")->first()->result);
+    }
+
+    /**
+     * @return array
+     * @param int $days
+     */
+    public static function fetchPast($days)
+    {
+        $db = DB::getInstance();
+
+        $sql = "SELECT u.*, (SELECT SUM(flighttime) FROM pireps p WHERE p.pilotid=u.id AND status=1) AS flighttime FROM pilots u WHERE DATEDIFF(NOW(), u.joined) <= ? ORDER BY u.joined ASC";
+        $results = $db->query($sql, [$days], true)->results();
+
+        $usersarray = [];
+        $statuses = array('Pending', 'Active', 'Inactive', 'Declined');
+        $admins = Permissions::usersWith('admin');
+        $admins = array_map(function ($item) {
+            return $item->id;
+        }, $admins);
+        foreach ($results as $r) {
+            $newdata = array(
+                'id' => $r->id,
+                'callsign' => $r->callsign,
+                'name' => $r->name,
+                'email' => $r->email,
+                'ifc' => $r->ifc,
+                'status' => $statuses[$r->status],
+                'joined' => $r->joined,
+                'transhours' => $r->transhours,
+                'transflights' => $r->transflights,
+                'isAdmin' => in_array($r->id, $admins) ? 1 : 0,
+                'flighttime' => $r->flighttime == null ? 0 : $r->flighttime,
+            );
+            $usersarray[] = $newdata;
+        }
+
+        return $usersarray;
+    }
 }

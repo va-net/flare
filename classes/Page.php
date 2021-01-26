@@ -32,8 +32,15 @@ class Page
     private static $_usedAssets = [];
     private static $_assetsMode = 0;
 
+    public static $badges = [
+        "codeshares" => "VANet::getCodeshareCount",
+        "recruitment" => "User::pendingCount",
+        "pireps" => "Pirep::pendingCount",
+        "settings" => "Updater::updateAvailable",
+    ];
+
     /**
-     * @return null
+     * @return void
      * @param string $title Title
      */
     public static function setTitle($title)
@@ -56,7 +63,7 @@ class Page
     }
 
     /**
-     * @return null
+     * @return void
      * @param int $mode 0 = Exclude to Remove, 1 = Include to Use
      */
     public static function assetsMode($mode)
@@ -68,12 +75,12 @@ class Page
         } else {
             throw new Exception("Invalid Assets Mode");
         }
-        
+
         self::$_assetsMode = $mode;
     }
 
     /**
-     * @return null
+     * @return void
      * @param string $asset Key of Asset to Include
      */
     public static function includeAsset($asset)
@@ -88,7 +95,7 @@ class Page
     }
 
     /**
-     * @return null
+     * @return void
      * @param string $asset Key of Asset to Exclude
      */
     public static function excludeAsset($asset)
@@ -105,7 +112,7 @@ class Page
     }
 
     /**
-     * @return null
+     * @return void
      * @param string $key Asset Key
      * @param array $tags Asset HTML Tags
      */
@@ -131,4 +138,12 @@ class Page
         return array_key_exists($asset, self::$_usedAssets) || in_array($asset, array_values(self::$_usedAssets));
     }
 
+    /**
+     * @return void
+     * @param array $value New Value
+     */
+    public static function setBadges($value)
+    {
+        self::$badges = $value;
+    }
 }

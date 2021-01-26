@@ -8,7 +8,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-class Notifications {
+class Notifications
+{
 
     /**
      * @var DB
@@ -44,12 +45,12 @@ class Notifications {
 
         $sql = "SELECT *, DATE_FORMAT(CONVERT_TZ(`datetime`, @@session.time_zone, '+00:00'), '%Y-%m-%dT%TZ') AS formattedDate FROM notifications 
                 WHERE pilotid=? OR pilotid=0 ORDER BY datetime DESC LIMIT {$limit}";
-        
+
         return self::$_db->query($sql, [$userId])->results();
     }
 
     /**
-     * @return null
+     * @return void
      * @param int $pilot Pilot ID
      * @param string $icon Icon
      * @param string $subject Notification Subject
@@ -63,7 +64,7 @@ class Notifications {
         if (strlen($subject) > 20) throw new Exception("Parameter subject must be 20 Characters or Less");
         if (strlen($content) > 60) throw new Exception("Parameter content must be 60 Characters or Less");
 
-        $res = self::$_db->insert('notifications', [
+        self::$_db->insert('notifications', [
             'pilotid' => $pilot,
             'icon' => $icon,
             'subject' => $subject,
@@ -74,18 +75,18 @@ class Notifications {
     /* EVENT HANDLERS */
 
     /**
-     * @return null
+     * @return void
      * @param Event $ev
      */
     public static function handleEvent($ev)
     {
         if (!array_key_exists($ev->event, self::$_events)) return;
 
-        call_user_func_array('self::'.self::$_events[$ev->event], [$ev]);
+        call_user_func_array('self::' . self::$_events[$ev->event], [$ev]);
     }
 
     /**
-     * @return null
+     * @return void
      * @param Event $ev
      */
     private static function handleUserAccepted($ev)
@@ -98,7 +99,7 @@ class Notifications {
     }
 
     /**
-     * @return null
+     * @return void
      * @param Event $ev
      */
     private static function handleEventAdded($ev)
@@ -110,7 +111,7 @@ class Notifications {
     }
 
     /**
-     * @return null
+     * @return void
      * @param Event $ev
      */
     private static function handleNewsAdded($ev)
@@ -122,7 +123,7 @@ class Notifications {
     }
 
     /**
-     * @return null
+     * @return void
      * @param Event $ev
      */
     private static function handlePirep($ev)
@@ -146,7 +147,7 @@ class Notifications {
         }
     }
 
-    private static function handlePromotion($ev) 
+    private static function handlePromotion($ev)
     {
         self::init();
         $usr = (new User)->getUser($ev->params['pilot']);
@@ -158,5 +159,4 @@ class Notifications {
         }
         self::notify(0, "fa-medal", "Promotion", $content);
     }
-
 }

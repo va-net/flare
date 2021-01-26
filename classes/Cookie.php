@@ -8,13 +8,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-class Cookie {
+class Cookie
+{
 
     /**
      * @return bool
      * @param string $name Cookie Name
      */
-    public static function exists($name) 
+    public static function exists($name)
     {
         return (isset($_COOKIE[$name])) ? true : false;
     }
@@ -23,7 +24,7 @@ class Cookie {
      * @return mixed
      * @param string $name Cookie Name
      */
-    public static function get($name) 
+    public static function get($name)
     {
         return $_COOKIE[$name];
     }
@@ -34,7 +35,7 @@ class Cookie {
      * @param mixed $value Cookie Value
      * @param int $expiry Cookie Expiry
      */
-    public static function create($name, $value, $expiry) 
+    public static function create($name, $value, $expiry)
     {
         if (setcookie($name, $value, time() + $expiry, '/')) {
             return true;
@@ -43,12 +44,11 @@ class Cookie {
     }
 
     /**
-     * @return null
+     * @return void
      * @param $name Cookie Name
      */
-    public static function delete($name) 
+    public static function delete($name)
     {
         self::create($name, '', time() - 1);
     }
-
 }

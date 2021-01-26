@@ -20,7 +20,7 @@ if (Input::get('action') === 'editprofile') {
     $csPattern = Config::get('VA_CALLSIGN_FORMAT');
     $trimmedPattern = preg_replace("/\/[a-z]*$/", '', preg_replace("/^\//", '', $csPattern));
 
-    if (!Callsign::assigned(Input::get('callsign'), $user->data()->id)) {
+    if (Callsign::assigned(Input::get('callsign'), $user->data()->id)) {
         Session::flash('error', 'Callsign is Already Taken!');
         Redirect::to('/home.php');
     } elseif (!Regex::match($csPattern, Input::get('callsign'))) {
@@ -28,12 +28,20 @@ if (Input::get('action') === 'editprofile') {
         Redirect::to('/home.php');
     } else {
         try {
-            $user->update(array(
-                'name' => Input::get('name'),
-                'callsign' => Input::get('callsign'),
-                'email' => Input::get('email'),
-                'ifc' => Input::get('ifc')
-            ));
+            if (Config::get('AUTO_CALLSIGNS') == 1) {
+                $user->update(array(
+                    'name' => Input::get('name'),
+                    'email' => Input::get('email'),
+                    'ifc' => Input::get('ifc')
+                ));
+            } else {
+                $user->update(array(
+                    'name' => Input::get('name'),
+                    'callsign' => Input::get('callsign'),
+                    'email' => Input::get('email'),
+                    'ifc' => Input::get('ifc')
+                ));
+            }
         } catch (Exception $e) {
             Session::flash('error', $e->getMessage());
             Redirect::to('home.php');
@@ -97,7 +105,7 @@ if (Input::get('action') === 'editprofile') {
     ));
 
     $response = Json::decode($response->body);
-    if ($response['success'] != true) {
+    if (!isset($response['success']) || $response['success'] != true) {
         Session::flash('error', 'There was an Error Connecting to VANet.');
         Redirect::to('pireps.php?page=new');
         die();
@@ -116,6 +124,7 @@ if (Input::get('action') === 'editprofile') {
         Session::flash('error', 'There was an Error Filing the PIREP.');
         Redirect::to('pireps.php?page=recents');
     } else {
+        Cache::delete('badge_pireps');
         Session::flash('success', 'PIREP Filed Successfully!');
         Redirect::to('pireps.php?page=recents');
     }
@@ -156,6 +165,13 @@ if (Input::get('action') === 'editprofile') {
         Permissions::revokeAll(Input::get('id'));
     }
 
+    $statuses = [
+        "Pending" => 0,
+        "Active" => 1,
+        "Inactive" => 2,
+        "Declined" => 3,
+    ];
+
     $user->update(array(
         'callsign' => Input::get('callsign'),
         'name' => Input::get('name'),
@@ -163,6 +179,7 @@ if (Input::get('action') === 'editprofile') {
         'ifc' => Input::get('ifc'),
         'transhours' => Time::strToSecs(Input::get('transhours')),
         'transflights' => Input::get('transflights'),
+        'status' => $statuses[Input::get('status')]
     ), Input::get('id'));
     Session::flash('success', 'User Edited Successfully!');
     Redirect::to('/admin/users.php');
@@ -228,6 +245,7 @@ if (Input::get('action') === 'editprofile') {
 
     Events::trigger('user/declined', ['id' => Input::get('id'), 'reason' => Input::get('declinereason')]);
 
+    Cache::delete('badge_recruitment');
     Session::flash('success', 'Application Declined Successfully');
     Redirect::to('/admin/recruitment.php');
 } elseif (Input::get('action') === 'acceptapplication') {
@@ -247,6 +265,7 @@ if (Input::get('action') === 'editprofile') {
 
     Events::trigger('user/accepted', [Input::get('accept')]);
 
+    Cache::delete('badge_recruitment');
     Session::flash('success', 'Application Accepted Successfully!');
     Redirect::to('/admin/recruitment.php');
 } elseif (Input::get('action') === 'acceptpirep') {
@@ -256,6 +275,7 @@ if (Input::get('action') === 'editprofile') {
     }
 
     Pirep::accept(Input::get('accept'));
+    Cache::delete('badge_pireps');
     Session::flash('success', 'PIREP Accepted Successfully!');
     Redirect::to('/admin/pireps.php');
 } elseif (Input::get('action') === 'declinepirep') {
@@ -265,6 +285,7 @@ if (Input::get('action') === 'editprofile') {
     }
 
     Pirep::decline(Input::get('decline'));
+    Cache::delete('badge_pireps');
     Session::flash('success', 'PIREP Declined Successfully');
     Redirect::to('/admin/pireps.php');
 } elseif (Input::get('action') === 'deletemulti') {
@@ -471,7 +492,7 @@ if (Input::get('action') === 'editprofile') {
         Redirect::to('/admin/operations.php?section=ranks');
     }
 } elseif (Input::get('action') === 'setdesign') {
-    if (!$user->hasPermission('opsmanage')) {
+    if (!$user->hasPermission('site')) {
         Redirect::to('home.php');
         die();
     }
@@ -487,7 +508,7 @@ if (Input::get('action') === 'editprofile') {
     Session::flash('success', 'Design Updated Successfully! You may need to reload the page or clear your cache in order for it to show.');
     Redirect::to('/admin/site.php?page=design');
 } elseif (Input::get('action') === 'vasettingsupdate') {
-    if (!$user->hasPermission('opsmanage')) {
+    if (!$user->hasPermission('site')) {
         Redirect::to('home.php');
         die();
     }
@@ -499,26 +520,35 @@ if (Input::get('action') === 'editprofile') {
         || !Config::replace("CHECK_PRERELEASE", Input::get('checkpre'))
         || !Config::replace("VA_CALLSIGN_FORMAT", Input::get('vaident'))
         || !Config::replace("VA_LOGO_URL", Input::get('valogo'))
+        || !Config::replace("AUTO_CALLSIGNS", Input::get('autocallsign'))
     ) {
-        Session::flash('error', 'There was an error updating the Settings');
+        Session::flash('error', 'There was an error updating your settings');
         Redirect::to('/admin/site.php?tab=settings');
         die();
     }
     Session::flash('success', 'VA Settings Changed Successfully!');
     Redirect::to('/admin/site.php?tab=settings');
-} elseif (Input::get('action') === 'vanetupdate') {
-    if (!$user->hasPermission('opsmanage')) {
+} elseif (Input::get('action') === 'interactionupdate') {
+    if (!$user->hasPermission('site')) {
         Redirect::to('home.php');
         die();
     }
 
+    $oldAnalytics = Config::get('MASTER_API_KEY') == '' ? 0 : 1;
+    if ($oldAnalytics == 1 && Input::get('analytics') == 0) {
+        Analytics::unregister();
+    } elseif ($oldAnalytics == 0 && Input::get('analytics') == 1) {
+        Analytics::register();
+    }
+
     if (!Config::replace('api_key', trim(Input::get('vanetkey')))) {
-        Session::flash('error', 'There was an error updating the config file!');
-        Redirect::to('/admin/site.php?tab=vanet');
+        Session::flash('error', 'There was an error updating the settings!');
+        Redirect::to('/admin/site.php?tab=interaction');
         die();
     }
-    Session::flash('success', 'VANet API Key changed Successfully.');
-    Redirect::to('/admin/site.php?tab=vanet');
+
+    Session::flash('success', 'Settings Updated');
+    Redirect::to('/admin/site.php?tab=interaction');
 } elseif (Input::get('action') === 'addevent') {
     if (!$user->hasPermission('opsmanage')) {
         Redirect::to('home.php');
@@ -707,6 +737,7 @@ if (Input::get('action') === 'editprofile') {
         Redirect::to('/admin/codeshares.php');
         die();
     } else {
+        Cache::delete('badge_codeshares');
         Session::flash('success', "Codeshare Deleted Successfully!");
         Redirect::to('/admin/codeshares.php');
     }
@@ -778,6 +809,7 @@ if (Input::get('action') === 'editprofile') {
         die();
     }
     VANet::deleteCodeshare($codeshare["id"]);
+    Cache::delete('badge_codeshares');
     Session::flash('success', "Codeshare Routes Imported Successfully!");
     Redirect::to('/admin/operations.php?section=routes');
 } elseif (Input::get('action') === 'phpvms') {
@@ -812,18 +844,6 @@ if (Input::get('action') === 'editprofile') {
     $params = array();
     $j = 0;
     foreach ($routes as $item) {
-        if ($j % 50 == 0 && $j != 0) {
-            $sql = trim($sql, ',');
-            $ret = $db->query($sql, $params);
-            if ($ret->error()) {
-                Session::flash('error', "Failed to Import Routes");
-                Redirect::to('/admin/operations.php?section=phpvms');
-                die();
-            }
-            $sql = "INSERT INTO routes (fltnum, dep, arr, duration, aircraftid) VALUES";
-            $params = array();
-        }
-
         $sql .= "\n(?, ?, ?, ?, ?),";
         array_push($params, $lastId + $j + 1);
         array_push($params, $item["fltnum"]);
@@ -858,7 +878,7 @@ if (Input::get('action') === 'editprofile') {
     Session::flash('success', "Routes Imported Successfully!");
     Redirect::to('/admin/operations.php?section=routes');
 } elseif (Input::get('action') === 'installplugin') {
-    if (!$user->hasPermission('admin')) {
+    if (!$user->hasPermission('site')) {
         Redirect::to('home.php');
     }
 
@@ -935,7 +955,7 @@ if (Input::get('action') === 'editprofile') {
     Session::flash('success', 'Plugin Installed!');
     Redirect::to('/admin/plugins.php?tab=installed');
 } elseif (Input::get('action') === 'removeplugin') {
-    if (!$user->hasPermission('admin')) {
+    if (!$user->hasPermission('site')) {
         Redirect::to('home.php');
     }
 
@@ -973,7 +993,7 @@ if (Input::get('action') === 'editprofile') {
     Session::flash('success', 'Plugin Removed');
     Redirect::to('/admin/plugins.php?tab=installed');
 } elseif (Input::get('action') === 'clearlogs') {
-    if (!$user->hasPermission('opsmanage')) {
+    if (!$user->hasPermission('site')) {
         Redirect::to('home.php');
     }
 
@@ -1015,7 +1035,16 @@ if (Input::get('action') === 'editprofile') {
         Session::flash('error', 'There was an Error Editing the PIREP');
         Redirect::to('/admin/pireps.php?tab=all');
     } else {
+        Cache::delete('badge_pireps');
         Session::flash('success', 'PIREP Edited Successfully!');
         Redirect::to('/admin/pireps.php?tab=all');
     }
+} elseif (Input::get('action') === 'clearcache') {
+    if (!$user->hasPermission('site')) {
+        Redirect::to('home.php');
+    }
+
+    Cache::clear();
+    Session::flash('success', 'Cache Cleared');
+    Redirect::to('/admin/site.php?tab=maintenance');
 }

@@ -11,7 +11,7 @@ require_once '../core/init.php';
 
 $user = new User();
 
-Page::setTitle('PIREPs Admin - '.Config::get('va/name'));
+Page::setTitle('PIREPs Admin - ' . Config::get('va/name'));
 Page::excludeAsset('chartjs');
 
 if (!$user->isLoggedIn()) {
@@ -24,9 +24,11 @@ $ACTIVE_CATEGORY = 'pirep-management';
 ?>
 <!DOCTYPE html>
 <html>
+
 <head>
     <?php include '../includes/header.php'; ?>
 </head>
+
 <body>
     <nav class="navbar navbar-dark navbar-expand-lg bg-custom">
         <?php include '../includes/navbar.php'; ?>
@@ -36,25 +38,26 @@ $ACTIVE_CATEGORY = 'pirep-management';
             <div class="row m-0 p-0">
                 <?php include '../includes/sidebar.php'; ?>
                 <div class="col-lg-9 main-content">
-                    <div id="loader-wrapper"><div id="loader" class="spinner-border spinner-border-sm spinner-custom"></div></div>
+                    <div id="loader-wrapper">
+                        <div id="loader" class="spinner-border spinner-border-sm spinner-custom"></div>
+                    </div>
                     <div class="loaded">
                         <?php
-                        if (file_exists(__DIR__.'/../install/install.php') && !file_exists(__DIR__.'/../.development')) {
+                        if (file_exists(__DIR__ . '/../install/install.php') && !file_exists(__DIR__ . '/../.development')) {
                             echo '<div class="alert alert-danger text-center">The Install Folder still Exists! Please delete it immediately, it poses a severe security risk.</div>';
                         }
-                        
+
                         if (Session::exists('error')) {
-                            echo '<div class="alert alert-danger text-center">Error: '.Session::flash('error').'</div>';
+                            echo '<div class="alert alert-danger text-center">Error: ' . Session::flash('error') . '</div>';
                         }
                         if (Session::exists('success')) {
-                            echo '<div class="alert alert-success text-center">'.Session::flash('success').'</div>';
+                            echo '<div class="alert alert-success text-center">' . Session::flash('success') . '</div>';
                         }
 
                         $tab = "pending";
                         if (!empty(Input::get('tab'))) {
                             $tab = Input::get('tab');
                         }
-                        $ACTIVE_CATEGORY = 'site-management'; 
                         ?>
                         <script>
                             $(document).ready(function() {
@@ -91,7 +94,7 @@ $ACTIVE_CATEGORY = 'pirep-management';
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php 
+                                        <?php
                                         $x = 0;
                                         $pireps = Pirep::fetchPending();
                                         foreach ($pireps as $pirep) {
@@ -109,8 +112,8 @@ $ACTIVE_CATEGORY = 'pirep-management';
                                             echo '</td><td class="align-middle mobile-hidden">';
                                             echo $pirep["multi"];
                                             echo '</td><td class="align-middle">';
-                                            echo '<button class="btn btn-success text-light" value="'.$pirep['id'].'" form="acceptpirep" type="submit" name="accept"><i class="fa fa-check"></i></button>';
-                                            echo '&nbsp;<button value="'.$pirep['id'].'" form="declinepirep" type="submit" class="btn btn-danger text-light" name="decline"><i class="fa fa-times"></i></button>';
+                                            echo '<button class="btn btn-success text-light" value="' . $pirep['id'] . '" form="acceptpirep" type="submit" name="accept"><i class="fa fa-check"></i></button>';
+                                            echo '&nbsp;<button value="' . $pirep['id'] . '" form="declinepirep" type="submit" class="btn btn-danger text-light" name="decline"><i class="fa fa-times"></i></button>';
                                             echo '</td>';
                                             $x++;
                                         }
@@ -132,37 +135,37 @@ $ACTIVE_CATEGORY = 'pirep-management';
                                     </thead>
                                     <tbody>
                                         <?php
-                                            $allpireps = Pirep::fetchAll();
-                                            $statuses = [
-                                                [
-                                                    "badge" => "warning",
-                                                    "text" => "Pending",
-                                                ],
-                                                [
-                                                    "badge" => "success",
-                                                    "text" => "Accepted",
-                                                ],
-                                                [
-                                                    "badge" => "danger",
-                                                    "text" => "Denied"
-                                                ],
-                                            ];
-                                            foreach ($allpireps as $a) {
-                                                echo '<tr><td class="align-middle">';
-                                                echo $a['date'];
-                                                echo '</td><td class="align-middle mobile-hidden">';
-                                                echo $a['pilotname'];
-                                                echo '</td><td class="align-middle">';
-                                                echo $a['departure'];
-                                                echo '</td><td class="align-middle">';
-                                                echo $a['arrival'];
-                                                echo '</td><td class="align-middle mobile-hidden">';
-                                                $s = $statuses[$a['status']];
-                                                echo '<span class="badge badge-'.$s['badge'].'">'.$s['text'].'</span>';
-                                                echo '</td><td class="align-middle">';
-                                                echo '<button class="btn bg-custom editpirepbtn" data-pirep=\''.json_encode($a).'\'><i class="fa fa-edit"></i></button>';
-                                                echo '</td></tr>';
-                                            }
+                                        $allpireps = Pirep::fetchAll();
+                                        $statuses = [
+                                            [
+                                                "badge" => "warning",
+                                                "text" => "Pending",
+                                            ],
+                                            [
+                                                "badge" => "success",
+                                                "text" => "Accepted",
+                                            ],
+                                            [
+                                                "badge" => "danger",
+                                                "text" => "Denied"
+                                            ],
+                                        ];
+                                        foreach ($allpireps as $a) {
+                                            echo '<tr><td class="align-middle">';
+                                            echo $a['date'];
+                                            echo '</td><td class="align-middle mobile-hidden">';
+                                            echo $a['pilotname'];
+                                            echo '</td><td class="align-middle">';
+                                            echo $a['departure'];
+                                            echo '</td><td class="align-middle">';
+                                            echo $a['arrival'];
+                                            echo '</td><td class="align-middle mobile-hidden">';
+                                            $s = $statuses[$a['status']];
+                                            echo '<span class="badge badge-' . $s['badge'] . '">' . $s['text'] . '</span>';
+                                            echo '</td><td class="align-middle">';
+                                            echo '<button class="btn bg-custom editpirepbtn" data-pirep=\'' . json_encode($a) . '\'><i class="fa fa-edit"></i></button>';
+                                            echo '</td></tr>';
+                                        }
                                         ?>
                                     </tbody>
                                 </table>
@@ -241,11 +244,11 @@ $ACTIVE_CATEGORY = 'pirep-management';
                                                         <label for="editpirep-ac">Aircraft</label>
                                                         <select required class="form-control" name="aircraft" id="editpirep-ac">
                                                             <?php
-                                                                $allaircraft = Aircraft::fetchActiveAircraft()->results();
-                                                                foreach ($allaircraft as $aircraft) {
-                                                                    $notes = $aircraft->notes == null ? '' : ' - '.$aircraft->notes;
-                                                                    echo '<option value="'.$aircraft->id.'">'.$aircraft->name.' ('.$aircraft->liveryname.')'.$notes.'</option>';
-                                                                }
+                                                            $allaircraft = Aircraft::fetchActiveAircraft()->results();
+                                                            foreach ($allaircraft as $aircraft) {
+                                                                $notes = $aircraft->notes == null ? '' : ' - ' . $aircraft->notes;
+                                                                echo '<option value="' . $aircraft->id . '">' . $aircraft->name . ' (' . $aircraft->liveryname . ')' . $notes . '</option>';
+                                                            }
                                                             ?>
                                                         </select>
                                                     </div>
@@ -257,8 +260,8 @@ $ACTIVE_CATEGORY = 'pirep-management';
                                                             <option value="2">Denied</option>
                                                         </select>
                                                     </div>
-                                                    <input type="submit" class="btn bg-custom" value="Save">    
-                                                </form>                                      
+                                                    <input type="submit" class="btn bg-custom" value="Save">
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
@@ -297,7 +300,7 @@ $ACTIVE_CATEGORY = 'pirep-management';
             </div>
             <style>
                 .nav-tabs .nav-link {
-                    color: #000!important;
+                    color: #000 !important;
                 }
             </style>
             <footer class="container-fluid text-center">
@@ -311,4 +314,5 @@ $ACTIVE_CATEGORY = 'pirep-management';
         });
     </script>
 </body>
+
 </html>

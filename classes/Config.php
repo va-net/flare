@@ -8,7 +8,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-class Config 
+class Config
 {
     /**
      * @var array
@@ -16,7 +16,7 @@ class Config
     private static $_dbConfig = [];
 
     /**
-     * @return null
+     * @return void
      * @param bool $force Force Reload
      */
     private static function loadDbConf($force = false)
@@ -35,13 +35,13 @@ class Config
      * @return mixed
      * @param string $path Config Key, Config File Categories Separated by Slashes
      */
-    public static function get($path) 
+    public static function get($path)
     {
         $config = $GLOBALS['config'];
         $path = explode('/', $path);
 
         foreach ($path as $bit) {
-            if(isset($config[$bit])) {
+            if (isset($config[$bit])) {
                 $config = $config[$bit];
             }
         }
@@ -53,7 +53,7 @@ class Config
             if (array_key_exists($path, self::$_dbConfig)) {
                 return self::$_dbConfig[$path];
             }
-            
+
             return '';
         }
 
@@ -68,11 +68,11 @@ class Config
     public static function replaceColour($main, $text)
     {
 
-        $currentConf = file_get_contents(__DIR__.'/../core/config.php');
+        $currentConf = file_get_contents(__DIR__ . '/../core/config.php');
         preg_match("/#([a-f0-9]{3}){1,2}\b/i", $currentConf, $matches);
-        $currentConf = str_replace($matches[0], '#'.$main, $currentConf);
+        $currentConf = str_replace($matches[0], '#' . $main, $currentConf);
 
-        $file = fopen(__DIR__.'/../core/config.php', 'w+');
+        $file = fopen(__DIR__ . '/../core/config.php', 'w+');
 
         if (!$file) {
             return false;
@@ -81,13 +81,12 @@ class Config
         fwrite($file, $currentConf);
         fclose($file);
 
-        self::replace("TEXT_COLOUR", '#'.$text);
+        self::replace("TEXT_COLOUR", '#' . $text);
 
         Events::trigger('config/updated', ['item' => 'TEXT_COLOUR']);
         Events::trigger('config/updated', ['item' => 'site/colour_main_hex']);
 
         return true;
-
     }
 
     /**
@@ -96,7 +95,7 @@ class Config
      */
     public static function replaceCss($data)
     {
-        $res = file_put_contents(__DIR__.'/../assets/custom.css', $data);
+        $res = file_put_contents(__DIR__ . '/../assets/custom.css', $data);
         return !($res === FALSE);
     }
 
@@ -105,8 +104,8 @@ class Config
      */
     public static function getCss()
     {
-        return file_get_contents(__DIR__.'/../assets/custom.css');
-    } 
+        return file_get_contents(__DIR__ . '/../assets/custom.css');
+    }
 
     /**
      * @return bool
@@ -116,8 +115,8 @@ class Config
     public static function replace($where, $new)
     {
 
-        $currentConfFile = file_get_contents(__DIR__.'/../core/config.php');
-        $regex = '/\''.$where.'\' => .*/m';
+        $currentConfFile = file_get_contents(__DIR__ . '/../core/config.php');
+        $regex = '/\'' . $where . '\' => .*/m';
         preg_match($regex, $currentConfFile, $matches);
 
         if (count($matches) === 0) {
@@ -125,7 +124,7 @@ class Config
             $sql = "SELECT COUNT(name) AS results FROM options WHERE name = ?";
             $exists = $db->query($sql, [$where])->results()[0]->results;
             if ($exists > 0) {
-                $res = $db->update('options', "'".$where."'", 'name', ["value" => $new]);
+                $res = $db->update('options', "'" . $where . "'", 'name', ["value" => $new]);
                 return !($res->error());
             }
 
@@ -140,9 +139,9 @@ class Config
         $currentVal = trim(str_replace("'", "", $currentVal[1]));
         $currentVal = trim(str_replace(",", "", $currentVal));
 
-        $newConf = preg_replace('/'.$currentVal.'/', $new, $currentConfFile, 1);
+        $newConf = preg_replace('/' . $currentVal . '/', $new, $currentConfFile, 1);
 
-        $file = fopen(__DIR__.'/../core/config.php', 'w+');
+        $file = fopen(__DIR__ . '/../core/config.php', 'w+');
 
         if (!$file) {
             return false;
@@ -156,7 +155,6 @@ class Config
         self::loadDbConf(true);
 
         return true;
-
     }
 
     /**
@@ -164,16 +162,16 @@ class Config
      * @param string $key Config Key
      * @param mixed $value Value
      */
-    public static function add($key, $value) {
+    public static function add($key, $value)
+    {
         $db = DB::getInstance();
         $ret = $db->insert('options', array(
             'name' => $key,
             'value' => $value
         ));
 
-        Events::trigger('config/added', ['item' => $where]);
+        Events::trigger('config/added', ['item' => $key, 'value' => $value]);
 
         return !($ret->error());
     }
-
 }

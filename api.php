@@ -10,7 +10,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 require_once './core/init.php';
 header('Content-Type: application/json');
 
-abstract class AuthType {
+abstract class AuthType
+{
     const NoAuth = 0;
     const Session = 1; // All scopes
     const Cookie = 2; // Reserved for Future Use, All Scopes
@@ -18,7 +19,8 @@ abstract class AuthType {
     const BasicHttp = 4; // All Scopes
 }
 
-abstract class ErrorCode {
+abstract class ErrorCode
+{
     const NoError = 0;
     const Unauthorized = 1;
     const NotFound = 2;
@@ -32,7 +34,8 @@ abstract class ErrorCode {
     const MethodNotAllowed = 12;
 }
 
-function unauthorized() {
+function unauthorized()
+{
     http_response_code(401);
     echo Json::encode([
         "status" => ErrorCode::Unauthorized,
@@ -41,7 +44,8 @@ function unauthorized() {
     die();
 }
 
-function internalError() {
+function internalError()
+{
     http_response_code(500);
     echo Json::encode([
         "status" => ErrorCode::InternalServerError,
@@ -50,7 +54,8 @@ function internalError() {
     die();
 }
 
-function badReq($status) {
+function badReq($status)
+{
     http_response_code(400);
     echo Json::encode([
         "status" => $status,
@@ -59,7 +64,8 @@ function badReq($status) {
     die();
 }
 
-function notFound() {
+function notFound()
+{
     http_response_code(404);
     echo Json::encode([
         "status" => ErrorCode::NotFound,
@@ -68,7 +74,8 @@ function notFound() {
     die();
 }
 
-function accessDenied() {
+function accessDenied()
+{
     http_response_code(403);
     echo Json::encode([
         "status" => ErrorCode::AccessDenied,
@@ -96,6 +103,7 @@ if ($user->isLoggedIn()) {
 
     $_authType = AuthType::ApiKey;
     $_apiUser = $check;
+    $user->find($_apiUser->id);
 } elseif (array_key_exists('apikey', $_GET)) {
     // Bearer Auth (Query String)
     $check = Api::processKey($_GET['apikey']);
@@ -103,8 +111,10 @@ if ($user->isLoggedIn()) {
         unauthorized();
     }
 
+
     $_authType = AuthType::ApiKey;
     $_apiUser = $check;
+    $user->find($_apiUser->id);
 } elseif (array_key_exists('Authorization', $_headers) && explode(' ', $_headers['Authorization'])[0] == 'Basic') {
     // Basic HTTP Auth
     $check = Api::processBasic(explode(' ', $_headers['Authorization'])[1]);
@@ -115,9 +125,8 @@ if ($user->isLoggedIn()) {
     $_authType = AuthType::BasicHttp;
     $_apiUser = $check;
     $pass = explode(':', base64_decode(explode(' ', $_headers['Authorization'])[1]))[1];
-    // If for some reason this fails, return a 500
     if (!$user->login($_apiUser->email, $pass)) {
-        internalError();
+        unauthorized();
     }
 } else {
     unauthorized();
@@ -127,7 +136,7 @@ if ($user->isLoggedIn()) {
 Router::pathNotFound('notFound');
 
 // Method Not Allowed
-Router::methodNotAllowed(function() {
+Router::methodNotAllowed(function () {
     http_response_code(405);
     echo Json::encode([
         "status" => ErrorCode::MethodNotAllowed,
@@ -137,7 +146,7 @@ Router::methodNotAllowed(function() {
 });
 
 // View All PIREPs for User
-Router::add('/pireps', function() {
+Router::add('/pireps', function () {
     global $user, $_apiUser;
     $res = [
         "status" => ErrorCode::NoError,
@@ -160,9 +169,9 @@ Router::add('/pireps', function() {
 });
 
 // View Specific PIREP
-Router::add('/pireps/([0-9]+)', function($pirepId) {
+Router::add('/pireps/([0-9]+)', function ($pirepId) {
     global $_apiUser;
-    
+
     $pirep = Pirep::find($pirepId, $_apiUser->id);
     if ($pirep === FALSE) {
         notFound();
@@ -183,12 +192,12 @@ Router::add('/pireps/([0-9]+)', function($pirepId) {
 });
 
 // Edit PIREP
-Router::add('/pireps/([0-9]*)', function($pirepId) {
+Router::add('/pireps/([0-9]*)', function ($pirepId) {
     global $_apiUser, $_authType;
     if ($_authType == AuthType::ApiKey) {
         accessDenied();
     }
-    
+
     $pirep = [];
 
     $pirep = (array)$pirep;
@@ -205,7 +214,7 @@ Router::add('/pireps/([0-9]*)', function($pirepId) {
 }, 'put');
 
 // File PIREP
-Router::add('/pireps', function() {     
+Router::add('/pireps', function () {
     global $_authType, $user;
     if ($_authType == AuthType::ApiKey) {
         accessDenied();
@@ -236,7 +245,7 @@ Router::add('/pireps', function() {
         badReq(ErrorCode::RankNotSufficent);
     }
 
-    $response = VANet::sendPirep(array (
+    $response = VANet::sendPirep(array(
         'AircraftID' => Aircraft::idToLiveryId(Input::get('aircraft')),
         'Arrival' => Input::get('arr'),
         'DateTime' => Input::get('date'),
@@ -271,7 +280,7 @@ Router::add('/pireps', function() {
 }, 'post');
 
 // Accept PIREP
-Router::add('/pireps/accept/([0-9]+)', function($pirepId) {
+Router::add('/pireps/accept/([0-9]+)', function ($pirepId) {
     global $_authType, $user;
     if ($_authType == AuthType::ApiKey) {
         accessDenied();
@@ -289,7 +298,7 @@ Router::add('/pireps/accept/([0-9]+)', function($pirepId) {
 });
 
 // Deny PIREP
-Router::add('/pireps/deny/([0-9]+)', function($pirepId) {
+Router::add('/pireps/deny/([0-9]+)', function ($pirepId) {
     global $_authType, $user;
     if ($_authType == AuthType::ApiKey) {
         accessDenied();
@@ -307,7 +316,7 @@ Router::add('/pireps/deny/([0-9]+)', function($pirepId) {
 });
 
 // View User Info
-Router::add('/about', function() {
+Router::add('/about', function () {
     global $_apiUser, $_authType;
     echo Json::encode([
         "status" => ErrorCode::NoError,
@@ -327,7 +336,7 @@ Router::add('/about', function() {
 });
 
 // Update User Info
-Router::add('/about', function() {
+Router::add('/about', function () {
     global $_authType, $user, $_apiUser;
     if ($_authType == AuthType::ApiKey) {
         accessDenied();
@@ -339,7 +348,7 @@ Router::add('/about', function() {
             badReq(ErrorCode::CallsignNotValid);
         }
 
-        if (!Callsign::assigned(Input::get('callsign'), $_apiUser->id)) {
+        if (Callsign::assigned(Input::get('callsign'), $_apiUser->id)) {
             badReq(ErrorCode::CallsignTaken);
         }
     }
@@ -349,7 +358,7 @@ Router::add('/about', function() {
     if (!empty(Input::get('name'))) $updUser['name'] = Input::get('name');
     if (!empty(Input::get('email'))) $updUser['email'] = Input::get('email');
     if (!empty(Input::get('ifc'))) $updUser['ifc'] = Input::get('ifc');
-    
+
     try {
         $user->update($updUser);
         echo Json::encode([
@@ -362,11 +371,13 @@ Router::add('/about', function() {
 }, 'put');
 
 // View All Events
-Router::add('/events', function() {
+Router::add('/events', function () {
+    global $user;
     if (!VANet::isGold()) badReq(ErrorCode::VaNotGold);
 
-    $events = array_filter(VANet::getEvents(), function($e) {
-        return $e["visible"];
+    $events = array_filter(VANet::getEvents(), function ($e) {
+        global $user;
+        return $e["visible"] || $user->hasPermission('opsmanage');
     });
     echo Json::encode([
         "status" => ErrorCode::NoError,
@@ -375,9 +386,9 @@ Router::add('/events', function() {
 });
 
 // View Specific Event
-Router::add('/events/([0-9a-zA-z]{8}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{12})', function($eventId) {
+Router::add('/events/([0-9a-zA-z]{8}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{12})', function ($eventId) {
     if (!VANet::isGold()) badReq(ErrorCode::VaNotGold);
-    
+
     $event = VANet::findEvent($eventId);
     if ($event === FALSE) notFound();
 
@@ -388,7 +399,7 @@ Router::add('/events/([0-9a-zA-z]{8}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4
 });
 
 // View All News
-Router::add('/news', function() {
+Router::add('/news', function () {
     $news = News::get();
 
     $i = 0;
@@ -406,7 +417,7 @@ Router::add('/news', function() {
 });
 
 // View Specific News Item
-Router::add('/news/([0-9]+)', function($newsId) {
+Router::add('/news/([0-9]+)', function ($newsId) {
     $article = News::find($newsId);
     if ($article === FALSE) notFound();
 
@@ -423,7 +434,7 @@ Router::add('/news/([0-9]+)', function($newsId) {
 });
 
 // Add News Item
-Router::add('/news', function() {
+Router::add('/news', function () {
     global $_authType, $user;
     if ($_authType == AuthType::ApiKey) {
         accessDenied();
@@ -444,7 +455,7 @@ Router::add('/news', function() {
 }, 'post');
 
 // Edit News Item
-Router::add('/news/([0-9]+)', function($newsId) {
+Router::add('/news/([0-9]+)', function ($newsId) {
     global $_authType, $user;
     if ($_authType == AuthType::ApiKey) {
         accessDenied();
@@ -465,7 +476,7 @@ Router::add('/news/([0-9]+)', function($newsId) {
 }, 'put');
 
 // Delete News Item
-Router::add('/news/([0-9]+)', function($newsId) {
+Router::add('/news/([0-9]+)', function ($newsId) {
     global $_authType, $user;
     if ($_authType == AuthType::ApiKey) {
         accessDenied();
@@ -482,11 +493,11 @@ Router::add('/news/([0-9]+)', function($newsId) {
 }, 'delete');
 
 // View All Routes
-Router::add('/routes', function() {
+Router::add('/routes', function () {
     $data = Route::fetchAll();
     $routes = [];
     foreach ($data as $id => $r) {
-        $r['aircraft'] = array_map(function($a) {
+        $r['aircraft'] = array_map(function ($a) {
             unset($a['liveryid']);
             $a['id'] = intval($a['id']);
             return $a;
@@ -507,11 +518,11 @@ Router::add('/routes', function() {
 });
 
 // View Specific Route
-Router::add('/routes/([0-9]+)', function($routeId) {
+Router::add('/routes/([0-9]+)', function ($routeId) {
     $route = Route::find($routeId);
     if ($route === FALSE) notFound();
 
-    $route->aircraft = array_map(function($a) {
+    $route->aircraft = array_map(function ($a) {
         return [
             "id" => $a->id,
             "name" => $a->name,
@@ -529,7 +540,7 @@ Router::add('/routes/([0-9]+)', function($routeId) {
 });
 
 // Add Route
-Router::add('/routes', function() {
+Router::add('/routes', function () {
     global $_authType, $user;
     if ($_authType == AuthType::ApiKey) {
         accessDenied();
@@ -555,7 +566,7 @@ Router::add('/routes', function() {
 }, 'post');
 
 // Edit Route
-Router::add('/routes/([0-9]+)', function($routeId) {
+Router::add('/routes/([0-9]+)', function ($routeId) {
     global $_authType, $user;
     if ($_authType == AuthType::ApiKey) {
         accessDenied();
@@ -578,7 +589,7 @@ Router::add('/routes/([0-9]+)', function($routeId) {
 }, 'put');
 
 // Delete Route
-Router::add('/routes/([0-9]+)', function($routeId) {
+Router::add('/routes/([0-9]+)', function ($routeId) {
     global $_authType, $user;
     if ($_authType == AuthType::ApiKey) {
         accessDenied();
@@ -595,8 +606,8 @@ Router::add('/routes/([0-9]+)', function($routeId) {
     ]);
 }, 'delete');
 
-Router::add('/aircraft', function() {
-    $allaircraft = array_map(function($a) {
+Router::add('/aircraft', function () {
+    $allaircraft = array_map(function ($a) {
         unset($a->status);
         foreach ($a as $key => $val) {
             if (is_numeric($val)) {
@@ -613,7 +624,7 @@ Router::add('/aircraft', function() {
     ]);
 });
 
-Router::add('/aircraft/([0-9]+)', function($aircraftId) {
+Router::add('/aircraft/([0-9]+)', function ($aircraftId) {
     $a = Aircraft::fetch($aircraftId);
     if ($a === FALSE) {
         notFound();
@@ -631,9 +642,9 @@ Router::add('/aircraft/([0-9]+)', function($aircraftId) {
     ]);
 });
 
-Router::add('/notifications', function() {
+Router::add('/notifications', function () {
     global $_apiUser;
-    $notifications = array_map(function($n) {
+    $notifications = array_map(function ($n) {
         $n->datetime = $n->formattedDate;
         unset($n->formattedDate);
         unset($n->pilotid);
@@ -651,8 +662,8 @@ Router::add('/notifications', function() {
     ]);
 });
 
-Router::add('/ranks', function() {
-    $ranks = array_map(function($r) {
+Router::add('/ranks', function () {
+    $ranks = array_map(function ($r) {
         foreach ($r as $key => $val) {
             if (is_numeric($val)) {
                 $r->$key = intval($val);
@@ -668,7 +679,7 @@ Router::add('/ranks', function() {
     ]);
 });
 
-Router::add('/ranks/([0-9]+)', function($rankId) {
+Router::add('/ranks/([0-9]+)', function ($rankId) {
     $r = Rank::find($rankId);
     if ($r === FALSE) {
         notFound();
@@ -686,7 +697,7 @@ Router::add('/ranks/([0-9]+)', function($rankId) {
     ]);
 });
 
-Router::add('/logs/(.+)', function($logName) {
+Router::add('/logs/(.+)', function ($logName) {
     global $_authType, $user;
     if ($_authType == AuthType::ApiKey) {
         accessDenied();
@@ -702,6 +713,81 @@ Router::add('/logs/(.+)', function($logName) {
         die();
     }
     echo file_get_contents("core/logs/{$logName}.log");
+});
+
+Router::add('/menu', function () {
+    global $user;
+    $IS_GOLD = VANet::isGold();
+    $menu = [];
+    foreach ($GLOBALS['pilot-menu'] as $name => $data) {
+        if ($IS_GOLD || $data["needsGold"] == false) {
+            unset($data["needsGold"]);
+            $data["category"] = 'pilot';
+            $menu[$name] = $data;
+        }
+    }
+    foreach ($GLOBALS['admin-menu'] as $cName => $cData) {
+        foreach ($cData as $name => $data) {
+            if ($user->hasPermission($data["permission"])) {
+                if ($IS_GOLD || !$data["needsGold"]) {
+                    unset($data["needsGold"]);
+                    $data["category"] = $cName;
+                    $menu[$name] = $data;
+                }
+            }
+        }
+    }
+
+    echo Json::encode([
+        "status" => ErrorCode::NoError,
+        "result" => $menu,
+    ]);
+});
+
+Router::add('/menu/badges', function () {
+    global $user;
+    $IS_GOLD = VANet::isGold();
+    $ids = [];
+    foreach ($GLOBALS['admin-menu'] as $cName => $cData) {
+        foreach ($cData as $name => $data) {
+            if ($user->hasPermission($data["permission"])) {
+                if (($IS_GOLD || !$data["needsGold"]) && isset($data["badgeid"]) && $data["badgeid"] != null) {
+                    $ids[] = $data["badgeid"];
+                }
+            }
+        }
+    }
+
+    foreach ($GLOBALS['pilot-menu'] as $name => $data) {
+        if (($IS_GOLD || $data["needsGold"] == false) && $data["badgeid"] != null) {
+            $ids[] = $data["badgeid"];
+        }
+    }
+
+    $badges = Page::$badges;
+    $res = [];
+    foreach ($badges as $id => $action) {
+        $cache = Cache::get("badge_{$id}");
+        if ($cache == '') {
+            $ret = call_user_func($action);
+            if (in_array($id, $ids)) $res[$id] = $ret;
+
+            if (gettype($ret) == 'boolean') {
+                $ret = $ret ? 'bool_1' : 'bool_0';
+            }
+            Cache::set("badge_{$id}", $ret, date("Y-m-d H:i:s", strtotime('+24 hours')));
+        } elseif (in_array($id, $ids)) {
+            if (strpos($cache, 'bool_') === 0) {
+                $cache = $cache == 'bool_1';
+            }
+            $res[$id] = $cache;
+        }
+    }
+
+    echo Json::encode([
+        "status" => ErrorCode::NoError,
+        "result" => $res,
+    ]);
 });
 
 Router::run('/api.php');

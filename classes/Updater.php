@@ -8,28 +8,34 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-class Updater 
+class Updater
 {
     /**
      * @return array
      */
-    public static function getVersion() {
-        return Json::decode(file_get_contents(__DIR__.'/../version.json'));
+    public static function getVersion()
+    {
+        return Json::decode(file_get_contents(__DIR__ . '/../version.json'));
     }
 
     /**
      * @return bool|array
      * @param bool $prerelease Whether to Check for Prerelease Versions
      */
-    public static function checkUpdate($prerelease = false) {
+    public static function checkUpdate($prerelease = false)
+    {
         $opts = array(
-            'http'=>array(
-                'method'=>"GET",
-                'header'=>"User-Agent: va-net\r\n"
+            'http' => array(
+                'method' => "GET",
+                'header' => "User-Agent: va-net\r\n"
             )
         );
         $context = stream_context_create($opts);
         $releases = Json::decode(file_get_contents("https://api.github.com/repos/va-net/flare/releases", false, $context));
+
+        if ($releases == null) {
+            return false;
+        }
 
         $next = null;
         $currentFound = false;
@@ -60,4 +66,11 @@ class Updater
         );
     }
 
+    /**
+     * @return bool
+     */
+    public static function updateAvailable()
+    {
+        return Updater::checkUpdate(Config::get('CHECK_PRERELEASE') == 1) !== FALSE;
+    }
 }

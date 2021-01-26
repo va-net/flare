@@ -14,26 +14,24 @@ class Route
      * @var DB
      */
     private static $_db;
-    
+
     private static function init()
     {
 
         self::$_db = DB::getInstance();
-
     }
 
     /**
-     * @return null
+     * @return void
      * @param array $fields Route Fields
      */
-    public static function add($fields) 
+    public static function add($fields)
     {
 
         self::init();
 
-        self::$_db->insert('routes', $fields);
+        self::$_db->insert('routes', $fields, true);
         Events::trigger('route/added', $fields);
-        
     }
 
     /**
@@ -48,7 +46,7 @@ class Route
         FROM (
             route_aircraft ra INNER JOIN aircraft a ON a.id=ra.aircraftid
         ) RIGHT JOIN routes r ON r.id=ra.routeid";
-        $data = self::$_db->query($sql)->results();
+        $data = self::$_db->query($sql, [], true)->results();
         foreach ($data as $d) {
             if (gettype($d->id) != 'string') $d->id = strval($d->id);
             if (!array_key_exists($d->id, $ret)) {
@@ -82,7 +80,7 @@ class Route
     }
 
     /**
-     * @return null
+     * @return void
      * @param int $id Route ID
      */
     public static function delete($id)
@@ -101,7 +99,7 @@ class Route
     public static function find($id)
     {
         self::init();
-        
+
         return self::$_db->get('routes', ['id', '=', $id])->first();
     }
 
@@ -110,10 +108,10 @@ class Route
      * @param int $id Route ID
      * @param array $fields Updated Route Fields
      */
-    public static function update($id, $fields) 
+    public static function update($id, $fields)
     {
         self::init();
-        $ret = self::$_db->update('routes', $id, 'id', $fields);
+        $ret = self::$_db->update('routes', $id, 'id', $fields, true);
 
         $fields["id"] = $id;
         Events::trigger('route/updated', $fields);
@@ -129,12 +127,12 @@ class Route
     {
         self::init();
         $sql = "SELECT * FROM aircraft WHERE id IN (SELECT aircraftid FROM route_aircraft WHERE routeid=?)";
-        $res = self::$_db->query($sql, [$id])->results();
+        $res = self::$_db->query($sql, [$id], true)->results();
         return $res;
     }
 
     /**
-     * @return null
+     * @return void
      * @param int $routeid Route ID
      * @param int $aircraft Aircraft ID, null to remove all aircraft
      */
@@ -152,7 +150,7 @@ class Route
     }
 
     /**
-     * @return null
+     * @return void
      * @param int $routeid Route ID
      * @param int $aircraft Aircraft ID
      */
@@ -163,7 +161,7 @@ class Route
         self::$_db->insert('route_aircraft', [
             "routeid" => $routeid,
             "aircraftid" => $aircraft,
-        ]);
+        ], true);
     }
 
     /**
@@ -175,7 +173,7 @@ class Route
         $sql = "SELECT id FROM routes ORDER BY id DESC LIMIT 1";
         $res = self::$_db->query($sql)->first();
         if ($res === FALSE) return 0;
-        
+
         return $res->id;
     }
 
@@ -191,7 +189,6 @@ class Route
                     pireps INNER JOIN pilots ON pireps.pilotid=pilots.id
                 ) INNER JOIN aircraft ON pireps.aircraftid=aircraft.id 
                 WHERE pireps.flightnum=? AND pireps.status=1";
-        return self::$_db->query($sql, [$fltnum])->results();
+        return self::$_db->query($sql, [$fltnum], true)->results();
     }
-
 }

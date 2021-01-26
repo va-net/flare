@@ -20,7 +20,6 @@ class Rank
     {
 
         self::$_db = DB::newInstance();
-
     }
 
     /**
@@ -43,7 +42,6 @@ class Rank
                 }
             }
         }
-
     }
 
     /**
@@ -56,7 +54,6 @@ class Rank
         self::init();
 
         return self::calc($hours, true);
-
     }
 
     /**
@@ -69,15 +66,14 @@ class Rank
         self::init();
 
         return self::calc($hours, false);
-
     }
 
     /**
-     * @return null
+     * @return void
      * @param string $name Rank Name
      * @param int $timereq Flight Time Required in Seconds
      */
-    public static function add($name, $timereq) 
+    public static function add($name, $timereq)
     {
 
         self::init();
@@ -89,31 +85,30 @@ class Rank
         self::$_db->insert('ranks', $data);
 
         Events::trigger('rank/added', $data);
-
     }
 
     /**
-     * @return null
+     * @return void
      * @param int $id Rank ID
      * @param array $fields Updated Rank Fields
      */
-    public static function update($id, $fields = array()) 
+    public static function update($id, $fields = array())
     {
         self::init();
-        
+
         if (!self::$_db->update('ranks', $id, 'id', $fields)) {
             throw new Exception('There was a problem updating the user.');
         }
 
         $fields["id"] = $id;
-        Events::trigger('rank/updated'. $fields);
+        Events::trigger('rank/updated', $fields);
     }
 
     /**
      * @return bool
      * @param int $id Rank ID
      */
-    public static function delete($id) 
+    public static function delete($id)
     {
         self::init();
 
@@ -133,20 +128,18 @@ class Rank
         self::init();
         $rank = self::$_db->get('ranks', array('id', '>', '0'), array('timereq', 'asc'));
         return $rank->first()->name;
-
     }
 
     /**
      * @return string
      * @param int $id Rank ID
      */
-    public static function idToName($id) 
+    public static function idToName($id)
     {
 
         self::init();
         $rank = self::$_db->get('ranks', array('id', '=', $id));
         return $rank->first()->name;
-
     }
 
     /**
@@ -159,32 +152,29 @@ class Rank
 
         $ret = self::$_db->get('ranks', ['id', '=', $id]);
         if ($ret->count() == 0) return false;
-        
+
         return $ret->first();
     }
-    
+
     /**
      * @return int
      * @param string $name Rank Name
      */
-    public static function nameToId($name) 
+    public static function nameToId($name)
     {
 
         self::init();
         $rank = self::$_db->get('ranks', array('name', '=', $name));
         return $rank->first()->id;
-
     }
 
     /**
      * @return DB
      */
-    public static function fetchAllNames() 
+    public static function fetchAllNames()
     {
 
         self::init();
         return self::$_db->getAll('ranks', ['1', '=', '1'], array('timereq', 'ASC'));
-
     }
-
 }

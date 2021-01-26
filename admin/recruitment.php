@@ -90,7 +90,12 @@ $ACTIVE_CATEGORY = 'user-management';
                                     echo '</td><td class="mobile-hidden align-middle">';
                                     echo $user["email"];
                                     echo '</td><td class="mobile-hidden align-middle">';
-                                    $username = explode('/', $user['ifc'])[4];
+                                    $username = explode('/', $user['ifc']);
+                                    if ($username === FALSE || count($username) < 5) {
+                                        $username = '';
+                                    } else {
+                                        $username = $username[4];
+                                    }
                                     echo '<a href="' . $user['ifc'] . '" target="_blank">' . $username . '</a>';
                                     echo '</td><td class="align-middle">';
                                     if (array_key_exists(strtolower($username), $blacklist)) {
