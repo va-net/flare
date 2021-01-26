@@ -154,6 +154,9 @@ if (!$user->isLoggedIn()) {
                                     <td class="align-middle"><b>IFC Profile</b></td>
                                     <?php
                                     $username = explode('/', $user->data()->ifc);
+                                    if ($username === FALSE || count($username) < 5) {
+                                        $username = [null, null, null, null, ''];
+                                    }
                                     ?>
                                     <td class="align-middle"><a href="<?= $user->data()->ifc ?>" target="_blank"><?= escape($username[4]) ?></td>
                                 </tr>
