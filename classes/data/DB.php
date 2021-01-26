@@ -45,13 +45,12 @@ class DB
     {
         return new DB();
     }
-
     /**
      * @return DB
      * @param string $sql SQL to Run
      * @param array $params Prepared Statement Parameters
      */
-    public function query($sql, $params = array(), $reportError = false, $classname = null)
+    public function query($sql, $params = array(), $reportError = false)
     {
         $this->_error = false;
         if ($this->_query = $this->_pdo->prepare($sql)) {
@@ -64,11 +63,7 @@ class DB
             }
 
             if ($this->_query->execute()) {
-                if ($classname == null) {
-                    $this->_results = $this->_query->fetchAll(PDO::FETCH_OBJ);
-                } else {
-                    $this->_results = $this->_query->fetchAll(PDO::FETCH_CLASS, $classname);
-                }
+                $this->_results = $this->_query->fetchAll(PDO::FETCH_OBJ);
                 $this->_count = $this->_query->rowCount();
             } else {
                 if ($reportError) Events::trigger('db/query-failed', ["query" => $this->_query->queryString, "params" => $params]);
@@ -81,7 +76,20 @@ class DB
         return $this;
     }
 
-    private function action($action, $table, $where = array(), $order = false, $reportError = false, $classname = null)
+    /**
+     * @return DB
+     * @param string $table Table Name
+     */
+    public function getTable($table, $reportError = false)
+    {
+        $sql = "SELECT * FROM {$table}";
+        if (!$this->query($sql, [], $reportError)->error()) {
+            return $this;
+        }
+        return $this;
+    }
+
+    private function action($action, $table, $where = array(), $order = false, $reportError = false)
     {
         if (count($where) === 3) {
             $operators = array('=', '<', '>', '<=', '>=');
@@ -99,7 +107,7 @@ class DB
                     $sql .= " ORDER BY {$orderby} {$direction}";
                 }
 
-                if (!$this->query($sql, array($value), $reportError, $classname)->error()) {
+                if (!$this->query($sql, array($value), $reportError)->error()) {
                     return $this;
                 }
             }
@@ -122,9 +130,9 @@ class DB
      * @param array $where Where Clause
      * @param bool|array $order Order Clause
      */
-    public function get($table, $where, $order = false, $reportError = false, $classname = null)
+    public function get($table, $where, $order = false, $reportError = false)
     {
-        return $this->action('SELECT *', $table, $where, $order, $reportError, $classname);
+        return $this->action('SELECT *', $table, $where, $order, $reportError);
     }
 
     /**
@@ -132,9 +140,9 @@ class DB
      * @param string $table Table Name
      * @param array $where Where Clause
      */
-    public function delete($table, $where, $reportError = false, $classname = null)
+    public function delete($table, $where, $reportError = false)
     {
-        return $this->action('DELETE', $table, $where, false, $reportError, $classname);
+        return $this->action('DELETE', $table, $where, false, $reportError);
     }
 
     /**
@@ -142,7 +150,7 @@ class DB
      * @param string $table Table Name
      * @param array $fields Field Names and Values
      */
-    public function insert($table, $fields = array(), $reportError = false, $classname = null)
+    public function insert($table, $fields = array(), $reportError = false)
     {
         $keys = array_keys($fields);
         $values = '';
@@ -159,7 +167,7 @@ class DB
 
         $sql = "INSERT INTO {$table} (`" . implode('`, `', $keys)  . "`) VALUES ({$values})";
 
-        if (!$this->query($sql, $fields, $reportError, $classname)->error()) {
+        if (!$this->query($sql, $fields, $reportError)->error()) {
             return $this;
         }
 
@@ -173,7 +181,7 @@ class DB
      * @param string $where ID Column Name
      * @param array $fields Updated Field Names and Values
      */
-    public function update($table, $id, $where, $fields = array(), $reportError = false, $classname = null)
+    public function update($table, $id, $where, $fields = array(), $reportError = false)
     {
         $set = '';
         $x = 1;
@@ -189,7 +197,7 @@ class DB
 
         $sql = "UPDATE {$table} SET {$set} WHERE {$where} = {$id}";
 
-        if (!$this->query($sql, $fields, $reportError, $classname)->error()) {
+        if (!$this->query($sql, $fields, $reportError)->error()) {
             return $this;
         }
 
@@ -205,7 +213,7 @@ class DB
     }
 
     /**
-     * @return mixed[]
+     * @return array
      */
     public function results()
     {
@@ -213,7 +221,7 @@ class DB
     }
 
     /**
-     * @return mixed
+     * @return object|bool
      */
     public function first()
     {
@@ -229,8 +237,8 @@ class DB
      * @return DB
      * @param string $table Table Name
      */
-    public function getAll($table, $reportError = false, $classname = null)
+    public function getAll($table, $reportError = false)
     {
-        return $this->query("SELECT * FROM {$table}", [], $reportError, $classname);
+        return $this->query("SELECT * FROM {$table}", [], $reportError);
     }
 }
