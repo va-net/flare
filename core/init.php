@@ -16,7 +16,14 @@ doing! If updating, please backup this file prior to doing so.
 session_start();
 
 spl_autoload_register(function ($class) {
-    require_once __DIR__ . '/../classes/' . $class . '.php';
+    $dirs = ['app', 'data', 'util'];
+    foreach ($dirs as $d) {
+        $file = __DIR__ . '/../classes/' . $d . '/' . $class . '.php';
+        if (file_exists($file)) {
+            require_once $file;
+            return;
+        }
+    }
 });
 
 if (file_exists(__DIR__ . '/config.php')) {
