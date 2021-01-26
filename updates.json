@@ -271,5 +271,62 @@
         "queries": [],
         "deletedFiles": [],
         "newFolders": []
+    },
+    {
+        "tag": "v1.2.0",
+        "name": "Version 1.2.0",
+        "date": "2021-01-27",
+        "notes": "Major Optimizations, Added Error Reporting, Added Menu Badges, Added User Reactivation, Added Route Delete Confirmation, Added Automatic Callsign Assignment (optional), Various Bug Fixes",
+        "prerelease": false,
+        "useUpdater": true,
+        "files": [
+            "classes/User.php",
+            "home.php",
+            "admin/repair.php",
+            "classes/Aircraft.php",
+            "classes/Analytics.php",
+            "classes/DB.php",
+            "classes/Notifications.php",
+            "classes/Route.php",
+            "core/init.php",
+            "classes/Cache.php",
+            "classes/VANet.php",
+            "admin/site.php",
+            "update.php",
+            "admin/pireps.php",
+            "classes/Rank.php",
+            "classes/Events.php",
+            "api.php",
+            "classes/Page.php",
+            "classes/Pirep.php",
+            "classes/Plugin.php",
+            "classes/Updater.php",
+            "includes/menus.php",
+            "includes/sidebar.php",
+            "updater.php",
+            "events.php",
+            "classes/Logger.php",
+            "admin/index.php",
+            "functions/daterange.php",
+            "admin/users.php",
+            "apply.php",
+            "assets/style.css.php",
+            "classes/Form.php",
+            "index.php",
+            "admin/operations.php",
+            "classes/Callsign.php",
+            "classes/Stats.php",
+            "vanet.php",
+            "admin/events.php"
+        ],
+        "queries": [
+            "CREATE TABLE IF NOT EXISTS `cache` (`name` VARCHAR(120) NOT NULL, `value` TEXT NOT NULL, `expiry` DATETIME NULL, PRIMARY KEY (`name`))",
+            "INSERT INTO `options` (`name`, `value`) VALUES ('AUTO_CALLSIGNS', '0')",
+            "ALTER TABLE `pilots` DROP INDEX `callsign`"
+        ],
+        "deletedFiles": [],
+        "newFolders": [
+            "core/logs"
+        ]
     }
 ]

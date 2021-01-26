@@ -1,5 +1,5 @@
 {
-    "tag": "v1.2.0-beta5",
-    "name": "Version 1.2.0 Beta 5",
-    "prerelease": true
+    "tag": "v1.2.0",
+    "name": "Version 1.2.0",
+    "prerelease": false
 }
