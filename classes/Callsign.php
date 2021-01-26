@@ -31,7 +31,7 @@ class Callsign
     {
 
         self::init();
-        $result = self::$_db->query("SELECT * FROM pilots WHERE id <> {$id} AND callsign = '{$callsign}' AND `status`=1");
+        $result = self::$_db->query("SELECT * FROM pilots WHERE id <> {$id} AND callsign = '{$callsign}' AND `status` < 2");
         return $result->count() != 0;
     }
 
@@ -41,7 +41,7 @@ class Callsign
     public static function all()
     {
         self::init();
-        $result = self::$_db->query("SELECT `callsign` FROM `pilots` WHERE `status`=1")->results();
+        $result = self::$_db->query("SELECT `callsign` FROM `pilots` WHERE `status` < 2")->results();
         return array_map(function ($u) {
             return $u->callsign;
         }, $result);
