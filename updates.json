@@ -250,5 +250,26 @@
         "queries": ["ALTER TABLE `pilots` DROP INDEX `callsign`"],
         "deletedFiles": [],
         "newFolders": []
+    },
+    {
+        "tag": "v1.2.0-beta5",
+        "name": "Version 1.2.0 Beta 5",
+        "date": "2021-01-26",
+        "notes": "Performance Improvements, Fixed Plugin Error Reporting",
+        "prerelease": true,
+        "useUpdater": true,
+        "files": [
+            "classes/Analytics.php",
+            "updater.php",
+            "events.php",
+            "home.php",
+            "vanet.php",
+            "admin/events.php",
+            "api.php",
+            "core/init.php"
+        ],
+        "queries": [],
+        "deletedFiles": [],
+        "newFolders": []
     }
 ]
