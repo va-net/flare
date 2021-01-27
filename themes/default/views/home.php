@@ -7,7 +7,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-Page::setTitle('Home - ' . Config::get('va/name'));
+Page::setTitle('Home - ' . Page::$pageData->va_name);
 ?>
 <!DOCTYPE html>
 <html>
@@ -31,7 +31,7 @@ Page::setTitle('Home - ' . Config::get('va/name'));
                     </div>
                     <div class="loaded">
                         <h3>Pilot Home</h3>
-                        <p>Welcome to the <?= escape(Page::$pageData->vaname) ?> Crew Center, <?= escape(Page::$pageData->user->data()->name) ?>!</p>
+                        <p>Welcome to the <?= escape(Page::$pageData->va_name) ?> Crew Center, <?= escape(Page::$pageData->user->data()->name) ?>!</p>
                         <!-- profile -->
                         <section id="profile" class="mb-2">
                             <h3>Your Profile</h3>
