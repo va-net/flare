@@ -1,18 +1,18 @@
 <div class="col-lg-3 p-3 bg-light text-left mobile-hidden border rounded shadow" id="desktopMenu" style="height: 100%;">
-    <h3>Pilot Panel - <?= escape($user->data()->callsign) ?></h3>
+    <h3>Pilot Panel - <?= escape(Page::$pageData->user->data()->callsign) ?></h3>
     <hr class="mt-0 divider" />
     <?php
     foreach ($GLOBALS['pilot-menu'] as $name => $data) {
-        if ($IS_GOLD || $data["needsGold"] == false) {
+        if (Page::$pageData->is_gold || $data["needsGold"] == false) {
             echo '<a href="' . $data['link'] . '" class="panel-link"><i class="fa ' . $data['icon'] . '"></i>&nbsp;' . $name . '</a><br />';
         }
     }
-    if ($user->hasPermission('admin')) {
+    if (Page::$pageData->user->hasPermission('admin')) {
         $localmenu = array();
         foreach ($GLOBALS['admin-menu'] as $name => $data) {
             $hasAnyPerms = false;
             foreach ($data as $key => $item) {
-                if ($user->hasPermission($item['permission'])) {
+                if (Page::$pageData->user->hasPermission($item['permission'])) {
                     $hasAnyPerms = true;
                 }
             }
@@ -33,8 +33,8 @@
 
             $j = 0;
             foreach ($items as $label => $data) {
-                if ($user->hasPermission($data["permission"])) {
-                    if ($IS_GOLD || !$data["needsGold"]) {
+                if (Page::$pageData->user->hasPermission($data["permission"])) {
+                    if (Page::$pageData->is_gold || !$data["needsGold"]) {
                         $badge = !isset($data["badgeid"]) || $data["badgeid"] == null ? '' : $data["badgeid"];
                         if ($j == 0) {
                             echo '&nbsp;&nbsp;<a href="' . $data["link"] . '" class="panel-link" data-badge="' . $badge . '"><i class="fa ' . $data['icon'] . '"></i>&nbsp;' . $label . '</a>';

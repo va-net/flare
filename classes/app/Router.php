@@ -2,7 +2,7 @@
 
 class Router
 {
-    private static $routes = array();
+    private static $routes = [];
     private static $pathNotFound = null;
     private static $methodNotAllowed = null;
 
@@ -14,11 +14,29 @@ class Router
      */
     public static function add($expression, $function, $method = 'get')
     {
-        array_push(self::$routes, array(
+        self::$routes[] = [
             'expression' => $expression,
             'function' => $function,
             'method' => $method
-        ));
+        ];
+    }
+
+    /**
+     * @return void
+     * @param string $expression
+     * @param string $method
+     */
+    public static function remove($expression, $method)
+    {
+        $i = 0;
+        foreach (self::$routes as $r) {
+            if ($r['expression'] == $expression && $r['method'] == $method) {
+                array_splice($routes, $i, 1);
+                break;
+            }
+
+            $i++;
+        }
     }
 
     /**
@@ -64,7 +82,6 @@ class Router
             }
 
             $route['expression'] = '^' . $route['expression'];
-
             $route['expression'] = $route['expression'] . '$';
 
             if (preg_match('#' . $route['expression'] . '#', $path, $matches)) {

@@ -16,56 +16,7 @@ if (!$user->isLoggedIn()) {
     Redirect::to('index.php');
 }
 
-if (Input::get('action') === 'editprofile') {
-    $csPattern = Config::get('VA_CALLSIGN_FORMAT');
-    $trimmedPattern = preg_replace("/\/[a-z]*$/", '', preg_replace("/^\//", '', $csPattern));
-
-    if (Callsign::assigned(Input::get('callsign'), $user->data()->id)) {
-        Session::flash('error', 'Callsign is Already Taken!');
-        Redirect::to('/home.php');
-    } elseif (!Regex::match($csPattern, Input::get('callsign'))) {
-        Session::flash('error', 'Callsign does not match the required format! Try <b>' . RegRev::generate($trimmedPattern) . '</b> instead.');
-        Redirect::to('/home.php');
-    } else {
-        try {
-            if (Config::get('AUTO_CALLSIGNS') == 1) {
-                $user->update(array(
-                    'name' => Input::get('name'),
-                    'email' => Input::get('email'),
-                    'ifc' => Input::get('ifc')
-                ));
-            } else {
-                $user->update(array(
-                    'name' => Input::get('name'),
-                    'callsign' => Input::get('callsign'),
-                    'email' => Input::get('email'),
-                    'ifc' => Input::get('ifc')
-                ));
-            }
-        } catch (Exception $e) {
-            Session::flash('error', $e->getMessage());
-            Redirect::to('home.php');
-        }
-        Session::flash('success', 'Profile updated successfully!');
-        Redirect::to('home.php');
-    }
-} elseif (Input::get('action') === 'changepass') {
-    if (Hash::check(Input::get('oldpass'), $user->data()->password)) {
-        try {
-            $user->update(array(
-                'password' => Hash::make(Input::get('newpass'))
-            ));
-        } catch (Exception $e) {
-            Session::flash('error', $e->getMessage());
-            Redirect::to('home.php');
-        }
-        Session::flash('success', 'Password Changed Successfully!');
-        Redirect::to('home.php');
-    } else {
-        Session::flash('error', 'Your Current Password was Incorrect!');
-        Redirect::to('home.php');
-    }
-} elseif (Input::get('action') === 'filepirep') {
+if (Input::get('action') === 'filepirep') {
     $multi = "None";
     $finalFTime = Time::strToSecs(Input::get('ftime'));
 

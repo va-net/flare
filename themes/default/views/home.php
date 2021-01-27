@@ -7,63 +7,31 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-require_once './core/init.php';
-
-$user = new User();
-
 Page::setTitle('Home - ' . Config::get('va/name'));
-Page::excludeAsset('datatables');
-Page::excludeAsset('chartjs');
-
-if (!$user->isLoggedIn()) {
-    Redirect::to('index.php');
-}
 ?>
 <!DOCTYPE html>
 <html>
 
 <head>
-    <?php include './includes/header.php'; ?>
+    <?php require_once __DIR__ . '/../includes/header.php'; ?>
 </head>
 
 <body>
-    <style>
-        #loader {
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            z-index: 1;
-            width: 150px;
-            height: 150px;
-            margin: -75px 0 0 -75px;
-            width: 120px;
-            height: 120px;
-        }
-    </style>
-
     <nav class="navbar navbar-dark navbar-expand-lg bg-custom">
-        <?php include './includes/navbar.php'; ?>
+        <?php require_once __DIR__ . '/../includes/navbar.php'; ?>
     </nav>
 
     <div class="container-fluid">
         <div class="container-fluid mt-4 text-center" style="overflow: auto;">
             <div class="row m-0 p-0">
-                <?php include './includes/sidebar.php'; ?>
+                <?php require_once __DIR__ . '/../includes/sidebar.php'; ?>
                 <div class="col-lg-9 main-content">
                     <div id="loader-wrapper">
                         <div id="loader" class="spinner-border spinner-border-sm spinner-custom"></div>
                     </div>
                     <div class="loaded">
                         <h3>Pilot Home</h3>
-                        <p>Welcome to the <?= escape(Config::get('va/name')) ?> Crew Center, <?= escape($user->data()->name) ?>!</p>
-                        <?php
-                        if (Session::exists('errormain')) {
-                            echo '<div class="alert alert-danger text-center">Error: ' . Session::flash('errormain') . '</div>';
-                        }
-                        if (Session::exists('successmain')) {
-                            echo '<div class="alert alert-success text-center">' . Session::flash('successmain') . '</div>';
-                        }
-                        ?>
+                        <p>Welcome to the <?= escape(Page::$pageData->vaname) ?> Crew Center, <?= escape(Page::$pageData->user->data()->name) ?>!</p>
                         <!-- profile -->
                         <section id="profile" class="mb-2">
                             <h3>Your Profile</h3>
@@ -86,27 +54,27 @@ if (!$user->isLoggedIn()) {
                                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                                         </div>
                                         <div class="modal-body">
-                                            <form action="update.php" method="post">
-                                                <input type="hidden" name="action" value="editprofile">
+                                            <form action="/home" method="post">
+                                                <input type="hidden" name="action" value="editprofile" />
                                                 <div class="form-group">
                                                     <label for="name">Name</label>
-                                                    <input type="text" maxlegnth="120" name="name" id="name" class="form-control" required value="<?= escape($user->data()->name) ?>">
+                                                    <input type="text" maxlegnth="120" name="name" id="name" class="form-control" required value="<?= escape(Page::$pageData->user->data()->name) ?>" />
                                                 </div>
-                                                <?php if (Config::get('AUTO_CALLSIGNS') != 1) : ?>
+                                                <?php if (Page::$pageData->auto_callsigns != 1) : ?>
                                                     <div class="form-group">
                                                         <label for="callsign">Callsign</label>
-                                                        <input type="text" name="callsign" id="callsign" class="form-control" required value="<?= escape($user->data()->callsign) ?>">
+                                                        <input type="text" name="callsign" id="callsign" class="form-control" required value="<?= escape(Page::$pageData->user->data()->callsign) ?>" />
                                                     </div>
                                                 <?php endif; ?>
                                                 <div class="form-group">
                                                     <label for="email">Email</label>
-                                                    <input type="email" name="email" id="email" class="form-control" required value="<?= escape($user->data()->email) ?>">
+                                                    <input type="email" name="email" id="email" class="form-control" required value="<?= escape(Page::$pageData->user->data()->email) ?>" />
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="ifc">IFC URL</label>
-                                                    <input type="url" name="ifc" id="ifc" class="form-control" required value="<?= escape($user->data()->ifc) ?>">
+                                                    <input type="url" name="ifc" id="ifc" class="form-control" required value="<?= escape(Page::$pageData->user->data()->ifc) ?>" />
                                                 </div>
-                                                <input type="submit" class="btn bg-custom" value="Edit Profile">
+                                                <input type="submit" class="btn bg-custom" value="Edit Profile" />
                                             </form>
                                         </div>
                                     </div>
@@ -121,7 +89,7 @@ if (!$user->isLoggedIn()) {
                                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                                         </div>
                                         <div class="modal-body">
-                                            <form action="update.php" method="post">
+                                            <form action="/home" method="post">
                                                 <input type="hidden" name="action" value="changepass">
                                                 <div class="form-group">
                                                     <label for="oldpass">Old Password</label>
@@ -148,41 +116,41 @@ if (!$user->isLoggedIn()) {
                             <table class="table mb-0 border-bottom">
                                 <tr>
                                     <td class="align-middle"><b>Name</b></td>
-                                    <td class="align-middle"><?= escape($user->data()->name) ?></td>
+                                    <td class="align-middle"><?= escape(Page::$pageData->user->data()->name) ?></td>
                                 </tr>
                                 <tr>
                                     <td class="align-middle"><b>IFC Profile</b></td>
                                     <?php
-                                    $username = explode('/', $user->data()->ifc);
-                                    if ($username === FALSE || count($username) < 5) {
-                                        $username = [null, null, null, null, ''];
+                                    Page::$pageData->username = explode('/', Page::$pageData->user->data()->ifc);
+                                    if (Page::$pageData->username === FALSE || count(Page::$pageData->username) < 5) {
+                                        Page::$pageData->username = [null, null, null, null, ''];
                                     }
                                     ?>
-                                    <td class="align-middle"><a href="<?= $user->data()->ifc ?>" target="_blank"><?= escape($username[4]) ?></td>
+                                    <td class="align-middle"><a href="<?= Page::$pageData->user->data()->ifc ?>" target="_blank"><?= escape(Page::$pageData->username[4]) ?></td>
                                 </tr>
                                 <tr>
                                     <td class="align-middle"><b>Callsign</b></td>
-                                    <td class="align-middle"><?= escape($user->data()->callsign) ?></td>
+                                    <td class="align-middle"><?= escape(Page::$pageData->user->data()->callsign) ?></td>
                                 </tr>
                                 <tr>
                                     <td class="align-middle"><b>Flight Time</b></td>
-                                    <td class="align-middle"><?= escape(Time::secsToString($user->getFlightTime())) ?></td>
+                                    <td class="align-middle"><?= escape(Time::secsToString(Page::$pageData->user->getFlightTime())) ?></td>
                                 </tr>
                                 <tr>
                                     <td class="align-middle"><b>Rank</b></td>
                                     <?php
-                                    $next = $user->nextrank();
+                                    $next = Page::$pageData->user->nextrank();
                                     $tip = "The Top Rank!";
                                     if ($next != null) {
                                         $hrs = $next->timereq / 3600;
                                         $tip = "Next Rank: {$next->name} ({$hrs}hrs)";
                                     }
                                     ?>
-                                    <td class="align-middle" data-toggle="tooltip" title="<?= $tip ?>"><?= escape($user->rank()) ?></td>
+                                    <td class="align-middle" data-toggle="tooltip" title="<?= $tip ?>"><?= escape(Page::$pageData->user->rank()) ?></td>
                                 </tr>
                                 <tr>
                                     <td class="align-middle"><b>PIREPs</b></td>
-                                    <td class="align-middle"><?= escape($user->numPirepsFiled()) ?></td>
+                                    <td class="align-middle"><?= escape(Page::$pageData->user->numPirepsFiled()) ?></td>
                                 </tr>
                             </table>
                         </section>
@@ -210,25 +178,10 @@ if (!$user->isLoggedIn()) {
                                     <tr class="mobile-hidden">
                                         <td colspan="5">Loading...</td>
                                     </tr>
-                                    <?php
-                                    // foreach ($pireps as $pirep) {
-                                    //     echo '<tr><td class="mobile-hidden align-middle">';
-                                    //     echo $pirep["number"];
-                                    //     echo '</td><td class="align-middle">';
-                                    //     echo $pirep["departure"].'-'.$pirep["arrival"];
-                                    //     echo '</td><td class="mobile-hidden align-middle">';
-                                    //     echo date_format(date_create($pirep['date']), 'Y-m-d');
-                                    //     echo '</td><td class="mobile-hidden align-middle">';
-                                    //     echo $pirep["aircraft"];
-                                    //     echo '</td><td class="align-middle">';
-                                    //     echo $pirep["status"];
-                                    //     echo '</td></tr>';
-                                    // }
-                                    ?>
                                 </tbody>
                             </table>
                         </section>
-                        <?php if ($IS_GOLD) : ?>
+                        <?php if (Page::$pageData->is_gold) : ?>
                             <!-- events -->
                             <section id="events" class="mb-3">
                                 <h3>Upcoming Events</h3>
@@ -252,12 +205,12 @@ if (!$user->isLoggedIn()) {
                 </div>
             </div>
             <footer class="container-fluid text-center">
-                <?php include './includes/footer.php'; ?>
+                <?php require_once __DIR__ . '/../includes/footer.php'; ?>
             </footer>
         </div>
     </div>
     <script>
-        <?php if ($IS_GOLD) : ?>
+        <?php if (Page::$pageData->is_gold) : ?>
             // Load Events
             $.get("/api.php/events", function(data) {
                 $("#events-table").html(data.result.map(function(e) {
