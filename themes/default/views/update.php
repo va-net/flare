@@ -16,70 +16,7 @@ if (!$user->isLoggedIn()) {
     Redirect::to('index.php');
 }
 
-if (Input::get('action') === 'filepirep') {
-    $multi = "None";
-    $finalFTime = Time::strToSecs(Input::get('ftime'));
-
-    if (!empty(Input::get('multi'))) {
-        $multiplier = Pirep::findMultiplier(Input::get('multi'));
-        if (!$multiplier) {
-            Session::flash('error', 'Invalid Multiplier Code');
-            Redirect::to('pireps.php?page=new');
-            die();
-        }
-
-        $multi = $multiplier->name;
-        $finalFTime *= $multiplier->multiplier;
-    }
-
-    $user = new User();
-    $allowedaircraft = $user->getAvailableAircraft();
-    $allowed = false;
-    foreach ($allowedaircraft as $a) {
-        if ($a["id"] == Input::get('aircraft')) {
-            $allowed = true;
-        }
-    }
-    if (!$allowed) {
-        Session::flash('error', 'You are not of a high enough rank to fly that aircraft. Your PIREP has not been filed.');
-        Redirect::to('pireps.php?page=new');
-    }
-
-    $response = VANet::sendPirep(array(
-        'AircraftID' => Aircraft::idToLiveryId(Input::get('aircraft')),
-        'Arrival' => Input::get('arr'),
-        'DateTime' => Input::get('date'),
-        'Departure' => Input::get('dep'),
-        'FlightTime' => Time::strToSecs(Input::get('ftime')),
-        'FuelUsed' => Input::get('fuel'),
-        'PilotId' => $user->data()->ifuserid
-    ));
-
-    $response = Json::decode($response->body);
-    if (!isset($response['success']) || $response['success'] != true) {
-        Session::flash('error', 'There was an Error Connecting to VANet.');
-        Redirect::to('pireps.php?page=new');
-        die();
-    }
-
-    if (!Pirep::file(array(
-        'flightnum' => Input::get('fnum'),
-        'departure' => Input::get('dep'),
-        'arrival' => Input::get('arr'),
-        'flighttime' => $finalFTime,
-        'pilotid' => $user->data()->id,
-        'date' => Input::get('date'),
-        'aircraftid' => Input::get('aircraft'),
-        'multi' => $multi
-    ))) {
-        Session::flash('error', 'There was an Error Filing the PIREP.');
-        Redirect::to('pireps.php?page=recents');
-    } else {
-        Cache::delete('badge_pireps');
-        Session::flash('success', 'PIREP Filed Successfully!');
-        Redirect::to('pireps.php?page=recents');
-    }
-} elseif (Input::get('action') === 'editpirep') {
+if (Input::get('action') === 'editpirep') {
     $pirep = Pirep::find(Input::get('id'));
     if ($pirep === FALSE) {
         Session::flash('error', 'PIREP Not Found');

@@ -11,9 +11,7 @@ require_once './core/init.php';
 
 $user = new User();
 
-Page::setTitle('Live Map - '.Config::get('va/name'));
-Page::excludeAsset('datatables');
-Page::excludeAsset('chartjs');
+Page::setTitle('Live Map - ' . Config::get('va/name'));
 
 if (!$user->isLoggedIn()) {
     Redirect::to('index.php');
@@ -21,9 +19,11 @@ if (!$user->isLoggedIn()) {
 ?>
 <!DOCTYPE html>
 <html>
+
 <head>
     <?php include './includes/header.php'; ?>
 </head>
+
 <body>
     <nav class="navbar navbar-dark navbar-expand-lg bg-custom">
         <?php include './includes/navbar.php'; ?>
@@ -33,7 +33,9 @@ if (!$user->isLoggedIn()) {
             <div class="row m-0 p-0">
                 <?php include './includes/sidebar.php'; ?>
                 <div class="col-lg-9 main-content">
-                    <div id="loader-wrapper"><div id="loader" class="spinner-border spinner-border-sm spinner-custom"></div></div>
+                    <div id="loader-wrapper">
+                        <div id="loader" class="spinner-border spinner-border-sm spinner-custom"></div>
+                    </div>
                     <div class="loaded">
                         <h3>Live Map</h3>
                         <p>Here you can view all the pilots that are currently flying through the Infinite Flight skies, using their <?= Config::get('va/name') ?> callsign.</p>
@@ -47,4 +49,5 @@ if (!$user->isLoggedIn()) {
         </div>
     </div>
 </body>
+
 </html>
