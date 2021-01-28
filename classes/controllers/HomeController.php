@@ -15,7 +15,7 @@ class HomeController extends Controller
     {
         $user = new User;
         if (!$user->isLoggedIn()) {
-            Redirect::to('index.php');
+            $this->redirect('/');
         }
         $data = new stdClass;
         $data->user = $user;
