@@ -14,7 +14,7 @@ $GLOBALS['admin-menu']["Operations Management"] = array(
         "needsGold" => false,
         "badgeid" => null,
     ],
-    "Manage Aircraft" => [
+    "Manage Fleet" => [
         "link" => "/admin/operations/fleet",
         "icon" => "fa-plane",
         "permission" => "opsmanage",
@@ -60,7 +60,7 @@ $GLOBALS['admin-menu']["User Management"] = array(
         "badgeid" => null,
     ],
     "Recruitment" => [
-        "link" => "/admin/users/recruitment",
+        "link" => "/admin/users/pending",
         "icon" => "fa-id-card",
         "permission" => "recruitment",
         "needsGold" => false,
