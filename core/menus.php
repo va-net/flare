@@ -158,7 +158,7 @@ $GLOBALS['pilot-menu'] = array(
         "badgeid" => null,
     ],
     "Events" => [
-        "link" => "/events",
+        "link" => "/events.php",
         "icon" => "fa-calendar",
         "needsGold" => true,
         "badgeid" => null,
