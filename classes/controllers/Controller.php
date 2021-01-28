@@ -21,13 +21,9 @@ class Controller
         if (!isset($data->user)) $data->user = new User;
 
         $phppath = __DIR__ . "/../../themes/{$theme}/views/{$pagename}.php";
-        $htmlpath = __DIR__ . "/../../themes/{$theme}/views/{$pagename}.html";
         if (file_exists($phppath)) {
             Page::$pageData = $data;
             include $phppath;
-            die();
-        } elseif (file_exists($htmlpath)) {
-            echo file_get_contents($htmlpath);
             die();
         } else {
             $this->notFound();
