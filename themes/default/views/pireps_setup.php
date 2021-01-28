@@ -6,7 +6,7 @@ Copyright (C) 2020  Lucas Rebato
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-Page::setTitle('Live Map - ' . Page::$pageData->va_name);
+Page::setTitle('PIREPs Setup - ' . Page::$pageData->va_name);
 ?>
 <!DOCTYPE html>
 <html>
@@ -28,9 +28,22 @@ Page::setTitle('Live Map - ' . Page::$pageData->va_name);
                         <div id="loader" class="spinner-border spinner-border-sm spinner-custom"></div>
                     </div>
                     <div class="loaded">
-                        <h3>Live Map</h3>
-                        <p>Here you can view all the pilots that are currently flying through the Infinite Flight skies, using their <?= Config::get('va/name') ?> callsign.</p>
-                        <iframe src='https://ifvarb.com/liveflightmap.php?callsign=<?= Page::$pageData->va_ident ?>&color=red&apikey=b48e66-79248c-d11549-090d5f-b39ea4' width='100%;' height='600px;' frameborder='0' scrolling='no'></iframe>
+                        <h3>Setup PIREPs</h3>
+                        <p>
+                            Before you can start filing PIREPs, we need to grab a bit of data from Infinite Flight.
+                            As you're flying anonymously or haven't linked your IFC Account to your IF Account,
+                            we couldn't grab this information in the background.
+                        </p>
+                        <p>
+                            Please spawn in on the <b><?= ucfirst(Page::$pageData->server); ?> Server</b>, and ensure that you set your
+                            callsign to your assigned one (<b><?= Page::$pageData->user->data()->callsign ?></b>, if you've forgotten!).
+                            Then, click the button below.
+                        </p>
+                        <form method="post" action="/pireps/setup">
+                            <input hidden name="action" value="setuppireps" />
+                            <input hidden name="callsign" value="<?= Page::$pageData->user->data()->callsign ?>" />
+                            <input type="submit" class="btn text-light bg-custom" value="Find Me" />
+                        </form>
                     </div>
                 </div>
             </div>

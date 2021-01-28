@@ -48,4 +48,14 @@ class Controller
         echo $content;
         die();
     }
+
+    /**
+     * @param User $user
+     */
+    protected function authenticate($user)
+    {
+        if (!$user->isLoggedIn()) {
+            $this->redirect('/');
+        }
+    }
 }

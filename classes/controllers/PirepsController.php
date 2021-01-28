@@ -12,9 +12,7 @@ class PirepsController extends Controller
     public function get_all()
     {
         $user = new User;
-        if (!$user->isLoggedIn()) {
-            $this->redirect('/');
-        }
+        $this->authenticate($user);
         $data = new stdClass;
         $data->user = $user;
         $data->va_name = Config::get('va/name');
@@ -28,6 +26,8 @@ class PirepsController extends Controller
         $user = new User;
         if (!$user->isLoggedIn()) {
             $this->redirect('/');
+        } elseif ($user->data()->ifuserid == null) {
+            $this->redirect('/pireps/setup');
         }
         $data = new stdClass;
         $data->user = $user;
@@ -40,6 +40,11 @@ class PirepsController extends Controller
     public function post_new()
     {
         $user = new User;
+        if (!$user->isLoggedIn()) {
+            $this->redirect('/');
+        } elseif ($user->data()->ifuserid == null) {
+            $this->redirect('/pireps/setup');
+        }
         $multi = "None";
         $finalFTime = Time::strToSecs(Input::get('ftime'));
 
@@ -101,5 +106,44 @@ class PirepsController extends Controller
             Session::flash('success', 'PIREP Filed Successfully!');
             $this->redirect('/pireps');
         }
+    }
+
+    public function get_setup()
+    {
+        $user = new User;
+        if (!$user->isLoggedIn()) {
+            $this->redirect('/');
+        }
+        $ifc = explode('/', $user->data()->ifc)[4];
+        $setupIfc = VANet::setupPirepsIfc($ifc, $user->data()->id);
+        if ($setupIfc) {
+            Session::flash('success', 'PIREPs were set up using your IFC Username. No further action is required.');
+            $this->redirect('/pireps/new');
+        }
+
+        $data = new stdClass;
+        $data->user = $user;
+        $data->va_name = Config::get('va/name');
+        $data->is_gold = VANet::isGold();
+        $data->server = 'casual';
+        $force = Config::get('FORCE_SERVER');
+        if ($force != 0 && $force != 'casual') $data->server = $force;
+        $this->render('pireps_setup', $data);
+    }
+
+    public function post_setup()
+    {
+        $user = new User;
+        $this->authenticate($user);
+        if (!VANet::setupPireps(Input::get('callsign'), $user->data()->id)) {
+            $server = 'casual';
+            $force = Config::get('FORCE_SERVER');
+            if ($force != 0 && $force != 'casual') $server = $force;
+            Session::flash('errorrecent', 'There was an Error Connecting to Infinite Flight. Ensure you are spawned in on the <b>' . ucfirst($server) . ' Server, and have set your callsign to \'' . $user->data()->callsign . '\'</b>!');
+            $this->get_setup();
+        }
+
+        Session::flash('success', 'PIREPs Setup Successfully! You can now File PIREPs.');
+        $this->redirect('/pireps/new');
     }
 }

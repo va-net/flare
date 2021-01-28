@@ -7,15 +7,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-require_once './core/init.php';
-
-$user = new User();
-
 Page::setTitle('PIREPs - ' . Config::get('va/name'));
-
-if (!$user->isLoggedIn()) {
-    Redirect::to('index.php');
-}
 ?>
 <!DOCTYPE html>
 <html>

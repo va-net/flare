@@ -7,7 +7,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-Page::setTitle('File PIREP - ' . Config::get('va/name'));
+Page::setTitle('File PIREP - ' . Page::$pageData->va_name);
 ?>
 <!DOCTYPE html>
 <html>
