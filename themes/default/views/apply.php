@@ -7,23 +7,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-require_once './core/init.php';
-
 use RegRev\RegRev;
 
-Page::setTitle('Apply - ' . Config::get('va/name'));
-Page::excludeAsset('datatables');
-Page::excludeAsset('chartjs');
-Page::excludeAsset('momentjs');
+Page::setTitle('Apply - ' . Page::$pageData->va_name);
 
-$user = new User();
-if ($user->isLoggedIn()) {
-    Redirect::to('home.php');
-}
-
-$csPattern = Config::get('VA_CALLSIGN_FORMAT');
-$trimmedPattern = preg_replace("/\/[a-z]*$/", '', preg_replace("/^\//", '', $csPattern));
-
+$trimmedPattern = preg_replace("/\/[a-z]*$/", '', preg_replace("/^\//", '', Page::$pageData->callsign_format));
 $filledCallsign = '';
 $callsigns = Callsign::all();
 if (empty(Input::get('callsign')) && $trimmedPattern != '.*') {
@@ -43,87 +31,21 @@ if (empty(Input::get('callsign')) && $trimmedPattern != '.*') {
 } else {
     $filledCallsign = Input::get('callsign');
 }
-
-if (Input::exists() && Token::check(Input::get('token'))) {
-    $validate = new Validate();
-    $validation = $validate->check($_POST, array(
-        'name' => array(
-            'required' => true,
-            'min' => 2,
-            'max' => 50
-        ),
-        'ifc' => array(
-            'required' => true
-        ),
-        'email' => array(
-            'required' => true,
-            'min' => 5,
-            'max' => 50
-        ),
-        'callsign' => array(
-            'required' => true,
-            'max' => 120
-        ),
-        'violand' => array(
-            'required' => true
-        ),
-        'grade' => array(
-            'required' => true
-        ),
-        'password' => array(
-            'required' => true,
-            'min' => 6
-        ),
-        'password-repeat' => array(
-            'required' => true,
-            'min' => 6,
-            'matches' => 'password'
-        )
-    ));
-
-    $assigned = Callsign::assigned(Input::get('callsign'), 0);
-    if ($validate->passed() && Regex::match($csPattern, Input::get('callsign')) && !$assigned) {
-        $user = new User();
-        try {
-            $user->create(array(
-                'name' => Input::get('name'),
-                'email' => Input::get('email'),
-                'ifc' => Input::get('ifc'),
-                'password' => Hash::make(Input::get('password')),
-                'callsign' => Input::get('callsign'),
-                'grade' => Input::get('grade'),
-                'violand' => Input::get('violand'),
-                'notes' => Input::get('notes'),
-            ));
-        } catch (Exception $e) {
-            die($e->getMessage());
-        }
-        Cache::delete('badge_recruitment');
-        Session::flash('success', 'Your application has been submitted! You will be contacted by a staff member in the coming weeks regarding the status of your application.');
-        Redirect::to('index.php');
-    } elseif (!$validate->passed()) {
-        Session::flash('error', $validate->errors()[0]);
-    } elseif ($assigned) {
-        Session::flash('error', 'That callsign is already taken');
-    } else {
-        Session::flash('error', 'Your Callsign is in an Invalid Format');
-    }
-}
 ?>
 <!DOCTYPE html>
 <html>
 
 <head>
-    <?php include './includes/header.php'; ?>
+    <?php require_once __DIR__ . '/../includes/header.php'; ?>
 </head>
 
 <body>
     <nav class="navbar navbar-dark navbar-expand-lg bg-custom">
-        <?php include './includes/navbar.php'; ?>
+        <?php require_once __DIR__ . '/../includes/navbar.php'; ?>
     </nav>
     <div class="container-fluid">
         <div class="container mt-4 text-center" style="overflow: auto;">
-            <h1 class="text-center pb-0 mb-0"><?= escape(Config::get('va/name')) ?></h1>
+            <h1 class="text-center pb-0 mb-0"><?= escape(Page::$pageData->va_name) ?></h1>
             <h3 class="text-center py-0 my-0">Application Form<br><br></h3>
             <?php
             if (Session::exists('error')) {
@@ -197,7 +119,7 @@ if (Input::exists() && Token::check(Input::get('token'))) {
                 </form>
             </div>
             <footer class="container-fluid text-center">
-                <?php include './includes/footer.php'; ?>
+                <?php require_once __DIR__ . '/../includes/footer.php'; ?>
             </footer>
         </div>
     </div>

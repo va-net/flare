@@ -30,8 +30,11 @@ Router::methodNotAllowed(function () {
     die();
 });
 
-Router::add('(/login)?', [new LoginController, 'get']);
-Router::add('(/login)?', [new LoginController, 'post'], 'post');
+Router::add('(/login)?', [new AuthController, 'get']);
+Router::add('(/login)?', [new AuthController, 'post'], 'post');
+Router::add('/apply', [new AuthController, 'apply_get']);
+Router::add('/apply', [new AuthController, 'apply_post'], 'post');
+Router::add('/logout', [new AuthController, 'logout']);
 Router::add('/home', [new HomeController, 'get']);
 Router::add('/home', [new HomeController, 'post'], 'post');
 
