@@ -51,7 +51,7 @@
     }
     ?>
     <br />
-    <a href="/logout" class="panel-link"><i class="fa fa-sign-out-alt"></i>&nbsp;Log Out</a>
+    <a href="/logout.php" class="panel-link"><i class="fa fa-sign-out-alt"></i>&nbsp;Log Out</a>
 </div>
 <script>
     $.get('/api.php/menu/badges', function(data) {
