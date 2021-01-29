@@ -46,7 +46,7 @@ Router::add('/pireps/setup', [new PirepsController, 'post_setup'], 'post');
 Router::add('/routes', [new RoutesController, 'get']);
 Router::add('/routes/search', [new RoutesController, 'search']);
 Router::add('/routes/([0-9]+)', [new RoutesController, 'view']);
-Router::add('/map', [new stdClass, 'get']); // [ ]
+Router::add('/map', [new MapController, 'get']);
 Router::add('/events', [new stdClass, 'get']); // [ ]
 Router::add('/events/([0-9a-zA-z]{8}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{12})', [new stdClass, 'get']); // [ ]
 Router::add('/pireps/acars', [new stdClass, 'get']); // [ ]
