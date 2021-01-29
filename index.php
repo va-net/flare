@@ -33,12 +33,11 @@ Router::add('/logout', [new AuthController, 'logout']);
 Router::add('/home', [new HomeController, 'get']);
 Router::add('/home', [new HomeController, 'post'], 'post');
 Router::add('/pireps', [new PirepsController, 'get_all']);
-Router::add('/pireps/([0-9]+)', [new stdClass, 'get']); // [ ]
 Router::add('/pireps/new', [new PirepsController, 'get_new']);
 Router::add('/pireps/new', [new PirepsController, 'post_new'], 'post');
 Router::add('/pireps/setup', [new PirepsController, 'get_setup']);
 Router::add('/pireps/setup', [new PirepsController, 'post_setup'], 'post');
-Router::add('/pireps/acars', [new stdClass, 'get']); // [ ]
+Router::add('/pireps/acars', [new PirepsController, 'acars']);
 Router::add('/routes', [new RoutesController, 'get']);
 Router::add('/routes/search', [new RoutesController, 'search']);
 Router::add('/routes/([0-9]+)', [new RoutesController, 'view']);

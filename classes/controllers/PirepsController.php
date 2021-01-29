@@ -146,4 +146,16 @@ class PirepsController extends Controller
         Session::flash('success', 'PIREPs Setup Successfully! You can now File PIREPs.');
         $this->redirect('/pireps/new');
     }
+
+    public function acars()
+    {
+        $user = new User;
+        $this->authenticate($user);
+        $data = new stdClass;
+        $data->user = $user;
+        $data->va_name = Config::get('va/name');
+        $data->is_gold = VANet::isGold();
+        $data->server = Config::get('FORCE_SERVER');
+        $this->render('acars', $data);
+    }
 }
