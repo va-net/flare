@@ -43,8 +43,8 @@ Router::add('/routes', [new RoutesController, 'get']);
 Router::add('/routes/search', [new RoutesController, 'search']);
 Router::add('/routes/([0-9]+)', [new RoutesController, 'view']);
 Router::add('/map', [new MapController, 'get']);
-Router::add('/events', [new stdClass, 'get']); // [ ]
-Router::add('/events/([0-9a-zA-z]{8}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{12})', [new stdClass, 'get']); // [ ]
+Router::add('/events', [new EventsController, 'get']);
+Router::add('/events/([0-9a-zA-z]{8}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{12})', [new EventsController, 'view']);
 
 // Admin Pages
 Router::add('/admin/operations/ranks', [new stdClass, 'get']); // [ ]

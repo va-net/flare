@@ -311,7 +311,6 @@ class VANet
             'apikey' => $key,
         ));
         $response = Json::decode($request->body);
-
         if (array_key_exists("status", $response)) {
             return $response["status"];
         }
