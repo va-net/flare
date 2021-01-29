@@ -31,7 +31,7 @@ class Router
         $i = 0;
         foreach (self::$routes as $r) {
             if ($r['expression'] == $expression && $r['method'] == $method) {
-                array_splice($routes, $i, 1);
+                array_splice(self::$routes, $i, 1);
                 break;
             }
 
