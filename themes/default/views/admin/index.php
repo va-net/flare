@@ -7,36 +7,24 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-require_once '../core/init.php';
-
-$user = new User();
-
-Page::setTitle('Site Dashboard - ' . Config::get('va/name'));
-Page::excludeAsset('datatables');
-
-if (!$user->isLoggedIn()) {
-    Redirect::to('/index.php');
-} elseif (!$user->hasPermission('admin')) {
-    Redirect::to('/home.php');
-}
-
+Page::setTitle('Site Dashboard - ' . Page::$pageData->va_name);
 $ACTIVE_CATEGORY = 'site-management';
 ?>
 <!DOCTYPE html>
 <html>
 
 <head>
-    <?php include '../includes/header.php'; ?>
+    <?php require_once __DIR__ . '/../../includes/header.php'; ?>
 </head>
 
 <body>
     <nav class="navbar navbar-dark navbar-expand-lg bg-custom">
-        <?php include '../includes/navbar.php'; ?>
+        <?php require_once __DIR__ . '/../../includes/navbar.php'; ?>
     </nav>
     <div class="container-fluid">
         <div class="container-fluid mt-4 text-center" style="overflow: auto;">
             <div class="row m-0 p-0">
-                <?php include '../includes/sidebar.php'; ?>
+                <?php require_once __DIR__ . '/../../includes/sidebar.php'; ?>
                 <div class="col-lg-9 main-content">
                     <div id="loader-wrapper">
                         <div id="loader" class="spinner-border spinner-border-sm spinner-custom"></div>
@@ -59,19 +47,19 @@ $ACTIVE_CATEGORY = 'site-management';
                             <div class="col-lg p-3">
                                 <div class="card p-3 shadow h-100">
                                     <h5 class="font-weight-bold">PIREPs (90 Days)</h5>
-                                    <p><?= Stats::totalFlights(90) ?></p>
+                                    <p><?= Page::$pageData->pireps_90 ?></p>
                                 </div>
                             </div>
                             <div class="col-lg p-3">
                                 <div class="card p-3 shadow h-100">
                                     <h5 class="font-weight-bold">Hours (90 Days)</h5>
-                                    <p><?= Time::secsToString(Stats::totalHours(90)) ?></p>
+                                    <p><?= Page::$pageData->hrs_90 ?></p>
                                 </div>
                             </div>
                             <div class="col-lg p-3">
                                 <div class="card p-3 shadow h-100">
                                     <h5 class="font-weight-bold">Pilot Applications (90 Days)</h5>
-                                    <p><?= Stats::pilotsApplied(90) ?></p>
+                                    <p><?= Page::$pageData->pilots_90 ?></p>
                                 </div>
                             </div>
                         </div>
@@ -80,36 +68,16 @@ $ACTIVE_CATEGORY = 'site-management';
                                 <div class="card p-3 shadow h-100">
                                     <h5 class="font-weight-bold">PIREPs (30 Days)</h5>
                                     <canvas id="pireps-chart"></canvas>
-                                    <?php
-                                    $allpireps = Pirep::fetchPast(30);
-                                    $chartdata = [];
-                                    $chartlables = [];
-                                    $dates = daterange(date("Y-m-d", strtotime("-30 days")), date("Y-m-d"));
-                                    $vals = array_map(function ($d) {
-                                        return 0;
-                                    }, $dates);
-                                    $pirepsAssoc = array_combine($dates, $vals);
-
-                                    foreach ($allpireps as $p) {
-                                        $p['date'] = date_format(date_create($p['date']), "Y-m-d");
-                                        $pirepsAssoc[$p['date']]++;
-                                    }
-
-                                    foreach ($pirepsAssoc as $date => $count) {
-                                        array_push($chartlables, $date);
-                                        array_push($chartdata, $count);
-                                    }
-                                    ?>
                                     <script>
                                         var ctx = document.getElementById('pireps-chart').getContext('2d');
                                         var chart = new Chart(ctx, {
                                             type: 'line',
                                             data: {
-                                                labels: <?= Json::encode($chartlables) ?>,
+                                                labels: <?= Json::encode(Page::$pageData->pireps_chart_labels) ?>,
                                                 datasets: [{
                                                     label: 'PIREPs',
-                                                    borderColor: '<?= Config::get('site/colour_main_hex') ?>',
-                                                    data: <?= Json::encode($chartdata) ?>
+                                                    borderColor: '<?= Page::$pageData->va_color ?>',
+                                                    data: <?= Json::encode(Page::$pageData->pireps_chart_data) ?>
                                                 }]
                                             },
                                             options: {}
@@ -121,32 +89,16 @@ $ACTIVE_CATEGORY = 'site-management';
                                 <div class="card p-3 shadow h-100">
                                     <h5 class="font-weight-bold">Pilot Applications (30 Days)</h5>
                                     <canvas id="pilots-chart"></canvas>
-                                    <?php
-                                    $allpilots = User::fetchPast(30);
-                                    $appchartdata = [];
-                                    $appchartlables = [];
-                                    $pilotsAssoc = array_combine($dates, $vals);
-
-                                    foreach ($allpilots as $p) {
-                                        $p['joined'] = date_format(date_create($p['joined']), "Y-m-d");
-                                        $pilotsAssoc[$p['joined']]++;
-                                    }
-
-                                    foreach ($pilotsAssoc as $date => $count) {
-                                        array_push($appchartlables, $date);
-                                        array_push($appchartdata, $count);
-                                    }
-                                    ?>
                                     <script>
                                         var ctx = document.getElementById('pilots-chart').getContext('2d');
                                         var chart = new Chart(ctx, {
                                             type: 'line',
                                             data: {
-                                                labels: <?= Json::encode($appchartlables) ?>,
+                                                labels: <?= Json::encode(Page::$pageData->pilots_chart_labels) ?>,
                                                 datasets: [{
                                                     label: 'Pilot Applications',
-                                                    borderColor: '<?= Config::get('site/colour_main_hex') ?>',
-                                                    data: <?= Json::encode($appchartdata) ?>
+                                                    borderColor: '<?= Page::$pageData->va_color ?>',
+                                                    data: <?= Json::encode(Page::$pageData->pilots_chart_data) ?>
                                                 }]
                                             },
                                             options: {}
@@ -170,9 +122,8 @@ $ACTIVE_CATEGORY = 'site-management';
                                         </thead>
                                         <tbody>
                                             <?php
-                                            $top = Stats::pilotLeaderboard(5, 'flighttime');
                                             $i = 1;
-                                            foreach ($top as $t) {
+                                            foreach (Page::$pageData->leaderboard as $t) {
                                                 echo '<tr><td>';
                                                 echo $i;
                                                 echo '</td><td>';
@@ -192,7 +143,7 @@ $ACTIVE_CATEGORY = 'site-management';
                 </div>
             </div>
             <footer class="container-fluid text-center">
-                <?php include '../includes/footer.php'; ?>
+                <?php require_once __DIR__ . '/../../includes/footer.php'; ?>
             </footer>
         </div>
     </div>

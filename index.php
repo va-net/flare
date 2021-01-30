@@ -46,6 +46,10 @@ Router::add('/events', [new EventsController, 'get']);
 Router::add('/events/([0-9a-zA-z]{8}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{12})', [new EventsController, 'view']);
 
 // Admin Pages
+Router::add('/admin', [new AdminController, 'dashboard']);
+Router::add('/admin/stats', [new stdClass, 'get']); // [ ]
+Router::add('/admin/news', [new stdClass, 'get']); // [ ]
+Router::add('/admin/settings', [new stdClass, 'get']); // [ ]
 Router::add('/admin/operations/ranks', [new stdClass, 'get']); // [ ]
 Router::add('/admin/operations/fleet', [new stdClass, 'get']); // [ ]
 Router::add('/admin/operations/routes', [new stdClass, 'get']); // [ ]
@@ -57,16 +61,12 @@ Router::add('/admin/users/staff', [new stdClass, 'get']); // [ ]
 Router::add('/admin/pireps', [new stdClass, 'get']); // [ ]
 Router::add('/admin/pireps/pending', [new stdClass, 'get']); // [ ]
 Router::add('/admin/pireps/multipliers', [new stdClass, 'get']); // [ ]
-Router::add('/admin/stats', [new stdClass, 'get']); // [ ]
-Router::add('/admin', [new stdClass, 'get']); // [ ]
-Router::add('/admin/news', [new stdClass, 'get']); // [ ]
-Router::add('/admin/settings', [new stdClass, 'get']); // [ ]
 Router::add('/admin/plugins', [new stdClass, 'get']); // [ ]
 Router::add('/admin/plugins/installed', [new stdClass, 'get']); // [ ]
 
 $initfile = __DIR__ . "/themes/{$theme}/_init.php";
 if (file_exists($initfile)) {
-    include($initfile);
+    include $initfile;
 }
 
 Router::run();
