@@ -48,4 +48,22 @@ class AdminController extends Controller
 
         $this->render('admin/index', $data);
     }
+
+    public function stats()
+    {
+        $user = new User;
+        $this->authenticate($user);
+        $data = new stdClass;
+        $data->user = $user;
+        $data->va_name = Config::get('va/name');
+        $data->is_gold = VANet::isGold();
+        $data->hours = Time::secsToString(Stats::totalHours());
+        $data->flights = Stats::totalFlights();
+        $data->pilots = Stats::numPilots();
+        $data->routes = Stats::numRoutes();
+        if ($data->is_gold) {
+            $data->stats = VANet::getStats();
+        }
+        $this->render('admin/stats', $data);
+    }
 }
