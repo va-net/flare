@@ -68,11 +68,11 @@ class Config
     public static function replaceColour($main, $text)
     {
 
-        $currentConf = file_get_contents(__DIR__ . '/../core/config.php');
+        $currentConf = file_get_contents(__DIR__ . '/../../core/config.php');
         preg_match("/#([a-f0-9]{3}){1,2}\b/i", $currentConf, $matches);
         $currentConf = str_replace($matches[0], '#' . $main, $currentConf);
 
-        $file = fopen(__DIR__ . '/../core/config.php', 'w+');
+        $file = fopen(__DIR__ . '/../../core/config.php', 'w+');
 
         if (!$file) {
             return false;
@@ -95,8 +95,8 @@ class Config
      */
     public static function replaceCss($data)
     {
-        $res = file_put_contents(__DIR__ . '/../assets/custom.css', $data);
-        return !($res === FALSE);
+        $res = file_put_contents(__DIR__ . '/../../assets/custom.css', $data);
+        return $res !== FALSE;
     }
 
     /**
@@ -104,7 +104,7 @@ class Config
      */
     public static function getCss()
     {
-        return file_get_contents(__DIR__ . '/../assets/custom.css');
+        return file_get_contents(__DIR__ . '/../../assets/custom.css');
     }
 
     /**
@@ -115,7 +115,7 @@ class Config
     public static function replace($where, $new)
     {
 
-        $currentConfFile = file_get_contents(__DIR__ . '/../core/config.php');
+        $currentConfFile = file_get_contents(__DIR__ . '/../../core/config.php');
         $regex = '/\'' . $where . '\' => .*/m';
         preg_match($regex, $currentConfFile, $matches);
 
@@ -141,7 +141,7 @@ class Config
 
         $newConf = preg_replace('/' . $currentVal . '/', $new, $currentConfFile, 1);
 
-        $file = fopen(__DIR__ . '/../core/config.php', 'w+');
+        $file = fopen(__DIR__ . '/../../core/config.php', 'w+');
 
         if (!$file) {
             return false;

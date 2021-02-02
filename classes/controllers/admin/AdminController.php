@@ -52,7 +52,7 @@ class AdminController extends Controller
     public function stats()
     {
         $user = new User;
-        $this->authenticate($user);
+        $this->authenticate($user, true, 'statsviewing');
         $data = new stdClass;
         $data->user = $user;
         $data->va_name = Config::get('va/name');

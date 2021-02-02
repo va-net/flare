@@ -51,10 +51,11 @@ class Controller
 
     /**
      * @param User $user
+     * @param string $permission
      */
-    protected function authenticate($user)
+    protected function authenticate($user, $admin = false, $permission = null)
     {
-        if (!$user->isLoggedIn()) {
+        if (!$user->isLoggedIn() || ($admin && !$user->hasPermission('admin')) || !$user->hasPermission($permission)) {
             $this->redirect('/');
         }
     }

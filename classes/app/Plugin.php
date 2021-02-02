@@ -52,6 +52,6 @@ class Plugin
     {
         $b = Page::$badges;
         $b[$id] = $action;
-        Page::setBadges($b);
+        Page::$badges = $b;
     }
 }
