@@ -379,22 +379,6 @@ if (Input::get('action') === 'editpirep') {
         Session::flash('success', 'Rank Deleted Successfully!');
         Redirect::to('/admin/operations.php?section=ranks');
     }
-} elseif (Input::get('action') === 'setdesign') {
-    if (!$user->hasPermission('site')) {
-        Redirect::to('home.php');
-        die();
-    }
-
-    if (
-        !Config::replaceColour(trim(Input::get('hexcol'), "#"), trim(Input::get('textcol'), "#"))
-        || !Config::replaceCss(Input::get('customcss'))
-    ) {
-        Session::flash('error', 'There was an Error Updating the Design');
-        Redirect::to('/admin/site.php');
-        die();
-    }
-    Session::flash('success', 'Design Updated Successfully! You may need to reload the page or clear your cache in order for it to show.');
-    Redirect::to('/admin/site.php?page=design');
 } elseif (Input::get('action') === 'vasettingsupdate') {
     if (!$user->hasPermission('site')) {
         Redirect::to('home.php');
@@ -416,27 +400,6 @@ if (Input::get('action') === 'editpirep') {
     }
     Session::flash('success', 'VA Settings Changed Successfully!');
     Redirect::to('/admin/site.php?tab=settings');
-} elseif (Input::get('action') === 'interactionupdate') {
-    if (!$user->hasPermission('site')) {
-        Redirect::to('home.php');
-        die();
-    }
-
-    $oldAnalytics = Config::get('MASTER_API_KEY') == '' ? 0 : 1;
-    if ($oldAnalytics == 1 && Input::get('analytics') == 0) {
-        Analytics::unregister();
-    } elseif ($oldAnalytics == 0 && Input::get('analytics') == 1) {
-        Analytics::register();
-    }
-
-    if (!Config::replace('api_key', trim(Input::get('vanetkey')))) {
-        Session::flash('error', 'There was an error updating the settings!');
-        Redirect::to('/admin/site.php?tab=interaction');
-        die();
-    }
-
-    Session::flash('success', 'Settings Updated');
-    Redirect::to('/admin/site.php?tab=interaction');
 } elseif (Input::get('action') === 'addevent') {
     if (!$user->hasPermission('opsmanage')) {
         Redirect::to('home.php');
@@ -880,19 +843,6 @@ if (Input::get('action') === 'editpirep') {
 
     Session::flash('success', 'Plugin Removed');
     Redirect::to('/admin/plugins.php?tab=installed');
-} elseif (Input::get('action') === 'clearlogs') {
-    if (!$user->hasPermission('site')) {
-        Redirect::to('home.php');
-    }
-
-    if (Input::get('period') == '*') {
-        Logger::clearAll();
-    } else {
-        Logger::clearOld(Input::get('period'));
-    }
-
-    Session::flash('success', 'Logs Cleared');
-    Redirect::to('/admin/site.php?tab=maintenance');
 } elseif (Input::get('action') === 'announce') {
     if (!$user->hasPermission('usermanage')) {
         Redirect::to('home.php');
@@ -927,12 +877,4 @@ if (Input::get('action') === 'editpirep') {
         Session::flash('success', 'PIREP Edited Successfully!');
         Redirect::to('/admin/pireps.php?tab=all');
     }
-} elseif (Input::get('action') === 'clearcache') {
-    if (!$user->hasPermission('site')) {
-        Redirect::to('home.php');
-    }
-
-    Cache::clear();
-    Session::flash('success', 'Cache Cleared');
-    Redirect::to('/admin/site.php?tab=maintenance');
 }

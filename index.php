@@ -51,7 +51,8 @@ Router::add('/admin/stats', [new AdminController, 'stats']);
 Router::add('/admin/news', [new stdClass, 'get']); // [ ]
 Router::add('/admin/news/add', [new stdClass, 'get']); // [ ]
 Router::add('/admin/news/([0-9]+)', [new stdClass, 'get']); // [ ]
-Router::add('/admin/settings', [new stdClass, 'get']); // [ ]
+Router::add('/admin/settings', [new AdminController, 'settings']);
+Router::add('/admin/settings', [new AdminController, 'settings_post'], 'post');
 Router::add('/admin/operations/ranks', [new stdClass, 'get']); // [ ]
 Router::add('/admin/operations/ranks/add', [new stdClass, 'get']); // [ ]
 Router::add('/admin/operations/ranks/([0-9]+)', [new stdClass, 'get']); // [ ]
