@@ -37,6 +37,9 @@ class Config
      */
     public static function get($path)
     {
+        if (!array_key_exists('config', $GLOBALS)) {
+            return '';
+        }
         $config = $GLOBALS['config'];
         $path = explode('/', $path);
 
