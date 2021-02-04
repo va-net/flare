@@ -8,7 +8,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-require_once '../classes/DB.php';
+require_once __DIR__.'/../classes/data/DB.php';
 
 class Installer
 {
