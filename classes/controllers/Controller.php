@@ -20,10 +20,15 @@ class Controller
 
         if (!isset($data->user)) $data->user = new User;
 
+        Page::$pageData = $data;
+
         $phppath = __DIR__ . "/../../themes/{$theme}/views/{$pagename}.php";
+        $defaultpath = __DIR__ . "/../../themes/default/views/{$pagename}.php";
         if (file_exists($phppath)) {
-            Page::$pageData = $data;
             include $phppath;
+            die();
+        } else if (file_exists($defaultpath)) {
+            include $defaultpath;
             die();
         } else {
             $this->notFound();
