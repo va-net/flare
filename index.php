@@ -48,9 +48,8 @@ Router::add('/events/([0-9a-zA-z]{8}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4
 // Admin Pages
 Router::add('/admin', [new AdminController, 'dashboard']);
 Router::add('/admin/stats', [new AdminController, 'stats']);
-Router::add('/admin/news', [new stdClass, 'get']); // [ ]
-Router::add('/admin/news/add', [new stdClass, 'get']); // [ ]
-Router::add('/admin/news/([0-9]+)', [new stdClass, 'get']); // [ ]
+Router::add('/admin/news', [new NewsController, 'get']);
+Router::add('/admin/news', [new NewsController, 'post'], 'post');
 Router::add('/admin/settings', [new AdminController, 'settings']);
 Router::add('/admin/settings', [new AdminController, 'settings_post'], 'post');
 Router::add('/admin/operations/ranks', [new stdClass, 'get']); // [ ]

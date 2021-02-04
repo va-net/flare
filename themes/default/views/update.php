@@ -198,40 +198,6 @@ if (Input::get('action') === 'editpirep') {
     ));
     Session::flash('success', 'Multiplier Added Successfully!');
     Redirect::to('/admin/multipliers.php');
-} elseif (Input::get('action') === 'deletearticle') {
-    if (!$user->hasPermission('newsmanage')) {
-        Redirect::to('home.php');
-        die();
-    }
-
-    News::archive(Input::get('delete'));
-    Session::flash('success', 'News Item Archived Successfully! ');
-    Redirect::to('/admin/news.php');
-} elseif (Input::get('action') === 'editarticle') {
-    if (!$user->hasPermission('newsmanage')) {
-        Redirect::to('home.php');
-        die();
-    }
-
-    News::edit(Input::get('id'), array(
-        'subject' => Input::get('title'),
-        'content' => Input::get('content')
-    ));
-    Session::flash('success', 'News Article Edited Successfully! ');
-    Redirect::to('/admin/news.php');
-} elseif (Input::get('action') === 'newarticle') {
-    if (!$user->hasPermission('newsmanage')) {
-        Redirect::to('home.php');
-        die();
-    }
-
-    News::add(array(
-        'subject' => Input::get('title'),
-        'content' => Input::get('content'),
-        'author' => Input::get('author')
-    ));
-    Session::flash('success', 'News Article Added Successfully!');
-    Redirect::to('/admin/news.php');
 } elseif (Input::get('action') === 'deleteaircraft') {
     if (!$user->hasPermission('opsmanage')) {
         Redirect::to('home.php');
