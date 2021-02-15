@@ -328,5 +328,20 @@
         "newFolders": [
             "core/logs"
         ]
+    },
+    {
+        "tag": "v1.2.1",
+        "name": "Version 1.2.1",
+        "date": "2021-02-16",
+        "notes": "Fixed Icons",
+        "prerelease": false,
+        "useUpdater": true,
+        "files": [
+            "assets/fontawesome.min.css",
+            "classes/Page.php"
+        ],
+        "queries": [],
+        "deletedFiles": [],
+        "newFolders": []
     }
 ]
