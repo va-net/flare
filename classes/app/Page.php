@@ -21,7 +21,7 @@ class Page
         ],
         'custom-css' => ['<link rel="stylesheet" type="text/css" href="/assets/custom.css">'],
         'flare-css' => ['<link rel="stylesheet" type="text/css" href="/assets/style.css.php">'],
-        'font-awesome' => ['<script src="https://kit.fontawesome.com/a076d05399.js"></script>'],
+        'font-awesome' => ['<link rel="stylesheet" type"text/css" href="/assets/fontawesome.min.css">'],
         'chartjs' => ['<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>'],
         'momentjs' => ['<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>'],
         'datatables' => [
