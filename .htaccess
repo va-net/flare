@@ -1,7 +1,8 @@
-Redirect /core/ /
-Redirect /includes/ /
-Redirect /classes/ /
-Redirect /vendor/ /
+RedirectMatch 403 ^/classes/.*?$
+RedirectMatch 403 ^/core/.*?$
+RedirectMatch 403 ^/docker-compose/.*?$
+RedirectMatch 403 ^/themes/.*?$
+RedirectMatch 403 ^/vendor/.*?$
 
 Options +FollowSymLinks
 Options All -Indexes 

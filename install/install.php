@@ -7,7 +7,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-require __DIR__.'/../core/init.php';
+require __DIR__ . '/../core/init.php';
 require_once 'Installer.php';
 
 Page::setTitle('Install Flare');
@@ -56,7 +56,6 @@ switch (Input::get('page')) {
         Redirect::to('?page=db-setup-cont');
         break;
     case 'db-setup-cont':
-        Installer::showTemplate('db-setup-cont');
         if (Input::get('submit')) {
             sleep(8);
             if (!Installer::setupDb()) {
@@ -65,6 +64,7 @@ switch (Input::get('page')) {
             }
             Redirect::to('?page=user-setup');
         }
+        Installer::showTemplate('db-setup-cont');
         break;
     case 'user-setup':
         Installer::showTemplate('user-setup');
@@ -89,7 +89,7 @@ switch (Input::get('page')) {
                     'status' => 1
                 ));
                 Permissions::giveAll(1);
-            } catch(Exception $e) {
+            } catch (Exception $e) {
                 Session::flash('error', 'Something went wrong when trying to register the user. Please try again.');
                 Redirect::to('?page=user-setup');
             }
@@ -98,7 +98,4 @@ switch (Input::get('page')) {
         break;
     case 'success':
         Installer::showTemplate('success');
-
 }
-
-

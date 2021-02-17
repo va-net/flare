@@ -18,12 +18,12 @@ class DB
         $_results,
         $_count = 0;
 
-    private function __construct()
+    private function __construct($ignore = false)
     {
         try {
             $this->_pdo = new PDO('mysql:host=' . Config::get('mysql/host') . ';dbname=' . Config::get('mysql/db') . ';port=' . Config::get('mysql/port'), Config::get('mysql/username'), Config::get('mysql/password'));
         } catch (PDOException $e) {
-            die($e->getMessage());
+            if (!$ignore) die($e->getMessage());
         }
     }
 
@@ -40,11 +40,18 @@ class DB
 
     /**
      * @return DB
+     * @param bool $ignore
      */
-    public static function newInstance()
+    public static function newInstance($ignore = false)
     {
-        return new DB();
+        return new DB($ignore);
     }
+
+    public function exists()
+    {
+        return isset($this->_pdo);
+    }
+
     /**
      * @return DB
      * @param string $sql SQL to Run

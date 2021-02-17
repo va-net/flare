@@ -24,7 +24,10 @@ class Config
         if (self::$_dbConfig != [] && !$force) {
             return;
         }
-        $db = DB::getInstance();
+        $db = DB::newInstance(true);
+        if (!$db->exists()) {
+            return;
+        }
         $ret = $db->getAll('options')->results();
         foreach ($ret as $c) {
             self::$_dbConfig[$c->name] = $c->value;
