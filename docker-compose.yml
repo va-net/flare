@@ -13,7 +13,7 @@ services:
     ports: 
       - 80:80
     volumes: 
-      - .:/var/www/html
+      - ./:/var/www/html
 
   db:
     image: mysql:5.7
