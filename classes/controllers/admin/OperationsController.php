@@ -7,10 +7,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-class RanksController extends Controller
+class OperationsController extends Controller
 {
-
-    public function get()
+    public function ranks_get()
     {
         $user = new User;
         $this->authenticate($user, true, 'opsmanage');
@@ -22,30 +21,30 @@ class RanksController extends Controller
         $this->render('admin/ranks', $data);
     }
 
-    public function post()
+    public function ranks_post()
     {
         $user = new User;
         $this->authenticate($user, true, 'opsmanage');
         switch (Input::get('action')) {
             case 'addrank':
-                $this->add();
+                $this->rank_add();
             case 'editrank':
-                $this->edit();
+                $this->rank_edit();
             case 'delrank':
-                $this->delete();
+                $this->rank_delete();
             default:
-                $this->get();
+                $this->ranks_get();
         }
     }
 
-    private function add()
+    private function rank_add()
     {
         Rank::add(Input::get('name'), Time::hrsToSecs(Input::get('time')));
         Session::flash('success', 'Rank Added Successfully!');
         $this->redirect('/admin/operations/ranks');
     }
 
-    private function edit()
+    private function rank_edit()
     {
         try {
             Rank::update(Input::get('id'), array(
@@ -60,7 +59,7 @@ class RanksController extends Controller
         $this->redirect('/admin/operations/ranks');
     }
 
-    private function delete()
+    private function rank_delete()
     {
         $ranks = Rank::fetchAllNames()->count();
         if ($ranks <= 1) {
@@ -75,5 +74,55 @@ class RanksController extends Controller
             Session::flash('success', 'Rank Deleted Successfully');
             $this->redirect('/admin/operations/ranks');
         }
+    }
+
+    public function fleet_get()
+    {
+        $user = new User;
+        $this->authenticate($user, true, 'opsmanage');
+        $data = new stdClass;
+        $data->user = $user;
+        $data->va_name = Config::get('va/name');
+        $data->is_gold = VANet::isGold();
+        $data->fleet = Aircraft::fetchActiveAircraft()->results();
+        $data->ranks = Rank::fetchAllNames()->results();
+        $this->render('admin/fleet', $data);
+    }
+
+    public function fleet_post()
+    {
+        $user = new User;
+        $this->authenticate($user, true, 'opsmanage');
+        switch (Input::get('action')) {
+            case 'addaircraft':
+                $this->fleet_add();
+            case 'deleteaircraft':
+                $this->fleet_delete();
+            case 'editfleet':
+                $this->fleet_edit();
+            default:
+                $this->fleet_get();
+        }
+    }
+
+    private function fleet_add()
+    {
+        Aircraft::add(Input::get('livery'), Input::get('rank'), Input::get('notes'));
+        Session::flash('success', 'Aircraft Added Successfully! ');
+        $this->redirect('/admin/operations/fleet');
+    }
+
+    private function fleet_delete()
+    {
+        Aircraft::archive(Input::get('delete'));
+        Session::flash('success', 'Aircraft Archived Successfully! ');
+        $this->redirect('/admin/operations/fleet');
+    }
+
+    private function fleet_edit()
+    {
+        Aircraft::update(Input::get('rank'), Input::get('notes'), Input::get('id'));
+        Session::flash('success', 'Aircraft Updated Successfully!');
+        $this->redirect('/admin/operations/fleet');
     }
 }

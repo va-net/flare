@@ -198,33 +198,6 @@ if (Input::get('action') === 'editpirep') {
     ));
     Session::flash('success', 'Multiplier Added Successfully!');
     Redirect::to('/admin/multipliers.php');
-} elseif (Input::get('action') === 'deleteaircraft') {
-    if (!$user->hasPermission('opsmanage')) {
-        Redirect::to('home.php');
-        die();
-    }
-
-    Aircraft::archive(Input::get('delete'));
-    Session::flash('success', 'Aircraft Archived Successfully! ');
-    Redirect::to('/admin/operations.php?section=fleet');
-} elseif (Input::get('action') === 'addaircraft') {
-    if (!$user->hasPermission('opsmanage')) {
-        Redirect::to('home.php');
-        die();
-    }
-
-    Aircraft::add(Input::get('livery'), Input::get('rank'), Input::get('notes'));
-    Session::flash('success', 'Aircraft Added Successfully! ');
-    Redirect::to('/admin/operations.php?section=fleet');
-} elseif (Input::get('action') === 'editfleet') {
-    if (!$user->hasPermission('opsmanage')) {
-        Redirect::to('home.php');
-        die();
-    }
-
-    Aircraft::update(Input::get('rank'), Input::get('notes'), Input::get('id'));
-    Session::flash('success', 'Aircraft Updated Successfully!');
-    Redirect::to('/admin/operations.php?section=fleet');
 } elseif (Input::get('action') === 'setuppireps') {
     if (!VANet::setupPireps(Input::get('callsign'), $user->data()->id)) {
         $server = 'casual';
