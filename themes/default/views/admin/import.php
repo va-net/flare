@@ -6,36 +6,24 @@ Copyright (C) 2020  Lucas Rebato
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-
-require_once '../core/init.php';
-
-$user = new User();
-
-Page::setTitle('Operations Admin - ' . Config::get('va/name'));
-
-if (!$user->isLoggedIn()) {
-    Redirect::to('/index.php');
-} elseif (!$user->hasPermission('opsmanage') || !$user->hasPermission('admin')) {
-    Redirect::to('/home.php');
-}
-
+Page::setTitle('Import Routes - ' . Page::$pageData->va_name);
 $ACTIVE_CATEGORY = 'operations-management';
 ?>
 <!DOCTYPE html>
 <html>
 
 <head>
-    <?php include '../includes/header.php'; ?>
+    <?php require_once __DIR__ . '/../../includes/header.php'; ?>
 </head>
 
 <body>
     <nav class="navbar navbar-dark navbar-expand-lg bg-custom">
-        <?php include '../includes/navbar.php'; ?>
+        <?php require_once __DIR__ . '/../../includes/navbar.php'; ?>
     </nav>
     <div class="container-fluid">
         <div class="container-fluid mt-4 text-center" style="overflow: auto;">
             <div class="row m-0 p-0">
-                <?php include '../includes/sidebar.php'; ?>
+                <?php require_once __DIR__ . '/../../includes/sidebar.php'; ?>
                 <div class="col-lg-9 main-content">
                     <div id="loader-wrapper">
                         <div id="loader" class="spinner-border spinner-border-sm spinner-custom"></div>
@@ -53,20 +41,29 @@ $ACTIVE_CATEGORY = 'operations-management';
                             echo '<div class="alert alert-success text-center">' . Session::flash('success') . '</div>';
                         }
                         ?>
-                        <?php if (Input::get('section') === 'fleet') : ?>
-                            <!--  -->
-                        <?php elseif (Input::get('section') === 'routes') : ?>
-                            <!--  -->
-                        <?php elseif (Input::get('section') === 'ranks') : ?>
-                            <!--  -->
-                        <?php elseif (Input::get('section') === 'phpvms') : ?>
-                            <!--  -->
-                        <?php endif; ?>
+                        <h3>phpVMS Importer</h3>
+                        <p>
+                            Here, you can import your routes from the phpVMS CSV Format.
+                        </p>
+                        <form method="post" enctype="multipart/form-data" action="/admin/operations/routes/import">
+                            <input hidden name="action" value="choose" />
+                            <div class="custom-file mb-2">
+                                <input required type="file" class="custom-file-input" name="routes-upload" accept=".csv" id="routes-upload">
+                                <label class="custom-file-label" id="routes-upload-label" for="routes-upload">Routes File</label>
+                            </div>
+                            <input type="submit" class="btn bg-custom" value="Process" />
+                        </form>
+                        <script>
+                            $("#routes-upload").on("change", function() {
+                                var fileName = $(this).val().split("\\").pop();
+                                $(this).siblings("#routes-upload-label").addClass("selected").html(fileName);
+                            });
+                        </script>
                     </div>
                 </div>
             </div>
             <footer class="container-fluid text-center">
-                <?php include '../includes/footer.php'; ?>
+                <?php require_once __DIR__ . '/../../includes/footer.php'; ?>
             </footer>
         </div>
     </div>

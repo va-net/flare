@@ -186,8 +186,7 @@ $ACTIVE_CATEGORY = 'operations-management';
                                                 <label for="fleetedit-rank">Minimum Rank</label>
                                                 <select required class="form-control" name="rank" id="fleetedit-rank">
                                                     <?php
-                                                    $ranks = Rank::fetchAllNames()->results();
-                                                    foreach ($ranks as $r) {
+                                                    foreach (Page::$pageData->ranks as $r) {
                                                         echo '<option value="' . $r->id . '">' . $r->name . '</option>';
                                                     }
                                                     ?>
