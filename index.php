@@ -51,32 +51,31 @@ Router::add('/admin/news', [new NewsController, 'get']);
 Router::add('/admin/news', [new NewsController, 'post'], 'post');
 Router::add('/admin/settings', [new AdminController, 'settings']);
 Router::add('/admin/settings', [new AdminController, 'settings_post'], 'post');
-Router::add('/admin/operations/ranks', [new stdClass, 'get']); // [ ]
-Router::add('/admin/operations/ranks/add', [new stdClass, 'get']); // [ ]
-Router::add('/admin/operations/ranks/([0-9]+)', [new stdClass, 'get']); // [ ]
-Router::add('/admin/operations/fleet', [new stdClass, 'get']); // [ ]
-Router::add('/admin/operations/fleet/add', [new stdClass, 'get']); // [ ]
-Router::add('/admin/operations/fleet/([0-9]+)', [new stdClass, 'get']); // [ ]
-Router::add('/admin/operations/routes', [new stdClass, 'get']); // [ ]
-Router::add('/admin/operations/routes/add', [new stdClass, 'get']); // [ ]
-Router::add('/admin/operations/routes/edit', [new stdClass, 'get']); // [ ]
-Router::add('/admin/operations/codeshares', [new stdClass, 'get']); // [ ]
-Router::add('/admin/operations/events', [new stdClass, 'get']); // [ ]
-Router::add('/admin/operations/events/add', [new stdClass, 'get']); // [ ]
-Router::add('/admin/operations/events/([0-9a-zA-z]{8}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{12})', [new stdClass, 'get']); // [ ]
-Router::add('/admin/users', [new stdClass, 'get']); // [ ]
-Router::add('/admin/([0-9]+)', [new stdClass, 'get']); // [ ]
-Router::add('/admin/([0-9]+)/edit', [new stdClass, 'get']); // [ ]
-Router::add('/admin/users/pending', [new stdClass, 'get']); // [ ]
-Router::add('/admin/users/staff', [new stdClass, 'get']); // [ ]
-Router::add('/admin/users/staff/([0-9]+)', [new stdClass, 'get']); // [ ]
-Router::add('/admin/pireps', [new stdClass, 'get']); // [ ]
-Router::add('/admin/pireps/([0-9]+)', [new stdClass, 'get']); // [ ]
-Router::add('/admin/pireps/([0-9]+)/edit', [new stdClass, 'get']); // [ ]
-Router::add('/admin/pireps/pending', [new stdClass, 'get']); // [ ]
-Router::add('/admin/pireps/multipliers', [new stdClass, 'get']); // [ ]
-Router::add('/admin/plugins', [new stdClass, 'get']); // [ ]
-Router::add('/admin/plugins/installed', [new stdClass, 'get']); // [ ]
+Router::add('/admin/operations/ranks', [new RanksController, 'get']);
+Router::add('/admin/operations/ranks', [new RanksController, 'post'], 'post');
+Router::add('/admin/operations/fleet', [new stdClass, 'get']);
+Router::add('/admin/operations/fleet/add', [new stdClass, 'get']);
+Router::add('/admin/operations/fleet/([0-9]+)', [new stdClass, 'get']);
+Router::add('/admin/operations/routes', [new stdClass, 'get']);
+Router::add('/admin/operations/routes/add', [new stdClass, 'get']);
+Router::add('/admin/operations/routes/edit', [new stdClass, 'get']);
+Router::add('/admin/operations/codeshares', [new stdClass, 'get']);
+Router::add('/admin/operations/events', [new stdClass, 'get']);
+Router::add('/admin/operations/events/add', [new stdClass, 'get']);
+Router::add('/admin/operations/events/([0-9a-zA-z]{8}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{12})', [new stdClass, 'get']);
+Router::add('/admin/users', [new stdClass, 'get']);
+Router::add('/admin/users/([0-9]+)', [new stdClass, 'get']);
+Router::add('/admin/users/([0-9]+)/edit', [new stdClass, 'get']);
+Router::add('/admin/users/pending', [new stdClass, 'get']);
+Router::add('/admin/users/staff', [new stdClass, 'get']);
+Router::add('/admin/users/staff/([0-9]+)', [new stdClass, 'get']);
+Router::add('/admin/pireps', [new stdClass, 'get']);
+Router::add('/admin/pireps/([0-9]+)', [new stdClass, 'get']);
+Router::add('/admin/pireps/([0-9]+)/edit', [new stdClass, 'get']);
+Router::add('/admin/pireps/pending', [new stdClass, 'get']);
+Router::add('/admin/pireps/multipliers', [new stdClass, 'get']);
+Router::add('/admin/plugins', [new stdClass, 'get']);
+Router::add('/admin/plugins/installed', [new stdClass, 'get']);
 
 $initfile = __DIR__ . "/themes/{$theme}/_init.php";
 if (file_exists($initfile)) {

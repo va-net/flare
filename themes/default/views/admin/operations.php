@@ -12,11 +12,6 @@ require_once '../core/init.php';
 $user = new User();
 
 Page::setTitle('Operations Admin - ' . Config::get('va/name'));
-Page::excludeAsset('chartjs');
-Page::registerAsset('bootstrap-select', [
-    '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />',
-    '<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>',
-]);
 
 if (!$user->isLoggedIn()) {
     Redirect::to('/index.php');
@@ -510,106 +505,7 @@ $ACTIVE_CATEGORY = 'operations-management';
                                 });
                             </script>
                         <?php elseif (Input::get('section') === 'ranks') : ?>
-                            <h3>Manage Ranks</h3>
-                            <p>Here you can Manage the Ranks that your pilots can be Awarded.</p>
-                            <button type="button" class="btn bg-custom mb-2" data-toggle="modal" data-target="#addRank">Add Rank</button>
-                            <div id="addRank" class="modal fade" role="dialog">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h4 class="modal-title">Add Rank</h4>
-                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <form action="/update.php" method="post">
-                                                <input hidden name="action" value="addrank">
-                                                <div class="form-group">
-                                                    <label for="name">Name</label>
-                                                    <input type="text" name="name" class="form-control" placeholder="Second Officer" required>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="time">Flight time required (in hours)</label>
-                                                    <input type="number" name="time" class="form-control" placeholder="50" required>
-                                                </div>
-                                                <input type="submit" class="btn bg-custom" value="Add Rank">
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <form id="delrank" action="/update.php" method="post">
-                                <input hidden name="action" value="delrank" />
-                            </form>
-
-                            <table class="table table-striped datatable">
-                                <thead class="bg-custom">
-                                    <tr>
-                                        <th>Name</th>
-                                        <th>Min. Hours</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php
-                                    $all = Rank::fetchAllNames()->results();
-                                    foreach ($all as $rank) {
-                                        echo '<tr><td class="align-middle">';
-                                        echo $rank->name;
-                                        echo '</td><td class="align-middle">';
-                                        echo Time::secsToString($rank->timereq);
-                                        echo '</td><td class="align-middle">';
-                                        echo '<button class="btn btn-primary text-light editRank" 
-                                        data-id="' . $rank->id . '" data-name="' . $rank->name . '" 
-                                        data-minhrs="' . ($rank->timereq / 3600) . '">
-                                        <i class="fa fa-edit"></i></button>';
-                                        echo '&nbsp;<button class="btn btn-danger text-light" 
-                                        value="' . $rank->id . '" form="delrank" name="delete">
-                                        <i class="fa fa-trash"></i></button>';
-                                        echo '</td></tr>';
-                                    }
-                                    ?>
-                                </tbody>
-                            </table>
-                            <div id="rankmodal" class="modal fade" role="dialog">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h4 class="modal-title" id="rankmodal-title"></h4>
-                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <form action="/update.php" method="post">
-                                                <input hidden name="action" value="editrank">
-                                                <input hidden name="id" id="rankmodal-id">
-                                                <div class="form-group">
-                                                    <label for="name">Name</label>
-                                                    <input type="text" name="name" class="form-control" id="rankmodal-name" required>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="time">Flight Time Required (in hours)</label>
-                                                    <input type="number" min="0" name="time" class="form-control" id="rankmodal-hours" required>
-                                                </div>
-                                                <input type="submit" class="btn bg-custom" value="Save">
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <script>
-                                $('.editRank').click(function(e) {
-                                    var rankId = $(this).data("id");
-                                    var rankName = $(this).data("name");
-                                    var rankHrs = $(this).data("minhrs");
-
-                                    $("#rankmodal-id").val(rankId);
-                                    $("#rankmodal-name").val(rankName);
-                                    $("#rankmodal-hours").val(rankHrs);
-                                    $("#rankmodal-title").text("Edit Rank - " + rankName);
-
-                                    $("#rankmodal").modal("show");
-                                });
-                            </script>
+                            <!--  -->
                         <?php elseif (Input::get('section') === 'phpvms') : ?>
                             <h3>phpVMS Importer</h3>
                             <p>

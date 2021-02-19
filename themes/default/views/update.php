@@ -305,46 +305,6 @@ if (Input::get('action') === 'editpirep') {
 
     Session::flash('success', 'Route Updated Successfully!');
     Redirect::to('/admin/operations.php?section=routes');
-} elseif (Input::get('action') === 'addrank') {
-    if (!$user->hasPermission('opsmanage')) {
-        Redirect::to('home.php');
-        die();
-    }
-
-    Rank::add(Input::get('name'), Time::hrsToSecs(Input::get('time')));
-    Session::flash('success', 'Rank Added Successfully!');
-    Redirect::to('/admin/operations.php?section=ranks');
-} elseif (Input::get('action') === 'editrank') {
-    if (!$user->hasPermission('opsmanage')) {
-        Redirect::to('home.php');
-        die();
-    }
-
-    try {
-        Rank::update(Input::get('id'), array(
-            'name' => Input::get('name'),
-            'timereq' => Time::hrsToSecs(Input::get('time'))
-        ));
-    } catch (Exception $e) {
-        Session::flash('error', 'There was an Error Editing the Rank.');
-        Redirect::to('/admin/operations.php?section=ranks');
-    }
-    Session::flash('success', 'Rank Edited Successfully!');
-    Redirect::to('/admin/operations.php?section=ranks');
-} elseif (Input::get('action') === 'delrank') {
-    if (!$user->hasPermission('opsmanage')) {
-        Redirect::to('home.php');
-        die();
-    }
-
-    $ret = Rank::delete(Input::get('delete'));
-    if (!$ret) {
-        Session::flash('error', 'There was an Error Deleting the Rank.');
-        Redirect::to('/admin/operations.php?section=ranks');
-    } else {
-        Session::flash('success', 'Rank Deleted Successfully!');
-        Redirect::to('/admin/operations.php?section=ranks');
-    }
 } elseif (Input::get('action') === 'vasettingsupdate') {
     if (!$user->hasPermission('site')) {
         Redirect::to('home.php');
