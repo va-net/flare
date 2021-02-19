@@ -9,3 +9,4 @@ aircraft.json
 test.php
 core/logs/*
 .development
+classes/util/curl_cookie.txt
