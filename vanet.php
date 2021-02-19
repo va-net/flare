@@ -100,7 +100,7 @@ if (Input::get('method') === 'acars' && !empty(Input::get('server'))) {
     $all = VANet::getCodeshares();
     $me = VANet::myInfo();
     foreach ($all as $codeshare) {
-        if ($codeshare["veFrom"]["codeshareId"] == $me["codeshareId"]) {
+        if ($codeshare["veTo"]["codeshareId"] != $me["codeshareId"]) {
             continue;
         }
         echo '<tr><td class="align-middle">';
