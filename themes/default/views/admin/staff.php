@@ -7,47 +7,39 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-require_once '../core/init.php';
-
-$user = new User();
-
-Page::setTitle('Staff Admin - '.Config::get('va/name'));
-Page::excludeAsset('chartjs');
-
-if (!$user->isLoggedIn()) {
-    Redirect::to('/index.php');
-} elseif (!$user->hasPermission('staffmanage') || !$user->hasPermission('admin')) {
-    Redirect::to('/home.php');
-}
-
+Page::setTitle('Staff Admin - ' . Page::$pageData->va_name);
 $ACTIVE_CATEGORY = 'user-management';
 ?>
 <!DOCTYPE html>
 <html>
+
 <head>
-    <?php include '../includes/header.php'; ?>
+    <?php require_once __DIR__ . '/../../includes/header.php'; ?>
 </head>
+
 <body>
     <nav class="navbar navbar-dark navbar-expand-lg bg-custom">
-        <?php include '../includes/navbar.php'; ?>
+        <?php require_once __DIR__ . '/../../includes/navbar.php'; ?>
     </nav>
     <div class="container-fluid">
         <div class="container-fluid mt-4 text-center" style="overflow: auto;">
             <div class="row m-0 p-0">
-                <?php include '../includes/sidebar.php'; ?>
+                <?php require_once __DIR__ . '/../../includes/sidebar.php'; ?>
                 <div class="col-lg-9 main-content">
-                    <div id="loader-wrapper"><div id="loader" class="spinner-border spinner-border-sm spinner-custom"></div></div>
+                    <div id="loader-wrapper">
+                        <div id="loader" class="spinner-border spinner-border-sm spinner-custom"></div>
+                    </div>
                     <div class="loaded">
                         <?php
-                        if (file_exists(__DIR__.'/../install/install.php') && !file_exists(__DIR__.'/../.development')) {
+                        if (file_exists(__DIR__ . '/../install/install.php') && !file_exists(__DIR__ . '/../.development')) {
                             echo '<div class="alert alert-danger text-center">The Install Folder still Exists! Please delete it immediately, it poses a severe security risk.</div>';
                         }
-                        
+
                         if (Session::exists('error')) {
-                            echo '<div class="alert alert-danger text-center">Error: '.Session::flash('error').'</div>';
+                            echo '<div class="alert alert-danger text-center">Error: ' . Session::flash('error') . '</div>';
                         }
                         if (Session::exists('success')) {
-                            echo '<div class="alert alert-success text-center">'.Session::flash('success').'</div>';
+                            echo '<div class="alert alert-success text-center">' . Session::flash('success') . '</div>';
                         }
                         ?>
                         <h3>Manage Staff</h3>
@@ -63,7 +55,7 @@ $ACTIVE_CATEGORY = 'user-management';
                             </thead>
                             <tbody>
                                 <?php
-                                $stafflist = $user->getAllStaff();
+                                $stafflist = Page::$pageData->staff;
                                 $x = 0;
                                 foreach ($stafflist as $staff) {
                                     echo '<tr><td class="align-middle">';
@@ -73,8 +65,8 @@ $ACTIVE_CATEGORY = 'user-management';
                                     echo '</td><td class="mobile-hidden align-middle">';
                                     echo $staff["email"];
                                     echo '</td><td class="align-middle">';
-                                    echo '<button class="btn text-light btn-primary" data-toggle="modal" data-target="#staff'.$x.'modal" data-callsign="'.$staff['callsign'].'" data-name="'.$staff['name'].'" data-email="'.$staff['email'].'" data-ifc="'.$staff['ifc'].'" data-joined="'.date_format(date_create($staff['joined']), 'Y-m-d').'" data-status="'.$staff['status'].'" data-id="'.$staff['id'].'"><i class="fa fa-edit"></i></button>';
-                                    echo '&nbsp;<button id="delconfirmbtn" class="btn text-light btn-danger" data-toggle="modal" data-target="#delconfirmmodal" data-callsign="'.$staff['callsign'].'"><i class="fa fa-trash"></i></button>';
+                                    echo '<button class="btn text-light btn-primary" data-toggle="modal" data-target="#staff' . $x . 'modal" data-callsign="' . $staff['callsign'] . '" data-name="' . $staff['name'] . '" data-email="' . $staff['email'] . '" data-ifc="' . $staff['ifc'] . '" data-joined="' . date_format(date_create($staff['joined']), 'Y-m-d') . '" data-status="' . $staff['status'] . '" data-id="' . $staff['id'] . '"><i class="fa fa-edit"></i></button>';
+                                    echo '&nbsp;<button id="delconfirmbtn" class="btn text-light btn-danger" data-toggle="modal" data-target="#delconfirmmodal" data-callsign="' . $staff['callsign'] . '"><i class="fa fa-trash"></i></button>';
                                     echo '</td>';
                                     $x++;
                                 }
@@ -90,11 +82,11 @@ $ACTIVE_CATEGORY = 'user-management';
                                         <div class="modal-header">
                                             <h5 class="modal-title" id="staffmodaltitle">Edit Staff Member - <?= $staff['callsign'] ?></h5>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
+                                                <span aria-hidden="true">&times;</span>
                                             </button>
                                         </div>
                                         <div class="modal-body">
-                                            <form action="/update.php" method="post">
+                                            <form action="/admin/users/staff" method="post">
                                                 <input hidden name="action" value="editstaffmember">
                                                 <input hidden name="id" value="<?= $staff['id'] ?>">
                                                 <div class="form-group">
@@ -120,25 +112,25 @@ $ACTIVE_CATEGORY = 'user-management';
                                                 <br>
                                                 <h5>Permissions</h5>
                                                 <?php
-                                                    $allperms = Permissions::getAll();
-                                                    $myperms = Permissions::forUser($staff['id']);
-                                                    foreach ($allperms as $permission => $name) {
-                                                        if ($user->hasPermission($permission, $staff['id'])): ?>
-                                                            <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox" value="on" id="permission-<?= $permission ?>" name="<?= $permission ?>" checked>
-                                                                <label class="form-check-label" for="permission-<?= $permission ?>">
-                                                                    <?= $name ?>
-                                                                </label>
-                                                            </div>
-                                                        <?php else: ?>
-                                                            <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox" value="on" id="permission-<?= $permission ?>" name="<?= $permission ?>">
-                                                                <label class="form-check-label" for="permission-<?= $permission ?>">
-                                                                    <?= $name ?>
-                                                                </label>
-                                                            </div>
-                                                        <?php endif; ?>
-                                                    <?php } ?>
+                                                $allperms = Permissions::getAll();
+                                                $myperms = Permissions::forUser($staff['id']);
+                                                foreach ($allperms as $permission => $name) {
+                                                    if (Page::$pageData->user->hasPermission($permission, $staff['id'])) : ?>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" value="on" id="permission-<?= $permission ?>" name="<?= $permission ?>" checked>
+                                                            <label class="form-check-label" for="permission-<?= $permission ?>">
+                                                                <?= $name ?>
+                                                            </label>
+                                                        </div>
+                                                    <?php else : ?>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" value="on" id="permission-<?= $permission ?>" name="<?= $permission ?>">
+                                                            <label class="form-check-label" for="permission-<?= $permission ?>">
+                                                                <?= $name ?>
+                                                            </label>
+                                                        </div>
+                                                    <?php endif; ?>
+                                                <?php } ?>
                                                 <br />
                                                 <input type="submit" class="btn bg-custom" value="Save">
                                             </form>
@@ -152,7 +144,7 @@ $ACTIVE_CATEGORY = 'user-management';
                 </div>
             </div>
             <footer class="container-fluid text-center">
-                <?php include '../includes/footer.php'; ?>
+                <?php require_once __DIR__ . '/../../includes/footer.php'; ?>
             </footer>
         </div>
     </div>
@@ -162,4 +154,5 @@ $ACTIVE_CATEGORY = 'user-management';
         });
     </script>
 </body>
+
 </html>

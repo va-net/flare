@@ -38,35 +38,6 @@ if (Input::get('action') === 'editpirep') {
         Session::flash('success', 'PIREP Edited successfully!');
         Redirect::to('pireps.php?page=recents');
     }
-} elseif (Input::get('action') === 'editstaffmember') {
-    if (!$user->hasPermission('staffmanage')) {
-        Redirect::to('home.php');
-        die();
-    }
-
-    $myperms = Permissions::forUser(Input::get('id'));
-    $permissions = Permissions::getAll();
-    foreach ($permissions as $permission => $name) {
-        if (Input::get($permission) == 'on' && !in_array($permission, $myperms)) {
-            Permissions::give(Input::get('id'), $permission);
-        } elseif (Input::get($permission) != 'on' && in_array($permission, $myperms)) {
-            Permissions::revoke(Input::get('id'), $permission);
-        }
-    }
-
-    try {
-        $user->update(array(
-            'callsign' => Input::get('callsign'),
-            'name' => Input::get('name'),
-            'email' => Input::get('email'),
-            'ifc' => Input::get('ifc')
-        ), Input::get('id'));
-    } catch (Exception $e) {
-        Session::flash('error', 'There was an Error Editing the Staff Member.');
-        Redirect::to('/admin/staff.php');
-    }
-    Session::flash('success', 'Staff Member Edited Successfully!');
-    Redirect::to('/admin/staff.php');
 } elseif (Input::get('action') === 'acceptpirep') {
     if (!$user->hasPermission('pirepmanage')) {
         Redirect::to('home.php');

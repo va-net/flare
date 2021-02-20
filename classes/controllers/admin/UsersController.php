@@ -154,4 +154,45 @@ class UsersController extends Controller
         Session::flash('success', 'Application Declined Successfully');
         $this->redirect('/admin/users/pending');
     }
+
+    public function get_staff()
+    {
+        $user = new User;
+        $this->authenticate($user, true, 'staffmanage');
+        $data = new stdClass;
+        $data->user = $user;
+        $data->va_name = Config::get('va/name');
+        $data->is_gold = VANet::isGold();
+        $data->staff = $user->getAllStaff();
+        $this->render('admin/staff', $data);
+    }
+
+    public function post_staff()
+    {
+        $user = new User;
+        $this->authenticate($user, true, 'staffmanage');
+        $myperms = Permissions::forUser(Input::get('id'));
+        $permissions = array_keys(Permissions::getAll());
+        foreach ($permissions as $permission) {
+            if (Input::get($permission) == 'on' && !in_array($permission, $myperms)) {
+                Permissions::give(Input::get('id'), $permission);
+            } elseif (Input::get($permission) != 'on' && in_array($permission, $myperms)) {
+                Permissions::revoke(Input::get('id'), $permission);
+            }
+        }
+
+        try {
+            $user->update(array(
+                'callsign' => Input::get('callsign'),
+                'name' => Input::get('name'),
+                'email' => Input::get('email'),
+                'ifc' => Input::get('ifc')
+            ), Input::get('id'));
+        } catch (Exception $e) {
+            Session::flash('error', 'There was an Error Editing the Staff Member.');
+            $this->redirect('/admin/users/staff');
+        }
+        Session::flash('success', 'Staff Member Edited Successfully!');
+        $this->redirect('/admin/users/staff');
+    }
 }
