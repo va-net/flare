@@ -38,53 +38,6 @@ if (Input::get('action') === 'editpirep') {
         Session::flash('success', 'PIREP Edited successfully!');
         Redirect::to('pireps.php?page=recents');
     }
-} elseif (Input::get('action') === 'edituser') {
-    if (!$user->hasPermission('usermanage')) {
-        Redirect::to('home.php');
-        die();
-    }
-
-    $isAdmin = $user->hasPermission('admin', Input::get('id'));
-    if (!$isAdmin && Input::get('admin') == 1) {
-        Permissions::give(Input::get('id'), 'admin');
-    } elseif ($isAdmin && Input::get('admin') == 0) {
-        Permissions::revokeAll(Input::get('id'));
-    }
-
-    $statuses = [
-        "Pending" => 0,
-        "Active" => 1,
-        "Inactive" => 2,
-        "Declined" => 3,
-    ];
-
-    $user->update(array(
-        'callsign' => Input::get('callsign'),
-        'name' => Input::get('name'),
-        'email' => Input::get('email'),
-        'ifc' => Input::get('ifc'),
-        'transhours' => Time::strToSecs(Input::get('transhours')),
-        'transflights' => Input::get('transflights'),
-        'status' => $statuses[Input::get('status')]
-    ), Input::get('id'));
-    Session::flash('success', 'User Edited Successfully!');
-    Redirect::to('/admin/users.php');
-} elseif (Input::get('action') === 'deluser') {
-    if (!$user->hasPermission('usermanage')) {
-        Redirect::to('home.php');
-        die();
-    }
-
-    try {
-        $user->update(array(
-            'status' => 2
-        ), Input::get('id'));
-    } catch (Exception $e) {
-        Session::flash('error', 'There was an Error Deleting the User.');
-        Redirect::to('/admin/users.php');
-    }
-    Session::flash('success', 'User deleted successfully!');
-    Redirect::to('/admin/users.php');
 } elseif (Input::get('action') === 'editstaffmember') {
     if (!$user->hasPermission('staffmanage')) {
         Redirect::to('home.php');
@@ -378,17 +331,6 @@ if (Input::get('action') === 'editpirep') {
 
     Session::flash('success', 'Plugin Removed');
     Redirect::to('/admin/plugins.php?tab=installed');
-} elseif (Input::get('action') === 'announce') {
-    if (!$user->hasPermission('usermanage')) {
-        Redirect::to('home.php');
-        die();
-    }
-
-    $title = escape(Input::get('title'));
-    $content = escape(Input::get('content'));
-    Notifications::notify(0, "fa-bullhorn", $title, $content);
-    Session::flash('sucess', 'Announcement Made');
-    Redirect::to('/admin/users.php');
 } elseif (Input::get('action') === 'editpirepadmin') {
     if (!$user->hasPermission('pirepmanage')) {
         Redirect::to('home.php');

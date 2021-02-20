@@ -7,18 +7,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-require_once '../core/init.php';
-
 $user = new User();
 
 Page::setTitle('Users Admin - ' . Config::get('va/name'));
-Page::excludeAsset('chartjs');
-
-if (!$user->isLoggedIn()) {
-    Redirect::to('/index.php');
-} elseif (!$user->hasPermission('usermanage') || !$user->hasPermission('admin')) {
-    Redirect::to('/home.php');
-}
 
 $ACTIVE_CATEGORY = 'user-management';
 ?>
@@ -26,17 +17,17 @@ $ACTIVE_CATEGORY = 'user-management';
 <html>
 
 <head>
-    <?php include '../includes/header.php'; ?>
+    <?php require_once __DIR__ . '/../../includes/header.php'; ?>
 </head>
 
 <body>
     <nav class="navbar navbar-dark navbar-expand-lg bg-custom">
-        <?php include '../includes/navbar.php'; ?>
+        <?php require_once __DIR__ . '/../../includes/navbar.php'; ?>
     </nav>
     <div class="container-fluid">
         <div class="container-fluid mt-4 text-center" style="overflow: auto;">
             <div class="row m-0 p-0">
-                <?php include '../includes/sidebar.php'; ?>
+                <?php require_once __DIR__ . '/../../includes/sidebar.php'; ?>
                 <div class="col-lg-9 main-content">
                     <div id="loader-wrapper">
                         <div id="loader" class="spinner-border spinner-border-sm spinner-custom"></div>
@@ -71,9 +62,7 @@ $ACTIVE_CATEGORY = 'user-management';
                             </thead>
                             <tbody>
                                 <?php
-                                $users = $user->getAllUsers();
-                                $x = 0;
-                                foreach ($users as $user) {
+                                foreach (Page::$pageData->users as $user) {
                                     $rowClassName = '';
                                     if ($user['status'] == 'Inactive') {
                                         $rowClassName = 'inactive-row';
@@ -98,7 +87,6 @@ $ACTIVE_CATEGORY = 'user-management';
                                     data-callsign="' . $user['callsign'] . '" data-id="' . $user['id'] . '">
                                     <i class="fa fa-trash"></i></button>';
                                     echo '</td>';
-                                    $x++;
                                 }
                                 ?>
                             </tbody>
@@ -117,7 +105,7 @@ $ACTIVE_CATEGORY = 'user-management';
                                     </div>
                                     <div class="modal-body">
                                         <p id="delconfirmmessage"></p>
-                                        <form action="/update.php" method="post">
+                                        <form action="/admin/users" method="post">
                                             <input hidden name="action" value="deluser">
                                             <input hidden value="" name="id" id="delconfirmuserid">
                                             <input type="submit" class="btn bg-danger text-light" value="Mark as Inactive">
@@ -127,7 +115,7 @@ $ACTIVE_CATEGORY = 'user-management';
                             </div>
                         </div>
                         <div class="modal fade" id="usermodal" tabindex="-1" role="dialog" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
+                            <div class="modal-dialog modal-lg" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h5 class="modal-title" id="usermodal-title"></h5>
@@ -136,7 +124,7 @@ $ACTIVE_CATEGORY = 'user-management';
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <form action="/update.php" method="post">
+                                        <form action="/admin/users" method="post">
                                             <input hidden name="action" value="edituser">
                                             <input hidden name="id" id="usermodal-id" value="">
                                             <div class="form-group">
@@ -237,7 +225,7 @@ $ACTIVE_CATEGORY = 'user-management';
                                     </div>
                                     <div class="modal-body">
                                         <p>Your announcement will be sent as a notification to all users.</p>
-                                        <form action="/update.php" method="post">
+                                        <form action="/admin/users" method="post">
                                             <input hidden name="action" value="announce" />
                                             <div class="form-group">
                                                 <label for="">Title</label>
@@ -316,7 +304,7 @@ $ACTIVE_CATEGORY = 'user-management';
                 </div>
             </div>
             <footer class="container-fluid text-center">
-                <?php include '../includes/footer.php'; ?>
+                <?php require_once __DIR__ . '/../../includes/footer.php'; ?>
             </footer>
         </div>
     </div>
