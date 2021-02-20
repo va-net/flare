@@ -70,7 +70,7 @@ $GLOBALS['admin-menu']["User Management"] = array(
 
 $GLOBALS['admin-menu']["PIREP Management"] = array(
     "Pending PIREPs" => [
-        "link" => "/admin/pireps/pending",
+        "link" => "/admin/pireps",
         "icon" => "fa-folder-open",
         "permission" => "pirepmanage",
         "needsGold" => false,

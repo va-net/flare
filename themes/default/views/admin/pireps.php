@@ -7,36 +7,24 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-require_once '../core/init.php';
-
-$user = new User();
-
 Page::setTitle('PIREPs Admin - ' . Config::get('va/name'));
-Page::excludeAsset('chartjs');
-
-if (!$user->isLoggedIn()) {
-    Redirect::to('/index.php');
-} elseif (!$user->hasPermission('pirepmanage') || !$user->hasPermission('admin')) {
-    Redirect::to('/home.php');
-}
-
 $ACTIVE_CATEGORY = 'pirep-management';
 ?>
 <!DOCTYPE html>
 <html>
 
 <head>
-    <?php include '../includes/header.php'; ?>
+    <?php require_once __DIR__ . '/../../includes/header.php'; ?>
 </head>
 
 <body>
     <nav class="navbar navbar-dark navbar-expand-lg bg-custom">
-        <?php include '../includes/navbar.php'; ?>
+        <?php require_once __DIR__ . '/../../includes/navbar.php'; ?>
     </nav>
     <div class="container-fluid">
         <div class="container-fluid mt-4 text-center" style="overflow: auto;">
             <div class="row m-0 p-0">
-                <?php include '../includes/sidebar.php'; ?>
+                <?php require_once __DIR__ . '/../../includes/sidebar.php'; ?>
                 <div class="col-lg-9 main-content">
                     <div id="loader-wrapper">
                         <div id="loader" class="spinner-border spinner-border-sm spinner-custom"></div>
@@ -75,16 +63,15 @@ $ACTIVE_CATEGORY = 'pirep-management';
                         </ul>
                         <div class="tab-content">
                             <div id="pending" class="tab-pane container-fluid p-3 fade">
-                                <form id="acceptpirep" action="/update.php" method="post">
+                                <form id="acceptpirep" action="/admin/pireps" method="post">
                                     <input hidden name="action" value="acceptpirep">
                                 </form>
-                                <form id="declinepirep" action="/update.php" method="post">
+                                <form id="declinepirep" action="/admin/pireps" method="post">
                                     <input hidden name="action" value="declinepirep">
                                 </form>
                                 <table class="table table-striped">
                                     <thead class="bg-custom">
                                         <tr>
-                                            <th class="mobile-hidden">Callsign</th>
                                             <th class="mobile-hidden">Flight Number</th>
                                             <th>Dep<span class="mobile-hidden">arture</span></th>
                                             <th>Arr<span class="mobile-hidden">ival</span></th>
@@ -96,12 +83,8 @@ $ACTIVE_CATEGORY = 'pirep-management';
                                     <tbody>
                                         <?php
                                         $x = 0;
-                                        $pireps = Pirep::fetchPending();
-                                        foreach ($pireps as $pirep) {
+                                        foreach (Page::$pageData->pending as $pirep) {
                                             echo '<tr><td class="align-middle mobile-hidden">';
-                                            $callsign = $user->idToCallsign($pirep['pilotid']);
-                                            echo $callsign;
-                                            echo '</td><td class="align-middle mobile-hidden">';
                                             echo $pirep['flightnum'];
                                             echo '</td><td class="align-middle">';
                                             echo $pirep['departure'];
@@ -135,7 +118,6 @@ $ACTIVE_CATEGORY = 'pirep-management';
                                     </thead>
                                     <tbody>
                                         <?php
-                                        $allpireps = Pirep::fetchAll();
                                         $statuses = [
                                             [
                                                 "badge" => "warning",
@@ -150,7 +132,7 @@ $ACTIVE_CATEGORY = 'pirep-management';
                                                 "text" => "Denied"
                                             ],
                                         ];
-                                        foreach ($allpireps as $a) {
+                                        foreach (Page::$pageData->all as $a) {
                                             echo '<tr><td class="align-middle">';
                                             echo $a['date'];
                                             echo '</td><td class="align-middle mobile-hidden">';
@@ -181,8 +163,8 @@ $ACTIVE_CATEGORY = 'pirep-management';
                                                 </button>
                                             </div>
                                             <div class="modal-body">
-                                                <form action="/update.php" method="post">
-                                                    <input hidden name="action" value="editpirepadmin">
+                                                <form action="/admin/pireps" method="post">
+                                                    <input hidden name="action" value="editpirep">
                                                     <input hidden name="id" id="editpirep-id">
                                                     <div class="form-group">
                                                         <label for="editpirep-date">Date of Flight</label>
@@ -304,7 +286,7 @@ $ACTIVE_CATEGORY = 'pirep-management';
                 }
             </style>
             <footer class="container-fluid text-center">
-                <?php include '../includes/footer.php'; ?>
+                <?php require_once __DIR__ . '/../../includes/footer.php'; ?>
             </footer>
         </div>
     </div>

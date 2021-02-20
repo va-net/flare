@@ -38,26 +38,6 @@ if (Input::get('action') === 'editpirep') {
         Session::flash('success', 'PIREP Edited successfully!');
         Redirect::to('pireps.php?page=recents');
     }
-} elseif (Input::get('action') === 'acceptpirep') {
-    if (!$user->hasPermission('pirepmanage')) {
-        Redirect::to('home.php');
-        die();
-    }
-
-    Pirep::accept(Input::get('accept'));
-    Cache::delete('badge_pireps');
-    Session::flash('success', 'PIREP Accepted Successfully!');
-    Redirect::to('/admin/pireps.php');
-} elseif (Input::get('action') === 'declinepirep') {
-    if (!$user->hasPermission('pirepmanage')) {
-        Redirect::to('home.php');
-        die();
-    }
-
-    Pirep::decline(Input::get('decline'));
-    Cache::delete('badge_pireps');
-    Session::flash('success', 'PIREP Declined Successfully');
-    Redirect::to('/admin/pireps.php');
 } elseif (Input::get('action') === 'deletemulti') {
     if (!$user->hasPermission('pirepmanage')) {
         Redirect::to('home.php');
@@ -262,27 +242,4 @@ if (Input::get('action') === 'editpirep') {
 
     Session::flash('success', 'Plugin Removed');
     Redirect::to('/admin/plugins.php?tab=installed');
-} elseif (Input::get('action') === 'editpirepadmin') {
-    if (!$user->hasPermission('pirepmanage')) {
-        Redirect::to('home.php');
-        die();
-    }
-
-    $data = array(
-        'flightnum' => Input::get('fnum'),
-        'departure' => Input::get('dep'),
-        'arrival' => Input::get('arr'),
-        'date' => Input::get('date'),
-        'flighttime' => Time::strToSecs(Input::get('ftime')),
-        'aircraftid' => Input::get('aircraft'),
-        'status' => Input::get('status'),
-    );
-    if (!Pirep::update(Input::get('id'), $data)) {
-        Session::flash('error', 'There was an Error Editing the PIREP');
-        Redirect::to('/admin/pireps.php?tab=all');
-    } else {
-        Cache::delete('badge_pireps');
-        Session::flash('success', 'PIREP Edited Successfully!');
-        Redirect::to('/admin/pireps.php?tab=all');
-    }
 }
