@@ -73,8 +73,8 @@ Router::add('/admin/pireps', [new AdminPirepsController, 'get']);
 Router::add('/admin/pireps', [new AdminPirepsController, 'post'], 'post');
 Router::add('/admin/pireps/multipliers', [new AdminPirepsController, 'get_multis']);
 Router::add('/admin/pireps/multipliers', [new AdminPirepsController, 'post_multis'], 'post');
-Router::add('/admin/plugins', [new stdClass, 'get']);
-Router::add('/admin/plugins/installed', [new stdClass, 'get']);
+Router::add('/admin/plugins', [new PluginsController, 'get']);
+Router::add('/admin/plugins', [new PluginsController, 'post'], 'post');
 
 $initfile = __DIR__ . "/themes/{$theme}/_init.php";
 if (file_exists($initfile)) {
