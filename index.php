@@ -71,7 +71,8 @@ Router::add('/admin/users/staff', [new UsersController, 'get_staff']);
 Router::add('/admin/users/staff', [new UsersController, 'post_staff'], 'post');
 Router::add('/admin/pireps', [new AdminPirepsController, 'get']);
 Router::add('/admin/pireps', [new AdminPirepsController, 'post'], 'post');
-Router::add('/admin/pireps/multipliers', [new stdClass, 'get']);
+Router::add('/admin/pireps/multipliers', [new AdminPirepsController, 'get_multis']);
+Router::add('/admin/pireps/multipliers', [new AdminPirepsController, 'post_multis'], 'post');
 Router::add('/admin/plugins', [new stdClass, 'get']);
 Router::add('/admin/plugins/installed', [new stdClass, 'get']);
 

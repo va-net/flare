@@ -38,28 +38,6 @@ if (Input::get('action') === 'editpirep') {
         Session::flash('success', 'PIREP Edited successfully!');
         Redirect::to('pireps.php?page=recents');
     }
-} elseif (Input::get('action') === 'deletemulti') {
-    if (!$user->hasPermission('pirepmanage')) {
-        Redirect::to('home.php');
-        die();
-    }
-
-    Pirep::deleteMultiplier(Input::get('delete'));
-    Session::flash('success', 'Multiplier Deleted Successfully!');
-    Redirect::to('/admin/multipliers.php');
-} elseif (Input::get('action') === 'addmulti') {
-    if (!$user->hasPermission('pirepmanage')) {
-        Redirect::to('home.php');
-        die();
-    }
-
-    Pirep::addMultiplier(array(
-        "code" => Pirep::generateMultiCode(),
-        "name" => Input::get("name"),
-        "multiplier" => Input::get("multi")
-    ));
-    Session::flash('success', 'Multiplier Added Successfully!');
-    Redirect::to('/admin/multipliers.php');
 } elseif (Input::get('action') === 'vasettingsupdate') {
     if (!$user->hasPermission('site')) {
         Redirect::to('home.php');

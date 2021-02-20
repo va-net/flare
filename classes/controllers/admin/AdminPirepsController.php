@@ -74,4 +74,48 @@ class AdminPirepsController extends Controller
             $this->redirect('/admin/pireps?tab=all');
         }
     }
+
+    public function get_multis()
+    {
+        $user = new User;
+        $this->authenticate($user, true, 'pirepmanage');
+        $data = new stdClass;
+        $data->user = $user;
+        $data->va_name = Config::get('va/name');
+        $data->is_gold = VANet::isGold();
+        $data->multis = Pirep::fetchMultipliers();
+        $this->render('admin/multipliers', $data);
+    }
+
+    public function post_multis()
+    {
+        $user = new User;
+        $this->authenticate($user, true, 'pirepmanage');
+        switch (Input::get('action')) {
+            case 'deletemulti':
+                $this->delete_multi();
+            case 'addmulti':
+                $this->add_multi();
+            default:
+                $this->get_multis();
+        }
+    }
+
+    private function delete_multi()
+    {
+        Pirep::deleteMultiplier(Input::get('delete'));
+        Session::flash('success', 'Multiplier Deleted Successfully!');
+        $this->redirect('/admin/pireps/multipliers');
+    }
+
+    private function add_multi()
+    {
+        Pirep::addMultiplier([
+            "code" => Pirep::generateMultiCode(),
+            "name" => Input::get("name"),
+            "multiplier" => Input::get("multi")
+        ]);
+        Session::flash('success', 'Multiplier Added Successfully!');
+        $this->redirect('/admin/pireps/multipliers');
+    }
 }

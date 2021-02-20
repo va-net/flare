@@ -7,48 +7,39 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-require_once '../core/init.php';
-
-$user = new User();
-
-Page::setTitle('Multipliers Admin - '.Config::get('va/name'));
-Page::excludeAsset('datatables');
-Page::excludeAsset('chartjs');
-
-if (!$user->isLoggedIn()) {
-    Redirect::to('/index.php');
-} elseif (!$user->hasPermission('pirepmanage') || !$user->hasPermission('admin')) {
-    Redirect::to('/home.php');
-}
-
+Page::setTitle('Multipliers Admin - ' . Page::$pageData->va_name);
 $ACTIVE_CATEGORY = 'pirep-management';
 ?>
 <!DOCTYPE html>
 <html>
+
 <head>
-    <?php include '../includes/header.php'; ?>
+    <?php require_once __DIR__ . '/../../includes/header.php'; ?>
 </head>
+
 <body>
     <nav class="navbar navbar-dark navbar-expand-lg bg-custom">
-        <?php include '../includes/navbar.php'; ?>
+        <?php require_once __DIR__ . '/../../includes/navbar.php'; ?>
     </nav>
     <div class="container-fluid">
         <div class="container-fluid mt-4 text-center" style="overflow: auto;">
             <div class="row m-0 p-0">
-                <?php include '../includes/sidebar.php'; ?>
+                <?php require_once __DIR__ . '/../../includes/sidebar.php'; ?>
                 <div class="col-lg-9 main-content">
-                    <div id="loader-wrapper"><div id="loader" class="spinner-border spinner-border-sm spinner-custom"></div></div>
+                    <div id="loader-wrapper">
+                        <div id="loader" class="spinner-border spinner-border-sm spinner-custom"></div>
+                    </div>
                     <div class="loaded">
                         <?php
-                        if (file_exists(__DIR__.'/../install/install.php') && !file_exists(__DIR__.'/../.development')) {
+                        if (file_exists(__DIR__ . '/../install/install.php') && !file_exists(__DIR__ . '/../.development')) {
                             echo '<div class="alert alert-danger text-center">The Install Folder still Exists! Please delete it immediately, it poses a severe security risk.</div>';
                         }
-                        
+
                         if (Session::exists('error')) {
-                            echo '<div class="alert alert-danger text-center">Error: '.Session::flash('error').'</div>';
+                            echo '<div class="alert alert-danger text-center">Error: ' . Session::flash('error') . '</div>';
                         }
                         if (Session::exists('success')) {
-                            echo '<div class="alert alert-success text-center">'.Session::flash('success').'</div>';
+                            echo '<div class="alert alert-success text-center">' . Session::flash('success') . '</div>';
                         }
                         ?>
                         <h3>Manage Multipliers</h3>
@@ -57,8 +48,8 @@ $ACTIVE_CATEGORY = 'pirep-management';
                             when filing their PIREP, enter a multiplier code, and their flight time multiplier will be applied automatically.
                         </p>
                         <h4>Active Multipliers</h4>
-                        <form id="multiarticle" action="/update.php" method="post">
-                            <input hidden name="action" value="deletemulti">
+                        <form id="multiarticle" action="/admin/pireps/multipliers" method="post">
+                            <input hidden name="action" value="deletemulti" />
                         </form>
                         <table class="table table-striped">
                             <thead class="bg-custom">
@@ -71,24 +62,23 @@ $ACTIVE_CATEGORY = 'pirep-management';
                             </thead>
                             <tbody>
                                 <?php
-                                    $multis = Pirep::fetchMultipliers();
-                                    foreach ($multis as $m) {
-                                        echo '<tr><td class="align-middle">';
-                                        echo $m->code;
-                                        echo '</td><td class="align-middle">';
-                                        echo $m->name;
-                                        echo '</td><td class="align-middle">';
-                                        echo $m->multiplier.'x';
-                                        echo '</td><td class="align-middle">';
-                                        echo '<button value="'.$m->id.'" form="multiarticle" type="submit" class="btn btn-danger text-light" name="delete"><i class="fa fa-trash"></i></button>';
-                                        echo '</td></tr>';
-                                    }
+                                foreach (Page::$pageData->multis as $m) {
+                                    echo '<tr><td class="align-middle">';
+                                    echo $m->code;
+                                    echo '</td><td class="align-middle">';
+                                    echo $m->name;
+                                    echo '</td><td class="align-middle">';
+                                    echo $m->multiplier . 'x';
+                                    echo '</td><td class="align-middle">';
+                                    echo '<button value="' . $m->id . '" form="multiarticle" type="submit" class="btn btn-danger text-light" name="delete"><i class="fa fa-trash"></i></button>';
+                                    echo '</td></tr>';
+                                }
                                 ?>
                             </tbody>
                         </table>
                         <br />
                         <h4>Add Multiplier</h4>
-                        <form action="/update.php" method="post">
+                        <form action="/admin/pireps/multipliers" method="post">
                             <input hidden name="action" value="addmulti" />
                             <div class="form-group">
                                 <label for="multi-name">Name</label>
@@ -104,7 +94,7 @@ $ACTIVE_CATEGORY = 'pirep-management';
                 </div>
             </div>
             <footer class="container-fluid text-center">
-                <?php include '../includes/footer.php'; ?>
+                <?php require_once __DIR__ . '/../../includes/footer.php'; ?>
             </footer>
         </div>
     </div>
@@ -114,4 +104,5 @@ $ACTIVE_CATEGORY = 'pirep-management';
         });
     </script>
 </body>
+
 </html>
