@@ -39,16 +39,16 @@ require_once __DIR__ . '/listeners.php';
 require_once __DIR__ . '/menus.php';
 require_once __DIR__ . '/functions.php';
 
-// Index installed plugins
-$slash = "/";
-if (strpos(strtolower(php_uname('s')), "window") !== FALSE) {
-    $slash = "\\";
-}
-$INSTALLED_PLUGINS = Json::decode(file_get_contents(__DIR__ . $slash . '..' . $slash . 'plugins.json'));
-foreach ($INSTALLED_PLUGINS as $p) {
-    $classname = $p["class"];
-    $classname::init();
-}
+// Index installed plugins - removed for now
+// $slash = "/";
+// if (strpos(strtolower(php_uname('s')), "window") !== FALSE) {
+//     $slash = "\\";
+// }
+// $INSTALLED_PLUGINS = Json::decode(file_get_contents(__DIR__ . $slash . '..' . $slash . 'plugins.json'));
+// foreach ($INSTALLED_PLUGINS as $p) {
+//     $classname = $p["class"];
+//     $classname::init();
+// }
 
 // Add Error Listeners
 Events::listen('db/query-failed', 'Analytics::reportDbError');

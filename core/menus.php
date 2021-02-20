@@ -116,15 +116,15 @@ $GLOBALS['admin-menu']["Site Management"] = array(
     ],
 );
 
-$GLOBALS['admin-menu']["Plugins"] = array(
-    "Manage Plugins" => [
-        "link" => "/admin/plugins",
-        "icon" => "fa-plug",
-        "permission" => "site",
-        "needsGold" => false,
-        "badgeid" => null,
-    ],
-);
+// $GLOBALS['admin-menu']["Plugins"] = array(
+//     "Manage Plugins" => [
+//         "link" => "/admin/plugins",
+//         "icon" => "fa-plug",
+//         "permission" => "site",
+//         "needsGold" => false,
+//         "badgeid" => null,
+//     ],
+// );
 
 $GLOBALS['pilot-menu'] = array(
     "Pilot Home" => [
