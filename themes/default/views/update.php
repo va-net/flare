@@ -9,8 +9,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 require_once './core/init.php';
 
-use RegRev\RegRev;
-
 $user = new User();
 if (!$user->isLoggedIn()) {
     Redirect::to('index.php');
@@ -219,44 +217,6 @@ if (Input::get('action') === 'editpirep') {
     }
     Session::flash('success', 'VA Settings Changed Successfully!');
     Redirect::to('/admin/site.php?tab=settings');
-} elseif (Input::get('action') === 'addevent') {
-    if (!$user->hasPermission('opsmanage')) {
-        Redirect::to('home.php');
-        die();
-    }
-
-    $sentGates = explode(",", Input::get('gates'));
-    $gates = array();
-    foreach ($sentGates as $g) {
-        array_push($gates, trim($g));
-    }
-
-    $vis = 'true';
-    if (Input::get('visible') == 0) {
-        $vis = 'false';
-    }
-
-    $datetime = Input::get('date') . ' ' . substr(Input::get('time'), 0, 2) . ':' . substr(Input::get('time'), 2, 2);
-
-    try {
-        VANet::createEvent(array(
-            "Name" => Input::get('name'),
-            "Description" => Input::get('description'),
-            "EventTypeID" => "1",
-            "DateTime" => $datetime,
-            "DepartureAirport" => Input::get('dep'),
-            "ArrivalAirport" => Input::get('arr'),
-            "Visible" => $vis,
-            "Aircraft" => Input::get('aircraft'),
-            "Server" => Input::get('server'),
-            "Gates" => $gates
-        ));
-        Session::flash('success', 'Event Added Successfully!');
-    } catch (Exception $e) {
-        Session::flash('error', 'Error Creating Event');
-    } finally {
-        Redirect::to('/admin/events.php');
-    }
 } elseif (Input::get('action') === 'eventsignup') {
     $uData = $user->data();
     if (VANet::isSignedUp($uData->ifuserid, Input::get('event')) != false) {
@@ -302,43 +262,6 @@ if (Input::get('action') === 'editpirep') {
         Session::flash('success', 'Slot Vacated Successfully!');
         Redirect::to('events.php?page=view&event=' . urlencode(Input::get('event')));
         die();
-    }
-} elseif (Input::get('action') === 'deleteevent') {
-    if (!$user->hasPermission('opsmanage')) {
-        Redirect::to('home.php');
-        die();
-    }
-
-    VANet::deleteEvent(Input::get('delete'));
-    Session::flash('success', 'Event Deleted Successfully');
-    Redirect::to('/admin/events.php');
-} elseif (Input::get('action') === 'editevent') {
-    if (!$user->hasPermission('opsmanage')) {
-        Redirect::to('home.php');
-        die();
-    }
-
-    $vis = 'true';
-    if (Input::get('visible') == 0) {
-        $vis = 'false';
-    }
-    $ret = VANet::editEvent(Input::get('id'), array(
-        "Name" => Input::get('name'),
-        "Description" => Input::get('description'),
-        "EventTypeID" => 1,
-        "DepartureAirport" => Input::get('dep'),
-        "ArrivalAirport" => Input::get('arr'),
-        "Visible" => $vis,
-        "AircraftID" => Input::get('aircraft'),
-        "Server" => Input::get('server')
-    ));
-
-    if (!$ret) {
-        Session::flash('error', "Error Updating Event");
-        Redirect::to('/admin/events.php');
-    } else {
-        Session::flash('success', "Event Updated Successfully");
-        Redirect::to('/admin/events.php');
     }
 } elseif (Input::get('action') === 'installplugin') {
     if (!$user->hasPermission('site')) {

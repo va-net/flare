@@ -61,9 +61,8 @@ Router::add('/admin/operations/routes/import', [new OperationsController, 'impor
 Router::add('/admin/operations/routes/import', [new OperationsController, 'import_post'], 'post');
 Router::add('/admin/operations/codeshares', [new CodesharesController, 'get']);
 Router::add('/admin/operations/codeshares', [new CodesharesController, 'post'], 'post');
-Router::add('/admin/operations/events', [new stdClass, 'get']);
-Router::add('/admin/operations/events/add', [new stdClass, 'get']);
-Router::add('/admin/operations/events/([0-9a-zA-z]{8}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{12})', [new stdClass, 'get']);
+Router::add('/admin/operations/events', [new AdminEventsController, 'get']);
+Router::add('/admin/operations/events', [new AdminEventsController, 'post'], 'post');
 Router::add('/admin/users', [new stdClass, 'get']);
 Router::add('/admin/users/([0-9]+)', [new stdClass, 'get']);
 Router::add('/admin/users/([0-9]+)/edit', [new stdClass, 'get']);

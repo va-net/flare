@@ -7,19 +7,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-require_once '../core/init.php';
-
-$user = new User();
-
-Page::setTitle('Events Admin - ' . Config::get('va/name'));
-Page::excludeAsset('datatables');
-Page::excludeAsset('chartjs');
-
-if (!$user->isLoggedIn()) {
-    Redirect::to('/index.php');
-} elseif (!$user->hasPermission('opsmanage') || !$user->hasPermission('admin')) {
-    Redirect::to('/home.php');
-}
+Page::setTitle('Events Admin - ' . Page::$pageData->va_name);
 
 $ACTIVE_CATEGORY = 'operations-management';
 ?>
@@ -27,17 +15,17 @@ $ACTIVE_CATEGORY = 'operations-management';
 <html>
 
 <head>
-    <?php include '../includes/header.php'; ?>
+    <?php require_once __DIR__ . '/../../includes/header.php'; ?>
 </head>
 
 <body>
     <nav class="navbar navbar-dark navbar-expand-lg bg-custom">
-        <?php include '../includes/navbar.php'; ?>
+        <?php require_once __DIR__ . '/../../includes/navbar.php'; ?>
     </nav>
     <div class="container-fluid">
         <div class="container-fluid mt-4 text-center" style="overflow: auto;">
             <div class="row m-0 p-0">
-                <?php include '../includes/sidebar.php'; ?>
+                <?php require_once __DIR__ . '/../../includes/sidebar.php'; ?>
                 <div class="col-lg-9 main-content">
                     <div id="loader-wrapper">
                         <div id="loader" class="spinner-border spinner-border-sm spinner-custom"></div>
@@ -69,7 +57,7 @@ $ACTIVE_CATEGORY = 'operations-management';
 
                                     <div class="modal-body">
                                         Are you sure you want to delete this Event?
-                                        <form id="deleteevent" action="/update.php" method="post">
+                                        <form id="deleteevent" action="/admin/operations/events" method="post">
                                             <input hidden name="action" value="deleteevent" />
                                             <input hidden name="delete" id="confirmEventDelete-id" />
                                             <input type="submit" class="btn btn-danger" value="Delete" />
@@ -94,7 +82,7 @@ $ACTIVE_CATEGORY = 'operations-management';
                                     </div>
 
                                     <div class="modal-body">
-                                        <form action="/update.php" method="post">
+                                        <form action="/admin/operations/events" method="post">
                                             <input hidden name="action" value="addevent" />
                                             <div class="form-group">
                                                 <label for="event-name">Event Name</label>
@@ -137,8 +125,7 @@ $ACTIVE_CATEGORY = 'operations-management';
                                                 <select required class="form-control" name="aircraft" id="event-aircraft">
                                                     <option value>Select</option>
                                                     <?php
-                                                    $activeAircraft = Aircraft::fetchActiveAircraft()->results();
-                                                    foreach ($activeAircraft as $aircraft) {
+                                                    foreach (Page::$pageData->fleet as $aircraft) {
                                                         echo '<option value="' . $aircraft->ifliveryid . '">' . $aircraft->name . ' (' . $aircraft->liveryname . ')</option>';
                                                     }
                                                     ?>
@@ -240,7 +227,7 @@ $ACTIVE_CATEGORY = 'operations-management';
                                     </div>
 
                                     <div class="modal-body">
-                                        <form action="/update.php" method="post">
+                                        <form action="/admin/operations/events" method="post">
                                             <input hidden name="action" value="editevent" />
                                             <input hidden name="id" id="editevent-id" />
                                             <div class="form-group">
@@ -264,8 +251,7 @@ $ACTIVE_CATEGORY = 'operations-management';
                                                 <select required class="form-control" name="aircraft" id="editevent-aircraft">
                                                     <option value>Select</option>
                                                     <?php
-                                                    $activeAircraft = Aircraft::fetchActiveAircraft()->results();
-                                                    foreach ($activeAircraft as $aircraft) {
+                                                    foreach (Page::$pageData->fleet as $aircraft) {
                                                         echo '<option value="' . $aircraft->ifliveryid . '">' . $aircraft->name . ' (' . $aircraft->liveryname . ')</option>';
                                                     }
                                                     ?>
@@ -298,7 +284,7 @@ $ACTIVE_CATEGORY = 'operations-management';
                 </div>
             </div>
             <footer class="container-fluid text-center">
-                <?php include '../includes/footer.php'; ?>
+                <?php require_once __DIR__ . '/../../includes/footer.php'; ?>
             </footer>
         </div>
     </div>

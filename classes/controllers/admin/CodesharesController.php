@@ -94,7 +94,7 @@ class CodesharesController extends Controller
         $codeshare = VANet::findCodeshare(Input::get('id'));
         if ($codeshare === FALSE) {
             Session::flash('error', "Codeshare Not Found");
-            Redirect::to('/admin/codeshares.php');
+            $this->redirect('/admin/operations/codeshares');
             die();
         }
 
@@ -124,6 +124,6 @@ class CodesharesController extends Controller
         VANet::deleteCodeshare($codeshare["id"]);
         Cache::delete('badge_codeshares');
         Session::flash('success', "Codeshare Routes Imported Successfully!");
-        Redirect::to('/admin/operations.php?section=routes');
+        $this->redirect('/admin/operations/routes');
     }
 }
