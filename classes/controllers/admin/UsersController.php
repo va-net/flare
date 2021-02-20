@@ -90,4 +90,68 @@ class UsersController extends Controller
         Session::flash('success', 'Announcement Created');
         $this->redirect('/admin/users');
     }
+
+    public function get_pending()
+    {
+        $user = new User;
+        $this->authenticate($user, true, 'recruitment');
+        $data = new stdClass;
+        $data->user = $user;
+        $data->va_name = Config::get('va/name');
+        $data->is_gold = VANet::isGold();
+        $data->users = $user->getAllPendingUsers();
+        $this->render('admin/recruitment', $data);
+    }
+
+    public function post_pending()
+    {
+        $user = new User;
+        $this->authenticate($user, true, 'recruitment');
+        switch (Input::get('action')) {
+            case 'acceptapplication':
+                $this->accept();
+            case 'declineapplication':
+                $this->decline();
+            default:
+                $this->get_pending();
+        }
+    }
+
+    private function accept()
+    {
+        $user = new User;
+        try {
+            $user->update(array(
+                'status' => 1
+            ), Input::get('accept'));
+        } catch (Exception $e) {
+            Session::flash('error', 'There was an Error Accepting the Application.');
+            $this->redirect('/admin/users/pending');
+        }
+
+        Events::trigger('user/accepted', [Input::get('accept')]);
+
+        Cache::delete('badge_recruitment');
+        Session::flash('success', 'Application Accepted Successfully!');
+        $this->redirect('/admin/users/pending');
+    }
+
+    private function decline()
+    {
+        $user = new User;
+        try {
+            $user->update(array(
+                'status' => 3
+            ), Input::get('id'));
+        } catch (Exception $e) {
+            Session::flash('error', 'There was an error Declining the Application.');
+            $this->redirect('/admin/users/pending');
+        }
+
+        Events::trigger('user/declined', ['id' => Input::get('id'), 'reason' => Input::get('declinereason')]);
+
+        Cache::delete('badge_recruitment');
+        Session::flash('success', 'Application Declined Successfully');
+        $this->redirect('/admin/users/pending');
+    }
 }

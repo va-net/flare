@@ -7,18 +7,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-require_once '../core/init.php';
-
-$user = new User();
-Page::excludeAsset('chartjs');
-
-Page::setTitle('Recruitment Admin - ' . Config::get('va/name'));
-
-if (!$user->isLoggedIn()) {
-    Redirect::to('/index.php');
-} elseif (!$user->hasPermission('recruitment') || !$user->hasPermission('admin')) {
-    Redirect::to('/home.php');
-}
+Page::setTitle('Recruitment Admin - ' . Page::$pageData->va_name);
 
 $ACTIVE_CATEGORY = 'user-management';
 ?>
@@ -26,17 +15,17 @@ $ACTIVE_CATEGORY = 'user-management';
 <html>
 
 <head>
-    <?php include '../includes/header.php'; ?>
+    <?php require_once __DIR__ . '/../../includes/header.php'; ?>
 </head>
 
 <body>
     <nav class="navbar navbar-dark navbar-expand-lg bg-custom">
-        <?php include '../includes/navbar.php'; ?>
+        <?php require_once __DIR__ . '/../../includes/navbar.php'; ?>
     </nav>
     <div class="container-fluid">
         <div class="container-fluid mt-4 text-center" style="overflow: auto;">
             <div class="row m-0 p-0">
-                <?php include '../includes/sidebar.php'; ?>
+                <?php require_once __DIR__ . '/../../includes/sidebar.php'; ?>
                 <div class="col-lg-9 main-content">
                     <div id="loader-wrapper">
                         <div id="loader" class="spinner-border spinner-border-sm spinner-custom"></div>
@@ -56,8 +45,8 @@ $ACTIVE_CATEGORY = 'user-management';
                         ?>
                         <h3>Recruitment</h3>
                         <p>Here you can manage any Pending Applications</p>
-                        <form id="accept" action="/update.php" method="post">
-                            <input hidden name="action" value="acceptapplication">
+                        <form id="accept" action="/admin/users/pending" method="post">
+                            <input hidden name="action" value="acceptapplication" />
                         </form>
                         <table class="table table-striped datatable">
                             <thead class="bg-custom">
@@ -72,9 +61,19 @@ $ACTIVE_CATEGORY = 'user-management';
                             <tbody>
                                 <?php
                                 $lists = Json::decode(file_get_contents("https://ifvarb.com/watchlist_api.php?apikey=a5f2963d-29b1-40e4-8867-a4fbb384002c"));
-                                $watchlist = array();
-                                $blacklist = array();
+                                $watchlist = [];
+                                $blacklist = [];
+                                $prevwatch = [];
+                                $prevblack = [];
                                 foreach ($lists as $l) {
+                                    if (new DateTime("now") > new DateTime($l['expire_date'])) {
+                                        if ($l["type"] == "Watchlist") {
+                                            $prevwatch[strtolower($l["ifc"])] = "{$l["notes"]} - Expired {$l["expire_date"]}";
+                                        } else {
+                                            $prevblack[strtolower($l["ifc"])] = "{$l["notes"]} - Expired {$l["expire_date"]}";
+                                        }
+                                        continue;
+                                    }
                                     if ($l["type"] == "Watchlist") {
                                         $watchlist[strtolower($l["ifc"])] = $l["notes"];
                                     } else {
@@ -82,9 +81,8 @@ $ACTIVE_CATEGORY = 'user-management';
                                     }
                                 }
 
-                                $users = $user->getAllPendingUsers();
                                 $x = 0;
-                                foreach ($users as $user) {
+                                foreach (Page::$pageData->users as $user) {
                                     echo '<tr><td class="mobile-hidden align-middle">';
                                     echo $user["name"];
                                     echo '</td><td class="mobile-hidden align-middle">';
@@ -102,6 +100,10 @@ $ACTIVE_CATEGORY = 'user-management';
                                         echo '<span class="badge badge-danger" data-toggle="tooltip" title="' . $blacklist[strtolower($username)] . '">Blacklisted</span>';
                                     } elseif (array_key_exists(strtolower($username), $watchlist)) {
                                         echo '<span class="badge badge-warning" data-toggle="tooltip" title="' . $watchlist[strtolower($username)] . '">Watchlisted</span>';
+                                    } elseif (array_key_exists(strtolower($username), $prevblack)) {
+                                        echo '<span class="badge badge-warning" data-toggle="tooltip" title="' . $prevblack[strtolower($username)] . '">Previous Blacklist</span>';
+                                    } elseif (array_key_exists(strtolower($username), $prevwatch)) {
+                                        echo '<span class="badge badge-info" data-toggle="tooltip" title="' . $prevwatch[strtolower($username)] . '">Previous Watchlist</span>';
                                     } else {
                                         echo '<span class="badge badge-success">None</span>';
                                     }
@@ -117,7 +119,7 @@ $ACTIVE_CATEGORY = 'user-management';
                         </table>
                         <?php
                         $x = 0;
-                        foreach ($users as $user) { ?>
+                        foreach (Page::$pageData->users as $user) { ?>
                             <div class="modal fade" id="user<?= $x ?>modal" tabindex="-1" role="dialog" aria-labelledby="user<?= $x ?>label" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
@@ -128,7 +130,7 @@ $ACTIVE_CATEGORY = 'user-management';
                                             </button>
                                         </div>
                                         <div class="modal-body">
-                                            <form action="/update.php" method="post">
+                                            <form action="/admin/users/pending" method="post">
                                                 <div class="form-group">
                                                     <label for="usermodal-callsign">Callsign</label>
                                                     <input readonly type="text" value="<?= $user["callsign"] ?>" class="form-control" name="callsign">
@@ -172,8 +174,8 @@ $ACTIVE_CATEGORY = 'user-management';
                                             </button>
                                         </div>
                                         <div class="modal-body">
-                                            <form action="/update.php" method="post" id="declinemodal">
-                                                <input hidden class="form-control" name="action" value="declineapplication">
+                                            <form action="/admin/users/pending" method="post" id="declinemodal">
+                                                <input hidden class="form-control" name="action" value="declineapplication" />
                                                 <input hidden class="form-control" name="id" value="<?= $user['id'] ?>">
                                                 <div class="form-group">
                                                     <label for="declinemodal-status">Reason for decline of application</label>
@@ -194,7 +196,7 @@ $ACTIVE_CATEGORY = 'user-management';
                 </div>
             </div>
             <footer class="container-fluid text-center">
-                <?php include '../includes/footer.php'; ?>
+                <?php require_once __DIR__ . '/../../includes/footer.php'; ?>
             </footer>
         </div>
     </div>

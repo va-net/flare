@@ -67,46 +67,6 @@ if (Input::get('action') === 'editpirep') {
     }
     Session::flash('success', 'Staff Member Edited Successfully!');
     Redirect::to('/admin/staff.php');
-} elseif (Input::get('action') === 'declineapplication') {
-    if (!$user->hasPermission('recruitment')) {
-        Redirect::to('home.php');
-        die();
-    }
-
-    try {
-        $user->update(array(
-            'status' => 3
-        ), Input::get('id'));
-    } catch (Exception $e) {
-        Session::flash('error', 'There was an error Declining the Application.');
-        Redirect::to('/admin/recruitment.php');
-    }
-
-    Events::trigger('user/declined', ['id' => Input::get('id'), 'reason' => Input::get('declinereason')]);
-
-    Cache::delete('badge_recruitment');
-    Session::flash('success', 'Application Declined Successfully');
-    Redirect::to('/admin/recruitment.php');
-} elseif (Input::get('action') === 'acceptapplication') {
-    if (!$user->hasPermission('recruitment')) {
-        Redirect::to('home.php');
-        die();
-    }
-
-    try {
-        $user->update(array(
-            'status' => 1
-        ), Input::get('accept'));
-    } catch (Exception $e) {
-        Session::flash('error', 'There was an Error Accepting the Application.');
-        Redirect::to('/admin/recruitment.php');
-    }
-
-    Events::trigger('user/accepted', [Input::get('accept')]);
-
-    Cache::delete('badge_recruitment');
-    Session::flash('success', 'Application Accepted Successfully!');
-    Redirect::to('/admin/recruitment.php');
 } elseif (Input::get('action') === 'acceptpirep') {
     if (!$user->hasPermission('pirepmanage')) {
         Redirect::to('home.php');
