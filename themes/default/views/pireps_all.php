@@ -89,7 +89,7 @@ Page::setTitle('All PIREPs - ' . Page::$pageData->va_name);
                                             </button>
                                         </div>
                                         <div class="modal-body">
-                                            <form action="update.php" method="post">
+                                            <form action="/pireps" method="post">
                                                 <input hidden name="action" value="editpirep">
                                                 <input hidden name="id" value="' . $pirep['id'] . '">
                                                 <div class="form-group">

@@ -32,6 +32,7 @@ Router::add('/logout', [new AuthController, 'logout']);
 Router::add('/home', [new HomeController, 'get']);
 Router::add('/home', [new HomeController, 'post'], 'post');
 Router::add('/pireps', [new PirepsController, 'get_all']);
+Router::add('/pireps', [new PirepsController, 'post_all'], 'post');
 Router::add('/pireps/new', [new PirepsController, 'get_new']);
 Router::add('/pireps/new', [new PirepsController, 'post_new'], 'post');
 Router::add('/pireps/setup', [new PirepsController, 'get_setup']);

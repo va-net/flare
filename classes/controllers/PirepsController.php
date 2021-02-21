@@ -21,6 +21,36 @@ class PirepsController extends Controller
         $this->render('pireps_all', $data);
     }
 
+    public function post_all()
+    {
+        $user = new User;
+        $this->authenticate($user);
+
+        $pirep = Pirep::find(Input::get('id'));
+        if ($pirep === FALSE) {
+            Session::flash('error', 'PIREP Not Found');
+            $this->redirect('/pireps');
+        }
+        if ($pirep->pilotid != $user->data()->id) {
+            Session::flash('error', 'There was an Error Editing the PIREP');
+            $this->redirect('/pireps');
+        }
+
+        $data = array(
+            'flightnum' => Input::get('fnum'),
+            'departure' => Input::get('dep'),
+            'arrival' => Input::get('arr'),
+            'date' => Input::get('date'),
+        );
+        if (!Pirep::update(Input::get('id'), $data)) {
+            Session::flash('error', 'There was an Error Editing the PIREP');
+            $this->redirect('/pireps');
+        } else {
+            Session::flash('success', 'PIREP Edited successfully!');
+            $this->redirect('/pireps');
+        }
+    }
+
     public function get_new()
     {
         $user = new User;
