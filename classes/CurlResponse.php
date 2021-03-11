@@ -61,7 +61,7 @@ class CurlResponse
     function __construct($response)
     {
         # Headers regex
-        $pattern = '#HTTP/\d(\.\d)?.*?$.*?\r\n\r\n#ims';
+        $pattern = '#HTTP/\d\.\d.*?$.*?\r\n\r\n#ims';
         $response = str_replace("HTTP/2", "HTTP/2.0", $response);
         $response = str_replace("HTTP/3", "HTTP/3.0", $response);
         # Extract headers from response
