@@ -343,5 +343,19 @@
         "queries": [],
         "deletedFiles": [],
         "newFolders": []
+    },
+    {
+        "tag": "v1.2.2",
+        "name": "Version 1.2.2",
+        "date": "2021-02-16",
+        "notes": "Added HTTP 2 Support in cURL",
+        "prerelease": false,
+        "useUpdater": true,
+        "files": [
+            "classes/CurlResponse.php"
+        ],
+        "queries": [],
+        "deletedFiles": [],
+        "newFolders": []
     }
 ]
