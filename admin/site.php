@@ -212,7 +212,7 @@ $ACTIVE_CATEGORY = 'site-management';
                                             <option value="0">No</option>
                                         </select>
                                         <script>
-                                            $("#analyticsdrop").val('<?= Config::get('MASTER_API_KEY') == '' ? 0 : 1 ?>');
+                                            $("#analyticsdrop").val('<?= empty(Config::get('MASTER_API_KEY')) ? 0 : 1 ?>');
                                         </script>
                                         <small class="text-muted">If enabled, reports of errors will be sent to the developers of Flare to help with debugging.</small>
                                     </div>

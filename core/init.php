@@ -44,6 +44,10 @@ foreach ($INSTALLED_PLUGINS as $p) {
     $classname::init();
 }
 
+if (strlen(Config::get('MASTER_API_KEY')) < 1) {
+    Analytics::register();
+}
+
 // Add Error Listeners
 Events::listen('db/query-failed', 'Analytics::reportDbError');
 Events::listen('site/updated', 'Analytics::reportUpdate');

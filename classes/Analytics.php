@@ -19,7 +19,7 @@ class Analytics
     public static function reportDbError($ev)
     {
         $key = Config::get('MASTER_API_KEY');
-        if ($key == '') return;
+        if (empty($key)) return;
 
         $url = self::$BASE . "/errors?site=" . $key;
         $ev->params["version"] = Updater::getVersion()["tag"];
@@ -48,7 +48,7 @@ class Analytics
     public static function reportException($ex)
     {
         $key = Config::get('MASTER_API_KEY');
-        if ($key == '') return;
+        if (empty($key)) return;
 
         $url = self::$BASE . "/errors?site=" . $key;
         $excluded = self::excludedFiles();
@@ -89,7 +89,7 @@ class Analytics
     public static function reportError($eCode, $eMessage, $eFile, $eLine)
     {
         $key = Config::get('MASTER_API_KEY');
-        if ($key == '') return;
+        if (empty($key)) return;
 
         $excluded = self::excludedFiles();
         $fname = explode('/', $eFile);
@@ -130,7 +130,7 @@ class Analytics
     public static function reportUpdate($ev)
     {
         $key = Config::get('MASTER_API_KEY');
-        if ($key == '') return;
+        if (empty($key)) return;
 
         $url = self::$BASE . "/instance?site=" . $key;
         $data = [
@@ -154,7 +154,7 @@ class Analytics
      */
     public static function register()
     {
-        if (Config::get('MASTER_API_KEY') != '') return;
+        if (!empty(Config::get('MASTER_API_KEY'))) return;
 
         $url = self::$BASE . "/instance";
         $data = [
@@ -182,7 +182,7 @@ class Analytics
     public static function unregister()
     {
         $key = Config::get('MASTER_API_KEY');
-        if ($key == '') return;
+        if (empty($key)) return;
 
         $url = self::$BASE . "/instance?site={$key}";
 
@@ -194,7 +194,7 @@ class Analytics
 
         $context = stream_context_create($options);
         file_get_contents($url, false, $context);
-        Config::replace('MASTER_API_KEY', '');
+        Config::replace('MASTER_API_KEY', '0');
     }
 
     /**
