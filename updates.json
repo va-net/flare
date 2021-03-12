@@ -347,12 +347,14 @@
     {
         "tag": "v1.2.2",
         "name": "Version 1.2.2",
-        "date": "2021-02-16",
+        "date": "2021-03-11",
         "notes": "Added HTTP 2 Support in cURL",
         "prerelease": false,
         "useUpdater": true,
         "files": [
-            "classes/CurlResponse.php"
+            "classes/CurlResponse.php",
+            "classes/Analytics.php",
+            "core/init.php"
         ],
         "queries": [],
         "deletedFiles": [],
