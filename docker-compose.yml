@@ -1,4 +1,4 @@
-version: "3.7"
+version: "3.8"
 services:
   app:
     build:
@@ -6,19 +6,16 @@ services:
       dockerfile: Dockerfile
     image: flare
     container_name: flare-app
-    restart: unless-stopped
-    working_dir: /var/www/
+    restart: always
     networks:
       - flare
     ports: 
       - 80:80
-    volumes: 
-      - .:/var/www/html
 
   db:
     image: mysql:5.7
     container_name: flare-db
-    restart: unless-stopped
+    restart: always
     environment:
       MYSQL_DATABASE: flare
       MYSQL_ROOT_PASSWORD: flare
