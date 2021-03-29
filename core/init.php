@@ -21,6 +21,17 @@ spl_autoload_register(function ($class) {
 
 if (file_exists(__DIR__ . '/config.php')) {
     require_once __DIR__ . '/config.php';
+
+    // Add Error Listeners
+    Events::listen('db/query-failed', 'Analytics::reportDbError');
+    Events::listen('site/updated', 'Analytics::reportUpdate');
+    set_error_handler('Analytics::reportError', E_ALL);
+    set_exception_handler('Analytics::reportException');
+
+    // Register for Analytics if not already
+    if (strlen(Config::get('MASTER_API_KEY')) < 1) {
+        Analytics::register();
+    }
 }
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -42,10 +53,6 @@ $INSTALLED_PLUGINS = Json::decode(file_get_contents(__DIR__ . $slash . '..' . $s
 foreach ($INSTALLED_PLUGINS as $p) {
     $classname = $p["class"];
     $classname::init();
-}
-
-if (strlen(Config::get('MASTER_API_KEY')) < 1) {
-    Analytics::register();
 }
 
 // Add Error Listeners
