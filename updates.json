@@ -325,9 +325,7 @@
             "ALTER TABLE `pilots` DROP INDEX `callsign`"
         ],
         "deletedFiles": [],
-        "newFolders": [
-            "core/logs"
-        ]
+        "newFolders": ["core/logs"]
     },
     {
         "tag": "v1.2.1",
@@ -336,10 +334,7 @@
         "notes": "Fixed Icons",
         "prerelease": false,
         "useUpdater": true,
-        "files": [
-            "assets/fontawesome.min.css",
-            "classes/Page.php"
-        ],
+        "files": ["assets/fontawesome.min.css", "classes/Page.php"],
         "queries": [],
         "deletedFiles": [],
         "newFolders": []
@@ -351,11 +346,19 @@
         "notes": "Added HTTP 2 Support in cURL",
         "prerelease": false,
         "useUpdater": true,
-        "files": [
-            "classes/CurlResponse.php",
-            "classes/Analytics.php",
-            "core/init.php"
-        ],
+        "files": ["classes/CurlResponse.php"],
+        "queries": [],
+        "deletedFiles": [],
+        "newFolders": []
+    },
+    {
+        "tag": "v1.2.3",
+        "name": "Version 1.2.3",
+        "date": "2021-02-30",
+        "notes": "Made Analytics Opt-Out, Fixed Installation Issue",
+        "prerelease": false,
+        "useUpdater": true,
+        "files": ["admin/site.php", "classes/Analytics.php", "core/init.php"],
         "queries": [],
         "deletedFiles": [],
         "newFolders": []
