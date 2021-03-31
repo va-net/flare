@@ -1,32 +1,30 @@
-version: "3.7"
+version: '3.7'
 services:
-  app:
-    build:
-      context: ./
-      dockerfile: Dockerfile
-    image: flare
-    container_name: flare-app
-    restart: unless-stopped
-    working_dir: /var/www/
-    networks:
-      - flare
-    ports: 
-      - 80:80
-    volumes: 
-      - .:/var/www/html
+    app:
+        build:
+            context: ./
+            dockerfile: Dockerfile
+        image: flare
+        container_name: flare-app
+        restart: unless-stopped
+        working_dir: /var/www/
+        networks:
+            - flare
+        ports:
+            - 80:80
 
-  db:
-    image: mysql:5.7
-    container_name: flare-db
-    restart: unless-stopped
-    environment:
-      MYSQL_DATABASE: flare
-      MYSQL_ROOT_PASSWORD: flare
-      MYSQL_PASSWORD: flare
-      MYSQL_USER: flare
-    networks:
-      - flare
+    db:
+        image: mysql:5.7
+        container_name: flare-db
+        restart: unless-stopped
+        environment:
+            MYSQL_DATABASE: flare
+            MYSQL_ROOT_PASSWORD: flare
+            MYSQL_PASSWORD: flare
+            MYSQL_USER: flare
+        networks:
+            - flare
 
 networks:
-  flare:
-    driver: bridge
+    flare:
+        driver: bridge

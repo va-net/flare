@@ -6,6 +6,6 @@ RUN docker-php-ext-install pdo_mysql curl
 
 RUN a2enmod rewrite
 
-#COPY . /var/www/html
+COPY . /var/www/html
 
-#RUN chown www-data:www-data -R /var/www/html/*
+RUN chown www-data:www-data -R /var/www/html/*
