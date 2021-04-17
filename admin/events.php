@@ -145,13 +145,6 @@ $ACTIVE_CATEGORY = 'operations-management';
                                                 </select>
                                             </div>
                                             <div class="form-group">
-                                                <label for="event-vis">Visible to Pilots?</label>
-                                                <select required class="form-control" name="visible" id="event-vis">
-                                                    <option value="1">Yes</option>
-                                                    <option value="0">No</option>
-                                                </select>
-                                            </div>
-                                            <div class="form-group">
                                                 <label for="event-serv">Event Server</label>
                                                 <select required class="form-control" name="server" id="event-serv">
                                                     <option value>Select</option>
@@ -197,7 +190,7 @@ $ACTIVE_CATEGORY = 'operations-management';
                                     </td><td class="align-middle">
                                     <button class="btn btn-primary editEvent" data-name="${e.name}" data-desc="${e.description.replace('"', "'")}" 
                                     data-dep="'${e.departureAirport}" data-arr="${e.arrivalAirport}" data-aircraft="${e.aircraft.liveryID}" 
-                                    data-vis="${e.visible ? 1 : 0}" data-server="${e.server}" data-id="${e.id}"><i class="fa fa-edit"></i></button>
+                                    data-server="${e.server}" data-id="${e.id}" data-date="${e.date}"><i class="fa fa-edit"></i></button>
                                     &nbsp;<button data-id="${e.id}" class="btn btn-danger text-light deleteEvent"><i class="fa fa-trash"></i></button>
                                     </td></tr>`;
                                 }).join(''));
@@ -215,6 +208,7 @@ $ACTIVE_CATEGORY = 'operations-management';
                                     var eventVis = $(this).data('vis');
                                     var eventServer = $(this).data('server');
                                     var eventId = $(this).data('id');
+                                    var eventDate = new Date($(this).data('date'));
 
                                     $("#editevent-name").val(eventName);
                                     $("#editevent-description").val(eventDesc);
@@ -224,6 +218,8 @@ $ACTIVE_CATEGORY = 'operations-management';
                                     $("#editevent-vis").val(eventVis);
                                     $("#editevent-serv").val(eventServer);
                                     $("#editevent-id").val(eventId);
+                                    $("#editevent-date").val(eventDate.toDateString());
+                                    $("#editevent-time").val(eventDate.toTimeString());
 
                                     $("#editevent").modal('show');
                                 });
@@ -248,6 +244,14 @@ $ACTIVE_CATEGORY = 'operations-management';
                                                 <input required type="text" class="form-control" name="name" id="editevent-name" />
                                             </div>
                                             <div class="form-group">
+                                                <label for="editevent-date">Event Date</label>
+                                                <input required type="date" class="form-control" name="date" id="editevent-date" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="editevent-time">Event Time</label>
+                                                <input required type="time" class="form-control" name="time" id="editevent-time" />
+                                            </div>
+                                            <div class="form-group">
                                                 <label for="editevent-description">Event Description</label>
                                                 <textarea required class="form-control" name="description" id="editevent-description"></textarea>
                                             </div>
@@ -269,13 +273,6 @@ $ACTIVE_CATEGORY = 'operations-management';
                                                         echo '<option value="' . $aircraft->ifliveryid . '">' . $aircraft->name . ' (' . $aircraft->liveryname . ')</option>';
                                                     }
                                                     ?>
-                                                </select>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="editevent-vis">Visible to Pilots?</label>
-                                                <select required class="form-control" name="visible" id="editevent-vis">
-                                                    <option value="1">Yes</option>
-                                                    <option value="0">No</option>
                                                 </select>
                                             </div>
                                             <div class="form-group">

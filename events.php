@@ -83,7 +83,7 @@ if (!$user->isLoggedIn()) {
                             <?php elseif (Input::get('page') === 'view' && !empty(Input::get('event'))) : ?>
                                 <?php $event = VANet::findEvent(Input::get('event')); ?>
 
-                                <?php if ($event === FALSE) : ?>
+                                <?php if ($event == null) : ?>
                                     <h3>Event Not Found</h3>
                                 <?php else : ?>
                                     <h3><?= $event["name"]; ?></h3>
@@ -112,9 +112,9 @@ if (!$user->isLoggedIn()) {
                                             <div class="col-lg-6 px-5">
                                                 <h4 class="text-left">Event Details</h4>
                                                 <p class="text-left">
-                                                    <b>Date & Time:</b> <?= $event["dateTime"] . 'Z'; ?><br />
-                                                    <b>Departure:</b> <?= $event["departureAirport"]; ?><br />
-                                                    <b>Arrival:</b> <?= $event["arrivalAirport"]; ?><br />
+                                                    <b>Date & Time:</b> <?= $event["date"] . 'Z'; ?><br />
+                                                    <b>Departure:</b> <?= $event["departureIcao"]; ?><br />
+                                                    <b>Arrival:</b> <?= $event["arrivalIcao"]; ?><br />
                                                     <b>Aircraft:</b> <?= $event["aircraft"]["aircraftName"] . ' (' . $event["aircraft"]["liveryName"] . ')'; ?><br />
                                                     <b>Server:</b> <?= ucfirst($event["server"]); ?><br />
                                                 </p>
@@ -149,7 +149,7 @@ if (!$user->isLoggedIn()) {
                                                     </thead>
                                                     <tbody>
                                                         <?php
-                                                        $mygate = array_values(array_filter($event['signups'], function ($s) {
+                                                        $mygate = array_values(array_filter($event['slots'], function ($s) {
                                                             global $user;
                                                             return $s['pilotId'] == $user->data()->ifuserid;
                                                         }));
@@ -171,7 +171,7 @@ if (!$user->isLoggedIn()) {
                                                         $pilots = array_combine($ids, $names);
 
 
-                                                        foreach ($event["signups"] as $gate) {
+                                                        foreach ($event["slots"] as $gate) {
                                                             $pilotName = $gate['pilotName'];
                                                             if ($pilotName === '' && isset($pilots[$gate['pilotId']])) {
                                                                 $pilotName = $pilots[$gate['pilotId']];
