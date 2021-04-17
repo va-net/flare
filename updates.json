@@ -362,5 +362,26 @@
         "queries": [],
         "deletedFiles": [],
         "newFolders": []
+    },
+    {
+        "tag": "v1.2.4-beta1",
+        "name": "Version 1.2.4 Beta 1",
+        "date": "2021-04-17",
+        "notes": "Use New VANet API",
+        "prerelease": true,
+        "useUpdater": true,
+        "files": [
+            "admin/events.php",
+            "admin/stats.php",
+            "classes/HttpRequest.php",
+            "classes/VANet.php",
+            "api.php",
+            "events.php",
+            "update.php",
+            "vanet.php"
+        ],
+        "queries": [],
+        "deletedFiles": [],
+        "newFolders": []
     }
 ]
