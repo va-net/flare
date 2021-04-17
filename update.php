@@ -95,17 +95,16 @@ if (Input::get('action') === 'editprofile') {
     }
 
     $response = VANet::sendPirep(array(
-        'AircraftID' => Aircraft::idToLiveryId(Input::get('aircraft')),
-        'Arrival' => Input::get('arr'),
-        'DateTime' => Input::get('date'),
-        'Departure' => Input::get('dep'),
-        'FlightTime' => Time::strToSecs(Input::get('ftime')),
-        'FuelUsed' => Input::get('fuel'),
-        'PilotId' => $user->data()->ifuserid
+        'aircraftLiveryId' => Aircraft::idToLiveryId(Input::get('aircraft')),
+        'arrivalIcao' => Input::get('arr'),
+        'date' => Input::get('date'),
+        'departureIcao' => Input::get('dep'),
+        'flightTime' => Time::strToSecs(Input::get('ftime')),
+        'fuelUsed' => Input::get('fuel'),
+        'pilotId' => $user->data()->ifuserid
     ));
 
-    $response = Json::decode($response->body);
-    if (!isset($response['success']) || $response['success'] != true) {
+    if (!$response) {
         Session::flash('error', 'There was an Error Connecting to VANet.');
         Redirect::to('pireps.php?page=new');
         die();
@@ -561,32 +560,20 @@ if (Input::get('action') === 'editprofile') {
         array_push($gates, trim($g));
     }
 
-    $vis = 'true';
-    if (Input::get('visible') == 0) {
-        $vis = 'false';
-    }
-
     $datetime = Input::get('date') . ' ' . substr(Input::get('time'), 0, 2) . ':' . substr(Input::get('time'), 2, 2);
 
-    try {
-        VANet::createEvent(array(
-            "Name" => Input::get('name'),
-            "Description" => Input::get('description'),
-            "EventTypeID" => "1",
-            "DateTime" => $datetime,
-            "DepartureAirport" => Input::get('dep'),
-            "ArrivalAirport" => Input::get('arr'),
-            "Visible" => $vis,
-            "Aircraft" => Input::get('aircraft'),
-            "Server" => Input::get('server'),
-            "Gates" => $gates
-        ));
-        Session::flash('success', 'Event Added Successfully!');
-    } catch (Exception $e) {
-        Session::flash('error', 'Error Creating Event');
-    } finally {
-        Redirect::to('/admin/events.php');
-    }
+    VANet::createEvent(array(
+        "name" => Input::get('name'),
+        "description" => Input::get('description'),
+        "date" => $datetime,
+        "departureIcao" => Input::get('dep'),
+        "arrivalIcao" => Input::get('arr'),
+        "aircraftLiveryId" => Input::get('aircraft'),
+        "server" => Input::get('server'),
+        "gateNames" => $gates
+    ));
+    Session::flash('success', 'Event Added Successfully!');
+    Redirect::to('/admin/events.php');
 } elseif (Input::get('action') === 'eventsignup') {
     $uData = $user->data();
     if (VANet::isSignedUp($uData->ifuserid, Input::get('event')) != false) {
@@ -595,44 +582,27 @@ if (Input::get('action') === 'editprofile') {
     }
 
     $ret = VANet::eventSignUp($uData->ifuserid, Input::get('gate'));
-    if ($ret === 400) {
-        Session::flash("error", "Event is Corrupted. Please contact your VA.");
-        Redirect::to('events.php?page=view&event=' . urlencode(Input::get('event')));
-        die();
-    } elseif ($ret === 404) {
-        Session::flash('error', 'Slot Not Found. Are you messing with us? :/');
-        Redirect::to('events.php?page=view&event=' . urlencode(Input::get('event')));
-        die();
-    } elseif ($ret === 409) {
-        Session::flash("error", "Rats! Someone got to that gate before you. Please try again.");
-        Redirect::to('events.php');
-        die();
-    } elseif ($ret === true) {
+    if ($ret) {
         Session::flash('success', 'Gate Reserved Successfully!');
         Redirect::to('events.php?page=view&event=' . urlencode(Input::get('event')));
         die();
     }
+
+    Session::flash("error", "Failed to reserve gate");
+    Redirect::to('events.php?page=view&event=' . urlencode(Input::get('event')));
 } elseif (Input::get('action') === 'vacateslot') {
     $uData = $user->data();
 
     $ret = VANet::eventPullOut(Input::get('gate'), Input::get('event'), $uData->ifuserid);
-
-    if ($ret === 400) {
-        Redirect::to('events.php?page=view&event=' . urlencode(Input::get('event')));
-        die();
-    } elseif ($ret === 404) {
-        Session::flash('error', 'Slot Not Found. Are you messing with us? :/');
-        Redirect::to('events.php?page=view&event=' . urlencode(Input::get('event')));
-        die();
-    } elseif ($ret === 409) {
-        Session::flash("error", "Event is Corrupted. Please contact your VA.");
-        Redirect::to('events.php');
-        die();
-    } elseif ($ret === true) {
+    if ($ret) {
         Session::flash('success', 'Slot Vacated Successfully!');
         Redirect::to('events.php?page=view&event=' . urlencode(Input::get('event')));
         die();
     }
+
+    Session::flash('error', 'Failed to Vacate Slot');
+    Redirect::to('events.php?page=view&event=' . urlencode(Input::get('event')));
+    die();
 } elseif (Input::get('action') === 'deleteevent') {
     if (!$user->hasPermission('opsmanage')) {
         Redirect::to('home.php');
@@ -648,28 +618,24 @@ if (Input::get('action') === 'editprofile') {
         die();
     }
 
-    $vis = 'true';
-    if (Input::get('visible') == 0) {
-        $vis = 'false';
-    }
+    $datetime = Input::get('date') . ' ' . substr(Input::get('time'), 0, 2) . ':' . substr(Input::get('time'), 2, 2);
+
     $ret = VANet::editEvent(Input::get('id'), array(
-        "Name" => Input::get('name'),
-        "Description" => Input::get('description'),
-        "EventTypeID" => 1,
-        "DepartureAirport" => Input::get('dep'),
-        "ArrivalAirport" => Input::get('arr'),
-        "Visible" => $vis,
-        "AircraftID" => Input::get('aircraft'),
-        "Server" => Input::get('server')
+        "name" => Input::get('name'),
+        "description" => Input::get('description'),
+        "date" => $datetime,
+        "departureIcao" => Input::get('dep'),
+        "arrivalIcao" => Input::get('arr'),
+        "aircraftLiveryId" => Input::get('aircraft'),
+        "server" => Input::get('server')
     ));
 
     if (!$ret) {
         Session::flash('error', "Error Updating Event");
-        Redirect::to('/admin/events.php');
     } else {
         Session::flash('success', "Event Updated Successfully");
-        Redirect::to('/admin/events.php');
     }
+    Redirect::to('/admin/events.php');
 } elseif (Input::get('action') === 'newcodeshare') {
     if (!$user->hasPermission('opsmanage')) {
         Redirect::to('home.php');
@@ -704,18 +670,18 @@ if (Input::get('action') === 'editprofile') {
 
         $route = $rItem;
         array_push($routes, array(
-            "flightNum" => $route['fltnum'],
-            "departure" => $route['dep'],
-            "arrival" => $route['arr'],
-            "aircraftID" => $route['aircraft'][0]['liveryid'],
+            "flightNumber" => $route['fltnum'],
+            "departureIcao" => $route['dep'],
+            "arrivalIcao" => $route['arr'],
+            "aircraftLiveryId" => $route['aircraft'][0]['liveryid'],
             "flightTime" => $route['duration']
         ));
     }
 
     $ret = VANet::sendCodeshare(array(
-        "VEToID" => Input::get('recipient'),
-        "Message" => Input::get('message'),
-        "Routes" => $routes
+        "recipientId" => Input::get('recipient'),
+        "message" => Input::get('message'),
+        "routes" => $routes
     ));
     if (!$ret) {
         Session::flash('error', "Error Connnecting to VANet");
@@ -748,9 +714,9 @@ if (Input::get('action') === 'editprofile') {
     }
 
     $codeshare = VANet::findCodeshare(Input::get('id'));
-    if ($codeshare === FALSE) {
+    if ($codeshare == null) {
         Session::flash('error', "Codeshare Not Found");
-        //Redirect::to('/admin/codeshares.php');
+        Redirect::to('/admin/codeshares.php');
         die();
     }
 
@@ -776,7 +742,7 @@ if (Input::get('action') === 'editprofile') {
 
         $aircraft = null;
         foreach ($allaircraft as $ac) {
-            if ($ac["liveryID"] == $route["aircraft"]["liveryID"]) {
+            if ($ac["liveryID"] == $route["aircraftLiveryId"]) {
                 $aircraft = $ac;
             }
         }
@@ -790,12 +756,10 @@ if (Input::get('action') === 'editprofile') {
             $acId = $acId->first()->id;
         }
 
-        $fltnum = preg_replace('/^[a-z]+/i', '', $route["flightNum"]);
-
         $sql .= "\n(?, ?, ?, ?, ?),";
-        array_push($params, $codeshare["veFrom"]["code"] . $fltnum);
-        array_push($params, $route["departure"]);
-        array_push($params, $route["arrival"]);
+        array_push($params, $route["flightNumber"]);
+        array_push($params, $route["departureIcao"]);
+        array_push($params, $route["arrivalIcao"]);
         array_push($params, $route["flightTime"]);
         array_push($params, $acId);
         $i++;
