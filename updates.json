@@ -383,5 +383,17 @@
         "queries": [],
         "deletedFiles": [],
         "newFolders": []
+    },
+    {
+        "tag": "v1.2.4-beta2",
+        "name": "Version 1.2.4 Beta 2",
+        "date": "2021-04-18",
+        "notes": "Fixed issue with requests to VANet",
+        "prerelease": true,
+        "useUpdater": true,
+        "files": ["classes/VANet.php"],
+        "queries": [],
+        "deletedFiles": [],
+        "newFolders": []
     }
 ]
