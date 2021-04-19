@@ -435,6 +435,14 @@ class VANet
     }
 
     /**
+     * @return int
+     */
+    public static function getCodeshareCount()
+    {
+        return count(self::getCodeshares());
+    }
+
+    /**
      * @return bool
      * @param array $fields Codeshare Fields
      */
