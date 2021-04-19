@@ -395,5 +395,17 @@
         "queries": [],
         "deletedFiles": [],
         "newFolders": []
+    },
+    {
+        "tag": "v1.2.4-beta3",
+        "name": "Version 1.2.4 Beta 4",
+        "date": "2021-04-19",
+        "notes": "Fixed issue with POST/PUT requests to VANet",
+        "prerelease": true,
+        "useUpdater": true,
+        "files": ["classes/VANet.php", "classes/HttpRequest.php"],
+        "queries": [],
+        "deletedFiles": [],
+        "newFolders": []
     }
 ]
