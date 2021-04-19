@@ -12,6 +12,8 @@ services:
             - flare
         ports:
             - 80:80
+        depends_on:
+            - db
 
     db:
         image: mysql:5.7
@@ -24,7 +26,25 @@ services:
             MYSQL_USER: flare
         networks:
             - flare
+        volumes:
+            - flare-mysql:/var/lib/mysql
+
+    dbadmin:
+        image: phpmyadmin:latest
+        container_name: flare-dbadmin
+        restart: unless-stopped
+        networks:
+            - flare
+        environment:
+            PMA_HOST: db
+        ports:
+            - 8080:80
+        depends_on:
+            - db
 
 networks:
     flare:
         driver: bridge
+
+volumes:
+    flare-mysql:
