@@ -372,4 +372,27 @@ class HttpRequest
         // Convert the latency to ms.
         $this->latency = round($time * 1000);
     }
+
+    /**
+     * @return string
+     * @param string $method
+     * @param string $data
+     * @param string $url
+     * @param array $headers
+     */
+    public static function hacky($url, $method, $data, $headers)
+    {
+
+        $opts = array(
+            'http' =>
+            array(
+                'method'  => $method,
+                'header'  => implode("\r\n", $headers),
+                'content' => $data
+            )
+        );
+
+        $context  = stream_context_create($opts);
+        return file_get_contents($url, false, $context);
+    }
 }
