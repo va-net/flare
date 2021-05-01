@@ -10,7 +10,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 class Analytics
 {
-    private static $BASE = 'http://vanet/flare/v1';
+    private static $BASE = 'https://api.vanet.app/flare/v1';
 
     /**
      * @param Event $ev
