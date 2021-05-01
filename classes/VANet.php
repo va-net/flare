@@ -11,6 +11,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 class VANet
 {
 
+    private static $BASE = "https://api.vanet.app";
+
     /**
      * @return array|null
      * @param string $key VANet API Key
@@ -30,7 +32,7 @@ class VANet
             }
         }
 
-        $req = new HttpRequest("https://api.vanet.app/airline/v1/profile");
+        $req = new HttpRequest(self::$BASE . "/airline/v1/profile");
         $req->setRequestHeaders([
             "X-Api-Key: {$key}",
         ])->execute();
@@ -82,7 +84,7 @@ class VANet
             return null;
         }
 
-        $req = new HttpRequest("https://api.vanet.app/airline/v1/stats");
+        $req = new HttpRequest(self::$BASE . "/airline/v1/stats");
         $req->setRequestHeaders(["X-Api-Key: {$key}"])->execute();
         $response = Json::decode($req->getResponse());
         if ($response['status'] != 0) return null;
@@ -106,7 +108,7 @@ class VANet
         $server = urlencode($server);
         $key = Config::get('vanet/api_key');
 
-        $req = new HttpRequest("https://api.vanet.app/airline/v1/user/id?callsign={$callsign}&serverName={$server}");
+        $req = new HttpRequest(self::$BASE . "/airline/v1/user/id?callsign={$callsign}&serverName={$server}");
         $req->setRequestHeaders(["X-Api-Key: {$key}"])->execute();
         if ($req->getHttpCode() != 200) {
             return false;
@@ -137,7 +139,7 @@ class VANet
 
         $ifc = urlencode($ifc);
         $key = Config::get('vanet/api_key');
-        $req = new HttpRequest("https://api.vanet.app/airline/v1/user/id/{$ifc}");
+        $req = new HttpRequest(self::$BASE . "/airline/v1/user/id/{$ifc}");
         $req->setRequestHeaders(["X-Api-Key: {$key}"])->execute();
         if ($req->getHttpCode() != 200) return false;
 
@@ -163,7 +165,7 @@ class VANet
     {
         $icao = urlencode($icao);
         $key = Config::get('vanet/api_key');
-        $req = new HttpRequest("https://api.vanet.app/public/v1/airport/{$icao}");
+        $req = new HttpRequest(self::$BASE . "/public/v1/airport/{$icao}");
         $req->setRequestHeaders(["X-Api-Key: {$key}"])->execute();
         if ($req->getHttpCode() != 200) {
             return false;
@@ -180,7 +182,7 @@ class VANet
     {
         $key = Config::get('vanet/api_key');
         $data = Json::encode($fields);
-        $response = Json::decode(@HttpRequest::hacky("https://api.vanet.app/airline/v1/flights", "POST", $data, ["X-Api-Key: {$key}", "Content-Type: application/json"]));
+        $response = Json::decode(@HttpRequest::hacky(self::$BASE . "/airline/v1/flights", "POST", $data, ["X-Api-Key: {$key}", "Content-Type: application/json"]));
         if (!$response || $response['status'] != 0) {
             return false;
         }
@@ -201,7 +203,7 @@ class VANet
             return null;
         }
 
-        $url = "https://api.vanet.app/airline/v1/events";
+        $url = self::$BASE . "/airline/v1/events";
         if ($future) {
             $url .= "/future";
         }
@@ -225,7 +227,7 @@ class VANet
         }
 
         $id = urlencode($id);
-        $req = new HttpRequest("https://api.vanet.app/airline/v1/events/{$id}");
+        $req = new HttpRequest(self::$BASE . "/airline/v1/events/{$id}");
         $req->setRequestHeaders(["X-Api-Key: {$key}"])->execute();
         if ($req->getHttpCode() != 200) {
             return null;
@@ -246,7 +248,7 @@ class VANet
         }
 
         $data = Json::encode($fields);
-        $response = Json::decode(@HttpRequest::hacky("https://api.vanet.app/airline/v1/events", "POST", $data, ["X-Api-Key: {$key}", "Content-Type: application/json"]));
+        $response = Json::decode(@HttpRequest::hacky(self::$BASE . "/airline/v1/events", "POST", $data, ["X-Api-Key: {$key}", "Content-Type: application/json"]));
         if (!$response || $response['status'] != 0) {
             return false;
         }
@@ -270,7 +272,7 @@ class VANet
 
         $gateId = urlencode($gateId);
         $data = Json::encode(["pilotId" => $pilotUid]);
-        $response = Json::decode(@HttpRequest::hacky("https://api.vanet.app/airline/v1/events/slot/{$gateId}", "POST", $data, ["X-Api-Key: {$key}", "Content-Type: application/json"]));
+        $response = Json::decode(@HttpRequest::hacky(self::$BASE . "/airline/v1/events/slot/{$gateId}", "POST", $data, ["X-Api-Key: {$key}", "Content-Type: application/json"]));
 
         if (!$response || $response['status'] != 0) return false;
 
@@ -291,7 +293,7 @@ class VANet
         }
 
         $slotId = urlencode($slotId);
-        $req = new HttpRequest("https://api.vanet.app/airline/v1/events/slot/{$slotId}");
+        $req = new HttpRequest(self::$BASE . "/airline/v1/events/slot/{$slotId}");
         $req->setRequestHeaders(["X-Api-Key: {$key}"])->setMethod("DELETE")->execute();
         $response = Json::decode($req->getResponse());
 
@@ -315,7 +317,7 @@ class VANet
         }
 
         $eventId = urlencode($eventId);
-        $req = new HttpRequest("https://api.vanet.app/airline/v1/events/{$eventId}");
+        $req = new HttpRequest(self::$BASE . "/airline/v1/events/{$eventId}");
         $req->setRequestHeaders(["X-Api-Key: {$key}"])->execute();
         $response = Json::decode($req->getResponse());
 
@@ -340,7 +342,7 @@ class VANet
         }
 
         $eventId = urlencode($eventId);
-        $req = new HttpRequest("https://api.vanet.app/airline/v1/events/{$eventId}");
+        $req = new HttpRequest(self::$BASE . "/airline/v1/events/{$eventId}");
         $req->setRequestHeaders(["X-Api-Key: {$key}"])->setMethod("DELETE")->execute();
 
         if ($req->getHttpCode() != 200 || Json::decode($req->getResponse())['status'] != 0) return false;
@@ -363,7 +365,7 @@ class VANet
 
         $id = urlencode($id);
         $data = Json::encode($fields);
-        $response = Json::decode(@HttpRequest::hacky("https://api.vanet.app/airline/v1/events/{$id}", "PUT", $data, ["X-Api-Key: {$key}", "Content-Type: application/json"]));
+        $response = Json::decode(@HttpRequest::hacky(self::$BASE . "/airline/v1/events/{$id}", "PUT", $data, ["X-Api-Key: {$key}", "Content-Type: application/json"]));
 
         if (!$response || $response['status'] != 0) {
             return false;
@@ -392,13 +394,13 @@ class VANet
         if ($uid == null) $uid = $user->data()->ifuserid;
         if ($user->data()->ifuserid == null) return null;
 
-        $req = new HttpRequest("https://api.vanet.app/airline/v1/acars");
+        $req = new HttpRequest(self::$BASE . "/airline/v1/acars");
         $data = Json::encode([
             "callsign" => $callsign,
             "userId" => $uid,
             "server" => $server,
         ]);
-        $response = Json::decode(@HttpRequest::hacky("https://api.vanet.app/airline/v1/acars", "POST", $data, ["X-Api-Key: {$key}", "Content-Type: application/json"]));
+        $response = Json::decode(@HttpRequest::hacky(self::$BASE . "/airline/v1/acars", "POST", $data, ["X-Api-Key: {$key}", "Content-Type: application/json"]));
 
         if ($response || $response['status'] != 0) return null;
 
@@ -411,7 +413,7 @@ class VANet
     public static function getCodeshares()
     {
         $key = Config::get('vanet/api_key');
-        $req = new HttpRequest("https://api.vanet.app/airline/v1/codeshares");
+        $req = new HttpRequest(self::$BASE . "/airline/v1/codeshares");
         $req->setRequestHeaders(["X-Api-Key: {$key}"])->execute();
         $response = Json::decode($req->getResponse());
         if ($req->getHttpCode() != 200 || $response['status'] != 0) {
@@ -436,9 +438,9 @@ class VANet
     public static function sendCodeshare($fields)
     {
         $key = Config::get('vanet/api_key');
-        $req = new HttpRequest("https://api.vanet.app/airline/v1/codeshares");
+        $req = new HttpRequest(self::$BASE . "/airline/v1/codeshares");
         $data = Json::encode($fields);
-        $response = Json::decode(@HttpRequest::hacky("https://api.vanet.app/airline/v1/codeshares", "POST", $data, ["X-Api-Key: {$key}", "Content-Type: application/json"]));
+        $response = Json::decode(@HttpRequest::hacky(self::$BASE . "/airline/v1/codeshares", "POST", $data, ["X-Api-Key: {$key}", "Content-Type: application/json"]));
         if (!$response || $response['status'] != 0) {
             return false;
         }
@@ -456,7 +458,7 @@ class VANet
     {
         $id = urlencode($id);
         $key = Config::get('vanet/api_key');
-        $req = new HttpRequest("https://api.vanet.app/airline/v1/codeshares/{$id}");
+        $req = new HttpRequest(self::$BASE . "/airline/v1/codeshares/{$id}");
         $req->setRequestHeaders(["X-Api-Key: {$key}"])
             ->setMethod("DELETE")
             ->execute();
@@ -479,7 +481,7 @@ class VANet
     {
         $id = urlencode($id);
         $key = Config::get('vanet/api_key');
-        $req = new HttpRequest("https://api.vanet.app/airline/v1/codeshares/{$id}");
+        $req = new HttpRequest(self::$BASE . "/airline/v1/codeshares/{$id}");
         $req->setRequestHeaders(["X-Api-Key: {$key}"])->execute();
         $response = Json::decode($req->getResponse());
 
