@@ -66,7 +66,6 @@ class DB
                 $this->_results = $this->_query->fetchAll(PDO::FETCH_OBJ);
                 $this->_count = $this->_query->rowCount();
             } else {
-                if ($reportError) Events::trigger('db/query-failed', ["query" => $this->_query->queryString, "params" => $params]);
                 $this->_error = true;
                 $this->_results = [];
                 $this->_count = 0;

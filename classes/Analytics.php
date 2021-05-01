@@ -10,118 +10,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 class Analytics
 {
-    private static $BASE = 'https://flare.vanet.app/api/public';
-
-    /**
-     * @param Event $ev
-     * @return void
-     */
-    public static function reportDbError($ev)
-    {
-        $key = Config::get('MASTER_API_KEY');
-        if (empty($key)) return;
-
-        $url = self::$BASE . "/errors?site=" . $key;
-        $ev->params["version"] = Updater::getVersion()["tag"];
-        $data = [
-            "type" => 2,
-            "message" => "DB Query Failed",
-            "data" => $ev->params,
-        ];
-
-        $options = array(
-            'http' => array(
-                'method'  => 'POST',
-                'content' => Json::encode($data),
-                'header' =>  "Content-Type: application/json\r\n",
-            )
-        );
-
-        $context = stream_context_create($options);
-        @file_get_contents($url, false, $context);
-    }
-
-    /**
-     * @param Exception $ex
-     * @return void
-     */
-    public static function reportException($ex)
-    {
-        $key = Config::get('MASTER_API_KEY');
-        if (empty($key)) return;
-
-        $url = self::$BASE . "/errors?site=" . $key;
-        $excluded = self::excludedFiles();
-        $fname = explode('/', $ex->getFile());
-        if (in_array($fname[count($fname) - 1], $excluded)) {
-            return;
-        }
-
-        $data = [
-            "type" => 1,
-            "code" => $ex->getCode(),
-            "message" => $ex->getMessage(),
-            "file" => $ex->getFile(),
-            "line" => $ex->getLine(),
-            "data" => [
-                "version" => Updater::getVersion()["tag"]
-            ],
-        ];
-
-        $options = array(
-            'http' => array(
-                'method'  => 'POST',
-                'content' => Json::encode($data),
-                'header' =>  "Content-Type: application/json\r\n",
-            )
-        );
-
-        $context = stream_context_create($options);
-        @file_get_contents($url, false, $context);
-    }
-
-    /**
-     * @param int $eCode
-     * @param string $eMessage
-     * @param string $eFile
-     * @param int $eLine
-     */
-    public static function reportError($eCode, $eMessage, $eFile, $eLine)
-    {
-        $key = Config::get('MASTER_API_KEY');
-        if (empty($key)) return;
-
-        $excluded = self::excludedFiles();
-        $fname = explode('/', $eFile);
-        if (in_array($fname[count($fname) - 1], $excluded)) {
-            return;
-        }
-
-        $url = self::$BASE . "/errors?site=" . $key;
-        $data = [
-            "type" => 0,
-            "message" => "DB Query Failed",
-            "code" => $eCode,
-            "message" => $eMessage,
-            "file" => $eFile,
-            "line" => $eLine,
-            "data" => [
-                "version" => Updater::getVersion()["tag"],
-            ],
-        ];
-
-        $options = array(
-            'http' => array(
-                'method'  => 'POST',
-                'content' => Json::encode($data),
-                'header' =>  "Content-Type: application/json\r\n",
-            )
-        );
-
-        $context = stream_context_create($options);
-        @file_get_contents($url, false, $context);
-        return false;
-    }
+    private static $BASE = 'http://vanet/flare/v1';
 
     /**
      * @param Event $ev
@@ -129,19 +18,19 @@ class Analytics
      */
     public static function reportUpdate($ev)
     {
-        $key = Config::get('MASTER_API_KEY');
+        $key = Config::get('INSTANCE_ID');
         if (empty($key)) return;
 
-        $url = self::$BASE . "/instance?site=" . $key;
-        $data = [
-            "version" => $ev->params['tag']
-        ];
+        $inst = Json::decode(Config::get('INSTANCE_INFO'));
+        $inst['flareVersion'] = $ev->params['tag'];
+
+        $url = self::$BASE . '/instance';
 
         $options = array(
             'http' => array(
                 'method'  => 'PUT',
-                'content' => Json::encode($data),
-                'header' =>  "Content-Type: application/json\r\n",
+                'content' => Json::encode($inst),
+                'header' =>  "Content-Type: application/json\r\nX-Api-Key: {$key}\r\n",
             )
         );
 
@@ -154,12 +43,17 @@ class Analytics
      */
     public static function register()
     {
-        if (!empty(Config::get('MASTER_API_KEY'))) return;
+        if (!empty(Config::get('INSTANCE_ID'))) return;
+
+        $key = Config::get('vanet/api_key');
 
         $url = self::$BASE . "/instance";
+        $db = DB::getInstance();
         $data = [
             "name" => Config::get('va/name'),
-            "version" => Updater::getVersion()["tag"],
+            "flareVersion" => Updater::getVersion()["tag"],
+            "phpVersion" => phpversion(),
+            "mysqlVersion" => $db->query("SELECT VERSION() AS v")->first()->v,
             "url" => self::url(),
         ];
 
@@ -167,13 +61,13 @@ class Analytics
             'http' => array(
                 'method'  => 'POST',
                 'content' => Json::encode($data),
-                'header' =>  "Content-Type: application/json\r\n",
+                'header' =>  "Content-Type: application/json\r\nX-Api-Key: {$key}\r\n",
             )
         );
 
         $context = stream_context_create($options);
         $res = Json::decode(file_get_contents($url, false, $context));
-        Config::replace('MASTER_API_KEY', $res['result']);
+        Config::replace('INSTANCE_ID', $res['result']);
     }
 
     /**
@@ -181,20 +75,29 @@ class Analytics
      */
     public static function unregister()
     {
-        $key = Config::get('MASTER_API_KEY');
+        $key = Config::get('INSTANCE_ID');
         if (empty($key)) return;
 
-        $url = self::$BASE . "/instance?site={$key}";
+        $url = self::$BASE . "/instance";
 
         $options = array(
             'http' => array(
                 'method'  => 'DELETE',
+                'header' => "X-Api-Key: {$key}\r\n"
             )
         );
 
         $context = stream_context_create($options);
         file_get_contents($url, false, $context);
-        Config::replace('MASTER_API_KEY', '0');
+        Config::replace('INSTANCE_ID', 0);
+    }
+
+    /**
+     * @return bool
+     */
+    public static function isRegistered()
+    {
+        return !empty(Config::get('INSTANCE_ID'));
     }
 
     /**
@@ -207,22 +110,5 @@ class Analytics
             isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? 'https' : 'http',
             $_SERVER['SERVER_NAME']
         );
-    }
-
-    /**
-     * @return string[]
-     */
-    private static function excludedFiles()
-    {
-        $plugins = Json::decode(file_get_contents(__DIR__ . '/../plugins.json'));
-        $files = [];
-        foreach ($plugins as $p) {
-            foreach ($p['installation']['files'] as $f) {
-                $name = explode('/', $f);
-                $files[] = $name[count($name) - 1];
-            }
-        }
-
-        return $files;
     }
 }
