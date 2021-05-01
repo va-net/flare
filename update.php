@@ -533,7 +533,7 @@ if (Input::get('action') === 'editprofile') {
         die();
     }
 
-    $oldAnalytics = Config::get('MASTER_API_KEY') == '' ? 0 : 1;
+    $oldAnalytics = empty(Config::get('INSTANCE_ID')) ? 0 : 1;
     if ($oldAnalytics == 1 && Input::get('analytics') == 0) {
         Analytics::unregister();
     } elseif ($oldAnalytics == 0 && Input::get('analytics') == 1) {
