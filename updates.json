@@ -398,12 +398,32 @@
     },
     {
         "tag": "v1.2.4-beta3",
-        "name": "Version 1.2.4 Beta 4",
+        "name": "Version 1.2.4 Beta 3",
         "date": "2021-04-19",
         "notes": "Fixed issue with POST/PUT requests to VANet",
         "prerelease": true,
         "useUpdater": true,
         "files": ["classes/VANet.php", "classes/HttpRequest.php"],
+        "queries": [],
+        "deletedFiles": [],
+        "newFolders": []
+    },
+    {
+        "tag": "v1.2.4-beta4",
+        "name": "Version 1.2.4 Beta 4",
+        "date": "2021-05-01",
+        "notes": "Transitioned to new analytics server",
+        "prerelease": true,
+        "useUpdater": true,
+        "files": [
+            "classes/VANet.php",
+            "home.php",
+            "classes/Analytics.php",
+            "classes/DB.php",
+            "core/init.php",
+            "admin/site.php",
+            "update.php"
+        ],
         "queries": [],
         "deletedFiles": [],
         "newFolders": []
