@@ -21,9 +21,12 @@ spl_autoload_register(function ($class) {
 
 if (file_exists(__DIR__ . '/config.php')) {
     require_once __DIR__ . '/config.php';
-    if (Config::get('mysql/host') != 'DB_HOST' && strlen(Config::get('INSTANCE_ID')) < 1) {
-        Analytics::register();
-    }
+} elseif (file_exists(__DIR__ . '/config.new.php')) {
+    require_once __DIR__ . '/config.new.php';
+}
+
+if (Config::isReady() && strlen(Config::get('INSTANCE_ID')) < 1) {
+    Analytics::register();
 }
 
 require_once __DIR__ . '/../vendor/autoload.php';

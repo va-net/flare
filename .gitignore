@@ -2,10 +2,11 @@ flare.sql
 core/init.php
 ._flare.sql
 permissions.json
-core/config.php
+core/config*.php
 classes/curl_cookie.txt
 routes.json
 aircraft.json
 test.php
 core/logs/*
 .development
+.env
