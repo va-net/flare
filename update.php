@@ -560,7 +560,7 @@ if (Input::get('action') === 'editprofile') {
         array_push($gates, trim($g));
     }
 
-    $datetime = Input::get('date') . ' ' . substr(Input::get('time'), 0, 2) . ':' . substr(Input::get('time'), 2, 2);
+    $datetime = Input::get('date') . 'T' . substr(Input::get('time'), 0, 2) . ':' . substr(Input::get('time'), 2, 2) . ':00.000Z';
 
     VANet::createEvent(array(
         "name" => Input::get('name'),

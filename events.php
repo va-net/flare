@@ -112,7 +112,7 @@ if (!$user->isLoggedIn()) {
                                             <div class="col-lg-6 px-5">
                                                 <h4 class="text-left">Event Details</h4>
                                                 <p class="text-left">
-                                                    <b>Date & Time:</b> <?= $event["date"] . 'Z'; ?><br />
+                                                    <b>Date & Time:</b> <?= str_replace('T', ' ', $event["date"]) . 'Z'; ?><br />
                                                     <b>Departure:</b> <?= $event["departureIcao"]; ?><br />
                                                     <b>Arrival:</b> <?= $event["arrivalIcao"]; ?><br />
                                                     <b>Aircraft:</b> <?= $event["aircraft"]["aircraftName"] . ' (' . $event["aircraft"]["liveryName"] . ')'; ?><br />
