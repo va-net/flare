@@ -2,7 +2,6 @@ core/config*.php
 classes/curl_cookie.txt
 test.php
 core/logs/*
-.development
 .env
 .git
 .github
