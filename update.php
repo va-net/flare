@@ -674,12 +674,12 @@ if (Input::get('action') === 'editprofile') {
             "departureIcao" => $route['dep'],
             "arrivalIcao" => $route['arr'],
             "aircraftLiveryId" => $route['aircraft'][0]['liveryid'],
-            "flightTime" => $route['duration']
+            "flightTime" => intval($route['duration'])
         ));
     }
 
     $ret = VANet::sendCodeshare(array(
-        "recipientId" => Input::get('recipient'),
+        "recipientId" => intval(Input::get('recipient')),
         "message" => Input::get('message'),
         "routes" => $routes
     ));
@@ -723,8 +723,9 @@ if (Input::get('action') === 'editprofile') {
     $db = DB::getInstance();
     $allaircraft = Aircraft::fetchAllLiveriesFromVANet();
 
-    $sql = "INSERT INTO routes (fltnum, dep, arr, duration, aircraftid) VALUES\n";
-    $params = array();
+    $sql = "INSERT INTO routes (fltnum, dep, arr, duration) VALUES\n";
+    $params = [];
+    $acs = [];
     $i = 0;
 
     foreach ($codeshare["routes"] as $route) {
@@ -736,7 +737,7 @@ if (Input::get('action') === 'editprofile') {
                 //Redirect::to('/admin/codeshares.php');
                 die();
             }
-            $sql = "INSERT INTO routes (fltnum, dep, arr, duration, aircraftid) VALUES";
+            $sql = "INSERT INTO routes (fltnum, dep, arr, duration) VALUES";
             $params = array();
         }
 
@@ -756,17 +757,24 @@ if (Input::get('action') === 'editprofile') {
             $acId = $acId->first()->id;
         }
 
-        $sql .= "\n(?, ?, ?, ?, ?),";
+        $sql .= "\n(?, ?, ?, ?),";
         array_push($params, $route["flightNumber"]);
         array_push($params, $route["departureIcao"]);
         array_push($params, $route["arrivalIcao"]);
         array_push($params, $route["flightTime"]);
-        array_push($params, $acId);
+        array_push($acs, $acId);
         $i++;
     }
 
     $sql = trim($sql, ',');
     $ret = $db->query($sql, $params);
+    $lastid = Route::lastId();
+    $i = 0;
+    foreach (range($lastid - count($codeshare['routes']), $lastid) as $x) {
+        Route::addAircraft($x, intval($acs[$i]));
+        $i++;
+    }
+
     if ($ret->error()) {
         Session::flash('error', "Error Importing Codeshare Routes");
         Redirect::to('/admin/codeshares.php');

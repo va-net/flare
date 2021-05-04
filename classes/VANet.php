@@ -438,7 +438,6 @@ class VANet
     public static function sendCodeshare($fields)
     {
         $key = Config::get('vanet/api_key');
-        $req = new HttpRequest(self::$BASE . "/airline/v1/codeshares");
         $data = Json::encode($fields);
         $response = Json::decode(@HttpRequest::hacky(self::$BASE . "/airline/v1/codeshares", "POST", $data, ["X-Api-Key: {$key}", "Content-Type: application/json"]));
         if (!$response || $response['status'] != 0) {
