@@ -451,17 +451,5 @@
         "queries": [],
         "deletedFiles": [],
         "newFolders": []
-    },
-    {
-        "tag": "v1.2.4-beta6",
-        "name": "Version 1.2.4 Beta 6",
-        "date": "2021-05-05",
-        "notes": "Dummy update",
-        "prerelease": true,
-        "useUpdater": true,
-        "files": [],
-        "queries": [],
-        "deletedFiles": [],
-        "newFolders": []
     }
 ]
