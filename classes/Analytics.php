@@ -21,9 +21,13 @@ class Analytics
         $key = Config::get('INSTANCE_ID');
         if (empty($key)) return;
 
-        $inst = Json::decode(Config::get('INSTANCE_INFO'));
-        $inst['flareVersion'] = $ev->params['tag'];
+        $db = DB::getInstance();
 
+        $inst = self::getInfo();
+        $inst['flareVersion'] = $ev->params['tag'];
+        $inst['phpVersion'] = phpversion();
+        $inst['mysqlVersion'] = $db->query("SELECT VERSION() AS v")->first()->v;
+        $inst['url'] = self::url();
         $url = self::$BASE . '/instance';
 
         $options = array(
@@ -36,6 +40,15 @@ class Analytics
 
         $context = stream_context_create($options);
         @file_get_contents($url, false, $context);
+    }
+
+    /**
+     * @return array
+     */
+    public static function getInfo()
+    {
+        $key = Config::get('INSTANCE_ID');
+        return Json::decode(HttpRequest::hacky(self::$BASE . '/instance', 'GET', '', ["X-Api-Key: {$key}\r\n"]));
     }
 
     /**
