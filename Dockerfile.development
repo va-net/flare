@@ -1,9 +1,9 @@
 FROM php:7-apache
 
-RUN apt-get update && apt-get install -y libcurl3-dev
-
-RUN docker-php-ext-install pdo_mysql curl
-
+RUN apt-get update && apt-get install -y libcurl3-dev libzip-dev zip
+RUN docker-php-ext-install pdo_mysql curl zip
 RUN a2enmod rewrite
+
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
 CMD chown www-data:www-data -R /var/www/html/* && apache2-foreground

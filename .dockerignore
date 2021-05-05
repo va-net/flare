@@ -8,3 +8,5 @@ core/logs/*
 .gitignore
 *.md
 docker*
+vendor
+install
