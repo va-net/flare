@@ -28,6 +28,7 @@ class Analytics
         $inst['phpVersion'] = phpversion();
         $inst['mysqlVersion'] = $db->query("SELECT VERSION() AS v")->first()->v;
         $inst['url'] = self::url();
+        $inst['name'] = Config::get('va/name');
         $url = self::$BASE . '/instance';
 
         $options = array(
