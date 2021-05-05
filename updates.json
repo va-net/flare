@@ -427,5 +427,28 @@
         "queries": [],
         "deletedFiles": [],
         "newFolders": []
+    },
+    {
+        "tag": "v1.2.4-beta5",
+        "name": "Version 1.2.4 Beta 5",
+        "date": "2021-05-05",
+        "notes": "Bug fixes, new configuration system",
+        "prerelease": true,
+        "useUpdater": true,
+        "files": [
+            "admin/events.php",
+            "events.php",
+            "update.php",
+            "apply.php",
+            "classes/Config.php",
+            "classes/User.php",
+            "core/init.php",
+            "index.php",
+            "classes/VANet.php",
+            "composer.lock"
+        ],
+        "queries": [],
+        "deletedFiles": [],
+        "newFolders": []
     }
 ]
