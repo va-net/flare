@@ -445,7 +445,8 @@
             "core/init.php",
             "index.php",
             "classes/VANet.php",
-            "composer.lock"
+            "composer.lock",
+            "classes/Analytics.php"
         ],
         "queries": [],
         "deletedFiles": [],
