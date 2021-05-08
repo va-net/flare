@@ -184,7 +184,7 @@ class Aircraft
     {
         self::init();
 
-        $details = self::fetchAircraftFromVANet($liveryId, 'LiveryID')[0];
+        $details = self::fetchAircraftFromVANet($liveryId);
         $data = array(
             'status' => 1,
             'rankreq' => $rank,
