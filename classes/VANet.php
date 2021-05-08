@@ -11,7 +11,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 class VANet
 {
 
-    private static $BASE = "https://api.vanet.app";
+    public static $BASE = "https://api.vanet.app";
 
     /**
      * @return array|null
