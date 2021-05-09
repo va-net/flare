@@ -539,5 +539,21 @@
         "queries": [],
         "deletedFiles": [],
         "newFolders": []
+    },
+    {
+        "tag": "v1.2.5",
+        "name": "Version 1.2.5",
+        "date": "2021-05-10",
+        "notes": "Moved aircraft to new API",
+        "prerelease": false,
+        "useUpdater": true,
+        "files": [
+            "classes/Aircraft.php",
+            "classes/VANet.php",
+            "classes/Time.php"
+        ],
+        "queries": [],
+        "deletedFiles": [],
+        "newFolders": []
     }
 ]
