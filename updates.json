@@ -555,5 +555,17 @@
         "queries": [],
         "deletedFiles": [],
         "newFolders": []
+    },
+    {
+        "tag": "v1.2.6",
+        "name": "Version 1.2.6",
+        "date": "2021-05-10",
+        "notes": "Fix flight time formatting",
+        "prerelease": false,
+        "useUpdater": true,
+        "files": ["classes/Time.php"],
+        "queries": [],
+        "deletedFiles": [],
+        "newFolders": []
     }
 ]
