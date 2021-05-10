@@ -34,7 +34,7 @@ class Time
         $hours = floor($secs / 3600);
         $minutes = floor(($secs / 60) % 60);
 
-        return "{$hours}:${$minutes}";
+        return sprintf("%02d:%02d", $hours, $minutes);
     }
 
     /**
