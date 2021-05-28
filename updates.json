@@ -567,5 +567,27 @@
         "queries": [],
         "deletedFiles": [],
         "newFolders": []
+    },
+    {
+        "tag": "v1.2.7",
+        "name": "Version 1.2.7",
+        "date": "2021-05-28",
+        "notes": "Optimization, installation bug fixes, feature flag enforcement",
+        "prerelease": false,
+        "useUpdater": true,
+        "files": [
+            "classes/Config.php",
+            "classes/Cookie.php",
+            "classes/DB.php",
+            "classes/Page.php",
+            "classes/Permissions.php",
+            "classes/Validate.php",
+            "includes/menus.php",
+            "includes/navbar.php",
+            "includes/sidebar.php"
+        ],
+        "queries": [],
+        "deletedFiles": [],
+        "newFolders": []
     }
 ]
