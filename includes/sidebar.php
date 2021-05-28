@@ -3,6 +3,9 @@
     <hr class="mt-0 divider" />
     <?php
     foreach ($GLOBALS['pilot-menu'] as $name => $data) {
+        if ($data["vanetFeature"] && !$PROFILE['activeFeatures'][$data['vanetFeature']]) {
+            continue;
+        }
         if ($IS_GOLD || $data["needsGold"] == false) {
             echo '<a href="' . $data['link'] . '" class="panel-link"><i class="fa ' . $data['icon'] . '"></i>&nbsp;' . $name . '</a><br />';
         }
@@ -34,6 +37,10 @@
             $j = 0;
             foreach ($items as $label => $data) {
                 if ($user->hasPermission($data["permission"])) {
+                    if ($data["vanetFeature"] && !$PROFILE['activeFeatures'][$data['vanetFeature']]) {
+                        continue;
+                    }
+
                     if ($IS_GOLD || !$data["needsGold"]) {
                         $badge = !isset($data["badgeid"]) || $data["badgeid"] == null ? '' : $data["badgeid"];
                         if ($j == 0) {
