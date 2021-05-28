@@ -16,7 +16,6 @@ services:
             - db
         volumes:
             - ./:/var/www/html
-        environment: []
 
     dbadmin:
         image: phpmyadmin:latest
