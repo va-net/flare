@@ -53,6 +53,9 @@ class Config
 
         // Check if the Key was Invalid. If so, fall back on the Database
         if ($config === $GLOBALS['config'] && $path != null) {
+            if ($path[0] == 'mysql') {
+                return '';
+            }
             self::loadDbConf();
             $path = implode('/', $path);
             if (array_key_exists($path, self::$_dbConfig)) {
