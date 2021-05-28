@@ -54,12 +54,12 @@ class Page
     /**
      * @return string
      */
-    public static function getTitle()
+    public static function &getTitle()
     {
-        return self::$_title;
         if (self::$_usedAssets == [] && self::$_assetsMode != 1) {
             self::$_usedAssets = self::$_assets;
         }
+        return self::$_title;
     }
 
     /**
@@ -124,7 +124,7 @@ class Page
     /**
      * @return array
      */
-    public static function assets()
+    public static function &assets()
     {
         return self::$_assets;
     }
