@@ -168,4 +168,31 @@ class PirepsController extends Controller
         $data->server = Config::get('FORCE_SERVER');
         $this->render('acars', $data);
     }
+
+    public function acars_post()
+    {
+        $user = new User;
+        $this->authenticate($user);
+        $data = new stdClass;
+        $data->user = $user;
+        $data->va_name = Config::get('va/name');
+        $data->is_gold = VANet::isGold();
+        $data->acars = VANet::runAcars(Input::get('server'));
+
+        if ($data->acars['status'] != 0) {
+            Session::flash('error', 'We couldn\'t find you on the server. Ensure that you have filed a flight plan, 
+            and are still connected to Infinite Flight. Then, reload the page and hit that button again.');
+            unset($data->acars);
+            $this->render('acars', $data);
+        }
+
+        $data->aircraft = Aircraft::findAircraft(Page::$pageData->acars['result']["aircraftLiveryId"]);
+        if (!$data->aircraft) {
+            Session::flash('error', 'You\'re Flying an Aircraft that isn\'t in this VA\'s Fleet!');
+            $this->render('acars', $data);
+        }
+
+
+        $this->render('acars_confirm', $data);
+    }
 }

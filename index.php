@@ -14,12 +14,12 @@ if (empty($theme)) $theme = 'default';
 
 Router::pathNotFound(function () {
     http_response_code(404);
-    echo '<h1>Not Found</h1>';
+    echo 'Not Found';
     die();
 });
 Router::methodNotAllowed(function () {
     http_response_code(405);
-    echo '<h1>Method Not Allowed</h1>';
+    echo 'Method Not Allowed';
     die();
 });
 
@@ -38,6 +38,7 @@ Router::add('/pireps/new', [new PirepsController, 'post_new'], 'post');
 Router::add('/pireps/setup', [new PirepsController, 'get_setup']);
 Router::add('/pireps/setup', [new PirepsController, 'post_setup'], 'post');
 Router::add('/pireps/acars', [new PirepsController, 'acars']);
+Router::add('/pireps/acars', [new PirepsController, 'acars_post'], 'post');
 Router::add('/routes', [new RoutesController, 'get']);
 Router::add('/routes/search', [new RoutesController, 'search']);
 Router::add('/routes/([0-9]+)', [new RoutesController, 'view']);

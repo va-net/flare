@@ -30,49 +30,29 @@ Page::setTitle('ACARS - ' . Page::$pageData->va_name);
                     <div class="loaded">
                         <h3>ACARS</h3>
                         <?php if (Page::$pageData->is_gold) : ?>
-                            <div id="preRun">
-                                <button data-toggle="collapse" data-target="#howtouseacars" class="btn btn-light w-100 mb-2 collapsed" aria-expanded="false">How to Use ACARS&nbsp;&nbsp;<i class="fa fa-caret-down" aria-hidden="true"></i></button>
-                                <p id="howtouseacars" class="text-left collapse">
-                                    1. First, fly your flight under your <?= Config::get('va/name') ?> Callsign - <?= Page::$pageData->user->data()->callsign ?>.<br />
-                                    2. Then, once you're at the gate but not despawned, come here and click the button below.<br />
-                                    3. The System will automatically grab your flight details, validate them, and File the PIREP.
-                                </p>
+                            <button data-toggle="collapse" data-target="#howtouseacars" class="btn btn-light w-100 mb-2 collapsed" aria-expanded="false">How to Use ACARS&nbsp;&nbsp;<i class="fa fa-caret-down" aria-hidden="true"></i></button>
+                            <p id="howtouseacars" class="text-left collapse">
+                                1. First, fly your flight under your <?= Page::$pageData->va_name ?> Callsign - <?= Page::$pageData->user->data()->callsign ?>.<br />
+                                2. Then, once you're at the gate but not despawned, come here and click the button below.<br />
+                                3. The System will automatically grab your flight details, validate them, and File the PIREP.
+                            </p>
+                            <form method="post">
                                 <?php
                                 if (Page::$pageData->server == 0 || Page::$pageData->server == 'casual') {
                                     echo '<div class="form-group">';
                                     echo '<label for="acars-server">Select Server</label>';
-                                    echo '<select class="form-control" id="acars-server">';
+                                    echo '<select class="form-control" id="acars-server" name="server">';
                                     echo '<option value="training">Training Server</option>';
                                     echo '<option value="expert">Expert Server</option>';
                                     echo '</select>';
                                     echo '</div>';
                                 } else {
-                                    echo '<input hidden id="acars-server" value="' . Page::$pageData->server . '" />';
+                                    echo '<input hidden name="server" value="' . Page::$pageData->server . '" />';
                                 }
                                 ?>
+                            </form>
 
-                                <button id="acarsBtn" class="btn btn-lg bg-custom">Run ACARS</button>
-                            </div>
-
-                            <div id="postRun"></div>
-
-                            <script>
-                                $(document).ready(function() {
-                                    $("#acarsBtn").click(function() {
-                                        $(".loaded").hide();
-                                        $("#loader-wrapper").show();
-                                        $.post("vanet.php", {
-                                            "server": $("#acars-server").val(),
-                                            "method": "acars"
-                                        }, function(data, status) {
-                                            $("#preRun").hide();
-                                            $("#loader-wrapper").hide();
-                                            $(".loaded").show();
-                                            $("#postRun").html(data);
-                                        });
-                                    });
-                                });
-                            </script>
+                            <button id="acarsBtn" class="btn btn-lg bg-custom">Run ACARS</button>
                         <?php else : ?>
                             <p>In order to run ACARS, <?= Page::$pageData->va_name ?> needs to sign up to VANet Gold. You can take a look at it <a href="https://vanet.app/airline/upgrade" target="_blank">here</a>!</p>
                         <?php endif; ?>

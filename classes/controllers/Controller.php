@@ -47,7 +47,7 @@ class Controller
     /**
      * @param string $content
      */
-    protected function notFound($content = '<h1>Not Found</h1>')
+    protected function notFound($content = 'Not Found')
     {
         http_response_code(404);
         echo $content;
