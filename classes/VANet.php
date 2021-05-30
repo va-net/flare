@@ -94,42 +94,6 @@ class VANet
 
     /**
      * @return bool
-     * @param string $callsign Pilot Callsign
-     * @param int $id Pilot ID
-     */
-    public static function setupPireps($callsign, $id)
-    {
-        $db = DB::getInstance();
-        $server = 'casual';
-        $force = Config::get('FORCE_SERVER');
-        if ($force != 0 && $force != 'casual') $server = $force;
-
-        $callsign = urlencode($callsign);
-        $server = urlencode($server);
-        $key = Config::get('vanet/api_key');
-
-        $req = new HttpRequest(self::$BASE . "/airline/v1/user/id?callsign={$callsign}&serverName={$server}");
-        $req->setRequestHeaders(["X-Api-Key: {$key}"])->execute();
-        if ($req->getHttpCode() != 200) {
-            return false;
-        }
-
-        $response = Json::decode($req->getResponse());
-        if ($response['status'] != 0) return false;
-
-        if (!$db->update('pilots', $id, 'id', array(
-            'ifuserid' => $response['result']
-        ))) {
-            return false;
-        }
-
-        Events::trigger('pirep/setup', ["pilot" => $id, "userid" => $response["result"], "method" => 0]);
-
-        return true;
-    }
-
-    /**
-     * @return bool
      * @param string $ifc Pilot IFC
      * @param int $id Pilot ID
      */

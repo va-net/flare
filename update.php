@@ -370,16 +370,6 @@ if (Input::get('action') === 'editprofile') {
     Aircraft::update(Input::get('rank'), Input::get('notes'), Input::get('id'));
     Session::flash('success', 'Aircraft Updated Successfully!');
     Redirect::to('/admin/operations.php?section=fleet');
-} elseif (Input::get('action') === 'setuppireps') {
-    if (!VANet::setupPireps(Input::get('callsign'), $user->data()->id)) {
-        $server = 'casual';
-        $force = Config::get('FORCE_SERVER');
-        if ($force != 0 && $force != 'casual') $server = $force;
-        Session::flash('errorrecent', 'There was an Error Connecting to Infinite Flight. Ensure you are spawned in on the <b>' . ucfirst($server) . ' Server, and have set your callsign to \'' . $user->data()->callsign . '\'</b>!');
-        Redirect::to('pireps.php?page=new');
-    }
-    Session::flash('successrecent', 'PIREPs Setup Successfully! You can now File PIREPs.');
-    Redirect::to('pireps.php?page=new');
 } elseif (Input::get('action') === 'addroute') {
     if (!$user->hasPermission('opsmanage')) {
         Redirect::to('home.php');
