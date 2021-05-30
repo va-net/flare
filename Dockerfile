@@ -1,8 +1,8 @@
 FROM php:7-apache
 
 # Install Required Extensions
-RUN apt-get update && apt-get install -y libcurl3-dev
-RUN docker-php-ext-install pdo_mysql curl
+RUN apt-get update && apt-get install -y libcurl3-dev libzip-dev zip
+RUN docker-php-ext-install pdo_mysql curl zip
 RUN a2enmod rewrite
 
 # Copy Files
