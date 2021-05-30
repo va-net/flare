@@ -94,6 +94,7 @@ if (Input::exists() && Token::check(Input::get('token'))) {
                 'grade' => Input::get('grade'),
                 'violand' => Input::get('violand'),
                 'notes' => Input::get('notes'),
+                'status' => count((new User())->getAllUsers()) == 0 ? 1 : 0,
             ));
         } catch (Exception $e) {
             die($e->getMessage());

@@ -24,7 +24,7 @@ class Cookie
      * @return mixed
      * @param string $name Cookie Name
      */
-    public static function get($name)
+    public static function &get($name)
     {
         return $_COOKIE[$name];
     }

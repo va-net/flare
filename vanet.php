@@ -20,18 +20,16 @@ if (Input::get('method') === 'acars' && !empty(Input::get('server'))) {
         die();
     }
     $response = VANet::runAcars(Input::get('server'));
-    if (array_key_exists('status', $response)) {
-        if ($response['status'] == 404 || $response['status'] == 409) {
-            echo '<div class="alert alert-warning">We couldn\'t find you on the server. Ensure that you have filed a flight plan, 
-            and are still connected to Infinite Flight. Then, reload the page and hit that button again.</div>';
-            die();
-        }
+    if ($response['status'] != 0) {
+        echo '<div class="alert alert-warning">We couldn\'t find you on the server. Ensure that you have filed a flight plan, 
+        and are still connected to Infinite Flight. Then, reload the page and hit that button again.</div>';
+        die();
     }
     echo '<p>Nice! We\'ve found you. If you\'ve finished your flight and at the gate, go ahead and fill out the details below. 
     If not, reload the page once you\'re done and click that button again.</p>';
 
 
-    $aircraft = Aircraft::findAircraft($response["aircraft"]);
+    $aircraft = Aircraft::findAircraft($response['result']["aircraftLiveryId"]);
     if (!$aircraft) {
         echo '<div class="alert alert-warning">You\'re Flying an Aircraft that isn\'t in this VA\'s Fleet!</div>';
         die();
@@ -41,13 +39,13 @@ if (Input::get('method') === 'acars' && !empty(Input::get('server'))) {
     echo '
     <input hidden value="filepirep" name="action" />
     <input hidden value="' . date("Y-m-d") . '" name="date" />
-    <input hidden value="' . Time::secsToString($response["flightTime"]) . '" name="ftime" />
+    <input hidden value="' . Time::secsToString($response['result']["flightTime"]) . '" name="ftime" />
     <input hidden value="' . $aircraft->id . '" name="aircraft" />
     ';
 
     // Check VANet was able to determine departure ICAO
-    if ($response["departure"] != null) {
-        echo '<input hidden value="' . $response["departure"] . '" name="dep" />';
+    if ($response['result']["departure"] != null) {
+        echo '<input hidden value="' . $response['result']["departure"] . '" name="dep" />';
     } else {
         // ICAO could not be determined. Show UI for input
         echo '
@@ -59,8 +57,8 @@ if (Input::get('method') === 'acars' && !empty(Input::get('server'))) {
     }
 
     // Check VANet was able to determine arrival ICAO
-    if ($response["arrival"] != null) {
-        echo '<input hidden value="' . $response["arrival"] . '" name="arr" />';
+    if ($response['result']["arrival"] != null) {
+        echo '<input hidden value="' . $response['result']["arrival"] . '" name="arr" />';
     } else {
         // ICAO could not be determined. Show UI for input
         echo '
@@ -98,13 +96,9 @@ if (Input::get('method') === 'acars' && !empty(Input::get('server'))) {
     }
 } elseif (Input::get('method') === 'codeshares' && $user->hasPermission('opsmanage')) {
     $all = VANet::getCodeshares();
-    $me = VANet::myInfo();
     foreach ($all as $codeshare) {
-        if ($codeshare["veFrom"]["codeshareId"] == $me["codeshareId"]) {
-            continue;
-        }
         echo '<tr><td class="align-middle">';
-        echo $codeshare["veFrom"]["code"] . ' (' . $codeshare["veFrom"]["codeshareId"] . ')';
+        echo $codeshare["senderName"];
         echo '</td><td class="align-middle mobile-hidden">';
         echo $codeshare["message"];
         echo '</td><td class="align-middle">';

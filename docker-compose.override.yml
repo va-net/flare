@@ -1,0 +1,31 @@
+version: '3.7'
+services:
+    app:
+        build:
+            context: ./
+            dockerfile: Dockerfile.development
+        image: flare-dev
+        container_name: flare-app
+        restart: unless-stopped
+        working_dir: /var/www/
+        networks:
+            - flare
+        ports:
+            - 80:80
+        depends_on:
+            - db
+        volumes:
+            - ./:/var/www/html
+
+    dbadmin:
+        image: phpmyadmin:latest
+        container_name: flare-dbadmin
+        restart: unless-stopped
+        networks:
+            - flare
+        environment:
+            PMA_HOST: db
+        ports:
+            - 8080:80
+        depends_on:
+            - db

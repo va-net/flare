@@ -40,6 +40,11 @@ class Config
         $config = $GLOBALS['config'];
         $path = explode('/', $path);
 
+        $constName = 'FLARE_' . implode('_', array_map('strtoupper', $path));
+        if (defined($constName)) {
+            return constant($constName);
+        }
+
         foreach ($path as $bit) {
             if (isset($config[$bit])) {
                 $config = $config[$bit];
@@ -48,6 +53,9 @@ class Config
 
         // Check if the Key was Invalid. If so, fall back on the Database
         if ($config === $GLOBALS['config'] && $path != null) {
+            if ($path[0] == 'mysql') {
+                return '';
+            }
             self::loadDbConf();
             $path = implode('/', $path);
             if (array_key_exists($path, self::$_dbConfig)) {
@@ -67,19 +75,23 @@ class Config
      */
     public static function replaceColour($main, $text)
     {
+        $constName = 'FLARE_SITE_COLOUR_MAIN_HEX';
+        if (defined($constName)) {
+            self::replace('site/colour_main_hex', $main);
+        } else {
+            $currentConf = file_get_contents(__DIR__ . '/../core/config.php');
+            preg_match("/#([a-f0-9]{3}){1,2}\b/i", $currentConf, $matches);
+            $currentConf = str_replace($matches[0], '#' . $main, $currentConf);
 
-        $currentConf = file_get_contents(__DIR__ . '/../core/config.php');
-        preg_match("/#([a-f0-9]{3}){1,2}\b/i", $currentConf, $matches);
-        $currentConf = str_replace($matches[0], '#' . $main, $currentConf);
+            $file = fopen(__DIR__ . '/../core/config.php', 'w+');
 
-        $file = fopen(__DIR__ . '/../core/config.php', 'w+');
+            if (!$file) {
+                return false;
+            }
 
-        if (!$file) {
-            return false;
+            fwrite($file, $currentConf);
+            fclose($file);
         }
-
-        fwrite($file, $currentConf);
-        fclose($file);
 
         self::replace("TEXT_COLOUR", '#' . $text);
 
@@ -114,47 +126,72 @@ class Config
      */
     public static function replace($where, $new)
     {
-
-        $currentConfFile = file_get_contents(__DIR__ . '/../core/config.php');
-        $regex = '/\'' . $where . '\' => .*/m';
-        preg_match($regex, $currentConfFile, $matches);
-
-        if (count($matches) === 0) {
-            $db = DB::getInstance();
-            $sql = "SELECT COUNT(name) AS results FROM options WHERE name = ?";
-            $exists = $db->query($sql, [$where])->results()[0]->results;
-            if ($exists > 0) {
-                $res = $db->update('options', "'" . $where . "'", 'name', ["value" => $new]);
-                return !($res->error());
+        $constName = 'FLARE_' . implode('_', array_map('strtoupper', explode('/', $where)));
+        if (defined($constName)) {
+            $file = file_get_contents(__DIR__ . '/../core/config.new.php');
+            $oldLine = "/define\('{$constName}', '.+'\);/";
+            $newLine = "define('{$constName}', '{$new}');";
+            $res = preg_replace($oldLine, $newLine, $file);
+            if ($res == $file) {
+                return self::replaceDb($where, $new);
             }
 
-            $res = $db->insert('options', [
-                "name" => $where,
-                "value" => $new,
-            ]);
+            Events::trigger('config/updated', ['item' => $where]);
+            return file_put_contents(__DIR__ . '/../core/config.new.php', $res) !== FALSE;
+        } else {
+            $currentConfFile = file_get_contents(__DIR__ . '/../core/config.php');
+            $regex = '/\'' . $where . '\' => .*/m';
+            preg_match($regex, $currentConfFile, $matches);
+
+            if (count($matches) === 0) {
+                return self::replaceDb($where, $new);
+            }
+
+            $currentVal = explode('=>', $matches[0]);
+            $currentVal = trim(str_replace("'", "", $currentVal[1]));
+            $currentVal = trim(str_replace(",", "", $currentVal));
+
+            $newConf = preg_replace('/' . $currentVal . '/', $new, $currentConfFile, 1);
+
+            $file = fopen(__DIR__ . '/../core/config.php', 'w+');
+
+            if (!$file) {
+                return false;
+            }
+
+            fwrite($file, $newConf);
+            fclose($file);
+
+            Events::trigger('config/updated', ['item' => $where]);
+
+            return true;
+        }
+    }
+
+    /**
+     * @return bool
+     * @param string $where Config Key
+     * @param mixed $new New Value
+     */
+    public static function replaceDb($where, $new)
+    {
+        $db = DB::getInstance();
+        $sql = "SELECT COUNT(name) AS results FROM options WHERE name = ?";
+        $exists = $db->query($sql, [$where])->results()[0]->results;
+        if ($exists > 0) {
+            $res = $db->update('options', "'" . $where . "'", 'name', ["value" => $new]);
             return !($res->error());
         }
 
-        $currentVal = explode('=>', $matches[0]);
-        $currentVal = trim(str_replace("'", "", $currentVal[1]));
-        $currentVal = trim(str_replace(",", "", $currentVal));
-
-        $newConf = preg_replace('/' . $currentVal . '/', $new, $currentConfFile, 1);
-
-        $file = fopen(__DIR__ . '/../core/config.php', 'w+');
-
-        if (!$file) {
-            return false;
-        }
-
-        fwrite($file, $newConf);
-        fclose($file);
+        $res = $db->insert('options', [
+            "name" => $where,
+            "value" => $new,
+        ]);
 
         Events::trigger('config/updated', ['item' => $where]);
-
         self::loadDbConf(true);
 
-        return true;
+        return !($res->error());
     }
 
     /**
@@ -173,5 +210,16 @@ class Config
         Events::trigger('config/added', ['item' => $key, 'value' => $value]);
 
         return !($ret->error());
+    }
+
+    /**
+     * @return bool
+     */
+    public static function isReady()
+    {
+        $old = file_exists(__DIR__ . '/../core/config.php');
+        $new = file_exists(__DIR__ . '/../core/config.new.php');
+        $db = self::get('mysql/host') != 'DB_HOST';
+        return ($old || $new) && $db;
     }
 }

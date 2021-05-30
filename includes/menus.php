@@ -6,6 +6,7 @@ $GLOBALS['admin-menu']["Operations Management"] = array(
         "icon" => "fa-medal",
         "permission" => "opsmanage",
         "needsGold" => false,
+        "vanetFeature" => null,
         "badgeid" => null,
     ],
     "Manage Fleet" => [
@@ -13,6 +14,7 @@ $GLOBALS['admin-menu']["Operations Management"] = array(
         "icon" => "fa-plane",
         "permission" => "opsmanage",
         "needsGold" => false,
+        "vanetFeature" => null,
         "badgeid" => null,
     ],
     "Manage Routes" => [
@@ -20,6 +22,7 @@ $GLOBALS['admin-menu']["Operations Management"] = array(
         "icon" => "fa-plane-departure",
         "permission" => "opsmanage",
         "needsGold" => false,
+        "vanetFeature" => null,
         "badgeid" => null,
     ],
     "Manage Codeshares" => [
@@ -27,6 +30,7 @@ $GLOBALS['admin-menu']["Operations Management"] = array(
         "icon" => "fa-handshake",
         "permission" => "opsmanage",
         "needsGold" => false,
+        "vanetFeature" => null,
         "badgeid" => "codeshares",
     ],
     "Manage Events" => [
@@ -34,6 +38,7 @@ $GLOBALS['admin-menu']["Operations Management"] = array(
         "icon" => "fa-plane-arrival",
         "permission" => "opsmanage",
         "needsGold" => true,
+        "vanetFeature" => "events",
         "badgeid" => null,
     ]
 );
@@ -155,12 +160,14 @@ $GLOBALS['pilot-menu'] = array(
         "link" => "/events.php",
         "icon" => "fa-calendar",
         "needsGold" => true,
+        "vanetFeature" => "events",
         "badgeid" => null,
     ],
     "ACARS" => [
         "link" => "/acars.php",
         "icon" => "fa-sync",
         "needsGold" => true,
+        "vanetFeature" => "acars",
         "badgeid" => null,
     ],
 );
