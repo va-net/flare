@@ -775,6 +775,7 @@ Router::add('/routes/([0-9]+)', function ($routeId) {
     ]);
 }, 'delete');
 
+// Get All Aircraft
 Router::add('/aircraft', function () {
     $allaircraft = array_map(function ($a) {
         unset($a->status);
@@ -793,6 +794,7 @@ Router::add('/aircraft', function () {
     ]);
 });
 
+// Get Aircraft
 Router::add('/aircraft/([0-9]+)', function ($aircraftId) {
     $a = Aircraft::fetch($aircraftId);
     if ($a === FALSE) {
@@ -811,6 +813,7 @@ Router::add('/aircraft/([0-9]+)', function ($aircraftId) {
     ]);
 });
 
+// Get Notifications
 Router::add('/notifications', function () {
     global $_apiUser;
     $notifications = array_map(function ($n) {
@@ -831,6 +834,7 @@ Router::add('/notifications', function () {
     ]);
 });
 
+// Get All Ranks
 Router::add('/ranks', function () {
     $ranks = array_map(function ($r) {
         foreach ($r as $key => $val) {
@@ -848,6 +852,7 @@ Router::add('/ranks', function () {
     ]);
 });
 
+// Get Rank
 Router::add('/ranks/([0-9]+)', function ($rankId) {
     $r = Rank::find($rankId);
     if ($r === FALSE) {
@@ -866,6 +871,7 @@ Router::add('/ranks/([0-9]+)', function ($rankId) {
     ]);
 });
 
+// Get Log
 Router::add('/logs/(.+)', function ($logName) {
     global $_authType, $user;
     if ($_authType == AuthType::ApiKey) {
@@ -884,6 +890,7 @@ Router::add('/logs/(.+)', function ($logName) {
     echo file_get_contents("core/logs/{$logName}.log");
 });
 
+// Get Menu
 Router::add('/menu', function () {
     global $user;
     $IS_GOLD = VANet::isGold();
@@ -913,6 +920,7 @@ Router::add('/menu', function () {
     ]);
 });
 
+// Get Menu Badges
 Router::add('/menu/badges', function () {
     global $user;
     $IS_GOLD = VANet::isGold();
@@ -956,6 +964,17 @@ Router::add('/menu/badges', function () {
     echo Json::encode([
         "status" => ErrorCode::NoError,
         "result" => $res,
+    ]);
+});
+
+// Get Liveries for Aircraft
+Router::add('/liveries', function () {
+    global $user;
+    if (!$user->hasPermission('opsmanage')) accessDenied();
+
+    echo Json::encode([
+        'status' => ErrorCode::NoError,
+        'result' => Aircraft::fetchLiveryIdsForAircraft(Input::get('aircraftid')),
     ]);
 });
 

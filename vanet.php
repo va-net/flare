@@ -14,12 +14,7 @@ if (!$user->isLoggedIn()) {
     Redirect::to('index.php');
 }
 
-if (Input::get('method') === 'liveriesforaircraft' && !empty(Input::get('data'))) {
-    $all = Aircraft::fetchLiveryIdsForAircraft(Input::get('data'));
-    foreach ($all as $name => $id) {
-        echo '<option value="' . $id . '">' . $name . '</option>';
-    }
-} elseif (Input::get('method') === 'codeshares' && $user->hasPermission('opsmanage')) {
+if (Input::get('method') === 'codeshares' && $user->hasPermission('opsmanage')) {
     $all = VANet::getCodeshares();
     foreach ($all as $codeshare) {
         echo '<tr><td class="align-middle">';

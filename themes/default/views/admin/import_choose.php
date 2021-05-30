@@ -87,14 +87,12 @@ $ACTIVE_CATEGORY = 'operations-management';
                                     var id = $(this).attr("id");
                                     $("#livery" + id).html("<option value>Loading...</option>");
                                     $.ajax({
-                                        url: "/vanet.php",
-                                        type: "POST",
-                                        data: {
-                                            method: "liveriesforaircraft",
-                                            data: $(this).val()
-                                        },
-                                        success: function(html) {
+                                        url: "/api.php/liveries?aircraftid=" + encodeURIComponent($(this).val()),
+                                        type: "GET",
+                                        success: function(data) {
                                             $("#livery" + id).empty();
+
+                                            var html = Object.entries(data).map(([id, name]) => `<option value="${id}">${name}</option>`);
                                             $("#livery" + id).append("<option>Select</option>");
                                             $("#livery" + id).append(html);
                                         }
