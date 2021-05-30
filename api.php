@@ -410,17 +410,17 @@ Router::add('/events/([0-9a-zA-z]{8}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4
 
     $pilots = array_values(array_filter(array_map(function ($s) {
         return $s['pilotId'];
-    }, $event['signups']), function ($uid) {
+    }, $event['slots']), function ($uid) {
         return $uid != null;
     }));
     $slots = array_values(array_map(function ($s) {
         return $s['id'];
-    }, array_filter($event['signups'], function ($s) {
+    }, array_filter($event['slots'], function ($s) {
         return $s['pilotId'] != null;
     })));
     $signups = array_combine($pilots, $slots);
 
-    $firstavail = array_values(array_filter($event['signups'], function ($s) {
+    $firstavail = array_values(array_filter($event['slots'], function ($s) {
         return $s['pilotId'] == null;
     }));
     if (count($firstavail) < 1) {

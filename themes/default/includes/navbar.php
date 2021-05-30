@@ -6,8 +6,6 @@ Copyright (C) 2020  Lucas Rebato
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-
-Page::$pageData->user = Page::$pageData->user;
 ?>
 
 <a class="navbar-brand" href="/">
@@ -32,7 +30,7 @@ Page::$pageData->user = Page::$pageData->user;
                 continue;
             }
 
-            if (($data['loginOnly'] && $user->isLoggedIn()) || (!$data['loginOnly'] && !$user->isLoggedIn())) {
+            if (($data['loginOnly'] && Page::$pageData->user->isLoggedIn()) || (!$data['loginOnly'] && !Page::$pageData->user->isLoggedIn())) {
                 $mobileHidden = $data['mobileHidden'] ? ' mobile-hidden' : '';
                 echo '<li class="nav-item' . $mobileHidden . '">';
                 echo '<a class="nav-link" href="' . $data['link'] . '" style="color: ' . $textcol . '!important;"><i class="fa ' . $data['icon'] . '"></i>&nbsp;' . $name . '</a>';
@@ -40,7 +38,7 @@ Page::$pageData->user = Page::$pageData->user;
             }
         }
 
-        if ($user->isLoggedIn()) :
+        if (Page::$pageData->user->isLoggedIn()) :
             $PROFILE = VANet::myInfo();
             $IS_GOLD = $PROFILE['isGoldPlan'];
             foreach ($GLOBALS['pilot-menu'] as $name => $data) {
@@ -80,7 +78,7 @@ Page::$pageData->user = Page::$pageData->user;
                             continue;
                         }
 
-                        if ($user->hasPermission($data["permission"])) {
+                        if (Page::$pageData->user->hasPermission($data["permission"])) {
                             if (($IS_GOLD && $data["needsGold"]) || !$data["needsGold"]) {
                                 echo '<a href="' . $data["link"] . '" class="panel-link" style="color: ' . $textcol . '!important;"><i class="fa ' . $data['icon'] . '"></i>&nbsp;' . $label . '</a>';
                             }

@@ -36,7 +36,7 @@
 
             $j = 0;
             foreach ($items as $label => $data) {
-                if ($user->hasPermission($data["permission"])) {
+                if (Page::$pageData->user->hasPermission($data["permission"])) {
                     if (isset($data["vanetFeature"]) && !$PROFILE['activeFeatures'][$data['vanetFeature']]) {
                         continue;
                     }

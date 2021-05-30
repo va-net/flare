@@ -49,9 +49,9 @@ Page::setTitle('Event - ' . Page::$pageData->va_name);
                                 <div class="col-lg-6 px-5">
                                     <h4 class="text-left">Event Details</h4>
                                     <p class="text-left">
-                                        <b>Date & Time:</b> <?= Page::$pageData->event["dateTime"] . 'Z'; ?><br />
-                                        <b>Departure:</b> <?= Page::$pageData->event["departureAirport"]; ?><br />
-                                        <b>Arrival:</b> <?= Page::$pageData->event["arrivalAirport"]; ?><br />
+                                        <b>Date & Time:</b> <?= str_replace('T', ' ', Page::$pageData->event["date"]) . 'Z'; ?><br />
+                                        <b>Departure:</b> <?= Page::$pageData->event["departureIcao"]; ?><br />
+                                        <b>Arrival:</b> <?= Page::$pageData->event["arrivalIcao"]; ?><br />
                                         <b>Aircraft:</b> <?= Page::$pageData->event["aircraft"]["aircraftName"] . ' (' . Page::$pageData->event["aircraft"]["liveryName"] . ')'; ?><br />
                                         <b>Server:</b> <?= ucfirst(Page::$pageData->event["server"]); ?><br />
                                     </p>
@@ -69,7 +69,7 @@ Page::setTitle('Event - ' . Page::$pageData->va_name);
                                 <div class="col-lg-6 px-5">
                                     <h4 class="text-center">Gates</h4>
                                     <?php
-                                    $mygate = array_values(array_filter(Page::$pageData->event['signups'], function ($s) {
+                                    $mygate = array_values(array_filter(Page::$pageData->event['slots'], function ($s) {
                                         return $s['pilotId'] == Page::$pageData->user->data()->ifuserid;
                                     }));
                                     if (count($mygate) < 1) {
@@ -77,36 +77,36 @@ Page::setTitle('Event - ' . Page::$pageData->va_name);
                                     } else {
                                         $mygate = $mygate[0];
                                     }
-                                    $freegates = array_filter(Page::$pageData->event['signups'], function ($s) {
-                                        return $s['pilotId'] == null;
+
+                                    $avail = count(array_filter(Page::$pageData->event['slots'], function ($x) {
+                                        return $x['pilotId'] == null;
+                                    })) != 0;
+
+                                    $pilotdata = array_filter(Page::$pageData->user->getAllUsers(), function ($u) {
+                                        return $u['ifuserid'] != null;
                                     });
-                                    if ($mygate == null && count($freegates) > 0) {
-                                        echo '<button class="btn bg-custom text-light changeStatus">Sign Up</button>';
-                                    }
+                                    $names = array_map(function ($p) {
+                                        return $p['name'];
+                                    }, $pilotdata);
+                                    $ids = array_map(function ($p) {
+                                        return $p['ifuserid'];
+                                    }, $pilotdata);
+                                    $pilots = array_combine($ids, $names);
                                     ?>
+                                    <?php if ($mygate == null && $avail) : ?>
+                                        <button class="btn bg-custom changeStatus">Sign Up</button>
+                                    <?php endif; ?>
                                     <table class="table table-striped text-center datatable-nosearch">
                                         <thead class="bg-custom">
                                             <tr>
                                                 <th>Gate</th>
                                                 <th>Pilot</th>
-                                                <!-- <th>Actions</th> -->
+                                                <th>Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <?php
-                                            $pilotdata = array_filter(Page::$pageData->user->getAllUsers(), function ($u) {
-                                                return $u['ifuserid'] != null;
-                                            });
-                                            $names = array_map(function ($p) {
-                                                return $p['name'];
-                                            }, $pilotdata);
-                                            $ids = array_map(function ($p) {
-                                                return $p['ifuserid'];
-                                            }, $pilotdata);
-                                            $pilots = array_combine($ids, $names);
-
-
-                                            foreach (Page::$pageData->event["signups"] as $gate) {
+                                            foreach (Page::$pageData->event["slots"] as $gate) {
                                                 $pilotName = $gate['pilotName'];
                                                 if ($pilotName === '' && isset($pilots[$gate['pilotId']])) {
                                                     $pilotName = $pilots[$gate['pilotId']];
@@ -118,10 +118,10 @@ Page::setTitle('Event - ' . Page::$pageData->va_name);
                                                 echo $gate["gate"];
                                                 echo '</td><td class="align-middle">';
                                                 echo $pilotName;
-                                                // echo '</td><td class="align-middle">';
-                                                // if ($mygate != null && $mygate['id'] == $gate['id']) {
-                                                //     echo '<button data-gid="' . $gate['id'] . '"  class="btn bg-custom text-light changeStatus">Pull Out</button>';
-                                                // }
+                                                echo '</td><td class="align-middle">';
+                                                if ($mygate != null && $mygate['id'] == $gate['id']) {
+                                                    echo '<button data-gid="' . $gate['id'] . '"  class="btn bg-custom text-light changeStatus">Pull Out</button>';
+                                                }
                                                 echo '</td></tr>';
                                             }
                                             ?>
