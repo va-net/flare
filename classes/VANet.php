@@ -394,17 +394,16 @@ class VANet
         if ($uid == null) $uid = $user->data()->ifuserid;
         if ($user->data()->ifuserid == null) return null;
 
-        $req = new HttpRequest(self::$BASE . "/airline/v1/acars");
         $data = Json::encode([
             "callsign" => $callsign,
             "userId" => $uid,
             "server" => $server,
         ]);
-        $response = Json::decode(@HttpRequest::hacky(self::$BASE . "/airline/v1/acars", "POST", $data, ["X-Api-Key: {$key}", "Content-Type: application/json"]));
+        $response = Json::decode(HttpRequest::hacky(self::$BASE . "/airline/v1/acars", "POST", $data, ["X-Api-Key: {$key}", "Content-Type: application/json"]));
 
-        if ($response || $response['status'] != 0) return null;
+        if (!$response) return null;
 
-        return Json::decode($req->getResponse());
+        return $response;
     }
 
     /**

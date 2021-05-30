@@ -388,7 +388,8 @@ class HttpRequest
             array(
                 'method'  => $method,
                 'header'  => implode("\r\n", $headers),
-                'content' => $data
+                'content' => $data,
+                'ignore_errors' => true,
             )
         );
 
