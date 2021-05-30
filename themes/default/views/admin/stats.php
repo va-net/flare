@@ -65,8 +65,8 @@ $ACTIVE_CATEGORY = 'pirep-management';
                             <h4>VANet Statistics</h4>
                             <table class="table">
                                 <tr>
-                                    <td><b>Total Distance</b></td>
-                                    <td><?php echo Page::$pageData->stats["totalDistance"]; ?>NM</td>
+                                    <td><b>Event Count</b></td>
+                                    <td><?php echo Page::$pageData->stats["eventCount"]; ?></td>
                                 </tr>
                                 <tr>
                                     <td><b>Total Revenue</b></td>
