@@ -53,38 +53,48 @@ $ACTIVE_CATEGORY = 'site-management';
                         if (Session::exists('success')) {
                             echo '<div class="alert alert-success text-center">' . Session::flash('success') . '</div>';
                         }
+
+                        $days = 90;
+                        if (isset($_GET['days']) && is_numeric($_GET['days'])) {
+                            $days = intval($_GET['days']);
+                        }
                         ?>
                         <h3>Admin Dashboard</h3>
+                        <form class="form-inline" method="get">
+                            <label for="days">Time Period (days)</label>
+                            <input type="number" class="form-control mx-2" id="days" name="days" value="<?= $days ?>">
+                            <button type="submit" class="btn bg-custom">View</button>
+                        </form>
                         <div class="row">
                             <div class="col-lg p-3">
                                 <div class="card p-3 shadow h-100">
-                                    <h5 class="font-weight-bold">PIREPs (90 Days)</h5>
-                                    <p><?= Stats::totalFlights(90) ?></p>
+                                    <h5 class="font-weight-bold">PIREPs (<?= $days ?> Days)</h5>
+                                    <p><?= Stats::totalFlights($days) ?></p>
                                 </div>
                             </div>
                             <div class="col-lg p-3">
                                 <div class="card p-3 shadow h-100">
-                                    <h5 class="font-weight-bold">Hours (90 Days)</h5>
-                                    <p><?= Time::secsToString(Stats::totalHours(90)) ?></p>
+                                    <h5 class="font-weight-bold">Hours (<?= $days ?> Days)</h5>
+                                    <p><?= Time::secsToString(Stats::totalHours($days)) ?></p>
                                 </div>
                             </div>
                             <div class="col-lg p-3">
                                 <div class="card p-3 shadow h-100">
-                                    <h5 class="font-weight-bold">Pilot Applications (90 Days)</h5>
-                                    <p><?= Stats::pilotsApplied(90) ?></p>
+                                    <h5 class="font-weight-bold">Pilot Applications (<?= $days ?> Days)</h5>
+                                    <p><?= Stats::pilotsApplied($days) ?></p>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-lg p-3">
                                 <div class="card p-3 shadow h-100">
-                                    <h5 class="font-weight-bold">PIREPs (30 Days)</h5>
+                                    <h5 class="font-weight-bold">PIREPs (<?= $days ?> Days)</h5>
                                     <canvas id="pireps-chart"></canvas>
                                     <?php
-                                    $allpireps = Pirep::fetchPast(30);
+                                    $allpireps = Pirep::fetchPast($days);
                                     $chartdata = [];
                                     $chartlables = [];
-                                    $dates = daterange(date("Y-m-d", strtotime("-30 days")), date("Y-m-d"));
+                                    $dates = daterange(date("Y-m-d", strtotime("-{$days} days")), date("Y-m-d"));
                                     $vals = array_map(function ($d) {
                                         return 0;
                                     }, $dates);
@@ -119,10 +129,10 @@ $ACTIVE_CATEGORY = 'site-management';
                             </div>
                             <div class="col-lg p-3">
                                 <div class="card p-3 shadow h-100">
-                                    <h5 class="font-weight-bold">Pilot Applications (30 Days)</h5>
+                                    <h5 class="font-weight-bold">Pilot Applications (<?= $days ?> Days)</h5>
                                     <canvas id="pilots-chart"></canvas>
                                     <?php
-                                    $allpilots = User::fetchPast(30);
+                                    $allpilots = User::fetchPast($days);
                                     $appchartdata = [];
                                     $appchartlables = [];
                                     $pilotsAssoc = array_combine($dates, $vals);
