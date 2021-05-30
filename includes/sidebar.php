@@ -3,7 +3,7 @@
     <hr class="mt-0 divider" />
     <?php
     foreach ($GLOBALS['pilot-menu'] as $name => $data) {
-        if ($data["vanetFeature"] && !$PROFILE['activeFeatures'][$data['vanetFeature']]) {
+        if (isset($data["vanetFeature"]) && !$PROFILE['activeFeatures'][$data['vanetFeature']]) {
             continue;
         }
         if ($IS_GOLD || $data["needsGold"] == false) {
@@ -37,7 +37,7 @@
             $j = 0;
             foreach ($items as $label => $data) {
                 if ($user->hasPermission($data["permission"])) {
-                    if ($data["vanetFeature"] && !$PROFILE['activeFeatures'][$data['vanetFeature']]) {
+                    if (isset($data["vanetFeature"]) && !$PROFILE['activeFeatures'][$data['vanetFeature']]) {
                         continue;
                     }
 

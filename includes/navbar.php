@@ -26,7 +26,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
     <ul class="navbar-nav">
         <?php
         foreach ($GLOBALS['top-menu'] as $name => $data) {
-            if ($data["vanetFeature"] && !$PROFILE['activeFeatures'][$data['vanetFeature']]) {
+            if (isset($data["vanetFeature"]) && !$PROFILE['activeFeatures'][$data['vanetFeature']]) {
                 continue;
             }
 
@@ -42,7 +42,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
             $PROFILE = VANet::myInfo();
             $IS_GOLD = $PROFILE['isGoldPlan'];
             foreach ($GLOBALS['pilot-menu'] as $name => $data) {
-                if ($data["vanetFeature"] && !$PROFILE['activeFeatures'][$data['vanetFeature']]) {
+                if (isset($data["vanetFeature"]) && !$PROFILE['activeFeatures'][$data['vanetFeature']]) {
                     continue;
                 }
 
@@ -74,7 +74,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                     echo '<div id="collapse' . $i . '" class="collapse ' . strtolower(str_replace(" ", "-", $category)) . '">';
 
                     foreach ($items as $label => $data) {
-                        if ($data["vanetFeature"] && !$PROFILE['activeFeatures'][$data['vanetFeature']]) {
+                        if (isset($data["vanetFeature"]) && !$PROFILE['activeFeatures'][$data['vanetFeature']]) {
                             continue;
                         }
 
