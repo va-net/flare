@@ -54,18 +54,18 @@ class CodesharesController extends Controller
                 $this->redirect('/admin/operations/codeshares');
             }
             array_push($routes, array(
-                "flightNum" => $r['fltnum'],
-                "departure" => $r['dep'],
-                "arrival" => $r['arr'],
-                "aircraftID" => $r['aircraft'][0]['liveryid'],
+                "flightNumber" => $r['fltnum'],
+                "departureIcao" => $r['dep'],
+                "arrivalArrival" => $r['arr'],
+                "aircraftLiveryId" => $r['aircraft'][0]['liveryid'],
                 "flightTime" => $r['duration']
             ));
         }
 
         $ret = VANet::sendCodeshare(array(
-            "VEToID" => Input::get('recipient'),
-            "Message" => Input::get('message'),
-            "Routes" => $routes
+            "recipientId" => Input::get('recipient'),
+            "message" => Input::get('message'),
+            "routes" => $routes
         ));
         if (!$ret) {
             Session::flash('error', "Error Connnecting to VANet");

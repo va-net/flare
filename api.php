@@ -444,6 +444,129 @@ Router::add('/events/([0-9a-zA-z]{8}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4
     ]);
 }, 'put');
 
+// Get All Codeshare Requests
+Router::add('/codeshares', function () {
+    global $user;
+    if (!$user->hasPermission('opsmanage')) accessDenied();
+
+    echo Json::encode([
+        'status' => ErrorCode::NoError,
+        'result' => VANet::getCodeshares(),
+    ]);
+});
+
+// Send Codeshare Request
+Router::add('/codeshares', function () {
+    $routes = [];
+    $inputRoutes = explode(",", Input::get('routes'));
+
+    $dbRoutes = Route::fetchAll();
+    foreach ($inputRoutes as $input) {
+        if (!array_key_exists($input, $dbRoutes)) {
+            Session::flash('error', 'Could not Find Route ' . $input);
+            $this->redirect('/admin/operations/codeshares');
+        }
+        $r = $dbRoutes[$input];
+        if (count($r['aircraft']) < 1) {
+            Session::flash('error', 'This route does not have any aircraft attached - ' . $input);
+            $this->redirect('/admin/operations/codeshares');
+        }
+        array_push($routes, array(
+            "flightNumber" => $r['fltnum'],
+            "departureIcao" => $r['dep'],
+            "arrivalIcao" => $r['arr'],
+            "aircraftLiveryId" => $r['aircraft'][0]['liveryid'],
+            "flightTime" => $r['duration']
+        ));
+    }
+
+    $ret = VANet::sendCodeshare(array(
+        "recipientId" => Input::get('recipient'),
+        "message" => Input::get('message'),
+        "routes" => $routes
+    ));
+    if (!$ret) {
+        Session::flash('error', "Error Connnecting to VANet");
+        $this->redirect('/admin/operations/codeshares');
+        die();
+    } else {
+        Session::flash('success', "Codeshare Sent Successfully!");
+        $this->redirect('/admin/operations/codeshares');
+    }
+}, 'post');
+
+// Get Codeshare Request
+Router::add('/codeshares/([0-9a-zA-z]{8}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{12})', function ($id) {
+    global $user;
+    if (!$user->hasPermission('opsmanage')) accessDenied();
+
+    $codeshare = VANet::findCodeshare($id);
+    if (!$codeshare) notFound();
+
+    echo Json::encode([
+        'status' => ErrorCode::NoError,
+        'result' => $codeshare,
+    ]);
+});
+
+// Import Codeshare
+Router::add('/codeshares/([0-9a-zA-z]{8}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{12})', function ($id) {
+    global $user;
+    if (!$user->hasPermission('opsmanage')) accessDenied();
+
+    $codeshare = VANet::findCodeshare($id);
+    if ($codeshare === FALSE) notFound();
+
+    $dbac = Aircraft::fetchAllAircraft();
+    $dbaircraft = [];
+    foreach ($dbac as $d) {
+        $dbaircraft[$d['ifliveryid']] = $d;
+    }
+
+    $lowrank = Rank::getFirstRank();
+    foreach ($codeshare["routes"] as $route) {
+        $ac = -1;
+        if (!array_key_exists($route['aircraftLiveryID'], $dbaircraft)) {
+            Aircraft::add($route['aircraftLiveryID'], $lowrank->id);
+            $ac = Aircraft::lastId();
+        } else {
+            $ac = $dbaircraft[$route['aircraftLiveryID']]->id;
+        }
+        Route::add([
+            'fltnum' => $route['flightNum'],
+            'dep' => $route['departure'],
+            'arr' => $route['arrival'],
+            'duration' => $route['flightTime'],
+        ]);
+        Route::addAircraft(Route::lastId(), $ac);
+    }
+    VANet::deleteCodeshare($codeshare["id"]);
+    Cache::delete('badge_codeshares');
+
+    echo Json::encode([
+        'status' => ErrorCode::NoError,
+        'result' => null,
+    ]);
+}, 'put');
+
+// Delete Codeshare
+Router::add('/codeshares/([0-9a-zA-z]{8}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{12})', function ($id) {
+    global $user;
+    if (!$user->hasPermission('opsmanage')) accessDenied();
+
+    $codeshare = VANet::findCodeshare($id);
+    if (!$codeshare) notFound();
+
+    $ret = VANet::deleteCodeshare($id);
+    if (!$ret) internalError();
+
+    Cache::delete('badge_codeshares');
+    echo Json::encode([
+        'status' => ErrorCode::NoError,
+        'result' => null,
+    ]);
+}, 'delete');
+
 // View All News
 Router::add('/news', function () {
     $news = News::get();
