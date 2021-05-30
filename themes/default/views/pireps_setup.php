@@ -31,19 +31,9 @@ Page::setTitle('PIREPs Setup - ' . Page::$pageData->va_name);
                         <h3>Setup PIREPs</h3>
                         <p>
                             Before you can start filing PIREPs, we need to grab a bit of data from Infinite Flight.
-                            As you're flying anonymously or haven't linked your IFC Account to your IF Account,
-                            we couldn't grab this information in the background.
+                            Please change your settings in IF so that "Show Username In-Flight" is ON, then start a
+                            quick flight so that everything syncs. Then come back here and refresh the page.
                         </p>
-                        <p>
-                            Please spawn in on the <b><?= ucfirst(Page::$pageData->server); ?> Server</b>, and ensure that you set your
-                            callsign to your assigned one (<b><?= Page::$pageData->user->data()->callsign ?></b>, if you've forgotten!).
-                            Then, click the button below.
-                        </p>
-                        <form method="post" action="/pireps/setup">
-                            <input hidden name="action" value="setuppireps" />
-                            <input hidden name="callsign" value="<?= Page::$pageData->user->data()->callsign ?>" />
-                            <input type="submit" class="btn text-light bg-custom" value="Find Me" />
-                        </form>
                     </div>
                 </div>
             </div>

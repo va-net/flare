@@ -103,17 +103,16 @@ class PirepsController extends Controller
         }
 
         $response = VANet::sendPirep(array(
-            'AircraftID' => Aircraft::idToLiveryId(Input::get('aircraft')),
-            'Arrival' => Input::get('arr'),
-            'DateTime' => Input::get('date'),
-            'Departure' => Input::get('dep'),
-            'FlightTime' => Time::strToSecs(Input::get('ftime')),
-            'FuelUsed' => Input::get('fuel'),
-            'PilotId' => $user->data()->ifuserid
+            'aircraftLiveryId' => Aircraft::idToLiveryId(Input::get('aircraft')),
+            'arrivalIcao' => Input::get('arr'),
+            'date' => Input::get('date'),
+            'departureIcao' => Input::get('dep'),
+            'flightTime' => Time::strToSecs(Input::get('ftime')),
+            'fuelUsed' => Input::get('fuel'),
+            'pilotId' => $user->data()->ifuserid
         ));
 
-        $response = Json::decode($response->body);
-        if (!isset($response['success']) || $response['success'] != true) {
+        if (!$response) {
             Session::flash('error', 'There was an Error Connecting to VANet.');
             $this->get_new();
             die();
@@ -155,26 +154,7 @@ class PirepsController extends Controller
         $data->user = $user;
         $data->va_name = Config::get('va/name');
         $data->is_gold = VANet::isGold();
-        $data->server = 'casual';
-        $force = Config::get('FORCE_SERVER');
-        if ($force != 0 && $force != 'casual') $data->server = $force;
         $this->render('pireps_setup', $data);
-    }
-
-    public function post_setup()
-    {
-        $user = new User;
-        $this->authenticate($user);
-        if (!VANet::setupPireps(Input::get('callsign'), $user->data()->id)) {
-            $server = 'casual';
-            $force = Config::get('FORCE_SERVER');
-            if ($force != 0 && $force != 'casual') $server = $force;
-            Session::flash('errorrecent', 'There was an Error Connecting to Infinite Flight. Ensure you are spawned in on the <b>' . ucfirst($server) . ' Server, and have set your callsign to \'' . $user->data()->callsign . '\'</b>!');
-            $this->get_setup();
-        }
-
-        Session::flash('success', 'PIREPs Setup Successfully! You can now File PIREPs.');
-        $this->redirect('/pireps/new');
     }
 
     public function acars()

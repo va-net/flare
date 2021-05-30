@@ -61,16 +61,14 @@ class AdminEventsController extends EventsController
 
         try {
             VANet::createEvent(array(
-                "Name" => Input::get('name'),
-                "Description" => Input::get('description'),
-                "EventTypeID" => "1",
-                "DateTime" => $datetime,
-                "DepartureAirport" => Input::get('dep'),
-                "ArrivalAirport" => Input::get('arr'),
-                "Visible" => $vis,
-                "Aircraft" => Input::get('aircraft'),
-                "Server" => Input::get('server'),
-                "Gates" => $gates
+                "name" => Input::get('name'),
+                "description" => Input::get('description'),
+                "date" => $datetime,
+                "departureIcao" => Input::get('dep'),
+                "arrivalIcao" => Input::get('arr'),
+                "aircraftLiveryId" => Input::get('aircraft'),
+                "server" => Input::get('server'),
+                "gateNames" => $gates
             ));
             Session::flash('success', 'Event Added Successfully!');
         } catch (Exception $e) {
@@ -87,14 +85,12 @@ class AdminEventsController extends EventsController
             $vis = 'false';
         }
         $ret = VANet::editEvent(Input::get('id'), array(
-            "Name" => Input::get('name'),
-            "Description" => Input::get('description'),
-            "EventTypeID" => 1,
-            "DepartureAirport" => Input::get('dep'),
-            "ArrivalAirport" => Input::get('arr'),
-            "Visible" => $vis,
-            "AircraftID" => Input::get('aircraft'),
-            "Server" => Input::get('server')
+            "name" => Input::get('name'),
+            "description" => Input::get('description'),
+            "departureIcao" => Input::get('dep'),
+            "arrivalIcao" => Input::get('arr'),
+            "aircraftLiveryId" => Input::get('aircraft'),
+            "server" => Input::get('server')
         ));
 
         if (!$ret) {
