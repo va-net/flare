@@ -26,15 +26,15 @@ class Aircraft
      */
     public static function fetchAllAircraftFromVANet()
     {
-        $curl = new Curl;
-        $response = $curl->get(Config::get('vanet/base_url') . '/api/aircraft', array(
-            'apikey' => Config::get('vanet/api_key')
-        ));
-        $response = Json::decode($response->body);
+        $key = Config::get('vanet/api_key');
+        $response = HttpRequest::hacky(VANet::$BASE . '/public/v1/aircraft', 'GET', '', ["X-Api-Key: {$key}"]);
+        $response = Json::decode($response);
 
-        $completed = array();
-        foreach ($response as $aircraft) {
-            if (in_array($aircraft['aircraftID'], $completed)) {
+        if ($response['status'] != 0) return [];
+
+        $completed = [];
+        foreach ($response['result'] as $aircraft) {
+            if (array_key_exists($aircraft['aircraftID'], $completed)) {
                 continue;
             } else {
                 $completed[$aircraft['aircraftID']] = $aircraft['aircraftName'];
@@ -48,11 +48,9 @@ class Aircraft
      */
     public static function fetchAllLiveriesFromVANet()
     {
-        $curl = new Curl;
-        $response = $curl->get(Config::get('vanet/base_url') . '/api/aircraft', array(
-            'apikey' => Config::get('vanet/api_key')
-        ));
-        return Json::decode($response->body);
+        $key = Config::get('vanet/api_key');
+        $response = HttpRequest::hacky(VANet::$BASE . '/public/v1/aircraft', 'GET', '', ["X-Api-Key: {$key}"]);
+        return Json::decode($response)['result'];
     }
 
     /**
@@ -61,13 +59,9 @@ class Aircraft
      */
     public static function fetchLiveryIdsForAircraft($aircraftid)
     {
-        self::init();
-        $curl = new Curl;
-        $response = $curl->get(Config::get('vanet/base_url') . "/api/aircraft/AircraftID/{$aircraftid}", array(
-            'apikey' => Config::get('vanet/api_key')
-        ));
-        $all = Json::decode($response->body);
-        $final = array();
+        $key = Config::get('vanet/api_key');
+        $response = HttpRequest::hacky(VANet::$BASE . '/public/v1/aircraft/' . urlencode($aircraftid), 'GET', '', ["X-Api-Key: {$key}"]);
+        $all = Json::decode($response)['result'];
         foreach ($all as $aircraft) {
             $final[$aircraft['liveryName']] = $aircraft['liveryID'];
         }
@@ -77,17 +71,13 @@ class Aircraft
 
     /**
      * @return array
-     * @param string $aircraft The Search Term
-     * @param string $search The Search Key
+     * @param string $liveryId Aircraft Livery ID
      */
-    public static function fetchAircraftFromVANet($aircraft, $search = 'AircraftID')
+    public static function fetchAircraftFromVANet($liveryId)
     {
-
-        $curl = new Curl;
-        $response = $curl->get(Config::get('vanet/base_url') . "/api/aircraft/{$search}/{$aircraft}", array(
-            'apikey' => Config::get('vanet/api_key')
-        ));
-        return Json::decode($response->body);
+        $key = Config::get('vanet/api_key');
+        $response = HttpRequest::hacky(VANet::$BASE . '/public/v1/aircraft/livery/' . urlencode($liveryId), 'GET', '', ["X-Api-Key: {$key}"]);
+        return Json::decode($response)['result'];
     }
 
     /**
@@ -179,24 +169,6 @@ class Aircraft
     }
 
     /**
-     * @return string
-     * @param string $livery Livery Name
-     * @param string $aircraftid Aircraft ID
-     */
-    public static function liveryNameToId($livery, $aircraftid)
-    {
-        $response = self::fetchAircraftFromVANet(rawurlencode($livery), 'LiveryName');
-
-        foreach ($response as $aircraft) {
-            if ($aircraftid == $aircraft['aircraftID']) {
-                continue;
-            }
-            $fin = $aircraft['liveryID'];
-        }
-        return $fin;
-    }
-
-    /**
      * @return void
      * @param string $liveryId Livery ID
      * @param int $rank Rank ID
@@ -206,7 +178,7 @@ class Aircraft
     {
         self::init();
 
-        $details = self::fetchAircraftFromVANet($liveryId, 'LiveryID')[0];
+        $details = self::fetchAircraftFromVANet($liveryId);
         $data = array(
             'status' => 1,
             'rankreq' => $rank,

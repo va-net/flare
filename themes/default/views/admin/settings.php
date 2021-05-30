@@ -192,7 +192,7 @@ $ACTIVE_CATEGORY = 'site-management';
                                             <option value="0">No</option>
                                         </select>
                                         <script>
-                                            $("#analyticsdrop").val('<?= Page::$pageData->analytics_enabeld ? 1 : 0 ?>');
+                                            $("#analyticsdrop").val('<?= Page::$pageData->analytics_enabled ? 1 : 0 ?>');
                                         </script>
                                         <small class="text-muted">If enabled, reports of errors will be sent to the developers of Flare to help with debugging.</small>
                                     </div>

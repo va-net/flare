@@ -28,6 +28,12 @@ spl_autoload_register(function ($class) {
 
 if (file_exists(__DIR__ . '/config.php')) {
     require_once __DIR__ . '/config.php';
+} elseif (file_exists(__DIR__ . '/config.new.php')) {
+    require_once __DIR__ . '/config.new.php';
+}
+
+if (Config::isReady() && strlen(Config::get('INSTANCE_ID')) < 1) {
+    Analytics::register();
 }
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -50,8 +56,4 @@ require_once __DIR__ . '/functions.php';
 //     $classname::init();
 // }
 
-// Add Error Listeners
-Events::listen('db/query-failed', 'Analytics::reportDbError');
 Events::listen('site/updated', 'Analytics::reportUpdate');
-set_error_handler('Analytics::reportError', E_ALL);
-set_exception_handler('Analytics::reportException');

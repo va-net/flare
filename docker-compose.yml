@@ -1,32 +1,46 @@
-version: "3.7"
+version: '3.7'
 services:
-  app:
-    build:
-      context: ./
-      dockerfile: Dockerfile
-    image: flare
-    container_name: flare-app
-    restart: unless-stopped
-    working_dir: /var/www/
-    networks:
-      - flare
-    ports: 
-      - 80:80
-    volumes: 
-      - ./:/var/www/html
-
-  db:
-    image: mysql:5.7
-    container_name: flare-db
-    restart: unless-stopped
-    environment:
-      MYSQL_DATABASE: flare
-      MYSQL_ROOT_PASSWORD: flare
-      MYSQL_PASSWORD: flare
-      MYSQL_USER: flare
-    networks:
-      - flare
+    app:
+        build:
+            context: ./
+            dockerfile: Dockerfile
+        image: flare
+        container_name: flare-app
+        restart: unless-stopped
+        working_dir: /var/www/
+        networks:
+            - flare
+        ports:
+            - 80:80
+        depends_on:
+            - db
+        environment:
+            FLARE_MYSQL_HOST: db
+            FLARE_MYSQL_USERNAME: flare
+            FLARE_MYSQL_PASSWORD: flare
+            FLARE_MYSQL_DB: flare
+            FLARE_MYSQL_PORT: 3306
+            FLARE_VA_NAME: ${VA_NAME}
+            FLARE_VA_IDENTIFIER: ${VA_IDENT}
+            FLARE_VANET_API_KEY: ${API_KEY}
+            FLARE_SITE_COLOUR_MAIN_HEX: '#FF7E00'
+    db:
+        image: mysql:5.7
+        container_name: flare-db
+        restart: unless-stopped
+        environment:
+            MYSQL_DATABASE: flare
+            MYSQL_ROOT_PASSWORD: flare
+            MYSQL_PASSWORD: flare
+            MYSQL_USER: flare
+        networks:
+            - flare
+        volumes:
+            - flare-mysql:/var/lib/mysql
 
 networks:
-  flare:
-    driver: bridge
+    flare:
+        driver: bridge
+
+volumes:
+    flare-mysql:

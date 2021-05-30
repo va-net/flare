@@ -61,8 +61,10 @@ switch (Input::get('page')) {
             if (!Installer::setupDb()) {
                 Session::flash('error', 'Hmm. Looks like there was an error setting up the database. Ensure you have entered the correct database details, and try again.');
                 Redirect::to('?page=db-setup');
+                die();
             }
             Redirect::to('?page=user-setup');
+            die();
         }
         Installer::showTemplate('db-setup-cont');
         break;

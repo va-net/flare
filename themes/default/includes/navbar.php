@@ -28,7 +28,11 @@ Page::$pageData->user = Page::$pageData->user;
     <ul class="navbar-nav">
         <?php
         foreach ($GLOBALS['top-menu'] as $name => $data) {
-            if (($data['loginOnly'] && Page::$pageData->user->isLoggedIn()) || (!$data['loginOnly'] && !Page::$pageData->user->isLoggedIn())) {
+            if (isset($data["vanetFeature"]) && !$PROFILE['activeFeatures'][$data['vanetFeature']]) {
+                continue;
+            }
+
+            if (($data['loginOnly'] && $user->isLoggedIn()) || (!$data['loginOnly'] && !$user->isLoggedIn())) {
                 $mobileHidden = $data['mobileHidden'] ? ' mobile-hidden' : '';
                 echo '<li class="nav-item' . $mobileHidden . '">';
                 echo '<a class="nav-link" href="' . $data['link'] . '" style="color: ' . $textcol . '!important;"><i class="fa ' . $data['icon'] . '"></i>&nbsp;' . $name . '</a>';
@@ -36,8 +40,14 @@ Page::$pageData->user = Page::$pageData->user;
             }
         }
 
-        if (Page::$pageData->user->isLoggedIn()) :
+        if ($user->isLoggedIn()) :
+            $PROFILE = VANet::myInfo();
+            $IS_GOLD = $PROFILE['isGoldPlan'];
             foreach ($GLOBALS['pilot-menu'] as $name => $data) {
+                if (isset($data["vanetFeature"]) && !$PROFILE['activeFeatures'][$data['vanetFeature']]) {
+                    continue;
+                }
+
                 if ($IS_GOLD || $data["needsGold"] == false) {
                     echo '<li class="nav-item desktop-hidden">';
                     echo '<a href="' . $data['link'] . '" class="panel-link" style="color: ' . $textcol . ' !important;"><i class="fa ' . $data['icon'] . '"></i>&nbsp;' . $name . '</a>';
@@ -66,7 +76,11 @@ Page::$pageData->user = Page::$pageData->user;
                     echo '<div id="collapse' . $i . '" class="collapse ' . strtolower(str_replace(" ", "-", $category)) . '">';
 
                     foreach ($items as $label => $data) {
-                        if (Page::$pageData->user->hasPermission($data["permission"])) {
+                        if (isset($data["vanetFeature"]) && !$PROFILE['activeFeatures'][$data['vanetFeature']]) {
+                            continue;
+                        }
+
+                        if ($user->hasPermission($data["permission"])) {
                             if (($IS_GOLD && $data["needsGold"]) || !$data["needsGold"]) {
                                 echo '<a href="' . $data["link"] . '" class="panel-link" style="color: ' . $textcol . '!important;"><i class="fa ' . $data['icon'] . '"></i>&nbsp;' . $label . '</a>';
                             }

@@ -11,8 +11,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 class VANet
 {
 
+    public static $BASE = "https://api.vanet.app";
+
     /**
-     * @return array
+     * @return array|null
      * @param string $key VANet API Key
      */
     public static function myInfo($key = null)
@@ -30,15 +32,19 @@ class VANet
             }
         }
 
-        $curl = new Curl;
-        $curl->options['CURLOPT_FRESH_CONNECT'] = true;
-        $response = $curl->get('https://vanet.app/api/myinfo/bykey', array(
-            'apikey' => $key
-        ));
+        $req = new HttpRequest(self::$BASE . "/airline/v1/profile");
+        $req->setRequestHeaders([
+            "X-Api-Key: {$key}",
+        ])->execute();
+        $response = Json::decode($req->getResponse());
+
+        if ($response['status'] != 0) return null;
+
         if ($wasNull) {
-            Cache::set('myinfo', $response->body, date("Y-m-d H:i:s", strtotime('+24 hours')));
+            Cache::set('myinfo', Json::encode($response['result']), date("Y-m-d H:i:s", strtotime('+24 hours')));
         }
-        return Json::decode($response->body);
+
+        return $response['result'];
     }
 
     /**
@@ -50,10 +56,7 @@ class VANet
         $myinfo = self::myInfo($key);
         if ($myinfo == null) return false;
 
-        if ($myinfo['tier'] != 'Gold') {
-            return false;
-        }
-        return true;
+        return $myinfo['isGoldPlan'];
     }
 
     /**
@@ -62,74 +65,31 @@ class VANet
      */
     public static function isVeKey($key = null)
     {
-
         if ($key == null) {
             $key = Config::get('vanet/api_key');
         }
 
         $myinfo = self::myInfo($key);
-        if ($myinfo['type'] == null) {
-            return false;
-        }
-        return true;
+        return $myinfo != null;
     }
 
     /**
-     * @return array|bool
+     * @return array|null
      */
     public static function getStats()
     {
         $key = Config::get('vanet/api_key');
 
         if (!self::isGold($key)) {
-            return false;
+            return null;
         }
 
-        $curl = new Curl;
-        $request = $curl->get(Config::get('vanet/base_url') . "/api/airline", array(
-            "apikey" => $key,
-        ));
-        return Json::decode($request->body);
-    }
+        $req = new HttpRequest(self::$BASE . "/airline/v1/stats");
+        $req->setRequestHeaders(["X-Api-Key: {$key}"])->execute();
+        $response = Json::decode($req->getResponse());
+        if ($response['status'] != 0) return null;
 
-    /**
-     * @return bool
-     * @param string $callsign Pilot Callsign
-     * @param int $id Pilot ID
-     */
-    public static function setupPireps($callsign, $id)
-    {
-        $db = DB::getInstance();
-
-        $server = 'casual';
-        $force = Config::get('FORCE_SERVER');
-        if ($force != 0 && $force != 'casual') $server = $force;
-
-        $curl = new Curl;
-        $request = $curl->get(Config::get('vanet/base_url') . '/api/userid', array(
-            'apikey' => Config::get('vanet/api_key'),
-            'callsign' => $callsign,
-            'server' => $server
-        ));
-        if ($request->headers['Status-Code'] != 200) {
-            return false;
-        }
-        $response = Json::decode($request->body);
-        if (array_key_exists('status', $response)) {
-            if ($response['status'] == 404) {
-                return false;
-            }
-        }
-
-        if (!$db->update('pilots', $id, 'id', array(
-            'ifuserid' => $response['data']
-        ))) {
-            return false;
-        }
-
-        Events::trigger('pirep/setup', ["pilot" => $id, "userid" => $response["data"], "method" => 0]);
-
-        return true;
+        return $response['result'];
     }
 
     /**
@@ -141,21 +101,17 @@ class VANet
     {
         $db = DB::getInstance();
 
-        $curl = new Curl;
-        $request = $curl->get(Config::get('vanet/base_url') . '/api/userid/ifc', [
-            'apikey' => Config::get('vanet/api_key'),
-            'ifc' => $ifc,
-        ]);
-        if ($request->headers['Status-Code'] != 200) {
-            return false;
-        }
-        $response = Json::decode($request->body);
-        if (array_key_exists('status', $response) && $response['status'] == 404) {
-            return false;
-        }
+        $ifc = urlencode($ifc);
+        $key = Config::get('vanet/api_key');
+        $req = new HttpRequest(self::$BASE . "/airline/v1/user/id/{$ifc}");
+        $req->setRequestHeaders(["X-Api-Key: {$key}"])->execute();
+        if ($req->getHttpCode() != 200) return false;
+
+        $response = Json::decode($req->getResponse());
+        if ($response['status'] != 0) return false;
 
         if (!$db->update('pilots', $id, 'id', [
-            'ifuserid' => $response['data']
+            'ifuserid' => $response['result']
         ])) {
             return false;
         }
@@ -171,73 +127,77 @@ class VANet
      */
     public static function getAirport($icao)
     {
+        $icao = urlencode($icao);
         $key = Config::get('vanet/api_key');
-
-        $curl = new Curl;
-        $response = $curl->get(Config::get('vanet/base_url') . '/api/airports/' . urlencode($icao), array(
-            'apikey' => $key
-        ));
-        if ($response->headers['Status-Code'] != 200) {
+        $req = new HttpRequest(self::$BASE . "/public/v1/airport/{$icao}");
+        $req->setRequestHeaders(["X-Api-Key: {$key}"])->execute();
+        if ($req->getHttpCode() != 200) {
             return false;
         }
-        return Json::decode($response->body);
+
+        return Json::decode($req->getResponse())['result'];
     }
 
     /**
-     * @return CurlResponse
+     * @return bool
      * @param array $fields PIREP Fields
      */
     public static function sendPirep($fields)
     {
-        $curl = new Curl;
-        return $curl->post(Config::get('vanet/base_url') . '/api/flights/new?apikey=' . Config::get('vanet/api_key'), $fields);
+        $key = Config::get('vanet/api_key');
+        $data = Json::encode($fields);
+        $response = Json::decode(@HttpRequest::hacky(self::$BASE . "/airline/v1/flights", "POST", $data, ["X-Api-Key: {$key}", "Content-Type: application/json"]));
+        if (!$response || $response['status'] != 0) {
+            return false;
+        }
+
+        if (!$response || Json::decode($response)['status'] != 0) return false;
+
+        return true;
     }
 
     /**
-     * @return array|bool
-     * @param bool $future Return Just Future Events
+     * @return array|null
+     * @param bool $future Return only Future Events
      */
     public static function getEvents($future = true)
     {
         $key = Config::get('vanet/api_key');
         if (!self::isGold($key)) {
-            return false;
+            return null;
         }
 
-        $url = Config::get('vanet/base_url') . '/api/events';
+        $url = self::$BASE . "/airline/v1/events";
         if ($future) {
-            $url = Config::get('vanet/base_url') . '/api/events/future';
+            $url .= "/future";
         }
 
-        $curl = new Curl;
-        $response = $curl->get($url, array(
-            'apikey' => $key
-        ));
-        if ($response->headers['Status-Code'] != 200) {
-            return [];
-        }
-        return Json::decode($response->body);
+        $req = new HttpRequest($url);
+        $req->setRequestHeaders(["X-Api-Key: {$key}"])->execute();
+        if ($req->getHttpCode() != 200) return null;
+
+        return Json::decode($req->getResponse())['result'];
     }
 
     /**
-     * @return array|bool
+     * @return array|null
      * @param string $id Event ID
      */
     public static function findEvent($id)
     {
         $key = Config::get('vanet/api_key');
         if (!self::isGold($key)) {
-            return false;
+            return null;
         }
 
-        $curl = new Curl;
-        $response = $curl->get(Config::get('vanet/base_url') . '/api/events/' . urlencode($id), array(
-            'apikey' => $key
-        ));
-        if ($response->headers['Status-Code'] != 200) {
-            return [];
+        $id = urlencode($id);
+        $req = new HttpRequest(self::$BASE . "/airline/v1/events/{$id}");
+        $req->setRequestHeaders(["X-Api-Key: {$key}"])->execute();
+        if ($req->getHttpCode() != 200) {
+            return null;
         }
-        return Json::decode($response->body);
+
+        return Json::decode($req->getResponse())['result'];
     }
 
     /**
@@ -251,10 +211,9 @@ class VANet
             return false;
         }
 
-        $curl = new Curl;
-        $request = $curl->post(Config::get('vanet/base_url') . '/api/events/new?apikey=' . urlencode($key), $fields);
-        $response = Json::decode($request->body);
-        if (array_key_exists("status", $response) || !$response["success"]) {
+        $data = Json::encode($fields);
+        $response = Json::decode(@HttpRequest::hacky(self::$BASE . "/airline/v1/events", "POST", $data, ["X-Api-Key: {$key}", "Content-Type: application/json"]));
+        if (!$response || $response['status'] != 0) {
             return false;
         }
 
@@ -263,6 +222,11 @@ class VANet
         return true;
     }
 
+    /**
+     * @param string $pilotUid Pilot User ID
+     * @param string $gateId Gate ID
+     * @return bool
+     */
     public static function eventSignUp($pilotUid, $gateId)
     {
         $key = Config::get('vanet/api_key');
@@ -270,19 +234,11 @@ class VANet
             return false;
         }
 
-        $curl = new Curl;
-        $request = $curl->get(Config::get('vanet/base_url') . '/api/events/signup/' . $gateId . '/' . $pilotUid, array(
-            'apikey' => $key
-        ));
-        $response = Json::decode($request->body);
+        $gateId = urlencode($gateId);
+        $data = Json::encode(["pilotId" => $pilotUid]);
+        $response = Json::decode(@HttpRequest::hacky(self::$BASE . "/airline/v1/events/slot/{$gateId}", "POST", $data, ["X-Api-Key: {$key}", "Content-Type: application/json"]));
 
-        if (array_key_exists("status", $response)) {
-            return $response["status"];
-        }
-
-        if (!$response["success"]) {
-            throw new Exception("Error Connecting to VANet");
-        }
+        if (!$response || $response['status'] != 0) return false;
 
         Events::trigger('vanet/event/signup/added', ['pilotUid' => $pilotUid, 'gateId' => $gateId]);
 
@@ -290,36 +246,24 @@ class VANet
     }
 
     /**
-     * @return int|bool
+     * @return bool
      * @param string $slotId Slot ID
-     * @param string $eventId Event ID
-     * @param string $pilotUid Pilot User ID
      */
-    public static function eventPullOut($slotId, $eventId, $pilotUid)
+    public static function eventPullOut($slotId)
     {
         $key = Config::get('vanet/api_key');
         if (!self::isGold($key)) {
             return false;
         }
-        $already = self::isSignedUp($pilotUid, $eventId);
-        if (!$already || $already != $slotId) {
-            return true;
-        }
 
-        $curl = new Curl;
-        $request = $curl->get(Config::get('vanet/base_url') . '/api/events/signup/vacate/' . urlencode($slotId), array(
-            'apikey' => $key,
-        ));
-        $response = Json::decode($request->body);
-        if (array_key_exists("status", $response)) {
-            return $response["status"];
-        }
+        $slotId = urlencode($slotId);
+        $req = new HttpRequest(self::$BASE . "/airline/v1/events/slot/{$slotId}");
+        $req->setRequestHeaders(["X-Api-Key: {$key}"])->setMethod("DELETE")->execute();
+        $response = Json::decode($req->getResponse());
 
-        if (!$response["success"]) {
-            throw new Exception("Error Connecting to VANet");
-        }
+        if ($req->getHttpCode() != 200 || $response['status'] != 0) return false;
 
-        Events::trigger('vanet/event/signup/removed', ['slot' => $slotId, 'pilot' => $pilotUid, 'event' => $eventId]);
+        Events::trigger('vanet/event/signup/removed', ['slot' => $slotId]);
 
         return true;
     }
@@ -336,14 +280,14 @@ class VANet
             return false;
         }
 
-        $curl = new Curl;
-        $request = $curl->get(Config::get('vanet/base_url') . '/api/events/' . urlencode($eventId), array(
-            'apikey' => $key,
-        ));
-        $response = Json::decode($request->body)["signups"];
-        foreach ($response as $r) {
-            if ($r["pilotId"] == $pilotUid) {
-                return $r["id"];
+        $eventId = urlencode($eventId);
+        $req = new HttpRequest(self::$BASE . "/airline/v1/events/{$eventId}");
+        $req->setRequestHeaders(["X-Api-Key: {$key}"])->execute();
+        $response = Json::decode($req->getResponse());
+
+        foreach ($response["result"]["slots"] as $s) {
+            if ($s["pilotId"] == $pilotUid) {
+                return true;
             }
         }
 
@@ -361,8 +305,12 @@ class VANet
             return false;
         }
 
-        $curl = new Curl;
-        $curl->delete(Config::get('vanet/base_url') . '/api/events/delete/' . urlencode($eventId) . '?apikey=' . urlencode($key));
+        $eventId = urlencode($eventId);
+        $req = new HttpRequest(self::$BASE . "/airline/v1/events/{$eventId}");
+        $req->setRequestHeaders(["X-Api-Key: {$key}"])->setMethod("DELETE")->execute();
+
+        if ($req->getHttpCode() != 200 || Json::decode($req->getResponse())['status'] != 0) return false;
+
         Events::trigger('vanet/event/deleted', ['id' => $eventId]);
         return true;
     }
@@ -379,9 +327,11 @@ class VANet
             return false;
         }
 
-        $curl = new Curl;
-        $response = $curl->put(Config::get('vanet/base_url') . '/api/events/update/' . urlencode($id) . '?apikey=' . urlencode($key), $fields);
-        if (array_key_exists("status", Json::decode($response->body))) {
+        $id = urlencode($id);
+        $data = Json::encode($fields);
+        $response = Json::decode(@HttpRequest::hacky(self::$BASE . "/airline/v1/events/{$id}", "PUT", $data, ["X-Api-Key: {$key}", "Content-Type: application/json"]));
+
+        if (!$response || $response['status'] != 0) {
             return false;
         }
 
@@ -392,44 +342,48 @@ class VANet
     }
 
     /**
-     * @return bool|array
+     * @return array|null
      * @param string $server Server
      * @param string $callsign Pilot Callsign
      * $param string $uid Pilot User ID
      */
     public static function runAcars($server, $callsign = null, $uid = null)
     {
-        if (!self::isGold()) return false;
+        $key = Config::get('vanet/api_key');
+        if (!self::isGold($key)) return null;
 
         $user = new User();
 
         if ($callsign == null) $callsign = $user->data()->callsign;
         if ($uid == null) $uid = $user->data()->ifuserid;
-        $key = Config::get('vanet/api_key');
+        if ($user->data()->ifuserid == null) return null;
 
-        $curl = new Curl;
-        $request = $curl->get(Config::get('vanet/base_url') . '/api/acars', array(
-            'callsign' => $callsign,
-            'userid' => $uid,
-            'server' => $server,
-            'apikey' => $key
-        ));
-        return Json::decode($request->body);
+        $data = Json::encode([
+            "callsign" => $callsign,
+            "userId" => $uid,
+            "server" => $server,
+        ]);
+        $response = Json::decode(HttpRequest::hacky(self::$BASE . "/airline/v1/acars", "POST", $data, ["X-Api-Key: {$key}", "Content-Type: application/json"]));
+
+        if (!$response) return null;
+
+        return $response;
     }
 
     /**
-     * @return array
+     * @return array|null
      */
     public static function getCodeshares()
     {
-        $curl = new Curl;
-        $response = $curl->get(Config::get('vanet/base_url') . '/api/codeshares', array(
-            'apikey' => Config::get('vanet/api_key')
-        ));
-        if ($response->headers['Status-Code'] != 200) {
-            return [];
+        $key = Config::get('vanet/api_key');
+        $req = new HttpRequest(self::$BASE . "/airline/v1/codeshares");
+        $req->setRequestHeaders(["X-Api-Key: {$key}"])->execute();
+        $response = Json::decode($req->getResponse());
+        if ($req->getHttpCode() != 200 || $response['status'] != 0) {
+            return null;
         }
-        return Json::decode($response->body);
+
+        return $response['result'];
     }
 
     /**
@@ -446,10 +400,10 @@ class VANet
      */
     public static function sendCodeshare($fields)
     {
-        $curl = new Curl;
-        $request = $curl->post(Config::get('vanet/base_url') . '/api/codeshares/new?apikey=' . urlencode(Config::get('vanet/api_key')), $fields);
-        $response = Json::decode($request->body);
-        if (array_key_exists("status", $response) || !$response["success"]) {
+        $key = Config::get('vanet/api_key');
+        $data = Json::encode($fields);
+        $response = Json::decode(@HttpRequest::hacky(self::$BASE . "/airline/v1/codeshares", "POST", $data, ["X-Api-Key: {$key}", "Content-Type: application/json"]));
+        if (!$response || $response['status'] != 0) {
             return false;
         }
 
@@ -464,11 +418,15 @@ class VANet
      */
     public static function deleteCodeshare($id)
     {
-        $curl = new Curl;
-        $request = $curl->delete(Config::get('vanet/base_url') . '/api/codeshares/delete/' . urlencode($id) . '?apikey=' . urlencode(Config::get('vanet/api_key')));
-        $response = Json::decode($request->body);
+        $id = urlencode($id);
+        $key = Config::get('vanet/api_key');
+        $req = new HttpRequest(self::$BASE . "/airline/v1/codeshares/{$id}");
+        $req->setRequestHeaders(["X-Api-Key: {$key}"])
+            ->setMethod("DELETE")
+            ->execute();
+        $response = Json::decode($req->getResponse());
 
-        if (array_key_exists("status", $response) || !$response["success"]) {
+        if ($req->getHttpCode() != 200 || $response['status'] != 0) {
             return false;
         }
 
@@ -478,19 +436,21 @@ class VANet
     }
 
     /**
-     * @return array|bool
+     * @return array|null
      * @param string $id Codeshare ID
      */
     public static function findCodeshare($id)
     {
-        $curl = new Curl;
-        $request = $curl->get(Config::get('vanet/base_url') . '/api/codeshares/' . urlencode($id) . '?apikey=' . urlencode(Config::get('vanet/api_key')));
-        $response = Json::decode($request->body);
+        $id = urlencode($id);
+        $key = Config::get('vanet/api_key');
+        $req = new HttpRequest(self::$BASE . "/airline/v1/codeshares/{$id}");
+        $req->setRequestHeaders(["X-Api-Key: {$key}"])->execute();
+        $response = Json::decode($req->getResponse());
 
-        if (array_key_exists("status", $response)) {
-            return false;
+        if ($req->getHttpCode() != 200 || $response['status'] != 0) {
+            return null;
         }
 
-        return $response;
+        return $response['result'];
     }
 }

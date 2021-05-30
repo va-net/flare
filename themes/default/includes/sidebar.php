@@ -3,7 +3,10 @@
     <hr class="mt-0 divider" />
     <?php
     foreach ($GLOBALS['pilot-menu'] as $name => $data) {
-        if (Page::$pageData->is_gold || $data["needsGold"] == false) {
+        if (isset($data["vanetFeature"]) && !$PROFILE['activeFeatures'][$data['vanetFeature']]) {
+            continue;
+        }
+        if ($IS_GOLD || $data["needsGold"] == false) {
             echo '<a href="' . $data['link'] . '" class="panel-link"><i class="fa ' . $data['icon'] . '"></i>&nbsp;' . $name . '</a><br />';
         }
     }
@@ -33,8 +36,12 @@
 
             $j = 0;
             foreach ($items as $label => $data) {
-                if (Page::$pageData->user->hasPermission($data["permission"])) {
-                    if (Page::$pageData->is_gold || !$data["needsGold"]) {
+                if ($user->hasPermission($data["permission"])) {
+                    if (isset($data["vanetFeature"]) && !$PROFILE['activeFeatures'][$data['vanetFeature']]) {
+                        continue;
+                    }
+
+                    if ($IS_GOLD || !$data["needsGold"]) {
                         $badge = !isset($data["badgeid"]) || $data["badgeid"] == null ? '' : $data["badgeid"];
                         if ($j == 0) {
                             echo '&nbsp;&nbsp;<a href="' . $data["link"] . '" class="panel-link" data-badge="' . $badge . '"><i class="fa ' . $data['icon'] . '"></i>&nbsp;' . $label . '</a>';

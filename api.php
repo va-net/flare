@@ -248,17 +248,16 @@ Router::add('/pireps', function () {
     }
 
     $response = VANet::sendPirep(array(
-        'AircraftID' => Aircraft::idToLiveryId(Input::get('aircraft')),
-        'Arrival' => Input::get('arr'),
-        'DateTime' => Input::get('date'),
-        'Departure' => Input::get('dep'),
-        'FlightTime' => Time::strToSecs(Input::get('ftime')),
-        'FuelUsed' => Input::get('fuel'),
-        'PilotId' => $user->data()->ifuserid
+        'aircraftLiveryId' => Aircraft::idToLiveryId(Input::get('aircraft')),
+        'arrivalIcao' => Input::get('arr'),
+        'date' => Input::get('date'),
+        'departureIcao' => Input::get('dep'),
+        'flightTime' => Time::strToSecs(Input::get('ftime')),
+        'fuelUsed' => Input::get('fuel'),
+        'pilotId' => $user->data()->ifuserid
     ));
 
-    $response = Json::decode($response->body);
-    if ($response['success'] != true) {
+    if (!$response) {
         internalError();
     }
 
@@ -377,10 +376,7 @@ Router::add('/events', function () {
     global $user;
     if (!VANet::isGold()) badReq(ErrorCode::VaNotGold);
 
-    $events = array_filter(VANet::getEvents(), function ($e) {
-        global $user;
-        return $e["visible"] || $user->hasPermission('opsmanage');
-    });
+    $events = VANet::getEvents();
     echo Json::encode([
         "status" => ErrorCode::NoError,
         "result" => $events,

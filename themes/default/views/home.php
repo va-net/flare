@@ -217,7 +217,7 @@ Page::setTitle('Home - ' . Page::$pageData->va_name);
                     return `<tr><td class="align-middle">
                     ${e.name}
                     </td><td class="align-middle">
-                    ${e.departureAirport}
+                    ${e.departureIcao}
                     </td><td class="align-middle">
                     <a href="/events.php?page=view&event=${e.id}" class="btn bg-custom">View</button>
                     </td></tr>`
