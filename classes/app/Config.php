@@ -40,16 +40,16 @@ class Config
      */
     public static function get($path)
     {
-        if (!array_key_exists('config', $GLOBALS)) {
-            return '';
-        }
-        $config = $GLOBALS['config'];
         $path = explode('/', $path);
-
         $constName = 'FLARE_' . implode('_', array_map('strtoupper', $path));
         if (defined($constName)) {
             return constant($constName);
         }
+
+        if (!array_key_exists('config', $GLOBALS)) {
+            return '';
+        }
+        $config = $GLOBALS['config'];
 
         foreach ($path as $bit) {
             if (isset($config[$bit])) {
