@@ -92,7 +92,7 @@ $ACTIVE_CATEGORY = 'operations-management';
                                         success: function(data) {
                                             $("#livery" + id).empty();
 
-                                            var html = Object.entries(data.result).map(([id, name]) => `<option value="${id}">${name}</option>`);
+                                            var html = Object.entries(data.result).map(([name, id]) => `<option value="${id}">${name}</option>`);
                                             $("#livery" + id).append("<option>Select</option>");
                                             $("#livery" + id).append(html);
                                         }
