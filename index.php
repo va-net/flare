@@ -46,7 +46,7 @@ Router::add('/events', [new EventsController, 'get']);
 Router::add('/events/([0-9a-zA-z]{8}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{12})', [new EventsController, 'view']);
 
 // Admin Pages
-Router::add('/admin', [new AdminController, 'dashboard']);
+Router::add('/admin(/home|/stats)?', [new AdminController, 'dashboard']);
 Router::add('/admin/stats', [new AdminController, 'stats']);
 Router::add('/admin/news', [new NewsController, 'get']);
 Router::add('/admin/news', [new NewsController, 'post'], 'post');
