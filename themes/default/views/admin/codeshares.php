@@ -101,7 +101,7 @@ $ACTIVE_CATEGORY = 'operations-management';
                         </table>
                         <script>
                             $.get("/api.php/codeshares", function(data, status) {
-                                var html = data.map(c => {
+                                var html = data.result.map(c => {
                                     c.message = c.message.replace(/[\u00A0-\u9999<>\&]/g, function(i) {
                                         return '&#' + i.charCodeAt(0) + ';';
                                     });
