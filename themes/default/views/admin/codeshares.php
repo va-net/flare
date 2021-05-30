@@ -100,15 +100,30 @@ $ACTIVE_CATEGORY = 'operations-management';
                             </tbody>
                         </table>
                         <script>
-                            $.post("/vanet.php", {
-                                "method": "codeshares"
-                            }, function(data, status) {
-                                $("#codeshares-table").html(data);
+                            $.get("/api.php/codeshares", function(data, status) {
+                                var html = data.map(c => {
+                                    c.message = c.message.replace(/[\u00A0-\u9999<>\&]/g, function(i) {
+                                        return '&#' + i.charCodeAt(0) + ';';
+                                    });
+                                    return `
+                                    <tr><td class="align-middle">
+                                    ${c.senderName}
+                                    </td><td class="align-middle mobile-hidden">
+                                    ${c.message}
+                                    </td><td class="align-middle">
+                                    ${c.routes.length}
+                                    </td><td class="align-middle">
+                                    <button value="${c.id}" form="importcodeshare" type="submit" class="btn bg-custom text-light" name="id"><i class="fa fa-file-download"></i></button>
+                                    &nbsp;<button class="btn btn-danger deleteCodeshare" data-id="${c.id}"><i class="fa fa-trash"></i></button>
+                                    </tr>
+                                    `;
+                                });
+                                $("#codeshares-table").html(html);
                                 $(".deleteCodeshare").click(function() {
                                     var id = $(this).data('id');
                                     $("#confirmShareDelete-id").val(id);
                                     $("#confirmShareDelete").modal('show');
-                                })
+                                });
                             });
                         </script>
                         <hr />
