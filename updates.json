@@ -589,5 +589,25 @@
         "queries": [],
         "deletedFiles": [],
         "newFolders": []
+    },
+    {
+        "tag": "v1.2.8",
+        "name": "Version 1.2.8",
+        "date": "2021-05-30",
+        "notes": "Fixed Navigation on old PHP versions, Added ability to adjust time period in admin dashboard, Fixed ACARS aircraft issue, Removed spawning in to set up PIREPs",
+        "prerelease": false,
+        "useUpdater": true,
+        "files": [
+            "includes/navbar.php",
+            "includes/sidebar.php",
+            "admin/index.php",
+            "classes/HttpRequest.php",
+            "classes/VANet.php",
+            "pireps.php",
+            "update.php"
+        ],
+        "queries": [],
+        "deletedFiles": [],
+        "newFolders": []
     }
 ]
