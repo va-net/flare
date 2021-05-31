@@ -24,7 +24,10 @@ class Config
         if (self::$_dbConfig != [] && !$force) {
             return;
         }
-        $db = DB::getInstance();
+        $db = DB::newInstance(true);
+        if (!$db->exists()) {
+            return;
+        }
         $ret = $db->getAll('options')->results();
         foreach ($ret as $c) {
             self::$_dbConfig[$c->name] = $c->value;
@@ -37,13 +40,16 @@ class Config
      */
     public static function get($path)
     {
-        $config = $GLOBALS['config'];
         $path = explode('/', $path);
-
         $constName = 'FLARE_' . implode('_', array_map('strtoupper', $path));
         if (defined($constName)) {
             return constant($constName);
         }
+
+        if (!array_key_exists('config', $GLOBALS)) {
+            return '';
+        }
+        $config = $GLOBALS['config'];
 
         foreach ($path as $bit) {
             if (isset($config[$bit])) {
@@ -89,16 +95,25 @@ class Config
                 return false;
             }
 
-            fwrite($file, $currentConf);
-            fclose($file);
+            $currentConf = file_get_contents(__DIR__ . '/../../core/config.php');
+            preg_match("/#([a-f0-9]{3}){1,2}\b/i", $currentConf, $matches);
+            $currentConf = str_replace($matches[0], '#' . $main, $currentConf);
+
+            $file = fopen(__DIR__ . '/../../core/config.php', 'w+');
+
+            if (!$file) {
+                return false;
+                fwrite($file, $currentConf);
+                fclose($file);
+            }
+
+            self::replace("TEXT_COLOUR", '#' . $text);
+
+            Events::trigger('config/updated', ['item' => 'TEXT_COLOUR']);
+            Events::trigger('config/updated', ['item' => 'site/colour_main_hex']);
+
+            return true;
         }
-
-        self::replace("TEXT_COLOUR", '#' . $text);
-
-        Events::trigger('config/updated', ['item' => 'TEXT_COLOUR']);
-        Events::trigger('config/updated', ['item' => 'site/colour_main_hex']);
-
-        return true;
     }
 
     /**
@@ -107,8 +122,8 @@ class Config
      */
     public static function replaceCss($data)
     {
-        $res = file_put_contents(__DIR__ . '/../assets/custom.css', $data);
-        return !($res === FALSE);
+        $res = file_put_contents(__DIR__ . '/../../assets/custom.css', $data);
+        return $res !== FALSE;
     }
 
     /**
@@ -116,7 +131,7 @@ class Config
      */
     public static function getCss()
     {
-        return file_get_contents(__DIR__ . '/../assets/custom.css');
+        return file_get_contents(__DIR__ . '/../../assets/custom.css');
     }
 
     /**

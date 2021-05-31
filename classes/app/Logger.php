@@ -10,7 +10,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 class Logger
 {
 
-    private static $_logDir = __DIR__ . '/../core/logs';
+    private static $_logDir = __DIR__ . '/../../core/logs';
 
     /**
      * @return void

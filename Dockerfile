@@ -10,6 +10,7 @@ COPY . /var/www/html
 
 # Set up files
 RUN chown www-data:www-data -R /var/www/html/*
+RUN chown www-data:www-data -R /var/www/html/.*
 
 # Install dependencies
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer

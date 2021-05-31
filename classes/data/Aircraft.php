@@ -18,7 +18,6 @@ class Aircraft
 
     private static function init()
     {
-
         self::$_db = DB::getInstance();
     }
 
@@ -86,7 +85,6 @@ class Aircraft
      */
     public static function fetchActiveAircraft()
     {
-
         self::init();
 
         return self::$_db->query("SELECT aircraft.*, ranks.name AS `rank` FROM aircraft INNER JOIN ranks ON aircraft.rankreq=ranks.id WHERE `status`=1 ORDER BY aircraft.name ASC;", [], true);
@@ -121,7 +119,6 @@ class Aircraft
      */
     public static function getAvailableAircraft($rankid)
     {
-
         self::init();
 
         $sql = 'SELECT aircraft.*, ranks.timereq FROM aircraft 
@@ -136,7 +133,6 @@ class Aircraft
      */
     public static function getAircraftName($id)
     {
-
         self::init();
 
         $result = self::$_db->get('aircraft', array('id', '=', $id));
@@ -150,7 +146,6 @@ class Aircraft
      */
     public static function getId($name)
     {
-
         self::init();
 
         $result = self::$_db->get('aircraft', array('name', '=', $name));
@@ -164,7 +159,6 @@ class Aircraft
      */
     public static function archive($id)
     {
-
         self::init();
 
         self::$_db->update('aircraft', $id, 'id', array(
@@ -227,7 +221,6 @@ class Aircraft
      */
     public static function nameToId($name)
     {
-
         self::init();
 
         $result = self::$_db->get('aircraft', array('name', '=', $name));
@@ -240,7 +233,6 @@ class Aircraft
      */
     public static function nameToAircraftId($name)
     {
-
         self::init();
 
         $result = self::$_db->get('aircraft', array('name', '=', $name));
@@ -276,7 +268,6 @@ class Aircraft
      */
     public static function fetch($id)
     {
-
         self::init();
         $result = self::$_db->get('aircraft', array('id', '=', $id), false, true);
         if ($result->count() == 0) return false;
@@ -289,9 +280,17 @@ class Aircraft
      */
     public static function exists($liveryId)
     {
-
         self::init();
         $result = self::$_db->get('aircraft', array('ifliveryid', '=', $liveryId));
         return !($result->count() == 0);
+    }
+
+    /**
+     * @return int
+     */
+    public static function lastId()
+    {
+        self::init();
+        return self::$_db->query("SELECT MAX(id) AS res FROM aircraft");
     }
 }

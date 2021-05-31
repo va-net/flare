@@ -16,11 +16,11 @@ doing! If updating, please backup this file prior to doing so.
 session_start();
 
 spl_autoload_register(function ($class) {
-    $dirs = ['app', 'data', 'util'];
+    $dirs = ['.', 'app', 'data', 'plugins', 'util', 'controllers', 'controllers/admin'];
     foreach ($dirs as $d) {
         $file = __DIR__ . '/../classes/' . $d . '/' . $class . '.php';
         if (file_exists($file)) {
-            require_once $file;
+            include $file;
             return;
         }
     }
@@ -42,19 +42,18 @@ require_once __DIR__ . '/../vendor/autoload.php';
 Events::listen('*', 'Logger::logEvent');
 Events::listen('*', 'Notifications::handleEvent');
 require_once __DIR__ . '/listeners.php';
-require_once __DIR__ . '/../functions/escape.php';
-require_once __DIR__ . '/../functions/daterange.php';
-require_once __DIR__ . '/../includes/menus.php';
+require_once __DIR__ . '/menus.php';
+require_once __DIR__ . '/functions.php';
 
-// Index installed plugins
-$slash = "/";
-if (strpos(strtolower(php_uname('s')), "window") !== FALSE) {
-    $slash = "\\";
-}
-$INSTALLED_PLUGINS = Json::decode(file_get_contents(__DIR__ . $slash . '..' . $slash . 'plugins.json'));
-foreach ($INSTALLED_PLUGINS as $p) {
-    $classname = $p["class"];
-    $classname::init();
-}
+// Index installed plugins - removed for now
+// $slash = "/";
+// if (strpos(strtolower(php_uname('s')), "window") !== FALSE) {
+//     $slash = "\\";
+// }
+// $INSTALLED_PLUGINS = Json::decode(file_get_contents(__DIR__ . $slash . '..' . $slash . 'plugins.json'));
+// foreach ($INSTALLED_PLUGINS as $p) {
+//     $classname = $p["class"];
+//     $classname::init();
+// }
 
 Events::listen('site/updated', 'Analytics::reportUpdate');

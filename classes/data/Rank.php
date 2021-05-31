@@ -120,14 +120,14 @@ class Rank
     }
 
     /**
-     * @return string
+     * @return object
      */
     public static function getFirstRank()
     {
 
         self::init();
         $rank = self::$_db->get('ranks', array('id', '>', '0'), array('timereq', 'asc'));
-        return $rank->first()->name;
+        return $rank->first();
     }
 
     /**

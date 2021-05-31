@@ -15,7 +15,7 @@ class Updater
      */
     public static function getVersion()
     {
-        return Json::decode(file_get_contents(__DIR__ . '/../version.json'));
+        return Json::decode(file_get_contents(__DIR__ . '/../../version.json'));
     }
 
     /**
@@ -71,6 +71,6 @@ class Updater
      */
     public static function updateAvailable()
     {
-        return Updater::checkUpdate(Config::get('CHECK_PRERELEASE') == 1) !== FALSE;
+        return self::checkUpdate(Config::get('CHECK_PRERELEASE') == 1) !== FALSE;
     }
 }

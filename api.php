@@ -32,6 +32,8 @@ abstract class ErrorCode
     const RankNotSufficent = 10;
     const VaNotGold = 11;
     const MethodNotAllowed = 12;
+    const NoIfUid = 13;
+    const NoGateAvailable = 14;
 }
 
 function unauthorized()
@@ -394,6 +396,177 @@ Router::add('/events/([0-9a-zA-z]{8}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4
     ]);
 });
 
+// Sign up to/pull out of Event
+Router::add('/events/([0-9a-zA-z]{8}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{12})', function ($eventId) {
+    global $_authType, $_apiUser;
+    if ($_authType == AuthType::ApiKey) {
+        accessDenied();
+    }
+    if (!VANet::isGold()) badReq(ErrorCode::VaNotGold);
+    if ($_apiUser->ifuserid == null) badReq(ErrorCode::NoIfUid);
+
+    $event = VANet::findEvent($eventId);
+    if ($event === FALSE) notFound();
+
+    $pilots = array_values(array_filter(array_map(function ($s) {
+        return $s['pilotId'];
+    }, $event['slots']), function ($uid) {
+        return $uid != null;
+    }));
+    $slots = array_values(array_map(function ($s) {
+        return $s['id'];
+    }, array_filter($event['slots'], function ($s) {
+        return $s['pilotId'] != null;
+    })));
+    $signups = array_combine($pilots, $slots);
+
+    $firstavail = array_values(array_filter($event['slots'], function ($s) {
+        return $s['pilotId'] == null;
+    }));
+    if (count($firstavail) < 1) {
+        $firstavail = false;
+    } else {
+        $firstavail = $firstavail[0];
+    }
+
+    if (array_key_exists($_apiUser->ifuserid, $signups)) {
+        VANet::eventPullOut($signups[$_apiUser->ifuserid], $eventId, $_apiUser->ifuserid);
+    } else {
+        if ($firstavail === FALSE) {
+            badReq(ErrorCode::NoGateAvailable);
+        }
+        VANet::eventSignUp($_apiUser->ifuserid, $firstavail['id']);
+    }
+
+    echo Json::encode([
+        "status" => ErrorCode::NoError,
+        "result" => null,
+    ]);
+}, 'put');
+
+// Get All Codeshare Requests
+Router::add('/codeshares', function () {
+    global $user;
+    if (!$user->hasPermission('opsmanage')) accessDenied();
+
+    echo Json::encode([
+        'status' => ErrorCode::NoError,
+        'result' => VANet::getCodeshares(),
+    ]);
+});
+
+// Send Codeshare Request
+Router::add('/codeshares', function () {
+    $routes = [];
+    $inputRoutes = explode(",", Input::get('routes'));
+
+    $dbRoutes = Route::fetchAll();
+    foreach ($inputRoutes as $input) {
+        if (!array_key_exists($input, $dbRoutes)) {
+            Session::flash('error', 'Could not Find Route ' . $input);
+            $this->redirect('/admin/operations/codeshares');
+        }
+        $r = $dbRoutes[$input];
+        if (count($r['aircraft']) < 1) {
+            Session::flash('error', 'This route does not have any aircraft attached - ' . $input);
+            $this->redirect('/admin/operations/codeshares');
+        }
+        array_push($routes, array(
+            "flightNumber" => $r['fltnum'],
+            "departureIcao" => $r['dep'],
+            "arrivalIcao" => $r['arr'],
+            "aircraftLiveryId" => $r['aircraft'][0]['liveryid'],
+            "flightTime" => $r['duration']
+        ));
+    }
+
+    $ret = VANet::sendCodeshare(array(
+        "recipientId" => Input::get('recipient'),
+        "message" => Input::get('message'),
+        "routes" => $routes
+    ));
+    if (!$ret) {
+        Session::flash('error', "Error Connnecting to VANet");
+        $this->redirect('/admin/operations/codeshares');
+        die();
+    } else {
+        Session::flash('success', "Codeshare Sent Successfully!");
+        $this->redirect('/admin/operations/codeshares');
+    }
+}, 'post');
+
+// Get Codeshare Request
+Router::add('/codeshares/([0-9a-zA-z]{8}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{12})', function ($id) {
+    global $user;
+    if (!$user->hasPermission('opsmanage')) accessDenied();
+
+    $codeshare = VANet::findCodeshare($id);
+    if (!$codeshare) notFound();
+
+    echo Json::encode([
+        'status' => ErrorCode::NoError,
+        'result' => $codeshare,
+    ]);
+});
+
+// Import Codeshare
+Router::add('/codeshares/([0-9a-zA-z]{8}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{12})', function ($id) {
+    global $user;
+    if (!$user->hasPermission('opsmanage')) accessDenied();
+
+    $codeshare = VANet::findCodeshare($id);
+    if ($codeshare === FALSE) notFound();
+
+    $dbac = Aircraft::fetchAllAircraft();
+    $dbaircraft = [];
+    foreach ($dbac as $d) {
+        $dbaircraft[$d['ifliveryid']] = $d;
+    }
+
+    $lowrank = Rank::getFirstRank();
+    foreach ($codeshare["routes"] as $route) {
+        $ac = -1;
+        if (!array_key_exists($route['aircraftLiveryID'], $dbaircraft)) {
+            Aircraft::add($route['aircraftLiveryID'], $lowrank->id);
+            $ac = Aircraft::lastId();
+        } else {
+            $ac = $dbaircraft[$route['aircraftLiveryID']]->id;
+        }
+        Route::add([
+            'fltnum' => $route['flightNum'],
+            'dep' => $route['departure'],
+            'arr' => $route['arrival'],
+            'duration' => $route['flightTime'],
+        ]);
+        Route::addAircraft(Route::lastId(), $ac);
+    }
+    VANet::deleteCodeshare($codeshare["id"]);
+    Cache::delete('badge_codeshares');
+
+    echo Json::encode([
+        'status' => ErrorCode::NoError,
+        'result' => null,
+    ]);
+}, 'put');
+
+// Delete Codeshare
+Router::add('/codeshares/([0-9a-zA-z]{8}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{12})', function ($id) {
+    global $user;
+    if (!$user->hasPermission('opsmanage')) accessDenied();
+
+    $codeshare = VANet::findCodeshare($id);
+    if (!$codeshare) notFound();
+
+    $ret = VANet::deleteCodeshare($id);
+    if (!$ret) internalError();
+
+    Cache::delete('badge_codeshares');
+    echo Json::encode([
+        'status' => ErrorCode::NoError,
+        'result' => null,
+    ]);
+}, 'delete');
+
 // View All News
 Router::add('/news', function () {
     $news = News::get();
@@ -602,6 +775,7 @@ Router::add('/routes/([0-9]+)', function ($routeId) {
     ]);
 }, 'delete');
 
+// Get All Aircraft
 Router::add('/aircraft', function () {
     $allaircraft = array_map(function ($a) {
         unset($a->status);
@@ -620,6 +794,7 @@ Router::add('/aircraft', function () {
     ]);
 });
 
+// Get Aircraft
 Router::add('/aircraft/([0-9]+)', function ($aircraftId) {
     $a = Aircraft::fetch($aircraftId);
     if ($a === FALSE) {
@@ -638,6 +813,7 @@ Router::add('/aircraft/([0-9]+)', function ($aircraftId) {
     ]);
 });
 
+// Get Notifications
 Router::add('/notifications', function () {
     global $_apiUser;
     $notifications = array_map(function ($n) {
@@ -658,6 +834,7 @@ Router::add('/notifications', function () {
     ]);
 });
 
+// Get All Ranks
 Router::add('/ranks', function () {
     $ranks = array_map(function ($r) {
         foreach ($r as $key => $val) {
@@ -675,6 +852,7 @@ Router::add('/ranks', function () {
     ]);
 });
 
+// Get Rank
 Router::add('/ranks/([0-9]+)', function ($rankId) {
     $r = Rank::find($rankId);
     if ($r === FALSE) {
@@ -693,6 +871,7 @@ Router::add('/ranks/([0-9]+)', function ($rankId) {
     ]);
 });
 
+// Get Log
 Router::add('/logs/(.+)', function ($logName) {
     global $_authType, $user;
     if ($_authType == AuthType::ApiKey) {
@@ -711,6 +890,7 @@ Router::add('/logs/(.+)', function ($logName) {
     echo file_get_contents("core/logs/{$logName}.log");
 });
 
+// Get Menu
 Router::add('/menu', function () {
     global $user;
     $IS_GOLD = VANet::isGold();
@@ -740,6 +920,7 @@ Router::add('/menu', function () {
     ]);
 });
 
+// Get Menu Badges
 Router::add('/menu/badges', function () {
     global $user;
     $IS_GOLD = VANet::isGold();
@@ -783,6 +964,17 @@ Router::add('/menu/badges', function () {
     echo Json::encode([
         "status" => ErrorCode::NoError,
         "result" => $res,
+    ]);
+});
+
+// Get Liveries for Aircraft
+Router::add('/liveries', function () {
+    global $user;
+    if (!$user->hasPermission('opsmanage')) accessDenied();
+
+    echo Json::encode([
+        'status' => ErrorCode::NoError,
+        'result' => Aircraft::fetchLiveryIdsForAircraft(Input::get('aircraftid')),
     ]);
 });
 
