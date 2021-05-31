@@ -123,6 +123,22 @@ if (count($nextUpdate["queries"]) != 0 && !($current["prerelease"] && !$next["pr
 }
 echo "Updated Database Successfully<br />";
 
+// Delete Files to Delete
+if (!($current["prerelease"] && !$next["prerelease"])) {
+    foreach ($nextUpdate["deletedFiles"] as $delFile) {
+        if (is_dir(__DIR__ . $slash . $delFile)) {
+            if (!rmdir(__DIR__ . $slash . $delFile)) {
+                echo "There was an error deleting " . $delFile;
+            }
+        } else {
+            if (!unlink(__DIR__ . $slash . $delFile)) {
+                echo "There was an error deleting " . $delFile;
+            }
+        }
+    }
+    echo "Deleted Removed Files Successfully<br />";
+}
+
 // Add Directories
 if (array_key_exists('newFolders', $nextUpdate)) {
     foreach ($nextUpdate['newFolders'] as $dir) {
@@ -146,16 +162,6 @@ foreach ($nextUpdate["files"] as $file) {
     }
 }
 echo "Updated Files Successfully<br />";
-
-// Delete Files to Delete
-if (!($current["prerelease"] && !$next["prerelease"])) {
-    foreach ($nextUpdate["deletedFiles"] as $delFile) {
-        if (!unlink(__DIR__ . $slash . $delFile)) {
-            echo "There was an error deleting " . $delFile;
-        }
-    }
-    echo "Deleted Removed Files Successfully<br />";
-}
 
 // Update Version File
 $vData = file_get_contents($RAW_URL . urlencode($nextTag["commit"]["sha"]) . "/version.json");
