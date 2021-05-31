@@ -849,7 +849,7 @@ if (Input::get('action') === 'editprofile') {
         $slash = "\\";
     }
 
-    $GH_BRANCH = "master";
+    $GH_BRANCH = "v1";
 
     $url = "https://raw.githubusercontent.com/va-net/flare-plugins/{$GH_BRANCH}/plugins.tsv";
     $opts = array(
@@ -900,7 +900,7 @@ if (Input::get('action') === 'editprofile') {
         }
     }
     foreach ($pluginadv["installation"]["files"] as $f) {
-        $data = file_get_contents("https://raw.githubusercontent.com/va-net/flare-plugins/master/" . $pluginbasic["slug"] . "/" . $f, false, $context);
+        $data = file_get_contents("https://raw.githubusercontent.com/va-net/flare-plugins/v1/" . $pluginbasic["slug"] . "/" . $f, false, $context);
         $f = str_replace("/", $slash, $f);
         file_put_contents(__DIR__ . $slash . $f, $data);
     }
