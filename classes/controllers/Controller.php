@@ -19,6 +19,8 @@ class Controller
         if (empty($theme)) $theme = 'default';
 
         if (!isset($data->user)) $data->user = new User;
+        if (!isset($data->va_name)) $data->va_name = Config::get('va/name');
+        if (!isset($data->is_gold)) $data->is_gold = VANet::isGold();
 
         Page::$pageData = $data;
 
