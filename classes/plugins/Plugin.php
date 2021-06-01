@@ -26,11 +26,11 @@ class Plugin
      * @param string $label Menu Item Label
      * @param array $data Meny Item Data
      */
-    public static function adminMenu($label, $data)
+    public static function adminMenu($label, $data, $category = 'Plugins')
     {
         if (!isset($data["needsGold"])) $data["needsGold"] = false;
         if (!isset($data["badgeid"])) $data["badgeid"] = null;
-        $GLOBALS['admin-menu']['Plugins'][$label] = $data;
+        $GLOBALS['admin-menu'][$category][$label] = $data;
     }
 
     /**
