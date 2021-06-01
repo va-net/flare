@@ -151,7 +151,7 @@ class VANet
             return false;
         }
 
-        if (!$response || Json::decode($response)['status'] != 0) return false;
+        if (!$response || $response['status'] != 0) return false;
 
         return true;
     }
