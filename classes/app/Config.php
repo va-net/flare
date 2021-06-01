@@ -154,7 +154,7 @@ class Config
             Events::trigger('config/updated', ['item' => $where]);
             return file_put_contents(__DIR__ . '/../core/config.new.php', $res) !== FALSE;
         } else {
-            $currentConfFile = file_get_contents(__DIR__ . '/../core/config.php');
+            $currentConfFile = file_get_contents(__DIR__ . '/../../core/config.php');
             $regex = '/\'' . $where . '\' => .*/m';
             preg_match($regex, $currentConfFile, $matches);
 
