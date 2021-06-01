@@ -11,7 +11,7 @@ require_once '../core/init.php';
 
 $user = new User();
 
-Page::setTitle('Plugins - '.Config::get('va/name'));
+Page::setTitle('Plugins - ' . Config::get('va/name'));
 
 if (!$user->isLoggedIn()) {
     Redirect::to('/index.php');
@@ -23,9 +23,11 @@ $ACTIVE_CATEGORY = 'plugins';
 ?>
 <!DOCTYPE html>
 <html>
+
 <head>
     <?php include '../includes/header.php'; ?>
 </head>
+
 <body>
     <nav class="navbar navbar-dark navbar-expand-lg bg-custom">
         <?php include '../includes/navbar.php'; ?>
@@ -35,27 +37,29 @@ $ACTIVE_CATEGORY = 'plugins';
             <div class="row m-0 p-0">
                 <?php include '../includes/sidebar.php'; ?>
                 <div class="col-lg-9 main-content">
-                    <div id="loader-wrapper"><div id="loader" class="spinner-border spinner-border-sm spinner-custom"></div></div>
+                    <div id="loader-wrapper">
+                        <div id="loader" class="spinner-border spinner-border-sm spinner-custom"></div>
+                    </div>
                     <div class="loaded">
                         <?php
-                        if (file_exists(__DIR__.'/../install/install.php') && !file_exists(__DIR__.'/../.development')) {
+                        if (file_exists(__DIR__ . '/../install/install.php') && !file_exists(__DIR__ . '/../.development')) {
                             echo '<div class="alert alert-danger text-center">The Install Folder still Exists! Please delete it immediately, it poses a severe security risk.</div>';
                         }
-                        
+
                         if (Session::exists('error')) {
-                            echo '<div class="alert alert-danger text-center">Error: '.Session::flash('error').'</div>';
+                            echo '<div class="alert alert-danger text-center">Error: ' . Session::flash('error') . '</div>';
                         }
                         if (Session::exists('success')) {
-                            echo '<div class="alert alert-success text-center">'.Session::flash('success').'</div>';
+                            echo '<div class="alert alert-success text-center">' . Session::flash('success') . '</div>';
                         }
                         ?>
                         <h3>Manage Plugins</h3>
                         <?php
-                            $tab = "store";
-                            if (!empty(Input::get('tab'))) {
-                                $tab = Input::get('tab');
-                            }
-                            $ACTIVE_CATEGORY = 'plugins';
+                        $tab = "store";
+                        if (!empty(Input::get('tab'))) {
+                            $tab = Input::get('tab');
+                        }
+                        $ACTIVE_CATEGORY = 'plugins';
                         ?>
                         <script>
                             $(document).ready(function() {
@@ -88,30 +92,30 @@ $ACTIVE_CATEGORY = 'plugins';
                                     </thead>
                                     <tbody>
                                         <?php
-                                            $url = "https://raw.githubusercontent.com/va-net/flare-plugins/master/plugins.tsv";
-                                            $opts = array(
-                                                'http'=>array(
-                                                    'method'=>"GET",
-                                                    'header'=>"User-Agent: va-net\r\n"
-                                                )
-                                            );
-                                            $context = stream_context_create($opts);
-                                            $plugins = file_get_contents($url, false, $context);
-                                            preg_match_all('/\n.*/m', $plugins, $lines);
-                                            foreach ($lines[0] as $l) {
-                                                $segments = explode("\t", $l);
-                                                $segments = array_map(function($x) {
-                                                    return trim($x);
-                                                }, $segments);
-                                                echo '<tr><td class="align-middle" data-toggle="tooltip" title="'.escape($segments[6]).'">';
-                                                echo $segments[0];
-                                                echo '</td><td class="align-middle">';
-                                                $tags = implode('</span><span class="badge badge-light mx-1">', explode(",", $segments[5]));
-                                                echo '<span class="badge badge-light mx-1">'.$tags.'</span>';
-                                                echo '</td><td class="align-middle">';
-                                                echo '<button class="btn bg-custom installBtn" data-slug="'.$segments[1].'" data-name="'.$segments[0].'"><i class="fa fa-cloud-download-alt"></i></button>';
-                                                echo '</td></tr>';
-                                            }
+                                        $url = "https://raw.githubusercontent.com/va-net/flare-plugins/v1/plugins.tsv";
+                                        $opts = array(
+                                            'http' => array(
+                                                'method' => "GET",
+                                                'header' => "User-Agent: va-net\r\n"
+                                            )
+                                        );
+                                        $context = stream_context_create($opts);
+                                        $plugins = file_get_contents($url, false, $context);
+                                        preg_match_all('/\n.*/m', $plugins, $lines);
+                                        foreach ($lines[0] as $l) {
+                                            $segments = explode("\t", $l);
+                                            $segments = array_map(function ($x) {
+                                                return trim($x);
+                                            }, $segments);
+                                            echo '<tr><td class="align-middle" data-toggle="tooltip" title="' . escape($segments[6]) . '">';
+                                            echo $segments[0];
+                                            echo '</td><td class="align-middle">';
+                                            $tags = implode('</span><span class="badge badge-light mx-1">', explode(",", $segments[5]));
+                                            echo '<span class="badge badge-light mx-1">' . $tags . '</span>';
+                                            echo '</td><td class="align-middle">';
+                                            echo '<button class="btn bg-custom installBtn" data-slug="' . $segments[1] . '" data-name="' . $segments[0] . '"><i class="fa fa-cloud-download-alt"></i></button>';
+                                            echo '</td></tr>';
+                                        }
                                         ?>
                                     </tbody>
                                 </table>
@@ -133,15 +137,15 @@ $ACTIVE_CATEGORY = 'plugins';
                                     </thead>
                                     <tbody>
                                         <?php
-                                            foreach ($INSTALLED_PLUGINS as $p) {
-                                                echo '<tr><td class="align-middle">';
-                                                echo $p["name"];
-                                                echo '</td><td class="align-middle">';
-                                                echo $p["version"]["tag"];
-                                                echo '</td><td class="align-middle">';
-                                                echo '<button class="btn btn-danger removeBtn" data-name="'.$p["name"].'"><i class="fa fa-trash"></i></button>';
-                                                echo '</td></tr>';
-                                            }
+                                        foreach ($INSTALLED_PLUGINS as $p) {
+                                            echo '<tr><td class="align-middle">';
+                                            echo $p["name"];
+                                            echo '</td><td class="align-middle">';
+                                            echo $p["version"]["tag"];
+                                            echo '</td><td class="align-middle">';
+                                            echo '<button class="btn btn-danger removeBtn" data-name="' . $p["name"] . '"><i class="fa fa-trash"></i></button>';
+                                            echo '</td></tr>';
+                                        }
                                         ?>
                                     </tbody>
                                 </table>
@@ -150,7 +154,7 @@ $ACTIVE_CATEGORY = 'plugins';
 
                         <style>
                             .nav-tabs .nav-link {
-                                color: #000!important;
+                                color: #000 !important;
                             }
                         </style>
                         <script>
@@ -165,7 +169,7 @@ $ACTIVE_CATEGORY = 'plugins';
                             $(".installBtn").click(function() {
                                 var name = $(this).data('name');
                                 var slug = $(this).data('slug');
-                                
+
                                 var conf = confirm('Are you sure you want to install the plugin "' + name + '"?');
                                 if (conf) {
                                     $("#installplugin-plugin").val(slug);
@@ -174,7 +178,7 @@ $ACTIVE_CATEGORY = 'plugins';
                             });
                             $(".removeBtn").click(function() {
                                 var name = $(this).data('name');
-                                
+
                                 var conf = confirm('Are you sure you want to Remove the plugin "' + name + '"?');
                                 if (conf) {
                                     $("#removeplugin-name").val(name);
@@ -196,4 +200,5 @@ $ACTIVE_CATEGORY = 'plugins';
         });
     </script>
 </body>
+
 </html>

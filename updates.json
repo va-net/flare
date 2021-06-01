@@ -609,5 +609,23 @@
         "queries": [],
         "deletedFiles": [],
         "newFolders": []
+    },
+    {
+        "tag": "v1.2.9",
+        "name": "Version 1.2.9",
+        "date": "2021-05-30",
+        "notes": "Fixed rare ACARS issue, restructured updater, changed plugins branch",
+        "prerelease": false,
+        "useUpdater": true,
+        "files": [
+            "updater.php",
+            "admin/plugins.php",
+            "update.php",
+            "vanet.php",
+            "classes/Aircraft.php"
+        ],
+        "queries": [],
+        "deletedFiles": [],
+        "newFolders": []
     }
 ]
