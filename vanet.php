@@ -81,7 +81,7 @@ if (Input::get('method') === 'acars' && !empty(Input::get('server'))) {
     </div>
 
     <div class="form-group">
-        <label for="multi">Multiplier Number (if applicable)</label>
+        <label for="multi">Multiplier Code (if applicable)</label>
         <input type="number" class="form-control" maxlength="6" minlength="6" id="multi" name="multi">
     </div>
 
