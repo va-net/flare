@@ -97,7 +97,7 @@ class Aircraft
     public static function findAircraft($liveryId)
     {
         self::init();
-        $result = self::$_db->get('aircraft', array('ifliveryid', '=', $liveryId));
+        $result = self::$_db->query("SELECT * FROM aircraft WHERE `ifliveryid`=? AND `status`=1", [$liveryId]);
         if ($result->count() === 0) return false;
         return $result->first();
     }
