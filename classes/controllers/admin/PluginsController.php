@@ -70,7 +70,7 @@ class PluginsController extends Controller
             $slash = "\\";
         }
 
-        $GH_BRANCH = "master";
+        $GH_BRANCH = "v2";
 
         $url = "https://raw.githubusercontent.com/va-net/flare-plugins/{$GH_BRANCH}/plugins.tsv";
         $opts = array(
@@ -103,11 +103,6 @@ class PluginsController extends Controller
 
         $version = Updater::getVersion();
         $pluginadv = Json::decode(file_get_contents("https://raw.githubusercontent.com/va-net/flare-plugins/{$GH_BRANCH}/" . $pluginbasic["slug"] . "/plugin.json", false, $context));
-        // Removed for now while we troubleshoot. Couldn't get a consistent repro.
-        // if (!in_array($version["tag"], $pluginadv["compatability"]) && $version["prerelease"] == false) {
-        //     Session::flash('error', 'This plugin does not support this version of Flare.');
-        //     $this->redirect('/admin/plugins');
-        // }
 
         foreach ($pluginadv["installation"]["files"] as $f) {
             $f = str_replace("/", $slash, $f);
@@ -121,7 +116,7 @@ class PluginsController extends Controller
             }
         }
         foreach ($pluginadv["installation"]["files"] as $f) {
-            $data = file_get_contents("https://raw.githubusercontent.com/va-net/flare-plugins/master/" . $pluginbasic["slug"] . "/" . $f, false, $context);
+            $data = file_get_contents("https://raw.githubusercontent.com/va-net/flare-plugins/{$GH_BRANCH}/" . $pluginbasic["slug"] . "/" . $f, false, $context);
             $f = str_replace("/", $slash, $f);
             file_put_contents(__DIR__ . '/../../..' . $slash . $f, $data);
         }
