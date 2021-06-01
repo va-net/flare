@@ -19,7 +19,7 @@ class PluginsController extends Controller
         $data->is_gold = VANet::isGold();
         $data->pending = Pirep::fetchPending();
 
-        $url = "https://raw.githubusercontent.com/va-net/flare-plugins/master/plugins.tsv";
+        $url = "https://raw.githubusercontent.com/va-net/flare-plugins/v2/plugins.tsv";
         $opts = array(
             'http' => array(
                 'method' => "GET",
