@@ -29,6 +29,14 @@ Page::setTitle('ACARS - ' . Page::$pageData->va_name);
                     </div>
                     <div class="loaded">
                         <h3>ACARS</h3>
+                        <?php
+                        if (Session::exists('error')) {
+                            echo '<div class="alert alert-danger text-center">Error: ' . Session::flash('error') . '</div>';
+                        }
+                        if (Session::exists('success')) {
+                            echo '<div class="alert alert-success text-center">' . Session::flash('success') . '</div>';
+                        }
+                        ?>
                         <?php if (Page::$pageData->is_gold) : ?>
                             <button data-toggle="collapse" data-target="#howtouseacars" class="btn btn-light w-100 mb-2 collapsed" aria-expanded="false">How to Use ACARS&nbsp;&nbsp;<i class="fa fa-caret-down" aria-hidden="true"></i></button>
                             <p id="howtouseacars" class="text-left collapse">
@@ -50,9 +58,10 @@ Page::setTitle('ACARS - ' . Page::$pageData->va_name);
                                     echo '<input hidden name="server" value="' . Page::$pageData->server . '" />';
                                 }
                                 ?>
+
+                                <button class="btn btn-lg bg-custom" type="submit">Run ACARS</button>
                             </form>
 
-                            <button id="acarsBtn" class="btn btn-lg bg-custom">Run ACARS</button>
                         <?php else : ?>
                             <p>In order to run ACARS, <?= Page::$pageData->va_name ?> needs to sign up to VANet Gold. You can take a look at it <a href="https://vanet.app/airline/upgrade" target="_blank">here</a>!</p>
                         <?php endif; ?>
