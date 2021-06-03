@@ -12,7 +12,7 @@ class AuthController extends Controller
 
     public function get()
     {
-        if (!file_exists(__DIR__ . '/../../core/config.php')) {
+        if (!Config::isReady()) {
             $this->redirect('/install/install.php');
         }
         $user = new User;

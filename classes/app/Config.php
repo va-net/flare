@@ -47,10 +47,10 @@ class Config
         }
 
         if (!array_key_exists('config', $GLOBALS)) {
-            return '';
+            return self::getFromDb(implode('/', $path));
         }
-        $config = $GLOBALS['config'];
 
+        $config = $GLOBALS['config'];
         foreach ($path as $bit) {
             if (isset($config[$bit])) {
                 $config = $config[$bit];
@@ -62,16 +62,21 @@ class Config
             if ($path[0] == 'mysql') {
                 return '';
             }
-            self::loadDbConf();
-            $path = implode('/', $path);
-            if (array_key_exists($path, self::$_dbConfig)) {
-                return self::$_dbConfig[$path];
-            }
 
-            return '';
+            return self::getFromDb(implode('/', $path));
         }
 
         return $config;
+    }
+
+    private static function getFromDb($key)
+    {
+        self::loadDbConf();
+        if (array_key_exists($key, self::$_dbConfig)) {
+            return self::$_dbConfig[$key];
+        }
+
+        return '';
     }
 
     /**
@@ -83,13 +88,14 @@ class Config
     {
         $constName = 'FLARE_SITE_COLOUR_MAIN_HEX';
         if (defined($constName)) {
-            self::replace('site/colour_main_hex', $main);
+            self::replace('site/colour_main_hex', '#' . $main);
+            self::replace('TEXT_COLOUR', '#' . $text);
         } else {
-            $currentConf = file_get_contents(__DIR__ . '/../core/config.php');
+            $currentConf = file_get_contents(__DIR__ . '/../../core/config.php');
             preg_match("/#([a-f0-9]{3}){1,2}\b/i", $currentConf, $matches);
             $currentConf = str_replace($matches[0], '#' . $main, $currentConf);
 
-            $file = fopen(__DIR__ . '/../core/config.php', 'w+');
+            $file = fopen(__DIR__ . '/../../core/config.php', 'w+');
 
             if (!$file) {
                 return false;
@@ -111,9 +117,9 @@ class Config
 
             Events::trigger('config/updated', ['item' => 'TEXT_COLOUR']);
             Events::trigger('config/updated', ['item' => 'site/colour_main_hex']);
-
-            return true;
         }
+
+        return true;
     }
 
     /**
@@ -143,17 +149,17 @@ class Config
     {
         $constName = 'FLARE_' . implode('_', array_map('strtoupper', explode('/', $where)));
         if (defined($constName)) {
-            $file = file_get_contents(__DIR__ . '/../core/config.new.php');
+            $file = file_get_contents(__DIR__ . '/../../core/config.new.php');
             $oldLine = "/define\('{$constName}', '.+'\);/";
             $newLine = "define('{$constName}', '{$new}');";
             $res = preg_replace($oldLine, $newLine, $file);
-            if ($res == $file) {
-                return self::replaceDb($where, $new);
-            }
 
             Events::trigger('config/updated', ['item' => $where]);
-            return file_put_contents(__DIR__ . '/../core/config.new.php', $res) !== FALSE;
+            return file_put_contents(__DIR__ . '/../../core/config.new.php', $res) !== FALSE;
         } else {
+            if (!file_exists(__DIR__ . '/../../core/config.php')) {
+                return self::replaceDb($where, $new);
+            }
             $currentConfFile = file_get_contents(__DIR__ . '/../../core/config.php');
             $regex = '/\'' . $where . '\' => .*/m';
             preg_match($regex, $currentConfFile, $matches);
@@ -168,7 +174,7 @@ class Config
 
             $newConf = preg_replace('/' . $currentVal . '/', $new, $currentConfFile, 1);
 
-            $file = fopen(__DIR__ . '/../core/config.php', 'w+');
+            $file = fopen(__DIR__ . '/../../core/config.php', 'w+');
 
             if (!$file) {
                 return false;
@@ -232,8 +238,8 @@ class Config
      */
     public static function isReady()
     {
-        $old = file_exists(__DIR__ . '/../core/config.php');
-        $new = file_exists(__DIR__ . '/../core/config.new.php');
+        $old = file_exists(__DIR__ . '/../../core/config.php');
+        $new = file_exists(__DIR__ . '/../../core/config.new.php');
         $db = self::get('mysql/host') != 'DB_HOST';
         return ($old || $new) && $db;
     }

@@ -6,13 +6,7 @@ Copyright (C) 2020  Lucas Rebato
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-
-if (!file_exists('./core/config.php')) {
-    Redirect::to('./install/install.php');
-}
-
 Page::setTitle('Login - ' . Config::get('va/name'));
-
 ?>
 <!DOCTYPE html>
 <html>
