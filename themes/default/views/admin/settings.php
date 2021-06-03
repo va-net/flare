@@ -165,14 +165,23 @@ $ACTIVE_CATEGORY = 'site-management';
                             <div id="design" class="tab-pane container-fluid p-3 fade">
                                 <h4>Site Design</h4>
                                 <form action="/admin/settings" method="post">
-                                    <input hidden name="action" value="setdesign">
+                                    <input hidden name="action" value="setdesign" />
                                     <div class="form-group">
                                         <label for="">Main Colour (hex)</label>
-                                        <input required type="text" class="form-control" name="hexcol" value="<?= Page::$pageData->color_main ?>">
+                                        <select required class="form-control" name="theme">
+                                            <option value>Select</option>
+                                            <?php foreach (Page::$pageData->themes as $t) : ?>
+                                                <option <?= $t == Page::$pageData->active_theme ? 'selected' : '' ?>><?= $t ?></option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="">Main Colour (hex)</label>
+                                        <input required type="text" class="form-control" name="hexcol" value="<?= Page::$pageData->color_main ?>" />
                                     </div>
                                     <div class="form-group">
                                         <label for="">Text Colour (hex)</label>
-                                        <input required type="text" class="form-control" name="textcol" value="<?= Page::$pageData->text_color ?>">
+                                        <input required type="text" class="form-control" name="textcol" value="<?= Page::$pageData->text_color ?>" />
                                     </div>
                                     <div class="form-group">
                                         <label for="">Custom CSS&nbsp;&nbsp;<i class="fa fa-question-circle" data-toggle="tooltip" title="CSS is a Website Styling Language"></i></label>

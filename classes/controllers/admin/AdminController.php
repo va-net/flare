@@ -71,6 +71,7 @@ class AdminController extends Controller
     {
         $user = new User;
         $this->authenticate($user, true, 'site');
+
         $data = new stdClass;
         $data->user = $user;
         $data->va_name = Config::get('va/name');
@@ -87,6 +88,14 @@ class AdminController extends Controller
         $data->text_color = Config::get('TEXT_COLOUR');
         $data->analytics_enabled = Config::get('MASTER_API_KEY') == '';
         $data->custom_css = Config::getCss();
+        $data->themes = array_filter(scandir(__DIR__ . '/../../../themes'), function ($x) {
+            return strpos($x, '.') !== 0;
+        });
+        $data->active_theme = Config::get('ACTIVE_THEME');
+        if (empty($data->active_theme)) {
+            $data->active_theme = 'default';
+        }
+
         $this->render('admin/settings', $data);
     }
 
@@ -115,6 +124,7 @@ class AdminController extends Controller
                 if (
                     !Config::replaceColour(trim(Input::get('hexcol'), "#"), trim(Input::get('textcol'), "#"))
                     || !Config::replaceCss(Input::get('customcss'))
+                    || !Config::replace('ACTIVE_THEME', Input::get('theme'))
                 ) {
                     Session::flash('error', 'Error Updating Design');
                 } else {
