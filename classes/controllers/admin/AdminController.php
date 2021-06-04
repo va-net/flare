@@ -86,7 +86,7 @@ class AdminController extends Controller
         $data->auto_callsigns = Config::get("AUTO_CALLSIGNS");
         $data->color_main = Config::get('site/colour_main_hex');
         $data->text_color = Config::get('TEXT_COLOUR');
-        $data->analytics_enabled = Config::get('MASTER_API_KEY') == '';
+        $data->analytics_enabled = !empty(Config::get('INSTANCE_ID'));
         $data->custom_css = Config::getCss();
         $data->themes = array_filter(scandir(__DIR__ . '/../../../themes'), function ($x) {
             return strpos($x, '.') !== 0;
@@ -133,10 +133,10 @@ class AdminController extends Controller
                 $this->redirect('/admin/settings?tab=design');
                 break;
             case 'interactionupdate':
-                $oldAnalytics = Config::get('MASTER_API_KEY') == '' ? 0 : 1;
-                if ($oldAnalytics == 1 && Input::get('analytics') == 0) {
+                $oldAnalytics = !empty(Config::get('INSTANCE_ID'));
+                if ($oldAnalytics && Input::get('analytics') == 0) {
                     Analytics::unregister();
-                } elseif ($oldAnalytics == 0 && Input::get('analytics') == 1) {
+                } elseif (!$oldAnalytics && Input::get('analytics') == 1) {
                     Analytics::register();
                 }
 

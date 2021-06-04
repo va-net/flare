@@ -32,7 +32,7 @@ if (file_exists(__DIR__ . '/config.php')) {
     require_once __DIR__ . '/config.new.php';
 }
 
-if (Config::isReady() && strlen(Config::get('INSTANCE_ID')) < 1) {
+if (Config::isReady() && strlen(Config::get('INSTANCE_ID')) < 1 && !file_exists(__DIR__ . '/../.development')) {
     Analytics::register();
 }
 

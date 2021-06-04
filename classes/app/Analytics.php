@@ -103,7 +103,7 @@ class Analytics
 
         $context = stream_context_create($options);
         file_get_contents($url, false, $context);
-        Config::replace('INSTANCE_ID', 0);
+        Config::replace('INSTANCE_ID', '0');
     }
 
     /**
