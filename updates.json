@@ -631,7 +631,7 @@
     {
         "tag": "v2.0.0-beta.1",
         "name": "Version 2.0.0",
-        "date": "2021-06-01",
+        "date": "2021-06-05",
         "notes": "Theming, Various other stuff",
         "prerelease": true,
         "useUpdater": true,
