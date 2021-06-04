@@ -30,10 +30,9 @@ Page::setTitle('ACARS - ' . Page::$pageData->va_name);
                     <div class="loaded">
                         <h3>ACARS</h3>
                         <p>
-                            Nice! We\'ve found you. If you've finished your flight and at the gate, go ahead and confirm the details below.
+                            Nice! We've found you. If you've finished your flight and at the gate, go ahead and confirm the details below.
                             If not, reload the page once you're done.
                         </p>
-
 
                         <form action="/pireps/new" method="post">
                             <input hidden value="filepirep" name="action" />
@@ -45,13 +44,13 @@ Page::setTitle('ACARS - ' . Page::$pageData->va_name);
 
                             <div class="form-group">
                                 <label for="ftime">Flight Time</label>
-                                <input readonly value="<?= Time::secsToString(Page::$pageData->acars['result']["flightTime"]) ?>" name="ftime" id="ftime" />
+                                <input readonly value="<?= Time::secsToString(Page::$pageData->acars['result']["flightTime"]) ?>" class="form-control" name="ftime" id="ftime" />
                             </div>
 
                             <input hidden value="<?= $aircraft->id ?>" name="aircraft" />
                             <div class="form-group">
                                 <label for="aircraftname">Aircraft</label>
-                                <input disabled value="<?= Page::$pageData->aircraft->name ?> - <?= Page::$pageData->aircraft->liveryname ?>" id="aircraftname" />
+                                <input disabled value="<?= Page::$pageData->aircraft->name ?> - <?= Page::$pageData->aircraft->liveryname ?>" class="form-control id=" aircraftname" />
                             </div>
 
                             <?php if (Page::$pageData->acars['result']["departure"] != null) : ?>

@@ -181,12 +181,12 @@ class PirepsController extends Controller
 
         if ($data->acars['status'] != 0) {
             Session::flash('error', 'We couldn\'t find you on the server. Ensure that you have filed a flight plan, 
-            and are still connected to Infinite Flight. Then, reload the page and hit that button again.');
+            and are still connected to Infinite Flight. Then, hit that button again.');
             unset($data->acars);
             $this->render('acars', $data);
         }
 
-        $data->aircraft = Aircraft::findAircraft(Page::$pageData->acars['result']["aircraftLiveryId"]);
+        $data->aircraft = Aircraft::findAircraft($data->acars['result']["aircraftLiveryId"]);
         if (!$data->aircraft) {
             Session::flash('error', 'You\'re Flying an Aircraft that isn\'t in this VA\'s Fleet!');
             $this->render('acars', $data);
