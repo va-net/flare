@@ -802,6 +802,7 @@
         "newFolders": [
             "classes/app",
             "classes/controllers",
+            "classes/controllers/admin",
             "classes/data",
             "classes/util",
             "classes/plugins",
