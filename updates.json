@@ -727,8 +727,7 @@
             "themes/default/views/pireps_setup.php",
             "themes/default/views/route_form.php",
             "themes/default/views/route_search.php",
-            "themes/default/views/route_view.php",
-            "themes/default/views/update.php"
+            "themes/default/views/route_view.php"
         ],
         "queries": [],
         "deletedFiles": [
