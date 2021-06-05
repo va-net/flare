@@ -644,7 +644,7 @@
             "classes/app/Config.php",
             "classes/app/Events.php",
             "classes/app/Logger.php",
-            "clasess/app/Page.php",
+            "classes/app/Page.php",
             "classes/plugins/Plugin.php",
             "classes/app/Router.php",
             "classes/app/Updater.php",
