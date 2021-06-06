@@ -48,7 +48,7 @@ Page::setTitle('Routes - ' . Page::$pageData->va_name);
                                 <select class="form-control" name="aircraft" id="aircraft">
                                     <option value="">Any Aircraft</option>
                                     <?php
-                                    foreach ($aircraft as Page::$pageData->aircraft) {
+                                    foreach (Page::$pageData->aircraft as $ac) {
                                         $notes = $ac->notes == null ? '' : ' - ' . $ac->notes;
                                         echo '<option value="' . $ac->id . '">' . $ac->name . ' (' . $ac->liveryname . ')' . $notes . '</option>';
                                     }
