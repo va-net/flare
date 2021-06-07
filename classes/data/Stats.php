@@ -28,12 +28,12 @@ class Stats
     {
         self::init();
         $transhours = 0;
+        $filedhours = 0;
 
         if ($days == null) {
             $transhours = self::$_db->query('SELECT SUM(transhours) AS trans FROM pilots')->first()->trans;
             $filedhours = self::$_db->query('SELECT SUM(flighttime) AS filed FROM pireps WHERE status=1')->first()->filed;
         } else {
-            $transhours = 0;
             $filedhours = self::$_db->query('SELECT SUM(flighttime) AS filed FROM pireps WHERE status=1 AND DATEDIFF(NOW(), date) <= ?', [$days])->first()->filed;
         }
 
@@ -49,12 +49,13 @@ class Stats
     public static function totalFlights($days = null)
     {
         self::init();
+        $transflights = 0;
+        $filedflights = 0;
 
         if ($days == null) {
             $transflights = self::$_db->query('SELECT SUM(pilots.transflights) AS trans FROM pilots')->first()->trans;
             $filedflights = self::$_db->query('SELECT COUNT(pireps.id) AS pireps FROM pireps WHERE status=1')->first()->pireps;
         } else {
-            $transflights = self::$_db->query('SELECT SUM(pilots.transflights) AS trans FROM pilots')->first()->trans;
             $filedflights = self::$_db->query('SELECT COUNT(pireps.id) AS pireps FROM pireps WHERE status=1 AND DATEDIFF(NOW(), date) <= ?', [$days])->first()->pireps;
         }
 
