@@ -821,7 +821,14 @@
         "useUpdater": true,
         "files": [
             "themes/default/views/admin/recruitment.php",
-            "themes/default/views/route_form.php"
+            "themes/default/views/route_form.php",
+            "classes/data/Stats.php",
+            "classes/controllers/admin/PluginsController.php",
+            "core/functions.php",
+            "updater.php",
+            "classes/data/Pirep.php",
+            "core/menus.php",
+            "themes/default/views/admin/pireps.php"
         ],
         "queries": [],
         "deletedFiles": [],
