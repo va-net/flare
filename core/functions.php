@@ -40,3 +40,24 @@ function escape($string)
 {
     return htmlentities($string, ENT_QUOTES, 'UTF-8');
 }
+
+/**
+ * @return void
+ * @param string $src
+ */
+function rrmdir($src)
+{
+    $dir = opendir($src);
+    while (false !== ($file = readdir($dir))) {
+        if (($file != '.') && ($file != '..')) {
+            $full = $src . '/' . $file;
+            if (is_dir($full)) {
+                rrmdir($full);
+            } else {
+                unlink($full);
+            }
+        }
+    }
+    closedir($dir);
+    rmdir($src);
+}

@@ -65,11 +65,6 @@ class PluginsController extends Controller
 
     private function install()
     {
-        $slash = "/";
-        if (strpos(strtolower(php_uname('s')), "window") !== FALSE) {
-            $slash = "\\";
-        }
-
         $GH_BRANCH = "v2";
 
         $url = "https://raw.githubusercontent.com/va-net/flare-plugins/{$GH_BRANCH}/plugins.tsv";
@@ -105,20 +100,18 @@ class PluginsController extends Controller
         $pluginadv = Json::decode(file_get_contents("https://raw.githubusercontent.com/va-net/flare-plugins/{$GH_BRANCH}/" . $pluginbasic["slug"] . "/plugin.json", false, $context));
 
         foreach ($pluginadv["installation"]["files"] as $f) {
-            $f = str_replace("/", $slash, $f);
-            if (file_exists(__DIR__ . '/../../..' . $slash . $f)) {
-                if (unlink(__DIR__ . '/../../..' . $slash . $f) !== TRUE) {
+            if (file_exists(__DIR__ . '/../../../' . $f)) {
+                if (unlink(__DIR__ . '/../../../' . $f) !== TRUE) {
                     Session::flash('error', 'File "' . $f . '" already exists, failed to delete it.');
                     $this->redirect('/admin/plugins');
                 }
 
-                Logger::log('File "' . __DIR__ . $slash . $f . '" was deleted while installing plugin ' . $pluginbasic["name"]);
+                Logger::log('File "' . __DIR__ . '/../../../' . $f . '" was deleted while installing plugin ' . $pluginbasic["name"]);
             }
         }
         foreach ($pluginadv["installation"]["files"] as $f) {
             $data = file_get_contents("https://raw.githubusercontent.com/va-net/flare-plugins/{$GH_BRANCH}/" . $pluginbasic["slug"] . "/" . $f, false, $context);
-            $f = str_replace("/", $slash, $f);
-            file_put_contents(__DIR__ . '/../../..' . $slash . $f, $data);
+            file_put_contents(__DIR__ . '/../../../' . $f, $data);
         }
 
         $db = DB::getInstance();
@@ -136,11 +129,6 @@ class PluginsController extends Controller
 
     private function remove()
     {
-        $slash = "/";
-        if (strpos(strtolower(php_uname('s')), "window") !== FALSE) {
-            $slash = "\\";
-        }
-
         $plugins = Json::decode(file_get_contents(__DIR__ . '/../../../plugins.json'));
         $theplugin = null;
         foreach ($plugins as $p) {
@@ -158,8 +146,9 @@ class PluginsController extends Controller
         }
 
         foreach ($theplugin["installation"]["files"] as $file) {
-            $file = str_replace("/", $slash, $file);
-            $path = __DIR__ . '/../../..' . $slash . $file;
+            $path = __DIR__ . '/../../../' . $file;
+            if (!file_exists($path)) continue;
+
             if (unlink($path) === FALSE) {
                 Session::flash('error', 'Failed to remove file - ' . $path);
                 $this->redirect('/admin/plugins');

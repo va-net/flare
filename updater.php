@@ -104,11 +104,6 @@ if (!$nextUpdate["useUpdater"]) {
     die();
 }
 
-$slash = "/";
-if (strpos(strtolower(php_uname('s')), "window") !== FALSE) {
-    $slash = "\\";
-}
-
 // Run DB Queries
 if (count($nextUpdate["queries"]) != 0 && !($current["prerelease"] && !$next["prerelease"])) {
     $db = DB::getInstance();
@@ -126,12 +121,12 @@ echo "Updated Database Successfully<br />";
 // Delete Files to Delete
 if (!($current["prerelease"] && !$next["prerelease"])) {
     foreach ($nextUpdate["deletedFiles"] as $delFile) {
-        if (is_dir(__DIR__ . $slash . $delFile)) {
-            if (!rmdir(__DIR__ . $slash . $delFile)) {
+        if (is_dir(__DIR__ . '/' . $delFile)) {
+            if (!rrmdir(__DIR__ . '/' . $delFile)) {
                 echo "There was an error deleting " . $delFile;
             }
         } else {
-            if (!unlink(__DIR__ . $slash . $delFile)) {
+            if (!unlink(__DIR__ . '/' . $delFile)) {
                 echo "There was an error deleting " . $delFile;
             }
         }
@@ -142,9 +137,8 @@ if (!($current["prerelease"] && !$next["prerelease"])) {
 // Add Directories
 if (array_key_exists('newFolders', $nextUpdate)) {
     foreach ($nextUpdate['newFolders'] as $dir) {
-        $dir = str_replace("/", $slash, $dir);
-        if (!file_exists(__DIR__ . $slash . $dir)) {
-            if (mkdir(__DIR__ . $slash . $dir) === FALSE) {
+        if (!file_exists(__DIR__ . '/' . $dir)) {
+            if (mkdir(__DIR__ . '/' . $dir) === FALSE) {
                 echo "Error Creating Directory " . $dir;
                 die();
             }
@@ -155,8 +149,7 @@ if (array_key_exists('newFolders', $nextUpdate)) {
 // Update Files
 foreach ($nextUpdate["files"] as $file) {
     $fileData = file_get_contents($RAW_URL . urlencode($nextTag["commit"]["sha"]) . "/" . urlencode($file));
-    $file = str_replace("/", $slash, $file);
-    if ($fileData === FALSE || file_put_contents(__DIR__ . $slash . $file, $fileData) === FALSE) {
+    if ($fileData === FALSE || file_put_contents(__DIR__ . '/' . $file, $fileData) === FALSE) {
         echo "Error Updating File " . $file;
         die();
     }
@@ -165,7 +158,7 @@ echo "Updated Files Successfully<br />";
 
 // Update Version File
 $vData = file_get_contents($RAW_URL . urlencode($nextTag["commit"]["sha"]) . "/version.json");
-file_put_contents(__DIR__ . $slash . "version.json", $vData);
+file_put_contents(__DIR__ . '/' . "version.json", $vData);
 echo "Updated Version File<br />";
 
 Events::trigger('site/updated', $nextUpdate);
