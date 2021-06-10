@@ -95,27 +95,11 @@ class Pirep
 
         self::init();
 
-        $result = self::$_db->get('pireps', array('status', '=', 0));
+        $result = self::$_db->query("SELECT r.*, p.callsign AS pilotcallsign, p.name AS pilotname FROM `pireps` r INNER JOIN `pilots` p ON p.id=r.pilotid WHERE r.`status`=0");
 
-        $x = 0;
-        $pireps = array();
-
-        while ($x < $result->count()) {
-            $newdata = array(
-                'id' => $result->results()[$x]->id,
-                'flightnum' => $result->results()[$x]->flightnum,
-                'departure' => $result->results()[$x]->departure,
-                'arrival' => $result->results()[$x]->arrival,
-                'flighttime' => $result->results()[$x]->flighttime,
-                'pilotid' => $result->results()[$x]->pilotid,
-                'date' => $result->results()[$x]->date,
-                'aircraftid' => $result->results()[$x]->flighttime,
-                'multi' => $result->results()[$x]->multi,
-                'status' => $result->results()[$x]->status,
-            );
-            $pireps[$x] = $newdata;
-            $x++;
-        }
+        $pireps = array_map(function ($x) {
+            return (array)$x;
+        }, $result->results());
         return $pireps;
     }
 

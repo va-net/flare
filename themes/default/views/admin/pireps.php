@@ -72,6 +72,7 @@ $ACTIVE_CATEGORY = 'pirep-management';
                                 <table class="table table-striped">
                                     <thead class="bg-custom">
                                         <tr>
+                                            <th class="mobile-hidden">Callsign</th>
                                             <th class="mobile-hidden">Flight Number</th>
                                             <th>Dep<span class="mobile-hidden">arture</span></th>
                                             <th>Arr<span class="mobile-hidden">ival</span></th>
@@ -85,6 +86,8 @@ $ACTIVE_CATEGORY = 'pirep-management';
                                         $x = 0;
                                         foreach (Page::$pageData->pending as $pirep) {
                                             echo '<tr><td class="align-middle mobile-hidden">';
+                                            echo $pirep['pilotcallsign'];
+                                            echo '</td><td class="align-middle mobile-hidden">';
                                             echo $pirep['flightnum'];
                                             echo '</td><td class="align-middle">';
                                             echo $pirep['departure'];
