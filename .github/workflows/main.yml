@@ -34,4 +34,4 @@ jobs:
           run: docker build -t $(echo $REGISTRY)/$(echo $IMAGE_NAME):edge -f ./Dockerfile .
           
         - name: Push beta image to GitHub Container Registry
-          
+          run: docker push $(echo $REGISTRY)/$(echo $IMAGE_NAME):edge
