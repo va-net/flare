@@ -33,5 +33,8 @@ jobs:
         - name: Build container image
           run: docker build -t $(echo $REGISTRY)/$(echo $IMAGE_NAME):edge -f ./Dockerfile .
           
+        - name: Log in to GitHub Container Registry
+          run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+          
         - name: Push beta image to GitHub Container Registry
           run: docker push $(echo $REGISTRY)/$(echo $IMAGE_NAME):edge
