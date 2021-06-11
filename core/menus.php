@@ -99,7 +99,7 @@ $GLOBALS['admin-menu']["PIREP Management"] = array(
 
 $GLOBALS['admin-menu']["Site Management"] = array(
     "Site Dashboard" => [
-        "link" => "/admin",
+        "link" => "/admin/home",
         "icon" => "fa-tachometer-alt",
         "permission" => "admin",
         "needsGold" => false,
