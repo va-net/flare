@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+    [x-cloak] {
+        @apply hidden;
+    }
+
+    [x-cloak='md'] {
+        @apply md:hidden;
+    }
+}
+
+@import url('/assets/tailwind.style.css');
