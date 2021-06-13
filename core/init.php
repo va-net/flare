@@ -34,6 +34,8 @@ if (file_exists(__DIR__ . '/config.php')) {
 
 if (Config::isReady() && strlen(Config::get('INSTANCE_ID')) < 1 && !file_exists(__DIR__ . '/../.development')) {
     Analytics::register();
+} elseif (!Config::isReady()) {
+    Redirect::to('/install/install.php');
 }
 
 require_once __DIR__ . '/../vendor/autoload.php';
