@@ -15,9 +15,16 @@ doing! If updating, please backup this file prior to doing so.
 
 session_start();
 
+if (file_exists(__DIR__ . '/config.php')) {
+    require_once __DIR__ . '/config.php';
+} elseif (file_exists(__DIR__ . '/config.new.php')) {
+    require_once __DIR__ . '/config.new.php';
+}
+
+$classdirs = ['.', 'app', 'data', 'plugins', 'util', 'controllers', 'controllers/admin'];
 spl_autoload_register(function ($class) {
-    $dirs = ['.', 'app', 'data', 'plugins', 'util', 'controllers', 'controllers/admin'];
-    foreach ($dirs as $d) {
+    global $classdirs;
+    foreach ($classdirs as $d) {
         $file = __DIR__ . '/../classes/' . $d . '/' . $class . '.php';
         if (file_exists($file)) {
             include $file;
@@ -26,17 +33,14 @@ spl_autoload_register(function ($class) {
     }
 });
 
-if (file_exists(__DIR__ . '/config.php')) {
-    require_once __DIR__ . '/config.php';
-} elseif (file_exists(__DIR__ . '/config.new.php')) {
-    require_once __DIR__ . '/config.new.php';
-}
-
 if (Config::isReady() && strlen(Config::get('INSTANCE_ID')) < 1 && !file_exists(__DIR__ . '/../.development')) {
     Analytics::register();
 } elseif (!Config::isReady()) {
     Redirect::to('/install/install.php');
 }
+
+$ACTIVE_THEME = Config::get('ACTIVE_THEME');
+array_unshift($classdirs, "../themes/{$ACTIVE_THEME}/controllers");
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
