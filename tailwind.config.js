@@ -1,6 +1,6 @@
 module.exports = {
     mode: 'jit',
-    purge: ['./themes/tailwind/**/*.php'],
+    purge: ['./themes/tailwind/**/*.php', './assets/js/tailwind.js'],
     darkMode: 'class',
     theme: {
         extend: {
