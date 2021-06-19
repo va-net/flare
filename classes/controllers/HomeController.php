@@ -18,10 +18,6 @@ class HomeController extends Controller
             $this->redirect('/');
         }
         $data = new stdClass;
-        $data->user = $user;
-        $data->va_name = Config::get('va/name');
-        $data->auto_callsigns = Config::get('AUTO_CALLSIGNS');
-        $data->is_gold = VANet::isGold();
         $this->render('home', $data);
     }
 
