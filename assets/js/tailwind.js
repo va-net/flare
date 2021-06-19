@@ -43,11 +43,11 @@ function pirepstable(data) {
 
 function pirepstats(data) {
     if (!data) {
-        return '<li>Loading...</li>';
+        return '<li class="w-5/6 h-4 mb-1 bg-black/30 dark:bg-white/30 rounded animate-pulse"></li><li class="w-2/3 h-4 mb-1 bg-black/30 dark:bg-white/30 rounded animate-pulse"></li><li class="w-full h-4 mb-1 bg-black/30 dark:bg-white/30 rounded animate-pulse"></li>';
     }
 
     if (data.length < 1) {
-        return '<li>No data yet!</li>';
+        return '<li class="font-bold">No data yet!</li>';
     }
 
     let visits = {};
@@ -101,7 +101,20 @@ function pirepstats(data) {
 
 function newsfeed(data) {
     if (!data) {
-        return '<p>Loading...</p>';
+        return `
+            <h3 class="text-2xl font-bold mb-3">News Feed</h3>
+            <div class="rounded shadow-md w-full p-3 space-y-1 border border-gray-200 dark:border-transparent dark:bg-white dark:text-white">
+                <div class="w-3/4 h-6 bg-black/30 dark:bg-white/30 rounded animate-pulse mb-2"></div>
+                <div class="grid grid-cols-6 gap-2">
+                    <div class="col-span-4 inline-block h-4 bg-black/30 dark:bg-white/30 rounded animate-pulse"></div>
+                    <div class="col-span-2 inline-block h-4 bg-black/30 dark:bg-white/30 rounded animate-pulse"></div>
+                    <div class="col-span-1 inline-block h-4 bg-black/30 dark:bg-white/30 rounded animate-pulse"></div>
+                    <div class="col-span-5 inline-block h-4 bg-black/30 dark:bg-white/30 rounded animate-pulse"></div>
+                    <div class="col-span-3 inline-block h-4 bg-black/30 dark:bg-white/30 rounded animate-pulse"></div>
+                    <div class="col-span-2 inline-block h-4 bg-black/30 dark:bg-white/30 rounded animate-pulse"></div>
+                </div>
+            </div>
+        `;
     }
 
     return (

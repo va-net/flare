@@ -4,7 +4,7 @@
     "description": "",
     "scripts": {
         "dev": "tailwindcss -i ./assets/tailwind.css -o ./assets/tailwind.index.css -w",
-        "build": "tailwindcss -i ./assets/tailwind.css -o ./assets/tailwind.index.css"
+        "build": "tailwindcss -i ./assets/tailwind.css -o ./assets/tailwind.index.css --minify"
     },
     "keywords": [],
     "author": "",
