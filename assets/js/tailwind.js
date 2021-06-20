@@ -103,8 +103,8 @@ function newsfeed(data) {
     if (!data) {
         return `
             <h3 class="text-2xl font-bold mb-3">News Feed</h3>
-            <div class="rounded shadow-md w-full p-3 space-y-1 border border-gray-200 dark:border-transparent dark:bg-white dark:text-white">
-                <div class="w-3/4 h-6 bg-black/30 dark:bg-white/30 rounded animate-pulse mb-2"></div>
+            <div class="rounded shadow-md w-full p-3 space-y-1 border border-gray-200 dark:border-transparent dark:bg-white/10 dark:text-white">
+                <div class="w-3/4 h-6 bg-black/30 dark:bg-white/30 rounded animate-pulse mb-3"></div>
                 <div class="grid grid-cols-6 gap-2">
                     <div class="col-span-4 inline-block h-4 bg-black/30 dark:bg-white/30 rounded animate-pulse"></div>
                     <div class="col-span-2 inline-block h-4 bg-black/30 dark:bg-white/30 rounded animate-pulse"></div>
@@ -122,7 +122,7 @@ function newsfeed(data) {
         data
             .map(
                 (n) => `
-                    <div class="rounded shadow-md w-full p-3 border border-gray-200 dark:border-transparent dark:bg-white dark:bg-opacity-10 dark:text-white">
+                    <div class="rounded shadow-md w-full p-3 border border-gray-200 dark:border-transparent dark:bg-white/10 dark:text-white">
                         <h4 class="text-xl font-semibold">${n.title}</h4>
                         <p class="mb-1">${n.content}</p>
                         <small class="inline-block">Posted by ${

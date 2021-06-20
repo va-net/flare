@@ -29,26 +29,31 @@
                 </p>
             </div>
             <form class="space-y-4 p-6 bg-white border-gray-200 border rounded-lg shadow-lg block" action="#" method="POST">
+                <?php if (Session::exists('success')) : ?>
+                    <p class="text-green-600 font-bold text-center text-sm"><?= Session::flash('success') ?></p>
+                <?php elseif (Session::exists('error')) : ?>
+                    <p class="text-red-500 font-bold text-center text-sm"><?= Session::flash('error') ?></p>
+                <?php endif; ?>
                 <input hidden type="hidden" name="token" value="<?= Token::generate() ?>" />
                 <div>
                     <label for="user-name" class="block font-semibold text-gray-700 mb-1">Name</label>
-                    <input id="user-name" name="name" type="text" autocomplete="given-name" required class="appearance-none rounded relative block w-full px-3 py-2 border-gray-400 text-gray-900 focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm" placeholder="John Doe">
+                    <input id="user-name" name="name" type="text" autocomplete="given-name" required class="appearance-none rounded relative block w-full px-3 py-2 border-gray-400 text-gray-900 focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm placeholder-gray-400" placeholder="John Doe">
                 </div>
                 <div>
                     <label for="email-address" class="block font-semibold text-gray-700 mb-1">Email address</label>
-                    <input id="email-address" name="email" type="email" autocomplete="email" required class="appearance-none rounded relative block w-full px-3 py-2 border-gray-400 text-gray-900 focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm" placeholder="john.doe@example.com">
+                    <input id="email-address" name="email" type="email" autocomplete="email" required class="appearance-none rounded relative block w-full px-3 py-2 border-gray-400 text-gray-900 focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm placeholder-gray-400" placeholder="john.doe@example.com">
                 </div>
                 <div>
                     <label for="ifc-url" class="block font-semibold text-gray-700 mb-1">IFC Profile URL</label>
-                    <input id="ifc-url" name="ifc" type="url" required class="appearance-none rounded relative block w-full px-3 py-2 border-gray-400 text-gray-900 focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm" placeholder="https://community.infiniteflight.com/u/John_Doe">
+                    <input id="ifc-url" name="ifc" type="url" required class="appearance-none rounded relative block w-full px-3 py-2 border-gray-400 text-gray-900 focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm placeholder-gray-400" placeholder="https://community.infiniteflight.com/u/John_Doe">
                 </div>
                 <div>
                     <label for="req-callsign" class="block font-semibold text-gray-700 mb-1">Request Callsign</label>
-                    <input id="req-callsign" name="callsign" type="text" required class="appearance-none rounded relative block w-full px-3 py-2 border-gray-400 text-gray-900 focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm">
+                    <input id="req-callsign" name="callsign" type="text" required class="appearance-none rounded relative block w-full px-3 py-2 border-gray-400 text-gray-900 focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm placeholder-gray-400">
                 </div>
                 <div>
                     <label for="vio-land-ratio" class="block font-semibold text-gray-700 mb-1">Violations to Landings Ratio</label>
-                    <input id="vio-land-ratio" name="violand" type="number" step="0.01" min="0" max="1" required class="appearance-none rounded relative block w-full px-3 py-2 border-gray-400 text-gray-900 focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm" placeholder="0.02">
+                    <input id="vio-land-ratio" name="violand" type="number" step="0.01" min="0" max="1" required class="appearance-none rounded relative block w-full px-3 py-2 border-gray-400 text-gray-900 focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm placeholder-gray-400" placeholder="0.02">
                 </div>
                 <div>
                     <label for="if-grade" class="block font-semibold text-gray-700 mb-1">Grade</label>
@@ -61,11 +66,11 @@
                 </div>
                 <div>
                     <label for="password" class="block font-semibold text-gray-700 mb-1">Password</label>
-                    <input id="password" name="password" type="password" autocomplete="current-password" required class="appearance-none rounded relative block w-full px-3 py-2 border-gray-400 text-gray-900 focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm">
+                    <input id="password" name="password" type="password" autocomplete="current-password" required class="appearance-none rounded relative block w-full px-3 py-2 border-gray-400 text-gray-900 focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm placeholder-gray-400">
                 </div>
                 <div>
                     <label for="password-confirm" class="block font-semibold text-gray-700 mb-1">Confirm Password</label>
-                    <input id="password-confirm" name="password-repeat" type="password" required class="appearance-none rounded relative block w-full px-3 py-2 border-gray-400 text-gray-900 focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm">
+                    <input id="password-confirm" name="password-repeat" type="password" required class="appearance-none rounded relative block w-full px-3 py-2 border-gray-400 text-gray-900 focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm placeholder-gray-400">
                 </div>
                 <div>
                     <button type="submit" class="relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-primary-text bg-primary focus:outline-none focus:ring-2 focus:ring-offset-2 hover:shadow-lg">

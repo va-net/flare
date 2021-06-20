@@ -29,6 +29,11 @@
                 </p>
             </div>
             <form class="space-y-6 p-6 bg-white border-gray-200 border rounded-lg shadow-lg block" action="#" method="POST">
+                <?php if (Session::exists('success')) : ?>
+                    <p class="text-green-600 font-bold text-center text-sm"><?= Session::flash('success') ?></p>
+                <?php elseif (Session::exists('error')) : ?>
+                    <p class="text-red-500 font-bold text-center text-sm"><?= Session::flash('error') ?></p>
+                <?php endif; ?>
                 <input hidden type="hidden" name="action" value="authenticate" />
                 <input hidden type="hidden" name="token" value="<?= Token::generate() ?>" />
                 <div class="mb-3">
