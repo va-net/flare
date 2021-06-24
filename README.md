@@ -6,7 +6,7 @@ Modern and Responsive VA Crew Center - Designed for Infinite Flight and Integrat
 
 ## Installation
 
-Installation is easy - download the latest [release](https://github.com/va-net/Flare/releases), and upload the files to your server. Then follow the installation instructions, and you're done!
+Installation is easy - download the latest [release](https://github.com/va-net/flare/releases), and upload the files to your server. Then follow the installation instructions, and you're done!
 
 ## Configuration
 
@@ -16,14 +16,12 @@ For all instructions on how to use and configure Flare, please visit the [commun
 
 Thanks for your interest in helping make Flare better! If you wish to contribute, fork the `dev` branch, make your changes then open a Pull Request.
 
-## Patreon
+## Support Flare
 
-Want extra features? Custom plugins? Your very own theme? Consider subscribing to one of Flare's Patreon tiers [here](https://www.patreon.com/rebal15)
-
-It's a lot of hard work for a teenager to maintain Flare, so I'd very much appreciate it!
+Flare is open support software, and is maintained in my free time. You can support these efforts by [buying me a coffee](https://ko-fi.com/kaimalcolm), [subscribing to VANet Gold](https://vanet.app/account/airline/billing), or using [this DigitalOcean referral link](https://m.do.co/c/d1d7cb8b65a1).
 
 ## License
 
 &copy; 2020, Lucas Rebato
 
-Flare is licensed under the GNU General Public License. A copy of the license is available [here](../master/LICENSE), and [here](https://www.gnu.org/licenses/gpl-3.0.txt).
+Flare is licensed under the GNU General Public License. A copy of the license is available [here](https://github.com/va-net/flare/blob/master/LICENSE), and [here](https://www.gnu.org/licenses/gpl-3.0.txt).
