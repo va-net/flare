@@ -14,39 +14,39 @@
 </head>
 
 <body>
-    <div class="min-h-screen flex justify-center bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
-        <div class="max-w-md w-full">
+    <div class="flex justify-center min-h-screen px-4 py-12 bg-gray-100 sm:px-6 lg:px-8">
+        <div class="w-full max-w-md">
             <div class="mb-8">
-                <h3 class="text-xl text-center font-bold text-gray-500"><?= Page::$pageData->va_name ?></h3>
-                <h2 class="text-center text-4xl font-bold text-gray-900">
+                <h3 class="text-xl font-bold text-center text-gray-500"><?= Page::$pageData->va_name ?></h3>
+                <h2 class="text-4xl font-bold text-center text-gray-900">
                     Sign in to your account
                 </h2>
-                <p class="mt-2 text-center text-sm text-gray-600">
+                <p class="mt-2 text-sm text-center text-gray-600">
                     Or
                     <a href="/apply" class="font-semibold text-primary hover:underline">
                         apply now
                     </a>
                 </p>
             </div>
-            <form class="space-y-6 p-6 bg-white border-gray-200 border rounded-lg shadow-lg block" action="#" method="POST">
+            <form class="block p-6 space-y-6 bg-white border border-gray-200 rounded-lg shadow-lg" action="#" method="POST">
                 <?php if (Session::exists('success')) : ?>
-                    <p class="text-green-600 font-bold text-center text-sm"><?= Session::flash('success') ?></p>
+                    <p class="text-sm font-bold text-center text-green-600"><?= Session::flash('success') ?></p>
                 <?php elseif (Session::exists('error')) : ?>
-                    <p class="text-red-500 font-bold text-center text-sm"><?= Session::flash('error') ?></p>
+                    <p class="text-sm font-bold text-center text-red-500"><?= Session::flash('error') ?></p>
                 <?php endif; ?>
                 <input hidden type="hidden" name="action" value="authenticate" />
                 <input hidden type="hidden" name="token" value="<?= Token::generate() ?>" />
                 <div class="mb-3">
-                    <label for="email-address" class="block font-semibold text-gray-700 mb-1">Email address</label>
-                    <input id="email-address" name="email" type="email" autocomplete="email" required class="appearance-none rounded relative block w-full px-3 py-2 border-gray-400 text-gray-900 focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm">
+                    <label for="email-address" class="block mb-1 font-semibold text-gray-700">Email address</label>
+                    <input id="email-address" name="email" type="email" autocomplete="email" required class="relative block w-full px-3 py-2 text-gray-900 border-gray-400 rounded appearance-none focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm">
                 </div>
                 <div>
-                    <label for="password" class="block font-semibold text-gray-700 mb-1">Password</label>
-                    <input id="password" name="password" type="password" autocomplete="current-password" required class="appearance-none rounded relative block w-full px-3 py-2 border-gray-400 text-gray-900 focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm">
+                    <label for="password" class="block mb-1 font-semibold text-gray-700">Password</label>
+                    <input id="password" name="password" type="password" autocomplete="current-password" required class="relative block w-full px-3 py-2 text-gray-900 border-gray-400 rounded appearance-none focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm">
                 </div>
 
                 <div>
-                    <button type="submit" class="relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-primary-text bg-primary focus:outline-none focus:ring-2 focus:ring-offset-2 hover:shadow-lg">
+                    <button type="submit" class="relative flex justify-center w-full px-4 py-2 text-sm font-medium border border-transparent rounded-md text-primary-text bg-primary focus:outline-none focus:ring-2 focus:ring-offset-2 hover:shadow-lg">
                         Sign in
                     </button>
                 </div>
