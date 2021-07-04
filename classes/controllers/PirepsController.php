@@ -27,7 +27,7 @@ class PirepsController extends Controller
         $this->authenticate($user);
 
         $pirep = Pirep::find(Input::get('id'));
-        if ($pirep === FALSE || $pirep->pilotid != $user->data()->id) {
+        if ($pirep === FALSE || ($pirep->pilotid != $user->data()->id && !$user->hasPermission('pirepmanage'))) {
             Session::flash('error', 'PIREP Not Found');
             $this->redirect('/pireps');
         }
