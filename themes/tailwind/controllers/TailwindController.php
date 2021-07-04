@@ -12,6 +12,15 @@ class TailwindController extends Controller
         if ($data->pirep === FALSE) $this->notFound();
         $data->aircraft = $user->getAvailableAircraft();
 
-        $this->render('pireps_pirep', $data);
+        $this->render('pireps_view', $data);
+    }
+
+    public function get_profile()
+    {
+        $user = new User;
+        $this->authenticate($user);
+        $data = new stdClass;
+        $data->user = $user;
+        $this->render('profile', $data);
     }
 }
