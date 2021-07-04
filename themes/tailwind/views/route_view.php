@@ -9,8 +9,8 @@ require_once __DIR__ . '/../includes/header.php';
             File PIREP
         </a>
     </div>
-    <div class="grid-cols-6 gap-4 space-y-4 md:grid md:space-y-0">
-        <div class="col-span-3 p-3 bg-gray-100 border border-gray-200 rounded-md shadow dark:border-0 dark:bg-gray-600">
+    <div class="grid-cols-2 gap-4 space-y-4 md:grid md:space-y-0">
+        <div class="p-3 bg-gray-100 border border-gray-200 rounded-md shadow dark:border-0 dark:bg-gray-600">
             <h2 class="text-2xl font-bold">Basic Information</h2>
             <ul>
                 <li>
@@ -30,7 +30,7 @@ require_once __DIR__ . '/../includes/header.php';
                 </li>
             </ul>
         </div>
-        <div class="col-span-3 p-3 bg-gray-100 border border-gray-200 rounded-md shadow dark:border-0 dark:bg-gray-600">
+        <div class="p-3 bg-gray-100 border border-gray-200 rounded-md shadow dark:border-0 dark:bg-gray-600">
             <h2 class="text-2xl font-bold">Aircraft</h2>
             <ul class="ml-5 list-disc">
                 <?php foreach (Page::$pageData->aircraft as $a) : ?>
@@ -38,7 +38,7 @@ require_once __DIR__ . '/../includes/header.php';
                 <?php endforeach; ?>
             </ul>
         </div>
-        <div class="col-span-6 p-3 bg-gray-100 border border-gray-200 rounded-md shadow dark:border-0 dark:bg-gray-600">
+        <div class="col-span-2 p-3 bg-gray-100 border border-gray-200 rounded-md shadow dark:border-0 dark:bg-gray-600">
             <h2 class="mb-2 text-2xl font-bold text-center">Previous PIREPs</h2>
             <div class="overflow-hidden border-b border-gray-200 shadow dark:border-gray-400 sm:rounded-lg">
                 <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-400">

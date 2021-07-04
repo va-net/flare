@@ -155,6 +155,13 @@ function initevents(data) {
         .then((r) => (data.events = r.result));
 }
 
+function toggleEventSignup(id) {
+    fetch(`/api.php/events/${encodeURIComponent(id)}`, {
+        method: 'PUT',
+    }).then(() => location.reload());
+    alert('Updating, please wait.');
+}
+
 document.addEventListener('alpine:initializing', () => {
     Alpine.directive(
         'html',
