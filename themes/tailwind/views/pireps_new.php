@@ -1,5 +1,5 @@
 <?php
-Page::setTitle('Home - ' . Page::$pageData->va_name);
+Page::setTitle('File PIREP - ' . Page::$pageData->va_name);
 require_once __DIR__ . '/../includes/header.php';
 ?>
 <div id="content" class="m-5">
@@ -21,7 +21,7 @@ require_once __DIR__ . '/../includes/header.php';
             <label for="ftime">Flight Time</label>
             <div class="gap-3 space-y-1 md:flex md:space-y-0">
                 <input id="ftime-hrs" type="number" required class="flex-1 block w-full border-gray-300 rounded-md shadow-sm dark:border-transparent focus:shadow-md focus:ring-primary focus:ring-2 dark:bg-white dark:bg-opacity-10 dark:text-white" placeholder="Hours" @change="(e) => { hours = e.target.value; }" />
-                <input id="ftime-mins" type="number" required class="flex-1 block w-full border-gray-300 rounded-md shadow-sm dark:border-transparent focus:shadow-md focus:ring-primary focus:ring-2 dark:bg-white dark:bg-opacity-10 dark:text-white" placeholder="Minutes" @change="(e) => { minutes = e.target.value; console.log(e.target.value); }" />
+                <input id="ftime-mins" type="number" required class="flex-1 block w-full border-gray-300 rounded-md shadow-sm dark:border-transparent focus:shadow-md focus:ring-primary focus:ring-2 dark:bg-white dark:bg-opacity-10 dark:text-white" placeholder="Minutes" @change="(e) => { minutes = e.target.value; }" />
             </div>
             <input type="hidden" class="hidden" name="ftime" id="ftime" :value="`${hours}:${minutes}`" value="" required />
         </div>
