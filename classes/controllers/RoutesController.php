@@ -94,10 +94,10 @@ class RoutesController extends Controller
         $data->va_name = Config::get('va/name');
         $data->is_gold = VANet::isGold();
         $data->route = Route::find($id);
-        if ($data->route !== FALSE) {
-            $data->aircraft = Route::aircraft($id);
-            $data->pireps = Route::pireps($data->route->fltnum);
-        }
+        if ($data->route === FALSE) $this->notFound();
+
+        $data->aircraft = Route::aircraft($id);
+        $data->pireps = Route::pireps($data->route->fltnum);
         $this->render('route_view', $data);
     }
 }
