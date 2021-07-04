@@ -55,9 +55,9 @@ $disabled = Page::$pageData->user->hasPermission('pirepmanage') ? 'required' : '
         </div>
         <div class="space-y-1">
             <label for="status">Status</label>
-            <select id="status" name="status" <?= $disabled ?> class="block w-full border-gray-300 rounded-md shadow-sm dark:bg-white/10 dark:text-white disabled:bg-gray-300 dark:border-transparent focus:shadow-md focus:ring-primary focus:ring-2 dark:disabled:bg-gray-800 dark:disabled:text-gray-400">
+            <select id="status" name="status" <?= $disabled ?> class="block w-full border-gray-300 rounded-md shadow-sm dark:border-transparent focus:shadow-md focus:ring-primary focus:ring-2 dark:text-white dark:bg-gray-600 dark:disabled:bg-gray-800 dark:disabled:text-gray-400">
                 <?php
-                $statuses = ['Pending', 'Accepted', 'Denied'];
+                $statuses = ['Pending', 'Approved', 'Denied'];
                 foreach ($statuses as $id => $label) {
                     if ($id == Page::$pageData->pirep->status) {
                         echo '<option value="' . $id . '" selected>' . $label . '</option>';
