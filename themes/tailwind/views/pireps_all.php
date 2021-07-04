@@ -2,19 +2,6 @@
 Page::setTitle('My PIREPs - ' . Page::$pageData->va_name);
 require_once __DIR__ . '/../includes/header.php';
 ?>
-<script id="pireps" type="application/json">
-    <?= Json::encode(array_map(function ($x) {
-        foreach ($x as $key => $val) {
-            if (is_numeric($val) && $key != 'number') {
-                $x[$key] = intval($val);
-            } else {
-                $x[$key] = escape($val);
-            }
-        }
-
-        return $x;
-    }, Page::$pageData->pireps)) ?>
-</script>
 <div id="content" class="m-5 text-black dark:text-white">
     <h1 class="text-3xl font-bold">My PIREPs</h1>
     <p class="mb-3">Showing your 30 most recent PIREPs</p>

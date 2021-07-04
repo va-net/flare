@@ -149,6 +149,12 @@ function inithome(data) {
         .then((r) => (data.news = r.result));
 }
 
+function initevents(data) {
+    fetch('/api.php/events')
+        .then((r) => r.json())
+        .then((r) => (data.events = r.result));
+}
+
 document.addEventListener('alpine:initializing', () => {
     Alpine.directive(
         'html',
