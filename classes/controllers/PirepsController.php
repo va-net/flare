@@ -100,9 +100,9 @@ class PirepsController extends Controller
 
         $response = VANet::sendPirep(array(
             'aircraftLiveryId' => Aircraft::idToLiveryId(Input::get('aircraft')),
-            'arrivalIcao' => Input::get('arr'),
+            'arrivalIcao' => strtoupper(Input::get('arr')),
             'date' => Input::get('date'),
-            'departureIcao' => Input::get('dep'),
+            'departureIcao' => strtoupper(Input::get('dep')),
             'flightTime' => Time::strToSecs(Input::get('ftime')),
             'fuelUsed' => Input::get('fuel'),
             'pilotId' => $user->data()->ifuserid
@@ -116,8 +116,8 @@ class PirepsController extends Controller
 
         if (!Pirep::file(array(
             'flightnum' => Input::get('fnum'),
-            'departure' => Input::get('dep'),
-            'arrival' => Input::get('arr'),
+            'departure' => strtoupper(Input::get('dep')),
+            'arrival' => strtoupper(Input::get('arr')),
             'flighttime' => $finalFTime,
             'pilotid' => $user->data()->id,
             'date' => Input::get('date'),
