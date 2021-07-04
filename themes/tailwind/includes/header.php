@@ -73,7 +73,7 @@ if (Page::$pageData->user->hasPermission('admin')) {
                 </ul>
             </aside>
             <main class="z-10 flex flex-col w-full min-h-screen shadow-lg dark:bg-gray-700">
-                <div class="flex items-center w-full gap-2 p-4 bg-gray-700 shadow-lg">
+                <div class="flex items-center w-full gap-2 p-4 shadow-lg">
                     <!-- Sidebar Toggle Button -->
                     <div class="flex items-center flex-1">
                         <button class="focus:outline-none" @click="sidebarOpen = !sidebarOpen">
