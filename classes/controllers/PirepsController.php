@@ -32,12 +32,17 @@ class PirepsController extends Controller
             $this->redirect('/pireps');
         }
 
-        $data = array(
+        $data = [
             'flightnum' => Input::get('fnum'),
             'departure' => Input::get('dep'),
             'arrival' => Input::get('arr'),
             'date' => Input::get('date'),
-        );
+        ];
+        if ($user->hasPermission('pirepmanage')) {
+            $data['flighttime'] = Time::strToSecs(Input::get('ftime'));
+            $data['aircraftid'] = Input::get('aircraft');
+            $data['status'] = Input::get('status');
+        }
         if (!Pirep::update(Input::get('id'), $data)) {
             Session::flash('error', 'There was an Error Editing the PIREP');
             $this->redirect('/pireps');
