@@ -72,8 +72,8 @@ if (Page::$pageData->user->hasPermission('admin')) {
                     <?php endforeach; ?>
                 </ul>
             </aside>
-            <main id="content" class="z-10 flex flex-col w-full min-h-screen shadow-lg dark:bg-gray-700">
-                <div id="content-nav" class="flex items-center w-full gap-2 p-4 shadow-lg">
+            <main class="z-10 flex flex-col w-full min-h-screen shadow-lg dark:bg-gray-700">
+                <div class="flex items-center w-full gap-2 p-4 bg-gray-700 shadow-lg">
                     <!-- Sidebar Toggle Button -->
                     <div class="flex items-center flex-1">
                         <button class="focus:outline-none" @click="sidebarOpen = !sidebarOpen">
