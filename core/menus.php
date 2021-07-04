@@ -156,12 +156,12 @@ $GLOBALS['pilot-menu'] = array(
         "needsGold" => false,
         "badgeid" => null,
     ],
-    "Live Map" => [
-        "link" => "/map",
-        "icon" => "fa-map",
-        "needsGold" => false,
-        "badgeid" => null,
-    ],
+    // "Live Map" => [
+    //     "link" => "/map",
+    //     "icon" => "fa-map",
+    //     "needsGold" => false,
+    //     "badgeid" => null,
+    // ],
     "Events" => [
         "link" => "/events",
         "icon" => "fa-calendar",
