@@ -166,6 +166,7 @@ class PirepsController extends Controller
         $data->user = $user;
         $data->va_name = Config::get('va/name');
         $data->is_gold = VANet::isGold();
+        if (!$data->is_gold) $this->notFound();
         $data->server = Config::get('FORCE_SERVER');
         $this->render('acars', $data);
     }
@@ -178,6 +179,7 @@ class PirepsController extends Controller
         $data->user = $user;
         $data->va_name = Config::get('va/name');
         $data->is_gold = VANet::isGold();
+        if (!$data->is_gold) $this->notFound();
         $data->acars = VANet::runAcars(Input::get('server'));
 
         if ($data->acars['status'] != 0) {
