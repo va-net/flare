@@ -7,14 +7,14 @@ function eventstable(data) {
 
     return data.map(
         (e) => `
-        <tr class="border-b-2 border-black dark:border-white hover:bg-black hover:bg-opacity-20 cursor-pointer" onclick="window.location.href = '/events/${
+        <tr class="hover:bg-black/20 cursor-pointer" onclick="window.location.href = '/events/${
             e.id
         }'">
-            <td class="px-3 py-2">
+            <td>
                 ${e.name}
-            </td><td class="px-3 py-2 hidden md:table-cell">
+            </td><td class="hidden md:table-cell">
                 ${new Date(e.date + 'Z').toLocaleString()}
-            </td><td class="px-3 py-2">
+            </td><td>
                 ${e.departureIcao}
             </td>
         </tr>

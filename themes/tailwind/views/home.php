@@ -65,18 +65,20 @@ require_once __DIR__ . '/../includes/header.php';
                 <h3 class="mb-3 text-2xl font-bold">
                     Upcoming Events
                 </h3>
-                <table class="w-full mb-2 table-auto">
-                    <thead class="text-left bg-primary text-primary-text">
-                        <tr>
-                            <th class="px-3 py-2">Name</th>
-                            <th class="hidden px-3 py-2 md:table-cell">
-                                Date
-                            </th>
-                            <th class="px-3 py-2">Airport</th>
-                        </tr>
-                    </thead>
-                    <tbody x-html="eventstable(data.events)"></tbody>
-                </table>
+                <div class="mb-2 table-wrapper">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th class="hidden md:table-cell">
+                                    Date
+                                </th>
+                                <th>Airport</th>
+                            </tr>
+                        </thead>
+                        <tbody x-html="eventstable(data.events)"></tbody>
+                    </table>
+                </div>
                 <small class="block mb-3 text-center">
                     Click on any event to view details.
                 </small>
@@ -84,18 +86,20 @@ require_once __DIR__ . '/../includes/header.php';
                 <h3 class="mb-3 text-2xl font-bold">
                     Recent PIREPs
                 </h3>
-                <table class="w-full mb-2 table-auto">
-                    <thead class="text-left bg-primary text-primary-text">
-                        <tr>
-                            <th class="px-3 py-2">Route</th>
-                            <th class="hidden px-3 py-2 md:table-cell">
-                                Aircraft
-                            </th>
-                            <th class="px-3 py-2">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody x-html="pirepstable(data.pireps)"></tbody>
-                </table>
+                <div class="table-wrapper">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Route</th>
+                                <th class="hidden md:table-cell">
+                                    Aircraft
+                                </th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody x-html="pirepstable(data.pireps)"></tbody>
+                    </table>
+                </div>
             <?php endif; ?>
         </div>
         <!-- Route Search -->

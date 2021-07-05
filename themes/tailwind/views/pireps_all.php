@@ -6,9 +6,9 @@ require_once __DIR__ . '/../includes/header.php';
     <h1 class="text-3xl font-bold">My PIREPs</h1>
     <p class="mb-3">Showing your 30 most recent PIREPs</p>
     <div class="inline-block w-full align-middle">
-        <div class="overflow-hidden border-b border-gray-200 shadow dark:border-gray-400 sm:rounded-lg">
-            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-400">
-                <thead class="bg-primary text-primary-text">
+        <div class="table-wrapper">
+            <table class="table">
+                <thead>
                     <tr>
                         <th scope="col" class="hidden px-6 py-3 text-xs font-medium tracking-wider text-left uppercase lg:table-cell">
                             Date
@@ -30,22 +30,22 @@ require_once __DIR__ . '/../includes/header.php';
                         </th>
                     </tr>
                 </thead>
-                <tbody class="bg-white divide-y divide-gray-200 dark:bg-gray-600">
+                <tbody>
                     <?php foreach (Page::$pageData->pireps as $pirep) : ?>
                         <tr>
-                            <td class="hidden px-6 py-3 whitespace-nowrap lg:table-cell">
+                            <td class="hidden lg:table-cell">
                                 <?= date_format(date_create($pirep['date']), 'Y-m-d') ?>
                             </td>
-                            <td class="hidden px-6 py-3 whitespace-nowrap lg:table-cell">
+                            <td class="hidden lg:table-cell">
                                 <?= $pirep['number'] ?>
                             </td>
-                            <td class="px-6 py-3 whitespace-nowrap">
+                            <td>
                                 <?= $pirep['departure'] . '-' . $pirep['arrival'] ?>
                             </td>
-                            <td class="hidden px-6 py-3 whitespace-nowrap lg:table-cell">
+                            <td class="hidden lg:table-cell">
                                 <?= $pirep['number'] ?>
                             </td>
-                            <td class="px-6 py-3 whitespace-nowrap">
+                            <td>
                                 <?php
                                 $statuses = [
                                     'Approved' => 'bg-green-100 text-green-800 dark:bg-green-300 dark:text-green-900',
