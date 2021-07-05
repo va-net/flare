@@ -1,5 +1,5 @@
 <?php
-Page::setTitle('ACARS - ' . Page::$pageData->va_name);
+Page::setTitle('Setup PIREPs - ' . Page::$pageData->va_name);
 require_once __DIR__ . '/../includes/header.php';
 ?>
 <div id="content" class="m-5 text-black dark:text-white">
