@@ -106,11 +106,11 @@ require_once __DIR__ . '/../includes/header.php';
             <form action="/routes/search" method="get">
                 <label class="block mb-2">
                     <span class="text-black dark:text-white">Departure ICAO</span>
-                    <input type="text" class="block w-full mt-1 border-gray-300 rounded-md shadow-sm dark:border-transparent focus:shadow-md focus:ring-primary focus:ring-2 dark:bg-white dark:bg-opacity-10 dark:text-white" name="dep" placeholder="YMML" />
+                    <input type="text" class="form-control" name="dep" placeholder="YMML" />
                 </label>
                 <label class="block mb-3">
                     <span class="text-black dark:text-white">Arrival ICAO</span>
-                    <input type="text" class="block w-full mt-1 border-gray-300 rounded-md shadow-sm dark:border-transparent focus:shadow-md focus:ring-primary focus:ring-2 dark:bg-white dark:bg-opacity-10 dark:text-white" name="arr" placeholder="YSSY" />
+                    <input type="text" class="form-control" name="arr" placeholder="YSSY" />
                 </label>
                 <button type="submit" class="px-3 py-2 rounded-md shadow-md bg-primary text-primary-text focus:outline-none focus:ring-2 focus:ring-transparent focus:ring-offset-1 focus:ring-offset-black dark:focus:ring-offset-white">
                     Search

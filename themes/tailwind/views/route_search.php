@@ -10,19 +10,19 @@ require_once __DIR__ . '/../includes/header.php';
             <form method="get" action="/routes/search" class="space-y-2" id="route-search">
                 <div class="space-y-1">
                     <label for="dep">Departure ICAO</label>
-                    <input id="dep" name="dep" type="text" value="<?= Input::get('dep') ?>" maxlength="4" class="block w-full border-gray-300 rounded-md shadow-sm dark:border-transparent focus:shadow-md focus:ring-primary focus:ring-2 dark:bg-white dark:bg-opacity-10 dark:text-white" />
+                    <input id="dep" name="dep" type="text" value="<?= Input::get('dep') ?>" maxlength="4" class="form-control" />
                 </div>
                 <div class="space-y-1">
                     <label for="arr">Arrival ICAO</label>
-                    <input id="arr" name="arr" type="text" value="<?= Input::get('arr') ?>" maxlength="4" class="block w-full border-gray-300 rounded-md shadow-sm dark:border-transparent focus:shadow-md focus:ring-primary focus:ring-2 dark:bg-white dark:bg-opacity-10 dark:text-white" />
+                    <input id="arr" name="arr" type="text" value="<?= Input::get('arr') ?>" maxlength="4" class="form-control" />
                 </div>
                 <div class="space-y-1">
                     <label for="fltnum">Flight Number</label>
-                    <input id="fltnum" name="fltnum" type="text" value="<?= Input::get('fltnum') ?>" class="block w-full border-gray-300 rounded-md shadow-sm dark:border-transparent focus:shadow-md focus:ring-primary focus:ring-2 dark:bg-white dark:bg-opacity-10 dark:text-white" />
+                    <input id="fltnum" name="fltnum" type="text" value="<?= Input::get('fltnum') ?>" class="form-control" />
                 </div>
                 <div class="space-y-1">
                     <label for="aircraft">Aircraft</label>
-                    <select id="aircraft" name="aircraft" class="block w-full border-gray-300 rounded-md shadow-sm dark:border-transparent focus:shadow-md focus:ring-primary focus:ring-2 dark:text-white dark:bg-gray-600">
+                    <select id="aircraft" name="aircraft" class="form-control">
                         <option value>Any Aircraft</option>
                         <?php
                         foreach (Page::$pageData->aircraft as $aircraft) {
@@ -39,7 +39,7 @@ require_once __DIR__ . '/../includes/header.php';
                 </div>
                 <div class="space-y-1">
                     <label for="duration">Flight Time</label>
-                    <select id="duration" name="duration" class="block w-full border-gray-300 rounded-md shadow-sm dark:border-transparent focus:shadow-md focus:ring-primary focus:ring-2 dark:text-white dark:bg-gray-600">
+                    <select id="duration" name="duration" class="form-control">
                         <option value>Any Flight Time</option>
                         <option value="0" <?= Input::get('duration') == '0' ? ' selected' : '' ?>>&lt; 1hr</option>
                         <?php foreach (range(1, 9) as $dur) : ?>

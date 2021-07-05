@@ -1,3 +1,5 @@
+const plugin = require('tailwindcss/plugin');
+
 module.exports = {
     mode: 'jit',
     purge: ['./themes/tailwind/**/*.php', './assets/js/tailwind.js'],
@@ -13,5 +15,16 @@ module.exports = {
     variants: {
         extend: {},
     },
-    plugins: [require('@tailwindcss/forms')],
+    plugins: [
+        require('@tailwindcss/forms'),
+        plugin(({ addVariant, e }) => {
+            addVariant('readonly', ({ modifySelectors, separator }) => {
+                modifySelectors(({ className }) => {
+                    return `.${e(
+                        `readonly${separator}${className}`
+                    )}[readonly]`;
+                });
+            });
+        }),
+    ],
 };
