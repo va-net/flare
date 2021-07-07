@@ -83,7 +83,7 @@ $ACTIVE_CATEGORY = 'user-management';
 
                                 $x = 0;
                                 foreach (Page::$pageData->users as $user) {
-                                    echo '<tr><td class="mobile-hidden align-middle">';
+                                    echo '<tr><td class="align-middle">';
                                     echo $user["name"];
                                     echo '</td><td class="mobile-hidden align-middle">';
                                     echo $user["email"];

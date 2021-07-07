@@ -43,7 +43,9 @@ class PluginsController extends Controller
                 "tags" => explode(',', $segments[5]),
                 "description" => $segments[6],
             ];
-        }, $lines[0]);
+        }, array_filter($lines[0], function ($x) {
+            return !empty($x);
+        }));
         $data->installed = Json::decode(file_get_contents(__DIR__ . '/../../../plugins.json'));
 
         $this->render('admin/plugins', $data);

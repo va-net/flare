@@ -20,7 +20,8 @@ class Controller
 
         if (!isset($data->user)) $data->user = new User;
         if (!isset($data->va_name)) $data->va_name = Config::get('va/name');
-        if (!isset($data->is_gold)) $data->is_gold = VANet::isGold();
+        if (!isset($data->va_profile)) $data->va_profile = VANet::myInfo();
+        if (!isset($data->is_gold)) $data->is_gold = $data->va_profile['isGoldPlan'];
 
         Page::$pageData = $data;
 

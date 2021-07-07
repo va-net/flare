@@ -20,6 +20,7 @@ class EventsController extends Controller
         $data->user = $user;
         $data->va_name = Config::get('va/name');
         $data->is_gold = VANet::isGold();
+        if (!$data->is_gold) $this->notFound();
         $this->render('events_list', $data);
     }
 
@@ -34,6 +35,7 @@ class EventsController extends Controller
         $data->user = $user;
         $data->va_name = Config::get('va/name');
         $data->is_gold = VANet::isGold();
+        if (!$data->is_gold) $this->notFound();
         $data->event = VANet::findEvent($eid);
         $data->users = $user->getAllUsers();
         $this->render('events_view', $data);

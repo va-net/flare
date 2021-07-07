@@ -167,7 +167,7 @@ $ACTIVE_CATEGORY = 'site-management';
                                 <form action="/admin/settings" method="post">
                                     <input hidden name="action" value="setdesign" />
                                     <div class="form-group">
-                                        <label for="">Main Colour (hex)</label>
+                                        <label for="">Theme</label>
                                         <select required class="form-control" name="theme">
                                             <option value>Select</option>
                                             <?php foreach (Page::$pageData->themes as $t) : ?>

@@ -27,21 +27,22 @@ class PirepsController extends Controller
         $this->authenticate($user);
 
         $pirep = Pirep::find(Input::get('id'));
-        if ($pirep === FALSE) {
+        if ($pirep === FALSE || ($pirep->pilotid != $user->data()->id && !$user->hasPermission('pirepmanage'))) {
             Session::flash('error', 'PIREP Not Found');
             $this->redirect('/pireps');
         }
-        if ($pirep->pilotid != $user->data()->id) {
-            Session::flash('error', 'There was an Error Editing the PIREP');
-            $this->redirect('/pireps');
-        }
 
-        $data = array(
+        $data = [
             'flightnum' => Input::get('fnum'),
             'departure' => Input::get('dep'),
             'arrival' => Input::get('arr'),
             'date' => Input::get('date'),
-        );
+        ];
+        if ($user->hasPermission('pirepmanage')) {
+            $data['flighttime'] = Time::strToSecs(Input::get('ftime'));
+            $data['aircraftid'] = Input::get('aircraft');
+            $data['status'] = Input::get('status');
+        }
         if (!Pirep::update(Input::get('id'), $data)) {
             Session::flash('error', 'There was an Error Editing the PIREP');
             $this->redirect('/pireps');
@@ -104,9 +105,9 @@ class PirepsController extends Controller
 
         $response = VANet::sendPirep(array(
             'aircraftLiveryId' => Aircraft::idToLiveryId(Input::get('aircraft')),
-            'arrivalIcao' => Input::get('arr'),
+            'arrivalIcao' => strtoupper(Input::get('arr')),
             'date' => Input::get('date'),
-            'departureIcao' => Input::get('dep'),
+            'departureIcao' => strtoupper(Input::get('dep')),
             'flightTime' => Time::strToSecs(Input::get('ftime')),
             'fuelUsed' => Input::get('fuel'),
             'pilotId' => $user->data()->ifuserid
@@ -120,8 +121,8 @@ class PirepsController extends Controller
 
         if (!Pirep::file(array(
             'flightnum' => Input::get('fnum'),
-            'departure' => Input::get('dep'),
-            'arrival' => Input::get('arr'),
+            'departure' => strtoupper(Input::get('dep')),
+            'arrival' => strtoupper(Input::get('arr')),
             'flighttime' => $finalFTime,
             'pilotid' => $user->data()->id,
             'date' => Input::get('date'),
@@ -165,6 +166,7 @@ class PirepsController extends Controller
         $data->user = $user;
         $data->va_name = Config::get('va/name');
         $data->is_gold = VANet::isGold();
+        if (!$data->is_gold) $this->notFound();
         $data->server = Config::get('FORCE_SERVER');
         $this->render('acars', $data);
     }
@@ -177,6 +179,7 @@ class PirepsController extends Controller
         $data->user = $user;
         $data->va_name = Config::get('va/name');
         $data->is_gold = VANet::isGold();
+        if (!$data->is_gold) $this->notFound();
         $data->acars = VANet::runAcars(Input::get('server'));
 
         if ($data->acars['status'] != 0) {

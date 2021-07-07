@@ -99,7 +99,7 @@ $GLOBALS['admin-menu']["PIREP Management"] = array(
 
 $GLOBALS['admin-menu']["Site Management"] = array(
     "Site Dashboard" => [
-        "link" => "/admin",
+        "link" => "/admin/home",
         "icon" => "fa-tachometer-alt",
         "permission" => "admin",
         "needsGold" => false,
@@ -156,12 +156,12 @@ $GLOBALS['pilot-menu'] = array(
         "needsGold" => false,
         "badgeid" => null,
     ],
-    "Live Map" => [
-        "link" => "/map",
-        "icon" => "fa-map",
-        "needsGold" => false,
-        "badgeid" => null,
-    ],
+    // "Live Map" => [
+    //     "link" => "/map",
+    //     "icon" => "fa-map",
+    //     "needsGold" => false,
+    //     "badgeid" => null,
+    // ],
     "Events" => [
         "link" => "/events",
         "icon" => "fa-calendar",

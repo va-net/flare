@@ -1,38 +1,32 @@
 <?php
-/*
-Flare, a fully featured and easy to use crew centre, designed for Infinite Flight.
-Copyright (C) 2020  Lucas Rebato
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
 
 use RegRev\RegRev;
 
-class HomeController extends Controller
+class TailwindController extends Controller
 {
-    public function get()
+    public function get_pirep($id)
     {
         $user = new User;
-        if (!$user->isLoggedIn()) {
-            $this->redirect('/');
-        }
+        $this->authenticate($user);
         $data = new stdClass;
-        $this->render('home', $data);
+        $data->user = $user;
+        $data->pirep = Pirep::find($id, $user->hasPermission('pirepmanage') ? null : $user->data()->id);
+        if ($data->pirep === FALSE) $this->notFound();
+        $data->aircraft = $user->getAvailableAircraft();
+
+        $this->render('pireps_view', $data);
     }
 
-    public function post()
+    public function get_profile()
     {
-        if (Input::get('action') === 'editprofile') {
-            $this->editprofile();
-        } elseif (Input::get('action') === 'changepass') {
-            $this->changepass();
-        } else {
-            $this->get();
-        }
+        $user = new User;
+        $this->authenticate($user);
+        $data = new stdClass;
+        $data->user = $user;
+        $this->render('profile', $data);
     }
 
-    private function editprofile()
+    public function post_profile()
     {
         $user = new User;
         $csPattern = Config::get('VA_CALLSIGN_FORMAT');
@@ -40,10 +34,10 @@ class HomeController extends Controller
 
         if (Callsign::assigned(Input::get('callsign'), $user->data()->id)) {
             Session::flash('error', 'Callsign is Already Taken!');
-            $this->get($user);
+            $this->get_profile();
         } elseif (!Regex::match($csPattern, Input::get('callsign'))) {
             Session::flash('error', 'Callsign does not match the required format! Try <b>' . RegRev::generate($trimmedPattern) . '</b> instead.');
-            Redirect::to('/home');
+            $this->get_profile();
         } else {
             try {
                 if (Config::get('AUTO_CALLSIGNS') == 1) {
@@ -62,30 +56,10 @@ class HomeController extends Controller
                 }
             } catch (Exception $e) {
                 Session::flash('error', $e->getMessage());
-                $this->get();
+                $this->get_profile();
             }
             Session::flash('success', 'Profile updated successfully!');
-            $this->get();
+            $this->get_profile();
         }
-    }
-
-    private function changepass()
-    {
-        $user = new User;
-        if (!Hash::check(Input::get('oldpass'), $user->data()->password)) {
-            Session::flash('error', 'Your Current Password was Incorrect!');
-            $this->get();
-        }
-
-        try {
-            $user->update(array(
-                'password' => Hash::make(Input::get('newpass'))
-            ));
-        } catch (Exception $e) {
-            Session::flash('error', $e->getMessage());
-            Redirect::to('home.php');
-        }
-        Session::flash('success', 'Password Changed Successfully!');
-        $this->get();
     }
 }

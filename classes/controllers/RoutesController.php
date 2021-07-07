@@ -17,7 +17,7 @@ class RoutesController extends Controller
         $data->user = $user;
         $data->va_name = Config::get('va/name');
         $data->is_gold = VANet::isGold();
-        $data->aircraft = Aircraft::getAvailableAircraft($user->rank(null, true))->results();
+        $data->aircraft = $user->getAvailableAircraft();
         $this->render('route_form', $data);
     }
 
@@ -63,6 +63,11 @@ class RoutesController extends Controller
                 array_push($stmts, (Input::get('duration') + 1) * 3600);
             }
         }
+        if (count($searchwhere) == 0) {
+            Session::flash('error', 'You must select at least one filter');
+            $this->redirect('/routes');
+        }
+
         $query = 'SELECT routes.fltnum, routes.dep, routes.arr, routes.duration, routes.id, routes.notes FROM routes';
         $i = 0;
         foreach ($searchwhere as $cond) {
@@ -89,10 +94,10 @@ class RoutesController extends Controller
         $data->va_name = Config::get('va/name');
         $data->is_gold = VANet::isGold();
         $data->route = Route::find($id);
-        if ($data->route !== FALSE) {
-            $data->aircraft = Route::aircraft($id);
-            $data->pireps = Route::pireps($data->route->fltnum);
-        }
+        if ($data->route === FALSE) $this->notFound();
+
+        $data->aircraft = Route::aircraft($id);
+        $data->pireps = Route::pireps($data->route->fltnum);
         $this->render('route_view', $data);
     }
 }

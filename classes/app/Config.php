@@ -46,8 +46,10 @@ class Config
             return constant($constName);
         }
 
-        if (!array_key_exists('config', $GLOBALS)) {
+        if (!array_key_exists('config', $GLOBALS) && $path[0] != 'mysql') {
             return self::getFromDb(implode('/', $path));
+        } elseif ($path[0] == 'mysql') {
+            return '';
         }
 
         $config = $GLOBALS['config'];
@@ -240,7 +242,7 @@ class Config
     {
         $old = file_exists(__DIR__ . '/../../core/config.php');
         $new = file_exists(__DIR__ . '/../../core/config.new.php');
-        $db = self::get('mysql/host') != 'DB_HOST';
+        $db = self::get('mysql/host') != 'DB_HOST' && !empty(self::get('mysql/host'));
         return ($old || $new) && $db;
     }
 }
