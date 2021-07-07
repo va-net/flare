@@ -116,7 +116,7 @@ if (Page::$pageData->user->hasPermission('admin')) {
                         if (count($notifications) != 0) {
                             echo implode('', $notifications);
                         } else {
-                            echo '<div class="px-4 py-2 text-sm text-gray-700">No Notifications Yet!</div>';
+                            echo '<div class="px-4 py-2 text-sm text-gray-700 dark:text-white">No Notifications Yet!</div>';
                         }
                         ?>
                     </div>

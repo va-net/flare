@@ -1,7 +1,7 @@
 <?php
 Page::setTitle(Page::$pageData->pirep->departure . ' to ' . Page::$pageData->pirep->arrival . ' - ' . Page::$pageData->va_name);
 require_once __DIR__ . '/../includes/header.php';
-$disabled = Page::$pageData->user->hasPermission('pirepmanage') ? 'disabled' : 'disabled';
+$disabled = Page::$pageData->user->hasPermission('pirepmanage') ? 'required' : 'disabled';
 ?>
 <div id="content" class="m-5 text-black dark:text-white">
     <h1 class="text-3xl font-bold">Edit PIREP #<?= Page::$pageData->pirep->id ?></h1>

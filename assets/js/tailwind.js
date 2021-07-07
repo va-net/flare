@@ -5,21 +5,23 @@ function eventstable(data) {
         </tr>`;
     }
 
-    return data.map(
-        (e) => `
-        <tr class="hover:bg-black/20 cursor-pointer" onclick="window.location.href = '/events/${
-            e.id
-        }'">
-            <td>
-                ${e.name}
-            </td><td class="hidden md:table-cell">
-                ${new Date(e.date + 'Z').toLocaleString()}
-            </td><td>
-                ${e.departureIcao}
-            </td>
-        </tr>
-    `
-    );
+    return data
+        .map(
+            (e) => `
+                <tr class="hover:bg-black/20 cursor-pointer" onclick="window.location.href = '/events/${
+                    e.id
+                }'">
+                    <td>
+                        ${e.name}
+                    </td><td class="hidden md:table-cell">
+                        ${new Date(e.date + 'Z').toLocaleString()}
+                    </td><td>
+                        ${e.departureIcao}
+                    </td>
+                </tr>
+            `
+        )
+        .join('');
 }
 
 function pirepstable(data) {
@@ -29,16 +31,19 @@ function pirepstable(data) {
         </tr>`;
     }
 
-    return data.slice(0, 5).map((p) => {
-        let pirepStatus = ['Pending', 'Approved', 'Denied'];
-        return `
+    return data
+        .slice(0, 5)
+        .map((p) => {
+            let pirepStatus = ['Pending', 'Approved', 'Denied'];
+            return `
             <tr class="border-b-2 border-black dark:border-white hover:bg-black hover:bg-opacity-20">
                 <td class="px-3 py-2">${p.departure}-${p.arrival}</td>
                 <td class="px-3 py-2 hidden md:table-cell">${p.aircraft}</td>
                 <td class="px-3 py-2">${pirepStatus[p.status]}</td>
             </tr>
         `;
-    });
+        })
+        .join('');
 }
 
 function pirepstats(data) {

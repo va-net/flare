@@ -129,7 +129,7 @@ require_once __DIR__ . '/../includes/header.php';
             <ul x-html="pirepstats(data.pireps)"></ul>
         </div>
         <!-- News Feed -->
-        <div class="col-span-7 p-4 border border-gray-200 rounded-lg shadow-lg dark:border-transparent dark:bg-white dark:bg-opacity-5 dark:text-white" x-html="newsfeed(data.news)">
+        <div class="col-span-7 p-4 space-y-2 border border-gray-200 rounded-lg shadow-lg dark:border-transparent dark:bg-white dark:bg-opacity-5 dark:text-white" x-html="newsfeed(data.news)">
             <h3 class="mb-3 text-2xl font-bold">News Feed</h3>
             <p>Loading...</p>
         </div>
