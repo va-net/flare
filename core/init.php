@@ -35,7 +35,7 @@ spl_autoload_register(function ($class) {
 
 if (Config::isReady() && strlen(Config::get('INSTANCE_ID')) < 1 && !file_exists(__DIR__ . '/../.development')) {
     Analytics::register();
-} elseif (!Config::isReady()) {
+} elseif (!Config::isReady() && !isset($IS_INSTALLER)) {
     Redirect::to('/install/install.php');
 }
 
