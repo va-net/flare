@@ -48,8 +48,6 @@ class Config
 
         if (!array_key_exists('config', $GLOBALS) && $path[0] != 'mysql') {
             return self::getFromDb(implode('/', $path));
-        } elseif ($path[0] == 'mysql') {
-            return '';
         }
 
         $config = $GLOBALS['config'];
