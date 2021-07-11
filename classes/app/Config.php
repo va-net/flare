@@ -91,28 +91,12 @@ class Config
             self::replace('site/colour_main_hex', '#' . $main);
             self::replace('TEXT_COLOUR', '#' . $text);
         } else {
+            $oldColour = Config::get('site/colour_main_hex');
             $currentConf = file_get_contents(__DIR__ . '/../../core/config.php');
             preg_match("/#([a-f0-9]{3}){1,2}\b/i", $currentConf, $matches);
-            $currentConf = str_replace($matches[0], '#' . $main, $currentConf);
+            $currentConf = str_replace("'colour_main_hex' => '{$oldColour}'", "'colour_main_hex' => '#{$main}'", $currentConf);
 
-            $file = fopen(__DIR__ . '/../../core/config.php', 'w+');
-
-            if (!$file) {
-                return false;
-            }
-
-            $currentConf = file_get_contents(__DIR__ . '/../../core/config.php');
-            preg_match("/#([a-f0-9]{3}){1,2}\b/i", $currentConf, $matches);
-            $currentConf = str_replace($matches[0], '#' . $main, $currentConf);
-
-            $file = fopen(__DIR__ . '/../../core/config.php', 'w+');
-
-            if (!$file) {
-                return false;
-                fwrite($file, $currentConf);
-                fclose($file);
-            }
-
+            file_put_contents(__DIR__ . '/../../core/config.php', $currentConf);
             self::replace("TEXT_COLOUR", '#' . $text);
 
             Events::trigger('config/updated', ['item' => 'TEXT_COLOUR']);
