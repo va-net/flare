@@ -58,14 +58,14 @@ if (Page::$pageData->user->hasPermission('admin')) {
                         <?php endif; ?>
                     <?php endforeach; ?>
                     <?php foreach ($adminmenu as $name => $items) : ?>
-                        <li :class="`mb-2 p-2 rounded font-semibold flex justify-[right] cursor-pointer ${isOpen ? 'bg-black' : 'hover:bg-black hover:bg-opacity-10 dark:hover:bg-opacity-40'}`" x-data="{ isOpen: false }" @click="isOpen = !isOpen">
+                        <li :class="`mb-2 p-2 rounded font-semibold flex justify-[right] cursor-pointer ${isOpen ? 'bg-black/20 dark:bg-black' : 'hover:bg-black hover:bg-opacity-10 dark:hover:bg-opacity-40'}`" x-data="{ isOpen: false }" @click="isOpen = !isOpen">
                             <span class="flex items-center">
                                 <?= TailwindIcons::icon("admin:{$name}", 'text-xl text-black dark:text-white opacity-70 h-6 w-6 mr-2') ?>
                                 <?= $name ?>
                             </span>
                             <div x-show="isOpen" x-cloak @click.away="isOpen = false" class="z-30 fixed w-44 transform translate-y-8 lg:translate-y-0 lg:translate-x-[260px] bg-white text-black dark:bg-gray-700 dark:text-white shadow-lg border border-gray-500 dark:border-white rounded object-right" x-transition:enter="transition ease-out duration-100" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95">
                                 <?php foreach ($items as $label => $data) : ?>
-                                    <a href="<?= $data['link'] ?>" class="block px-4 py-2 hover:bg-black dark:hover:bg-opacity-40 hover:bg-opacity-10"><?= $label ?></a>
+                                    <a href="<?= $data['link'] ?>" class="block px-4 py-2 hover:bg-black/10 dark:hover:bg-black/40"><?= $label ?></a>
                                 <?php endforeach; ?>
                             </div>
                         </li>
