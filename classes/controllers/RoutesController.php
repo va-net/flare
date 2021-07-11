@@ -29,6 +29,7 @@ class RoutesController extends Controller
         $data->user = $user;
         $data->va_name = Config::get('va/name');
         $data->is_gold = VANet::isGold();
+        $data->aircraft = $user->getAvailableAircraft();
 
         $searchwhere = array();
         $stmts = array();
