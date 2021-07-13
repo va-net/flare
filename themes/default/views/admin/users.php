@@ -25,8 +25,8 @@ $ACTIVE_CATEGORY = 'user-management';
         <?php require_once __DIR__ . '/../../includes/navbar.php'; ?>
     </nav>
     <div class="container-fluid">
-        <div class="container-fluid mt-4 text-center" style="overflow: auto;">
-            <div class="row m-0 p-0">
+        <div class="mt-4 text-center container-fluid" style="overflow: auto;">
+            <div class="p-0 m-0 row">
                 <?php require_once __DIR__ . '/../../includes/sidebar.php'; ?>
                 <div class="col-lg-9 main-content">
                     <div id="loader-wrapper">
@@ -35,20 +35,20 @@ $ACTIVE_CATEGORY = 'user-management';
                     <div class="loaded">
                         <?php
                         if (file_exists(__DIR__ . '/../install/install.php') && !file_exists(__DIR__ . '/../.development')) {
-                            echo '<div class="alert alert-danger text-center">The Install Folder still Exists! Please delete it immediately, it poses a severe security risk.</div>';
+                            echo '<div class="text-center alert alert-danger">The Install Folder still Exists! Please delete it immediately, it poses a severe security risk.</div>';
                         }
 
                         if (Session::exists('error')) {
-                            echo '<div class="alert alert-danger text-center">Error: ' . Session::flash('error') . '</div>';
+                            echo '<div class="text-center alert alert-danger">Error: ' . Session::flash('error') . '</div>';
                         }
                         if (Session::exists('success')) {
-                            echo '<div class="alert alert-success text-center">' . Session::flash('success') . '</div>';
+                            echo '<div class="text-center alert alert-success">' . Session::flash('success') . '</div>';
                         }
                         ?>
                         <h3>Manage Users</h3>
                         <p>Here you can view all users, active and inactive. Click on a user to view/edit the information.</p>
                         <p>
-                            <span class="text-primary cursor-pointer" id="toggle-inactive" data-state="0">Hide Inactive Users</span>
+                            <span class="cursor-pointer text-primary" id="toggle-inactive" data-state="1">Show Inactive Users</span>
                         </p>
                         <table class="table datatable">
                             <thead class="bg-custom">
@@ -64,14 +64,16 @@ $ACTIVE_CATEGORY = 'user-management';
                                 <?php
                                 foreach (Page::$pageData->users as $user) {
                                     $rowClassName = '';
+                                    $rowStyle = '';
                                     if ($user['status'] == 'Inactive') {
                                         $rowClassName = 'inactive-row';
+                                        $rowStyle = 'display: none;';
                                     }
-                                    echo '<tr class="' . $rowClassName . '"><td class="align-middle">';
+                                    echo '<tr class="' . $rowClassName . '" style="' . $rowStyle . '"><td class="align-middle">';
                                     echo $user["callsign"];
-                                    echo '</td><td class="mobile-hidden align-middle">';
+                                    echo '</td><td class="align-middle mobile-hidden">';
                                     echo $user["name"];
-                                    echo '</td><td class="mobile-hidden align-middle">';
+                                    echo '</td><td class="align-middle mobile-hidden">';
                                     echo Time::secsToString($user["flighttime"] + $user["transhours"]);
                                     echo '</td><td class="align-middle">';
                                     echo $user["status"];
@@ -92,7 +94,7 @@ $ACTIVE_CATEGORY = 'user-management';
                             </tbody>
                         </table>
                         <p>
-                            <span class="text-primary cursor-pointer font-weight-bold" data-toggle="modal" data-target="#broadcastmodal">Make Announcement</span>
+                            <span class="cursor-pointer text-primary font-weight-bold" data-toggle="modal" data-target="#broadcastmodal">Make Announcement</span>
                         </p>
                         <div class="modal fade" id="delconfirmmodal" tabindex="-1" role="dialog" aria-hidden="true">
                             <div class="modal-dialog" role="document">
@@ -303,7 +305,7 @@ $ACTIVE_CATEGORY = 'user-management';
                     </div>
                 </div>
             </div>
-            <footer class="container-fluid text-center">
+            <footer class="text-center container-fluid">
                 <?php require_once __DIR__ . '/../../includes/footer.php'; ?>
             </footer>
         </div>
