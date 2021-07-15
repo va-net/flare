@@ -46,17 +46,17 @@ class CodesharesController extends Controller
         foreach ($inputRoutes as $input) {
             if (!array_key_exists($input, $dbRoutes)) {
                 Session::flash('error', 'Could not Find Route ' . $input);
-                $this->redirect('/admin/operations/codeshares');
+                $this->get();
             }
             $r = $dbRoutes[$input];
             if (count($r['aircraft']) < 1) {
                 Session::flash('error', 'This route does not have any aircraft attached - ' . $input);
-                $this->redirect('/admin/operations/codeshares');
+                $this->get();
             }
             array_push($routes, array(
                 "flightNumber" => $r['fltnum'],
                 "departureIcao" => $r['dep'],
-                "arrivalArrival" => $r['arr'],
+                "arrivalIcao" => $r['arr'],
                 "aircraftLiveryId" => $r['aircraft'][0]['liveryid'],
                 "flightTime" => $r['duration']
             ));
@@ -69,11 +69,11 @@ class CodesharesController extends Controller
         ));
         if (!$ret) {
             Session::flash('error', "Error Connnecting to VANet");
-            $this->redirect('/admin/operations/codeshares');
+            $this->get();
             die();
         } else {
             Session::flash('success', "Codeshare Sent Successfully!");
-            $this->redirect('/admin/operations/codeshares');
+            $this->get();
         }
     }
 
@@ -82,11 +82,11 @@ class CodesharesController extends Controller
         $ret = VANet::deleteCodeshare(Input::get('delete'));
         if (!$ret) {
             Session::flash('error', "Error Connnecting to VANet");
-            $this->redirect('/admin/operations/codeshares');
+            $this->get();
         }
         Cache::delete('badge_codeshares');
         Session::flash('success', "Codeshare Deleted Successfully!");
-        $this->redirect('/admin/operations/codeshares');
+        $this->get();
     }
 
     private function import()
@@ -94,29 +94,29 @@ class CodesharesController extends Controller
         $codeshare = VANet::findCodeshare(Input::get('id'));
         if ($codeshare === FALSE) {
             Session::flash('error', "Codeshare Not Found");
-            $this->redirect('/admin/operations/codeshares');
+            $this->get();
             die();
         }
 
         $dbac = Aircraft::fetchAllAircraft();
         $dbaircraft = [];
         foreach ($dbac as $d) {
-            $dbaircraft[$d['ifliveryid']] = $d;
+            $dbaircraft[$d->ifliveryid] = $d;
         }
 
         $lowrank = Rank::getFirstRank();
         foreach ($codeshare["routes"] as $route) {
             $ac = -1;
-            if (!array_key_exists($route['aircraftLiveryID'], $dbaircraft)) {
-                Aircraft::add($route['aircraftLiveryID'], $lowrank->id);
+            if (!array_key_exists($route['aircraftLiveryId'], $dbaircraft)) {
+                Aircraft::add($route['aircraftLiveryId'], $lowrank->id);
                 $ac = Aircraft::lastId();
             } else {
-                $ac = $dbaircraft[$route['aircraftLiveryID']]->id;
+                $ac = $dbaircraft[$route['aircraftLiveryId']]->id;
             }
             Route::add([
-                'fltnum' => $route['flightNum'],
-                'dep' => $route['departure'],
-                'arr' => $route['arrival'],
+                'fltnum' => $route['flightNumber'],
+                'dep' => $route['departureIcao'],
+                'arr' => $route['arrivalIcao'],
                 'duration' => $route['flightTime'],
             ]);
             Route::addAircraft(Route::lastId(), $ac);

@@ -110,7 +110,7 @@ class Aircraft
 
         self::init();
 
-        return self::$_db->get('aircraft', array('status', '<', 3), array('name', 'ASC'));
+        return self::$_db->get('aircraft', array('status', '<', 3), array('name', 'ASC'))->results();
     }
 
     /**
@@ -291,6 +291,9 @@ class Aircraft
     public static function lastId()
     {
         self::init();
-        return self::$_db->query("SELECT MAX(id) AS res FROM aircraft");
+        $res = self::$_db->query("SELECT MAX(id) AS res FROM aircraft")->first();
+        if ($res === FALSE) return 0;
+
+        return $res->res;
     }
 }

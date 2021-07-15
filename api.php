@@ -520,22 +520,22 @@ Router::add('/codeshares/([0-9a-zA-z]{8}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-
     $dbac = Aircraft::fetchAllAircraft();
     $dbaircraft = [];
     foreach ($dbac as $d) {
-        $dbaircraft[$d['ifliveryid']] = $d;
+        $dbaircraft[$d->ifliveryid] = $d;
     }
 
     $lowrank = Rank::getFirstRank();
     foreach ($codeshare["routes"] as $route) {
         $ac = -1;
-        if (!array_key_exists($route['aircraftLiveryID'], $dbaircraft)) {
-            Aircraft::add($route['aircraftLiveryID'], $lowrank->id);
+        if (!array_key_exists($route['aircraftLiveryId'], $dbaircraft)) {
+            Aircraft::add($route['aircraftLiveryId'], $lowrank->id);
             $ac = Aircraft::lastId();
         } else {
-            $ac = $dbaircraft[$route['aircraftLiveryID']]->id;
+            $ac = $dbaircraft[$route['aircraftLiveryId']]->id;
         }
         Route::add([
-            'fltnum' => $route['flightNum'],
-            'dep' => $route['departure'],
-            'arr' => $route['arrival'],
+            'fltnum' => $route['flightNumber'],
+            'dep' => $route['departureIcao'],
+            'arr' => $route['arrivalIcao'],
             'duration' => $route['flightTime'],
         ]);
         Route::addAircraft(Route::lastId(), $ac);
