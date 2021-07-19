@@ -631,5 +631,24 @@
         "queries": [],
         "deletedFiles": [],
         "newFolders": []
+    },
+    {
+        "tag": "v2.0.0-beta.5",
+        "name": "Version 2.0.0 Beta 5",
+        "date": "2021-07-19",
+        "notes": "Inactive users hidden by default in user management, Fix codeshares, Re-added repair function",
+        "prerelease": true,
+        "useUpdater": true,
+        "files": [
+            "themes/default/views/admin/users.php",
+            "classes/data/Aircraft.php",
+            "api.php",
+            "classes/controllers/admin/CodesharesController.php",
+            "themes/tailwind/views/home.php",
+            "themes/default/views/admin/settings.php"
+        ],
+        "queries": [],
+        "deletedFiles": [],
+        "newFolders": []
     }
 ]
