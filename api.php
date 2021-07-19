@@ -978,4 +978,29 @@ Router::add('/liveries', function () {
     ]);
 });
 
+// Repair Site
+Router::add('/repair', function () {
+    global $user;
+    if (!$user->hasPermission('admin')) accessDenied();
+
+    // Remove Permissions Column
+    $db = DB::getInstance();
+    $table = $db->query("SELECT * FROM pilots")->results();
+    $cols = array_keys($table);
+    if (in_array('permissions', $cols)) {
+        $db->query("ALTER TABLE `pilots` DROP `permissions`");
+    }
+
+    // Fix Prerelease Check
+    if (empty(Config::get('CHECK_PRERELEASE'))) {
+        $v = Updater::getVersion();
+        Config::replace('CHECK_PRERELEASE', $v['prerelease'] ? '1' : '0');
+    }
+
+    echo Json::encode([
+        'status' => ErrorCode::NoError,
+        'result' => null,
+    ]);
+});
+
 Router::run('/api.php');

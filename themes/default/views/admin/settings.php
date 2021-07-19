@@ -22,8 +22,8 @@ $ACTIVE_CATEGORY = 'site-management';
         <?php require_once __DIR__ . '/../../includes/navbar.php'; ?>
     </nav>
     <div class="container-fluid">
-        <div class="container-fluid mt-4 text-center" style="overflow: auto;">
-            <div class="row m-0 p-0">
+        <div class="mt-4 text-center container-fluid" style="overflow: auto;">
+            <div class="p-0 m-0 row">
                 <?php require_once __DIR__ . '/../../includes/sidebar.php'; ?>
                 <div class="col-lg-9 main-content">
                     <div id="loader-wrapper">
@@ -44,14 +44,14 @@ $ACTIVE_CATEGORY = 'site-management';
                         </script>
                         <?php
                         if (file_exists(__DIR__ . '/../install/install.php') && !file_exists(__DIR__ . '/../.development')) {
-                            echo '<div class="alert alert-danger text-center">The Install Folder still Exists! Please delete it immediately, it poses a severe security risk.</div>';
+                            echo '<div class="text-center alert alert-danger">The Install Folder still Exists! Please delete it immediately, it poses a severe security risk.</div>';
                         }
 
                         if (Session::exists('error')) {
-                            echo '<div class="alert alert-danger text-center">Error: ' . Session::flash('error') . '</div>';
+                            echo '<div class="text-center alert alert-danger">Error: ' . Session::flash('error') . '</div>';
                         }
                         if (Session::exists('success')) {
-                            echo '<div class="alert alert-success text-center">' . Session::flash('success') . '</div>';
+                            echo '<div class="text-center alert alert-success">' . Session::flash('success') . '</div>';
                         }
                         ?>
                         <h3>Flare Settings</h3>
@@ -76,7 +76,7 @@ $ACTIVE_CATEGORY = 'site-management';
                         </ul>
 
                         <div class="tab-content">
-                            <div id="settings" class="tab-pane container-fluid p-3 fade">
+                            <div id="settings" class="p-3 tab-pane container-fluid fade">
                                 <h4>VA Settings</h4>
                                 <form action="/admin/settings" method="post">
                                     <input hidden name="action" value="vasettingsupdate">
@@ -94,8 +94,8 @@ $ACTIVE_CATEGORY = 'site-management';
                                         <input required type="text" class="form-control" name="vaident" id="vaident" value="<?= Page::$pageData->callsign_format ?>" />
                                         <small class="text-muted">
                                             <b>Pre-fill:</b>
-                                            <span class="text-primary cursor-pointer" id="prefill-va">Airline 123VA</span> |
-                                            <span class="text-primary cursor-pointer" id="prefill-any">Any Callsign</span>
+                                            <span class="cursor-pointer text-primary" id="prefill-va">Airline 123VA</span> |
+                                            <span class="cursor-pointer text-primary" id="prefill-any">Any Callsign</span>
                                         </small>
                                     </div>
                                     <div class="form-group">
@@ -162,7 +162,7 @@ $ACTIVE_CATEGORY = 'site-management';
                                     });
                                 </script>
                             </div>
-                            <div id="design" class="tab-pane container-fluid p-3 fade">
+                            <div id="design" class="p-3 tab-pane container-fluid fade">
                                 <h4>Site Design</h4>
                                 <form action="/admin/settings" method="post">
                                     <input hidden name="action" value="setdesign" />
@@ -190,7 +190,7 @@ $ACTIVE_CATEGORY = 'site-management';
                                     <input type="submit" class="btn bg-custom" value="Save">
                                 </form>
                             </div>
-                            <div id="interaction" class="tab-pane container-fluid p-3 fade">
+                            <div id="interaction" class="p-3 tab-pane container-fluid fade">
                                 <h4>Connectivity Settings</h4>
                                 <form action="/admin/settings" method="post">
                                     <input hidden name="action" value="interactionupdate" />
@@ -208,7 +208,7 @@ $ACTIVE_CATEGORY = 'site-management';
                                     <input type="submit" class="btn bg-custom" value="Save" />
                                 </form>
                             </div>
-                            <div id="maint" class="tab-pane container-fluid p-3 fade">
+                            <div id="maint" class="p-3 tab-pane container-fluid fade">
                                 <h4>Site Maintenance</h4>
                                 <div class="row">
                                     <div class="col-lg">
@@ -236,14 +236,14 @@ $ACTIVE_CATEGORY = 'site-management';
                                     </div>
                                     <script>
                                         $("#repair-btn").click(function() {
-                                            $.get('/admin/repair.php', function() {
+                                            $.get('/api.php/repair', function() {
                                                 alert('Repair attempted successfully');
                                             });
                                         });
                                     </script>
                                 </div>
                             </div>
-                            <div id="updates" class="tab-pane container-fluid p-3 fade">
+                            <div id="updates" class="p-3 tab-pane container-fluid fade">
                                 <h4>Flare Updates</h4>
                                 <p>
                                     <b>You are on Flare <?php echo Page::$pageData->version["tag"]; ?></b>
@@ -285,7 +285,7 @@ $ACTIVE_CATEGORY = 'site-management';
                     </div>
                 </div>
             </div>
-            <footer class="container-fluid text-center">
+            <footer class="text-center container-fluid">
                 <?php require_once __DIR__ . '/../../includes/footer.php'; ?>
             </footer>
         </div>
