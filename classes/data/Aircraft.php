@@ -40,7 +40,8 @@ class Aircraft
                 $completed[$aircraft['aircraftID']] = $aircraft['aircraftName'];
             }
         }
-        return asort($completed);
+        asort($completed);
+        return $completed;
     }
 
     /**
@@ -66,7 +67,8 @@ class Aircraft
             $final[$aircraft['liveryName']] = $aircraft['liveryID'];
         }
 
-        return ksort($final);
+        ksort($final);
+        return $final;
     }
 
     /**

@@ -21,8 +21,8 @@ $ACTIVE_CATEGORY = 'operations-management';
         <?php require_once __DIR__ . '/../../includes/navbar.php'; ?>
     </nav>
     <div class="container-fluid">
-        <div class="container-fluid mt-4 text-center" style="overflow: auto;">
-            <div class="row m-0 p-0">
+        <div class="mt-4 text-center container-fluid" style="overflow: auto;">
+            <div class="p-0 m-0 row">
                 <?php require_once __DIR__ . '/../../includes/sidebar.php'; ?>
                 <div class="col-lg-9 main-content">
                     <div id="loader-wrapper">
@@ -31,18 +31,18 @@ $ACTIVE_CATEGORY = 'operations-management';
                     <div class="loaded">
                         <?php
                         if (file_exists(__DIR__ . '/../install/install.php') && !file_exists(__DIR__ . '/../.development')) {
-                            echo '<div class="alert alert-danger text-center">The Install Folder still Exists! Please delete it immediately, it poses a severe security risk.</div>';
+                            echo '<div class="text-center alert alert-danger">The Install Folder still Exists! Please delete it immediately, it poses a severe security risk.</div>';
                         }
 
                         if (Session::exists('error')) {
-                            echo '<div class="alert alert-danger text-center">Error: ' . Session::flash('error') . '</div>';
+                            echo '<div class="text-center alert alert-danger">Error: ' . Session::flash('error') . '</div>';
                         }
                         if (Session::exists('success')) {
-                            echo '<div class="alert alert-success text-center">' . Session::flash('success') . '</div>';
+                            echo '<div class="text-center alert alert-success">' . Session::flash('success') . '</div>';
                         }
                         ?>
                         <h3>Fleet</h3>
-                        <button type="button" class="btn bg-custom mb-2" data-toggle="modal" data-target="#addAircraft">Add Aircraft</button>
+                        <button type="button" class="mb-2 btn bg-custom" data-toggle="modal" data-target="#addAircraft">Add Aircraft</button>
                         <div id="addAircraft" class="modal fade" role="dialog">
                             <div class="modal-dialog">
                                 <div class="modal-content">
@@ -58,8 +58,8 @@ $ACTIVE_CATEGORY = 'operations-management';
                                                 <select required class="form-control" name="aircraftselect" id="aircraftselect" required>
                                                     <option value>Select</option>
                                                     <?php
-                                                    $allac = Aircraft::fetchAllAircraftFromVANet();
-                                                    foreach ($allac as $id => $name) {
+                                                    var_dump(gettype(Page::$pageData->types));
+                                                    foreach (Page::$pageData->types as $id => $name) {
                                                         echo '<option value="' . $id . '">' . $name . '</option>';
                                                     }
                                                     ?>
@@ -125,7 +125,7 @@ $ACTIVE_CATEGORY = 'operations-management';
                                         </form>
                                     </div>
 
-                                    <div class="modal-footer text-center justify-content-center">
+                                    <div class="text-center modal-footer justify-content-center">
                                         <button type="button" class="btn bg-custom" data-dismiss="modal">Cancel</button>
                                     </div>
 
@@ -219,7 +219,7 @@ $ACTIVE_CATEGORY = 'operations-management';
                     </div>
                 </div>
             </div>
-            <footer class="container-fluid text-center">
+            <footer class="text-center container-fluid">
                 <?php require_once __DIR__ . '/../../includes/footer.php'; ?>
             </footer>
         </div>

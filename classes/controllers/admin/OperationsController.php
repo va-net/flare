@@ -86,6 +86,7 @@ class OperationsController extends Controller
         $data->is_gold = VANet::isGold();
         $data->fleet = Aircraft::fetchActiveAircraft()->results();
         $data->ranks = Rank::fetchAllNames()->results();
+        $data->types = Aircraft::fetchAllAircraftFromVANet();
         $this->render('admin/fleet', $data);
     }
 
