@@ -22,8 +22,8 @@ Page::setTitle('Home - ' . Page::$pageData->va_name);
     </nav>
 
     <div class="container-fluid">
-        <div class="container-fluid mt-4 text-center" style="overflow: auto;">
-            <div class="row m-0 p-0">
+        <div class="mt-4 text-center container-fluid" style="overflow: auto;">
+            <div class="p-0 m-0 row">
                 <?php require_once __DIR__ . '/../includes/sidebar.php'; ?>
                 <div class="col-lg-9 main-content">
                     <div id="loader-wrapper">
@@ -37,14 +37,14 @@ Page::setTitle('Home - ' . Page::$pageData->va_name);
                             <h3>Your Profile</h3>
                             <?php
                             if (Session::exists('error')) {
-                                echo '<div class="alert alert-danger text-center">Error: ' . Session::flash('error') . '</div>';
+                                echo '<div class="text-center alert alert-danger">Error: ' . Session::flash('error') . '</div>';
                             }
                             if (Session::exists('success')) {
-                                echo '<div class="alert alert-success text-center">' . Session::flash('success') . '</div>';
+                                echo '<div class="text-center alert alert-success">' . Session::flash('success') . '</div>';
                             }
                             ?>
-                            <button type="button" class="btn bg-custom mb-2" data-toggle="modal" data-target="#editMyProfile">Edit Profile</button>
-                            <button type="button" class="btn bg-custom mb-2" data-toggle="modal" data-target="#changePassword">Change Password</button>
+                            <button type="button" class="mb-2 btn bg-custom" data-toggle="modal" data-target="#editMyProfile">Edit Profile</button>
+                            <button type="button" class="mb-2 btn bg-custom" data-toggle="modal" data-target="#changePassword">Change Password</button>
                             <!-- edit profile form -->
                             <div id="editMyProfile" class="modal fade" role="dialog">
                                 <div class="modal-dialog">
@@ -60,12 +60,10 @@ Page::setTitle('Home - ' . Page::$pageData->va_name);
                                                     <label for="name">Name</label>
                                                     <input type="text" maxlegnth="120" name="name" id="name" class="form-control" required value="<?= escape(Page::$pageData->user->data()->name) ?>" />
                                                 </div>
-                                                <?php if (Page::$pageData->auto_callsigns != 1) : ?>
-                                                    <div class="form-group">
-                                                        <label for="callsign">Callsign</label>
-                                                        <input type="text" name="callsign" id="callsign" class="form-control" required value="<?= escape(Page::$pageData->user->data()->callsign) ?>" />
-                                                    </div>
-                                                <?php endif; ?>
+                                                <div class="form-group">
+                                                    <label for="callsign">Callsign</label>
+                                                    <input type="text" name="callsign" id="callsign" class="form-control" required value="<?= escape(Page::$pageData->user->data()->callsign) ?>" />
+                                                </div>
                                                 <div class="form-group">
                                                     <label for="email">Email</label>
                                                     <input type="email" name="email" id="email" class="form-control" required value="<?= escape(Page::$pageData->user->data()->email) ?>" />
@@ -185,7 +183,7 @@ Page::setTitle('Home - ' . Page::$pageData->va_name);
                             <!-- events -->
                             <section id="events" class="mb-3">
                                 <h3>Upcoming Events</h3>
-                                <table class="table table-striped text-center">
+                                <table class="table text-center table-striped">
                                     <thead class="bg-custom">
                                         <tr>
                                             <th>Name</th>
@@ -204,7 +202,7 @@ Page::setTitle('Home - ' . Page::$pageData->va_name);
                     </div>
                 </div>
             </div>
-            <footer class="container-fluid text-center">
+            <footer class="text-center container-fluid">
                 <?php require_once __DIR__ . '/../includes/footer.php'; ?>
             </footer>
         </div>
@@ -240,7 +238,7 @@ Page::setTitle('Home - ' . Page::$pageData->va_name);
             data.result = data.result.slice(0, 4);
 
             var newsHtml = data.result.map(function(n) {
-                return `<div class="card mb-3"><div class="card-body">
+                return `<div class="mb-3 card"><div class="card-body">
                         <h5 class="card-title"><u>${n.title}</u></h5>
                         <p><small><i class="fa fa-user"></i> ${n.author}&nbsp;&nbsp;&nbsp;
                         <i class="fa fa-clock"></i> ${n.dateposted}</small></p>
@@ -265,10 +263,10 @@ Page::setTitle('Home - ' . Page::$pageData->va_name);
 
             var pirepsHtml = data.result.map(function(p) {
                 var pirepStatus = ['Pending', 'Approved', 'Denied'];
-                return `<tr><td class="mobile-hidden align-middle">${p.flightnum}</td>
+                return `<tr><td class="align-middle mobile-hidden">${p.flightnum}</td>
                         <td class="align-middle">${p.departure}-${p.arrival}</td>
-                        <td class="mobile-hidden align-middle">${p.date}</td>
-                        <td class="mobile-hidden align-middle">${p.aircraft}</td>
+                        <td class="align-middle mobile-hidden">${p.date}</td>
+                        <td class="align-middle mobile-hidden">${p.aircraft}</td>
                         <td class="align-middle">${pirepStatus[p.status]}</td></tr>`;
             });
             $("#pireps-body").html(pirepsHtml.join(''));

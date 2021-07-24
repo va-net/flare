@@ -119,16 +119,6 @@ $ACTIVE_CATEGORY = 'site-management';
                                         <small class="text-muted">This will force all operations (PIREP lookups, ACARS, etc) to be on this server. If turned off, pilots will be able to choose.</small>
                                     </div>
                                     <div class="form-group">
-                                        <label for="">Automatically Assign Callsigns</label>
-                                        <select requried class="form-control" name="autocallsign" id="autocallsign">
-                                            <option value="0">No</option>
-                                            <option value="1">Yes</option>
-                                        </select>
-                                        <script>
-                                            $("#autocallsign").val('<?= Page::$pageData->auto_callsigns ?>');
-                                        </script>
-                                    </div>
-                                    <div class="form-group">
                                         <label for="">Check for Beta Updates?</label>
                                         <select requried class="form-control" name="checkpre" id="check-prerelease" <?= Page::$pageData->version["prerelease"] ? 'disabled' : '' ?>>
                                             <option value="0">No (Recommended for Production Sites)</option>

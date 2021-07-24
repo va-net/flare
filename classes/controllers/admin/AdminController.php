@@ -83,7 +83,6 @@ class AdminController extends Controller
         $data->callsign_format = Config::get('VA_CALLSIGN_FORMAT');
         $data->va_ident = Config::get('va/identifier');
         $data->force_server = Config::get('FORCE_SERVER');
-        $data->auto_callsigns = Config::get("AUTO_CALLSIGNS");
         $data->color_main = Config::get('site/colour_main_hex');
         $data->text_color = Config::get('TEXT_COLOUR');
         $data->analytics_enabled = !empty(Config::get('INSTANCE_ID'));
@@ -112,7 +111,6 @@ class AdminController extends Controller
                     || !Config::replace("CHECK_PRERELEASE", Input::get('checkpre'))
                     || !Config::replace("VA_CALLSIGN_FORMAT", Input::get('vaident'))
                     || !Config::replace("VA_LOGO_URL", Input::get('valogo'))
-                    || !Config::replace("AUTO_CALLSIGNS", Input::get('autocallsign'))
                 ) {
                     Session::flash('error', 'Error Updating Settings');
                 } else {

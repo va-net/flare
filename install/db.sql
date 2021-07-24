@@ -138,4 +138,3 @@ INSERT INTO `options` (`name`, `value`) VALUES ('FORCE_SERVER', '0');
 INSERT INTO `options` (`name`, `value`) VALUES ('CHECK_PRERELEASE', '0');
 INSERT INTO `options` (`name`, `value`) VALUES ('TEXT_COLOUR', '#fff');
 INSERT INTO `options` (`name`, `value`) VALUES ('VA_CALLSIGN_FORMAT', '/.*/i');
-INSERT INTO `options` (`name`, `value`) VALUES ('AUTO_CALLSIGNS', '0');
