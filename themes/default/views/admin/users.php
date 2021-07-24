@@ -65,7 +65,7 @@ $ACTIVE_CATEGORY = 'user-management';
                                 foreach (Page::$pageData->users as $user) {
                                     $rowClassName = '';
                                     $rowStyle = '';
-                                    if ($user['status'] == 'Inactive') {
+                                    if ($user['status'] == 'Inactive' || $user['status'] == 'Declined') {
                                         $rowClassName = 'inactive-row';
                                         $rowStyle = 'display: none;';
                                     }
