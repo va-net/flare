@@ -21,7 +21,6 @@ class User
 
     public function __construct($user = null)
     {
-
         $this->_db = DB::getInstance();
 
         $this->_sessionName = 'user';
@@ -48,7 +47,6 @@ class User
      */
     public function create($fields)
     {
-
         if (!$this->_db->insert('pilots', $fields)) {
             throw new Exception('There was a problem creating an account.');
         }
@@ -57,12 +55,23 @@ class User
     }
 
     /**
+     * @return boid
+     * @param int $id User ID
+     */
+    public function delete($id)
+    {
+        $this->_db->delete('pireps', ['pilotid', '=', $id]);
+        Permissions::revokeAll($id);
+        $this->_db->delete('notifications', ['pilotid', '=', $id]);
+        $this->_db->delete('pilots', ['id', '=', $id]);
+    }
+
+    /**
      * @return bool
      * @param int|string $user Email or User ID
      */
     public function find($user = null)
     {
-
         if ($user) {
             $field = (is_numeric($user)) ? 'id' : 'email';
             $data = $this->_db->query("SELECT * FROM pilots WHERE {$field}=? AND status=1", [$user]);
@@ -128,7 +137,6 @@ class User
      */
     public function exists()
     {
-
         return (!empty($this->_data)) ? true : false;
     }
 
@@ -137,7 +145,6 @@ class User
      */
     public function data()
     {
-
         return $this->_data;
     }
 
@@ -146,7 +153,6 @@ class User
      */
     public function isLoggedIn()
     {
-
         return $this->_isLoggedIn;
     }
 
@@ -155,7 +161,6 @@ class User
      */
     public function logout()
     {
-
         Session::delete($this->_sessionName);
         Cookie::delete($this->_cookieName);
         Events::trigger('user/logged-out', (array)$this->data());
@@ -168,7 +173,6 @@ class User
      */
     public function update($fields = array(), $id = null)
     {
-
         if (!$id && $this->isLoggedIn()) {
             $id = $this->data()->id;
         }
@@ -188,7 +192,6 @@ class User
      */
     public function hasPermission($key, $id = null)
     {
-
         if (!$id && $this->isLoggedIn()) {
             $id = $this->data()->id;
         }
@@ -216,7 +219,6 @@ class User
      */
     public function rank($id = null, $returnid = false)
     {
-
         if (!$id && $this->isLoggedIn()) {
             $id = $this->data()->id;
         }
@@ -258,7 +260,6 @@ class User
      */
     public function getAvailableAircraft($id = null)
     {
-
         if (!$id && $this->isLoggedIn()) {
             $id = $this->data()->id;
         }
@@ -284,7 +285,6 @@ class User
      */
     public function getFlightTime($id = null)
     {
-
         if (!$id && $this->isLoggedIn()) {
             $id = $this->data()->id;
         }
@@ -314,7 +314,6 @@ class User
      */
     public function numPirepsFiled($id = null)
     {
-
         if (!$id && $this->isLoggedIn()) {
             $id = $this->data()->id;
         }
@@ -341,7 +340,6 @@ class User
      */
     public function fetchPireps($id = null, $limit = null)
     {
-
         if ($id == null) {
             $id = $this->data()->id;
         }
@@ -398,7 +396,6 @@ class User
      */
     public function fetchApprovedPireps($id = null)
     {
-
         if (!$id && $this->isLoggedIn()) {
             $id = $this->data()->id;
         }
@@ -412,7 +409,6 @@ class User
      */
     public function totalPirepsFiled($id = null)
     {
-
         if (!$id && $this->isLoggedIn()) {
             $id = $this->data()->id;
         }
@@ -436,7 +432,6 @@ class User
      */
     public function getAllUsers()
     {
-
         $db = DB::newInstance();
 
         $sql = "SELECT u.*, (SELECT SUM(flighttime) FROM pireps p WHERE p.pilotid=u.id AND `status`=1) AS flighttime FROM pilots u";
@@ -491,7 +486,6 @@ class User
      */
     public function getAllPendingUsers()
     {
-
         $db = DB::newInstance();
 
         $results = $db->get('pilots', array('status', '=', 0));
@@ -526,7 +520,6 @@ class User
      */
     public function idToCallsign($id)
     {
-
         $result = $this->_db->get('pilots', array('id', '=', $id));
         $result =  $result->first();
         return $result->callsign;

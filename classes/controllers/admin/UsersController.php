@@ -40,16 +40,28 @@ class UsersController extends Controller
     private function delete()
     {
         $user = new User;
-        try {
-            $user->update(array(
-                'status' => 2
-            ), Input::get('id'));
-            Session::flash('success', 'User deleted successfully!');
-        } catch (Exception $e) {
-            Session::flash('error', 'There was an Error Deleting the User.');
-        } finally {
-            $this->redirect('/admin/users');
+
+        if (empty(Input::get('permanent'))) {
+            try {
+                $user->update(array(
+                    'status' => 2
+                ), Input::get('id'));
+                Session::flash('success', 'User Marked Inactive');
+            } catch (Exception $e) {
+                Session::flash('error', 'Failed to Mark User Inactive');
+            } finally {
+                $this->redirect('/admin/users');
+            }
         }
+
+        if (!$user->hasPermission('staffmanage')) {
+            Session::flash('error', "You're not allowed to do that!");
+            $this->get();
+        }
+
+        $user->delete(Input::get('id'));
+        Session::flash('success', 'User Deleted');
+        $this->redirect('/admin/users');
     }
 
     private function edit()
