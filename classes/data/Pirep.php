@@ -18,8 +18,7 @@ class Pirep
 
     private static function init()
     {
-
-        self::$_db = DB::newInstance();
+        self::$_db = DB::getInstance();
     }
 
     /**
@@ -28,7 +27,6 @@ class Pirep
      */
     public static function file($fields = array())
     {
-
         self::init();
         if (self::$_db->insert('pireps', $fields)->error()) {
             return false;
@@ -44,7 +42,6 @@ class Pirep
      */
     public static function update($id, $fields = array())
     {
-
         self::init();
 
         if (self::$_db->update('pireps', $id, 'id', $fields)->error()) {
@@ -56,11 +53,26 @@ class Pirep
     }
 
     /**
+     * @return bool
+     * @param int $id PIREP ID
+     */
+    public static function delete($id)
+    {
+        self::init();
+
+        $res = !(self::$_db->delete('pireps', ['id', '=', $id])->error());
+        if ($res) {
+            Events::trigger('pirep/deleted', ['id' => $id]);
+        }
+
+        return $res;
+    }
+
+    /**
      * @return array
      */
     public static function fetchAll()
     {
-
         self::init();
 
         $sql = "SELECT pireps.*, pilots.name AS pilotname, aircraft.name AS aircraftname FROM (pireps INNER JOIN pilots ON pireps.pilotid=pilots.id) INNER JOIN aircraft ON pireps.aircraftid=aircraft.id ORDER BY pireps.date DESC";
@@ -118,7 +130,6 @@ class Pirep
      */
     public static function accept($id)
     {
-
         self::init();
 
         $usr = new User;
@@ -143,7 +154,6 @@ class Pirep
      */
     public static function decline($id)
     {
-
         self::init();
 
         self::$_db->update('pireps', $id, 'id', array(
