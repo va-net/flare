@@ -134,6 +134,8 @@ if ($user->isLoggedIn()) {
     unauthorized();
 }
 
+$guid = '([0-9a-zA-z]{8}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{12})';
+
 // Not Found
 Router::pathNotFound('notFound');
 
@@ -384,7 +386,7 @@ Router::add('/events', function () {
 });
 
 // View Specific Event
-Router::add('/events/([0-9a-zA-z]{8}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{12})', function ($eventId) {
+Router::add('/events/' . $guid, function ($eventId) {
     if (!VANet::isGold()) badReq(ErrorCode::VaNotGold);
 
     $event = VANet::findEvent($eventId);
@@ -397,7 +399,7 @@ Router::add('/events/([0-9a-zA-z]{8}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4
 });
 
 // Sign up to/pull out of Event
-Router::add('/events/([0-9a-zA-z]{8}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{12})', function ($eventId) {
+Router::add('/events/' . $guid, function ($eventId) {
     global $_authType, $_apiUser;
     if ($_authType == AuthType::ApiKey) {
         accessDenied();
@@ -496,7 +498,7 @@ Router::add('/codeshares', function () {
 }, 'post');
 
 // Get Codeshare Request
-Router::add('/codeshares/([0-9a-zA-z]{8}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{12})', function ($id) {
+Router::add('/codeshares/' . $guid, function ($id) {
     global $user;
     if (!$user->hasPermission('opsmanage')) accessDenied();
 
@@ -510,7 +512,7 @@ Router::add('/codeshares/([0-9a-zA-z]{8}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-
 });
 
 // Import Codeshare
-Router::add('/codeshares/([0-9a-zA-z]{8}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{12})', function ($id) {
+Router::add('/codeshares/' . $guid, function ($id) {
     global $user;
     if (!$user->hasPermission('opsmanage')) accessDenied();
 
@@ -550,7 +552,7 @@ Router::add('/codeshares/([0-9a-zA-z]{8}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-
 }, 'put');
 
 // Delete Codeshare
-Router::add('/codeshares/([0-9a-zA-z]{8}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{12})', function ($id) {
+Router::add('/codeshares/' . $guid, function ($id) {
     global $user;
     if (!$user->hasPermission('opsmanage')) accessDenied();
 
