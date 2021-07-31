@@ -7,6 +7,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+$IS_API = true;
 require_once './core/init.php';
 header('Content-Type: application/json');
 
