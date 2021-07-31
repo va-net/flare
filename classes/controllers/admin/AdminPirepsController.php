@@ -33,6 +33,8 @@ class AdminPirepsController extends Controller
                 $this->decline();
             case 'editpirep':
                 $this->edit();
+            case 'delpirep':
+                $this->delete();
             default:
                 $this->get();
         }
@@ -73,6 +75,17 @@ class AdminPirepsController extends Controller
             Session::flash('success', 'PIREP Edited Successfully!');
             $this->redirect('/admin/pireps?tab=all');
         }
+    }
+
+    private function delete()
+    {
+        if (Pirep::delete(Input::get('id'))) {
+            Session::flash('success', 'PIREP Deleted');
+        } else {
+            Session::flash('error', 'Failed to Delete PIREP');
+        }
+
+        $this->redirect('/admin/pireps?tab=all');
     }
 
     public function get_multis()

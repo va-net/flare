@@ -22,8 +22,8 @@ $ACTIVE_CATEGORY = 'pirep-management';
         <?php require_once __DIR__ . '/../../includes/navbar.php'; ?>
     </nav>
     <div class="container-fluid">
-        <div class="container-fluid mt-4 text-center" style="overflow: auto;">
-            <div class="row m-0 p-0">
+        <div class="mt-4 text-center container-fluid" style="overflow: auto;">
+            <div class="p-0 m-0 row">
                 <?php require_once __DIR__ . '/../../includes/sidebar.php'; ?>
                 <div class="col-lg-9 main-content">
                     <div id="loader-wrapper">
@@ -32,14 +32,14 @@ $ACTIVE_CATEGORY = 'pirep-management';
                     <div class="loaded">
                         <?php
                         if (file_exists(__DIR__ . '/../install/install.php') && !file_exists(__DIR__ . '/../.development')) {
-                            echo '<div class="alert alert-danger text-center">The Install Folder still Exists! Please delete it immediately, it poses a severe security risk.</div>';
+                            echo '<div class="text-center alert alert-danger">The Install Folder still Exists! Please delete it immediately, it poses a severe security risk.</div>';
                         }
 
                         if (Session::exists('error')) {
-                            echo '<div class="alert alert-danger text-center">Error: ' . Session::flash('error') . '</div>';
+                            echo '<div class="text-center alert alert-danger">Error: ' . Session::flash('error') . '</div>';
                         }
                         if (Session::exists('success')) {
-                            echo '<div class="alert alert-success text-center">' . Session::flash('success') . '</div>';
+                            echo '<div class="text-center alert alert-success">' . Session::flash('success') . '</div>';
                         }
 
                         $tab = "pending";
@@ -62,7 +62,7 @@ $ACTIVE_CATEGORY = 'pirep-management';
                             </li>
                         </ul>
                         <div class="tab-content">
-                            <div id="pending" class="tab-pane container-fluid p-3 fade">
+                            <div id="pending" class="p-3 tab-pane container-fluid fade">
                                 <form id="acceptpirep" action="/admin/pireps" method="post">
                                     <input hidden name="action" value="acceptpirep">
                                 </form>
@@ -107,7 +107,11 @@ $ACTIVE_CATEGORY = 'pirep-management';
                                     </tbody>
                                 </table>
                             </div>
-                            <div id="all" class="tab-pane container-fluid p-3 fade">
+                            <div id="all" class="p-3 tab-pane container-fluid fade">
+                                <form method="post" action="/admin/pireps" id="delpirep">
+                                    <input hidden name="action" value="delpirep" type="hidden" />
+                                    <input hidden name="id" value="" type="hidden" id="delpirep-id" />
+                                </form>
                                 <table class="table table-striped datatable">
                                     <thead class="bg-custom">
                                         <tr>
@@ -148,7 +152,8 @@ $ACTIVE_CATEGORY = 'pirep-management';
                                             $s = $statuses[$a['status']];
                                             echo '<span class="badge badge-' . $s['badge'] . '">' . $s['text'] . '</span>';
                                             echo '</td><td class="align-middle">';
-                                            echo '<button class="btn bg-custom editpirepbtn" data-pirep=\'' . json_encode($a) . '\'><i class="fa fa-edit"></i></button>';
+                                            echo '<button class="mr-1 btn bg-custom editpirepbtn" data-pirep=\'' . json_encode($a) . '\'><i class="fa fa-edit"></i></button>';
+                                            echo '<button class="btn btn-danger delpirepbtn" data-pirepid="' . $a['id'] . '"><i class="fa fa-trash"></i></button>';
                                             echo '</td></tr>';
                                         }
                                         ?>
@@ -252,7 +257,7 @@ $ACTIVE_CATEGORY = 'pirep-management';
                                     </div>
                                 </div>
 
-                                <!-- Edit PIREP Script -->
+                                <!-- Edit/Delete PIREP Scripts -->
                                 <script>
                                     $(".editpirepbtn").click(function() {
                                         var pirep = $(this).data('pirep');
@@ -277,6 +282,14 @@ $ACTIVE_CATEGORY = 'pirep-management';
                                         formatFlightTime();
                                         $("#editpirep-modal").modal('show');
                                     });
+                                    $(".delpirepbtn").click(function() {
+                                        var conf = confirm('Are you sure you want to PERMANETLY delete this PIREP?');
+                                        if (!conf) return;
+
+                                        var id = $(this).data('pirepid');
+                                        $("#delpirep-id").val(id);
+                                        $("#delpirep").submit();
+                                    });
                                 </script>
                             </div>
                         </div>
@@ -288,7 +301,7 @@ $ACTIVE_CATEGORY = 'pirep-management';
                     color: #000 !important;
                 }
             </style>
-            <footer class="container-fluid text-center">
+            <footer class="text-center container-fluid">
                 <?php require_once __DIR__ . '/../../includes/footer.php'; ?>
             </footer>
         </div>

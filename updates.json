@@ -650,5 +650,35 @@
         "queries": [],
         "deletedFiles": [],
         "newFolders": []
+    },
+    {
+        "tag": "v2.0.0-beta.6",
+        "name": "Version 2.0.0 Beta 6",
+        "date": "2021-07-24",
+        "notes": "Fixed aircraft creation, Fixed inactive user filter, Improved callsign auto-fill, Removed auto callsign support, Added PIREP deletion, Added user deletion",
+        "prerelease": true,
+        "useUpdater": true,
+        "files": [
+            "classes/controllers/admin/OperationsController.php",
+            "classes/data/Aircraft.php",
+            "themes/default/views/admin/fleet.php",
+            "classes/controllers/AuthController.php",
+            "themes/default/views/apply.php",
+            "themes/tailwind/views/apply.php",
+            "classes/controllers/HomeController.php",
+            "classes/controllers/admin/AdminController.php",
+            "themes/default/views/admin/settings.php",
+            "themes/default/views/home.php",
+            "themes/tailwind/controllers/TailwindController.php",
+            "classes/controllers/admin/AdminPirepsController.php",
+            "classes/data/Pirep.php",
+            "themes/default/views/admin/pireps.php",
+            "themes/default/views/admin/users.php",
+            "classes/controllers/admin/UsersController.php",
+            "classes/data/User.php"
+        ],
+        "queries": [],
+        "deletedFiles": [],
+        "newFolders": []
     }
 ]

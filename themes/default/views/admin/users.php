@@ -65,7 +65,7 @@ $ACTIVE_CATEGORY = 'user-management';
                                 foreach (Page::$pageData->users as $user) {
                                     $rowClassName = '';
                                     $rowStyle = '';
-                                    if ($user['status'] == 'Inactive') {
+                                    if ($user['status'] == 'Inactive' || $user['status'] == 'Declined') {
                                         $rowClassName = 'inactive-row';
                                         $rowStyle = 'display: none;';
                                     }
@@ -106,12 +106,26 @@ $ACTIVE_CATEGORY = 'user-management';
                                         </button>
                                     </div>
                                     <div class="modal-body">
+                                        <p>
+                                            Marking a user as <b>Inactive</b> prevents them from logging in but does not remove their data.
+                                            This action is reversible and can be performed by anyone. <b>Deleting a user</b> permanently
+                                            deletes all their data and cannot be reversed. Permanent deletion can only be done by users
+                                            who can manage staff member permissions.
+                                        </p>
                                         <p id="delconfirmmessage"></p>
                                         <form action="/admin/users" method="post">
-                                            <input hidden name="action" value="deluser">
-                                            <input hidden value="" name="id" id="delconfirmuserid">
-                                            <input type="submit" class="btn bg-danger text-light" value="Mark as Inactive">
+                                            <input hidden name="action" value="deluser" />
+                                            <input hidden value="" name="id" class="delconfirmuserid" />
+                                            <input type="submit" class="btn bg-custom text-light" value="Mark as Inactive" />
                                         </form>
+                                        <?php if (Page::$pageData->user->hasPermission('staffmanage')) : ?>
+                                            <form action="/admin/users" method="post">
+                                                <input hidden name="action" value="deluser" />
+                                                <input hidden value="" name="id" class="delconfirmuserid" />
+                                                <input hidden name="permanent" value="1" />
+                                                <input type="submit" class="btn btn-danger text-light" value="Permanently Delete" />
+                                            </form>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                             </div>
@@ -280,9 +294,8 @@ $ACTIVE_CATEGORY = 'user-management';
                                 var userCallsign = $(e.relatedTarget).data('callsign');
                                 var userId = $(e.relatedTarget).data('id');
 
-                                var message = 'Are you sure you want to mark the user ' + userCallsign + ' as inactive?'
-                                $("#delconfirmmessage").text(message);
-                                $("#delconfirmuserid").val(userId);
+                                $("#delconfirmmessage").text(`User: ${userCallsign}`);
+                                $(".delconfirmuserid").val(userId);
                             });
                         </script>
                         <!-- Hide Inactive Users -->
