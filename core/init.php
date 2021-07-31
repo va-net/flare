@@ -52,10 +52,10 @@ if (!isset($IS_API) || !$IS_API) {
 
     $ACTIVE_THEME = Config::get('ACTIVE_THEME');
     array_unshift($classdirs, "../themes/{$ACTIVE_THEME}/controllers");
+}
 
-    $INSTALLED_PLUGINS = Json::decode(file_get_contents(__DIR__ . '/../plugins.json'));
-    foreach ($INSTALLED_PLUGINS as $p) {
-        $classname = $p['className'];
-        $classname::init();
-    }
+$INSTALLED_PLUGINS = Json::decode(file_get_contents(__DIR__ . '/../plugins.json'));
+foreach ($INSTALLED_PLUGINS as $p) {
+    $classname = $p['className'];
+    $classname::init();
 }

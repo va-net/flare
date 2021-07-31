@@ -1006,4 +1006,17 @@ Router::add('/repair', function () {
     ]);
 });
 
+// Get/Search Plugins
+Router::add('/plugins', function () {
+    global $user;
+    if (!$user->hasPermission('site')) accessDenied();
+
+    $search = empty(Input::get('search')) ? null : Input::get('search');
+    $page = empty(Input::get('page')) ? 1 : Input::get('page');
+    echo Json::encode([
+        'status' => ErrorCode::NoError,
+        'result' => VANet::getPlugins($search, Input::get('prerelease') == 'true', $page),
+    ]);
+});
+
 Router::run('/api.php');

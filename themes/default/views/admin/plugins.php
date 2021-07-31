@@ -22,8 +22,8 @@ $ACTIVE_CATEGORY = 'plugins';
         <?php require_once __DIR__ . '/../../includes/navbar.php'; ?>
     </nav>
     <div class="container-fluid">
-        <div class="container-fluid mt-4 text-center" style="overflow: auto;">
-            <div class="row m-0 p-0">
+        <div class="mt-4 text-center container-fluid" style="overflow: auto;">
+            <div class="p-0 m-0 row">
                 <?php require_once __DIR__ . '/../../includes/sidebar.php'; ?>
                 <div class="col-lg-9 main-content">
                     <div id="loader-wrapper">
@@ -32,14 +32,14 @@ $ACTIVE_CATEGORY = 'plugins';
                     <div class="loaded">
                         <?php
                         if (file_exists(__DIR__ . '/../install/install.php') && !file_exists(__DIR__ . '/../.development')) {
-                            echo '<div class="alert alert-danger text-center">The Install Folder still Exists! Please delete it immediately, it poses a severe security risk.</div>';
+                            echo '<div class="text-center alert alert-danger">The Install Folder still Exists! Please delete it immediately, it poses a severe security risk.</div>';
                         }
 
                         if (Session::exists('error')) {
-                            echo '<div class="alert alert-danger text-center">Error: ' . Session::flash('error') . '</div>';
+                            echo '<div class="text-center alert alert-danger">Error: ' . Session::flash('error') . '</div>';
                         }
                         if (Session::exists('success')) {
-                            echo '<div class="alert alert-success text-center">' . Session::flash('success') . '</div>';
+                            echo '<div class="text-center alert alert-success">' . Session::flash('success') . '</div>';
                         }
                         ?>
                         <h3>Manage Plugins</h3>
@@ -64,42 +64,49 @@ $ACTIVE_CATEGORY = 'plugins';
                         </ul>
 
                         <div class="tab-content">
-                            <div id="store" class="tab-pane container-fluid p-3 fade">
+                            <div id="store" class="p-3 tab-pane container-fluid fade">
                                 <h4>Plugin Store</h4>
                                 <form id="installplugin" method="post" action="/admin/plugins">
                                     <input hidden name="action" value="installplugin" />
                                     <input hidden name="plugin" id="installplugin-plugin" />
+                                    <input hidden name="prerelease" id="installplugin-prerelease" />
                                 </form>
-                                <table class="table table-striped mobile-hidden" id="pluginstable">
-                                    <thead>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Tags</th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php
-                                        foreach (Page::$pageData->all as $p) {
-                                            echo '<tr><td class="align-middle" data-toggle="tooltip" title="' . escape($p["description"]) . '">';
-                                            echo $p["name"];
-                                            echo '</td><td class="align-middle">';
-                                            $tags = implode('</span><span class="badge badge-light mx-1">', $p["tags"]);
-                                            echo '<span class="badge badge-light mx-1">' . $tags . '</span>';
-                                            echo '</td><td class="align-middle">';
-                                            echo '<button class="btn bg-custom installBtn" data-slug="' . $p["slug"] . '" data-name="' . $p["name"] . '"><i class="fa fa-cloud-download-alt"></i></button>';
-                                            echo '</td></tr>';
-                                        }
-                                        ?>
-                                    </tbody>
-                                </table>
-                                <p class="desktop-hidden">Please user a larger screen for the plugins store</p>
+                                <form id="pluginsearch" class="mb-3 d-flex">
+                                    <div class="input-group" style="flex: 1 1 0%;">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-search"></i></span>
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="Search" aria-label="Search" id="pluginsearch-search">
+                                    </div>
+                                    <div style="flex: none;" class="pl-2 d-flex">
+                                        <div class="my-auto custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="pluginsearch-prerelease" />
+                                            <label class="custom-control-label" for="pluginsearch-prerelease">Include Prerelease</label>
+                                        </div>
+                                    </div>
+                                </form>
+                                <div class="card-columns" id="search-results">
+                                    <?php foreach (Page::$pageData->all['data'] as $plugin) : ?>
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h5 class="card-title"><?= $plugin['name'] ?></h5>
+                                                <p class="mb-0 card-text"><?= $plugin['description'] ?></p>
+                                                <p class="card-text"><small class="text-muted">Tags: <?= implode(', ', $plugin['tags']) ?></small></p>
+                                                <?php if ($plugin['installed']) : ?>
+                                                    <button class="btn bg-custom" disabled>Installed</button>
+                                                <?php else : ?>
+                                                    <button class="btn bg-custom" type="submit" form="installplugin" name="plugin" value="<?= $plugin['id'] ?>">Install</button>
+                                                <?php endif; ?>
+                                            </div>
+                                        </div>
+                                    <?php endforeach; ?>
+                                </div>
                             </div>
-                            <div id="installed" class="tab-pane container-fluid p-3 fade">
+                            <div id="installed" class="p-3 tab-pane container-fluid fade">
                                 <h4>Installed Plugins</h4>
                                 <form id="removeplugin" method="post" action="/admin/plugins">
                                     <input hidden name="action" value="removeplugin" />
-                                    <input hidden name="plugin" id="removeplugin-name" />
+                                    <input hidden name="plugin" id="removeplugin-id" />
                                 </form>
                                 <table class="table datatable-nosearch">
                                     <thead>
@@ -113,11 +120,11 @@ $ACTIVE_CATEGORY = 'plugins';
                                         <?php
                                         foreach (Page::$pageData->installed as $p) {
                                             echo '<tr><td class="align-middle">';
-                                            echo $p["name"];
+                                            echo $p['pluginInfo']['name'];
                                             echo '</td><td class="align-middle">';
-                                            echo $p["version"]["tag"];
+                                            echo $p['versionTag'];
                                             echo '</td><td class="align-middle">';
-                                            echo '<button class="btn btn-danger removeBtn" data-name="' . $p["name"] . '"><i class="fa fa-trash"></i></button>';
+                                            echo '<button class="btn btn-danger removeBtn" data-id="' . $p['pluginInfo']['id'] . '" data-name="' . $p['pluginInfo']['name'] . '"><i class="fa fa-trash"></i></button>';
                                             echo '</td></tr>';
                                         }
                                         ?>
@@ -132,38 +139,49 @@ $ACTIVE_CATEGORY = 'plugins';
                             }
                         </style>
                         <script>
-                            if ($("#pluginstable").css('display') != 'none') {
-                                $("#pluginstable").dataTable({
-                                    "paging": true,
-                                    "ordering": true,
-                                    "info": true,
-                                    "pageLength": 10
-                                });
-                            }
-                            $(".installBtn").click(function() {
-                                var name = $(this).data('name');
-                                var slug = $(this).data('slug');
-
-                                var conf = confirm('Are you sure you want to install the plugin "' + name + '"?');
-                                if (conf) {
-                                    $("#installplugin-plugin").val(slug);
-                                    $("#installplugin").submit();
-                                }
-                            });
                             $(".removeBtn").click(function() {
-                                var name = $(this).data('name');
+                                var id = $(this).data('id');
 
-                                var conf = confirm('Are you sure you want to Remove the plugin "' + name + '"?');
+                                var conf = confirm('Are you sure you want to Remove the plugin "' + $(this).data('name') + '"?');
                                 if (conf) {
-                                    $("#removeplugin-name").val(name);
+                                    $("#removeplugin-id").val(id);
                                     $("#removeplugin").submit();
                                 }
                             });
+
+                            const refreshPlugins = function() {
+                                $("#search-results").text('Loading...');
+                                $.get(
+                                    `/api.php/plugins?search=${encodeURIComponent($("#pluginsearch-search").val())}&prerelease=${$("#pluginsearch-prerelease").is(':checked') ? 'true' : 'false'}`,
+                                    function(data, status) {
+                                        $("#search-results").html(data.result.data.map((p) => {
+                                            return `<div class="card">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">${p.name}</h5>
+                                                    <p class="mb-0 card-text">${p.description}</p>
+                                                    <p class="card-text"><small class="text-muted">Tags: ${p.tags.join(', ')}</small></p>
+                                                    ${p.installed ? '<button class="btn bg-custom" disabled>Installed</button>' : `<button class="btn bg-custom" type="submit" form="installplugin" name="plugin" value="${p.id}">Install</button>`}
+                                                </div>
+                                            </div>`;
+                                        }).join(''));
+                                    }
+                                )
+                            };
+
+                            $("#pluginsearch").submit(function(e) {
+                                e.preventDefault();
+                                refreshPlugins();
+                            });
+
+                            $("#pluginsearch-prerelease").change(function(e) {
+                                $("#installplugin-prerelease").val(e.target.checked ? '1' : '0');
+                                refreshPlugins();
+                            })
                         </script>
                     </div>
                 </div>
             </div>
-            <footer class="container-fluid text-center">
+            <footer class="text-center container-fluid">
                 <?php require_once __DIR__ . '/../../includes/footer.php'; ?>
             </footer>
         </div>

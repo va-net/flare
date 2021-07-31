@@ -453,4 +453,96 @@ class VANet
 
         return $response['result'];
     }
+
+    /**
+     * @return array
+     * @param string|null $search Search Term
+     * @param bool $prerelease Whether to include prereleased plugins
+     * @param int $page Page Number
+     */
+    public static function getPlugins($search = null, $prerelease = false, $page = 1)
+    {
+        if ($search != null) $search = urlencode($search);
+
+        $search = empty($search) ? '' : "search={$search}&";
+        $page = 'page=' . urlencode($page) . '&';
+        $prerelease = 'prerelease=' . ($prerelease ? 'true' : 'false');
+
+        $req = new HttpRequest(self::$BASE . "/flare/v1/plugins?{$search}{$page}{$prerelease}");
+        $req->execute();
+        $response = Json::decode($req->getResponse());
+
+        if ($req->getHttpCode() != 200 || !$response || $response['status'] != 0) {
+            return [];
+        }
+
+        if (isset($response['result']['data'])) {
+            $response['result']['data'] = array_map(function ($x) {
+                $x['installed'] = false;
+                foreach ($GLOBALS['INSTALLED_PLUGINS'] as $i) {
+                    if ($i['pluginInfo']['id'] == $x['id']) $x['installed'] = true;
+                }
+
+                return $x;
+            }, $response['result']['data']);
+        }
+
+        return $response['result'];
+    }
+
+    /**
+     * @return array|null
+     * @param string $id Plugin ID
+     */
+    public static function getPlugin($id)
+    {
+        $req = new HttpRequest(self::$BASE . "/flare/v1/plugins/" . urlencode($id));
+        $req->execute();
+        $response = Json::decode($req->getResponse());
+
+        if ($req->getHttpCode() != 200 || !$response || $response['status'] != 0) {
+            return null;
+        }
+
+        return $response['result'];
+    }
+
+    /**
+     * @return array|null
+     * @param string $id Plugin ID
+     * @param bool $prerelease Whether to install prerelease version
+     */
+    public static function pluginInstallDetails($id, $prerelease = false)
+    {
+        $key = Config::get('INSTANCE_ID');
+
+        $req = new HttpRequest(self::$BASE . '/flare/v1/plugins/' . urlencode($id) . ($prerelease ? '?prerelease=true' : ''));
+        // if (!empty($key)) $req->setRequestHeaders(["X-Api-Key: {$key}"]);
+
+        $req->setMethod('POST')
+            ->execute();
+
+        $response = Json::decode($req->getResponse());
+        if ($req->getHttpCode() != 200 || !$response || $response['status'] != 0) {
+            return null;
+        }
+
+        return $response['result'];
+    }
+
+    /**
+     * @return void
+     * @param string $id Plugin ID
+     */
+    public static function pluginUninstalled($id)
+    {
+        $key = Config::get('INSTANCE_ID');
+        if (empty($key)) return;
+
+        $req = new HttpRequest(self::$BASE . '/flare/v1/plugins/' . urlencode($id));
+        $req->setRequestHeaders(["X-Api-Key: {$key}"]);
+
+        $req->setMethod('DELETE')
+            ->execute();
+    }
 }
