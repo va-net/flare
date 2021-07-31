@@ -517,7 +517,7 @@ class VANet
         $key = Config::get('INSTANCE_ID');
 
         $req = new HttpRequest(self::$BASE . '/flare/v1/plugins/' . urlencode($id) . ($prerelease ? '?prerelease=true' : ''));
-        // if (!empty($key)) $req->setRequestHeaders(["X-Api-Key: {$key}"]);
+        if (!empty($key)) $req->setRequestHeaders(["X-Api-Key: {$key}"]);
 
         $req->setMethod('POST')
             ->execute();
