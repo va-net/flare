@@ -179,7 +179,7 @@ Page::setTitle('Home - ' . Page::$pageData->va_name);
                                 </tbody>
                             </table>
                         </section>
-                        <?php if (Page::$pageData->is_gold) : ?>
+                        <?php if (Page::$pageData->is_gold && VANet::featureEnabled('events')) : ?>
                             <!-- events -->
                             <section id="events" class="mb-3">
                                 <h3>Upcoming Events</h3>
@@ -208,7 +208,7 @@ Page::setTitle('Home - ' . Page::$pageData->va_name);
         </div>
     </div>
     <script>
-        <?php if (Page::$pageData->is_gold) : ?>
+        <?php if (Page::$pageData->is_gold && VANet::featureEnabled('events')) : ?>
             // Load Events
             $.get("/api.php/events", function(data) {
                 $("#events-table").html(data.result.map(function(e) {

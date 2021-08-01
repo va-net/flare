@@ -2,7 +2,7 @@
 Page::setTitle('Home - ' . Page::$pageData->va_name);
 require_once __DIR__ . '/../includes/header.php';
 ?>
-<div id="content" x-data="{ data: { events: null, pireps: null, news: null } }" x-init="inithome(data)">
+<div id="content" x-data="{ data: { events: null, pireps: null, news: null, atc: null, } }" x-init="inithome(data)">
     <div class="w-full p-5 shadow-lg bg-primary text-primary-text h-36 pt-7">
         <h2 class="text-4xl font-bold text-center">
             Welcome, <?= escape(Page::$pageData->user->data()->name) ?>
@@ -17,7 +17,7 @@ require_once __DIR__ . '/../includes/header.php';
             </div>
             <div>
                 <h3 class="text-lg font-bold">PIREPs Filed</h3>
-                <h5 class="font-semibold" x-text="data.pireps?.length || '...'"></h5>
+                <h5 class="font-semibold" x-text="data.pireps?.length === undefined ? '...' : data.pireps.length"></h5>
             </div>
         </div>
         <div class="flex items-center flex-auto w-full p-4 bg-white border rounded shadow-lg min-h-20">
@@ -61,7 +61,7 @@ require_once __DIR__ . '/../includes/header.php';
     <div class="w-full px-5 space-y-4 md:grid md:grid-cols-12 md:gap-4 md:space-y-0">
         <!-- Recent PIREPs (Silver) or Upcoming Events (Gold) -->
         <div class="col-span-7 p-4 border border-gray-200 rounded-lg shadow-lg dark:border-transparent dark:bg-white dark:bg-opacity-5 dark:text-white">
-            <?php if (Page::$pageData->is_gold) : ?>
+            <?php if (Page::$pageData->is_gold && VANet::featureEnabled('events')) : ?>
                 <h3 class="mb-3 text-2xl font-bold">
                     Upcoming Events
                 </h3>
@@ -121,12 +121,32 @@ require_once __DIR__ . '/../includes/header.php';
                 </button>
             </form>
         </div>
-        <!-- Statistics -->
+        <!-- User Statistics (Silver) or Active ATC (Gold) -->
         <div class="col-span-5 p-4 border border-gray-200 rounded-lg shadow-lg dark:border-transparent dark:bg-white dark:bg-opacity-5 dark:text-white">
-            <h3 class="mb-3 text-2xl font-bold">
-                Your Statistics
-            </h3>
-            <ul x-html="pirepstats(data.pireps)"></ul>
+            <?php if (Page::$pageData->is_gold && VANet::featureEnabled('airline-atc')) : ?>
+                <h3 class="mb-3 text-2xl font-bold">
+                    Active ATC - Expert Server
+                </h3>
+                <div class="table-wrapper">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Airport</th>
+                                <th>Station</th>
+                                <th class="hidden md:table-cell">
+                                    Controller
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody x-html="atctable(data.atc)"></tbody>
+                    </table>
+                </div>
+            <?php else : ?>
+                <h3 class="mb-3 text-2xl font-bold">
+                    Your Statistics
+                </h3>
+                <ul x-html="pirepstats(data.pireps)"></ul>
+            <?php endif; ?>
         </div>
         <!-- News Feed -->
         <div class="col-span-7 p-4 space-y-2 border border-gray-200 rounded-lg shadow-lg dark:border-transparent dark:bg-white dark:bg-opacity-5 dark:text-white" x-html="newsfeed(data.news)">

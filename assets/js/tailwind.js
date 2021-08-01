@@ -142,6 +142,45 @@ function newsfeed(data) {
     );
 }
 
+function atctable(data) {
+    if (!data) {
+        return `<tr class="border-b-2 border-black dark:border-white hover:bg-black hover:bg-opacity-20">
+            <td class="px-3 py-2 text-center" colspan="3">Loading...</td>
+        </tr>`;
+    }
+
+    const stationTypes = [
+        'Ground',
+        'Tower',
+        'Unicom',
+        'Delivery',
+        'Approach',
+        'Departure',
+        'Center',
+        'ATIS',
+        'Aircraft',
+        'Recorded',
+        'Unknown',
+        'Unused',
+    ];
+
+    return data
+        .map(
+            (s) => `
+                <tr>
+                    <td>
+                        ${s.airportName || 'N/A'}
+                    </td><td>
+                        ${stationTypes[s.type]}
+                    </td><td class="hidden md:table-cell">
+                        ${s.username}
+                    </td>
+                </tr>
+            `
+        )
+        .join('');
+}
+
 function inithome(data) {
     fetch('/api.php/events')
         .then((r) => r.json())
@@ -152,6 +191,9 @@ function inithome(data) {
     fetch('/api.php/news')
         .then((r) => r.json())
         .then((r) => (data.news = r.result));
+    fetch('/api.php/atc')
+        .then((r) => r.json())
+        .then((r) => (data.atc = r.result));
 }
 
 function initevents(data) {

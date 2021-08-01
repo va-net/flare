@@ -620,6 +620,11 @@ class VANet
         return $res['result'];
     }
 
+    /**
+     * @return array|null
+     * @param string $id Plugin ID
+     * @param bool $prerelease Whether to install prerelease version
+     */
     public static function pluginUpdateDetails($id, $prerelease = false)
     {
         $key = Config::get('INSTANCE_ID');
@@ -636,5 +641,25 @@ class VANet
         }
 
         return $response['result'];
+    }
+
+    /**
+     * @return array|null
+     * @param string $server `casual`, `training`, or `expert`
+     */
+    public static function getAtc($server = 'expert')
+    {
+        if (!self::isGold()) return null;
+
+        $key = Config::get('vanet/api_key');
+
+        $req = new HttpRequest(self::$BASE . '/airline/v1/atc/' . urlencode($server));
+        $req->setRequestHeaders(["X-Api-Key: {$key}"])
+            ->execute();
+
+        $data = Json::decode($req->getResponse());
+        if (!$data || $data['status'] != 0) return null;
+
+        return $data['result'];
     }
 }

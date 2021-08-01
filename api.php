@@ -1033,4 +1033,17 @@ Router::add('/plugins/updates', function () {
     ]);
 });
 
+// Get Active ATC (Gold Only)
+Router::add('/atc', function () {
+    if (!VANet::isGold()) accessDenied();
+
+    $res = VANet::getAtc(empty(Input::get('server')) ? 'expert' : Input::get('server'));
+    if (!$res) internalError();
+
+    echo Json::encode([
+        'status' => ErrorCode::NoError,
+        'result' => $res
+    ]);
+});
+
 Router::run('/api.php');
