@@ -105,12 +105,12 @@ class Router
 
         if (!$route_match_found) {
             if ($path_match_found) {
-                header("HTTP/1.0 405 Method Not Allowed");
+                http_response_code(405);
                 if (self::$methodNotAllowed) {
                     call_user_func_array(self::$methodNotAllowed, array($path, $method));
                 }
             } else {
-                header("HTTP/1.0 404 Not Found");
+                http_response_code(404);
                 if (self::$pathNotFound) {
                     call_user_func_array(self::$pathNotFound, array($path));
                 }
