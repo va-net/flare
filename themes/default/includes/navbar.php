@@ -26,7 +26,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
     <ul class="navbar-nav">
         <?php
         foreach ($GLOBALS['top-menu'] as $name => $data) {
-            if (isset($data["vanetFeature"]) && !$PROFILE['activeFeatures'][$data['vanetFeature']]) {
+            if (isset($data["vanetFeature"]) && $PROFILE['activeFeatures'][$data['vanetFeature']] === FALSE) {
                 continue;
             }
 
@@ -42,7 +42,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
             $PROFILE = VANet::myInfo();
             $IS_GOLD = $PROFILE['isGoldPlan'];
             foreach ($GLOBALS['pilot-menu'] as $name => $data) {
-                if (isset($data["vanetFeature"]) && !$PROFILE['activeFeatures'][$data['vanetFeature']]) {
+                if (isset($data["vanetFeature"]) && $PROFILE['activeFeatures'][$data['vanetFeature']] === FALSE) {
                     continue;
                 }
 
@@ -74,7 +74,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                     echo '<div id="collapse' . $i . '" class="collapse ' . strtolower(str_replace(" ", "-", $category)) . '">';
 
                     foreach ($items as $label => $data) {
-                        if (isset($data["vanetFeature"]) && !$PROFILE['activeFeatures'][$data['vanetFeature']]) {
+                        if (isset($data["vanetFeature"]) && $PROFILE['activeFeatures'][$data['vanetFeature']] === FALSE) {
                             continue;
                         }
 
@@ -96,16 +96,16 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
         <?php endif; ?>
     </ul>
     <?php if (Page::$pageData->user->isLoggedIn()) : ?>
-        <ul class="navbar-nav ml-auto">
+        <ul class="ml-auto navbar-nav">
             <li class="nav-item mobile-hidden">
                 <a class="nav-link" href="#" id="myNotifications-btn" data-toggle="dropdown" data-target="myNotifications" aria-haspopup="true" aria-expanded="false" style="color: <?= $textcol ?>!important;"><i class="fa fa-bell"></i></a>
-                <div class="dropdown-menu dropdown-menu-right m-2 shadow-lg" id="myNotifications">
+                <div class="m-2 shadow-lg dropdown-menu dropdown-menu-right" id="myNotifications">
                     <?php
                     $notifications = array_map(function ($n) {
                         return '<div class="dropdown-item">
-                            <small class="d-block m-0 p-0"><small class="moment">' . $n->formattedDate . '</small></small>
-                            <span class="d-block m-0 p-0"><i class="fa ' . $n->icon . '"></i>&nbsp;&nbsp;<b>' . escape($n->subject) . '</b></span>
-                            <small class="d-block m-0 p-0">' . escape($n->content) . '</small>
+                            <small class="p-0 m-0 d-block"><small class="moment">' . $n->formattedDate . '</small></small>
+                            <span class="p-0 m-0 d-block"><i class="fa ' . $n->icon . '"></i>&nbsp;&nbsp;<b>' . escape($n->subject) . '</b></span>
+                            <small class="p-0 m-0 d-block">' . escape($n->content) . '</small>
                         </div>';
                     }, Notifications::mine(Page::$pageData->user->data()->id));
                     if (count($notifications) != 0) {

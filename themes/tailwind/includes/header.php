@@ -4,7 +4,12 @@ if (Page::$pageData->user->hasPermission('admin')) {
     foreach ($GLOBALS['admin-menu'] as $name => $data) {
         $subitems = [];
         foreach ($data as $key => $item) {
-            if ($item['vanetFeature'] && !Page::$pageData->va_profile['activeFeatures'][$item['vanetFeature']]) continue;
+            if (
+                isset(Page::$pageData->va_profile['activeFeatures'][$item['vanetFeature']])
+                && Page::$pageData->va_profile['activeFeatures'][$item['vanetFeature']] === FALSE
+            ) {
+                continue;
+            }
 
             if (Page::$pageData->user->hasPermission($item['permission']) && (Page::$pageData->is_gold || !$item['needsGold'])) {
                 $subitems[$key] = $item;
@@ -44,7 +49,7 @@ if (Page::$pageData->user->hasPermission('admin')) {
                 <ul id="sidebar-nav" class="mx-3">
                     <?php foreach ($GLOBALS['pilot-menu'] as $name => $data) : ?>
                         <?php
-                        if (isset($data["vanetFeature"]) && !Page::$pageData->va_profile['activeFeatures'][$data['vanetFeature']]) {
+                        if (isset($data["vanetFeature"]) && Page::$pageData->va_profile['activeFeatures'][$data['vanetFeature']] === FALSE) {
                             continue;
                         }
                         ?>

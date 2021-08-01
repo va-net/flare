@@ -1,9 +1,9 @@
-<div class="col-lg-3 p-3 bg-light text-left mobile-hidden border rounded shadow" id="desktopMenu" style="height: 100%;">
+<div class="p-3 text-left border rounded shadow col-lg-3 bg-light mobile-hidden" id="desktopMenu" style="height: 100%;">
     <h3>Pilot Panel - <?= escape(Page::$pageData->user->data()->callsign) ?></h3>
     <hr class="mt-0 divider" />
     <?php
     foreach ($GLOBALS['pilot-menu'] as $name => $data) {
-        if (isset($data["vanetFeature"]) && !$PROFILE['activeFeatures'][$data['vanetFeature']]) {
+        if (isset($data["vanetFeature"]) && $PROFILE['activeFeatures'][$data['vanetFeature']] === FALSE) {
             continue;
         }
         if ($IS_GOLD || $data["needsGold"] == false) {
@@ -37,7 +37,7 @@
             $j = 0;
             foreach ($items as $label => $data) {
                 if (Page::$pageData->user->hasPermission($data["permission"])) {
-                    if (isset($data["vanetFeature"]) && !$PROFILE['activeFeatures'][$data['vanetFeature']]) {
+                    if (isset($data["vanetFeature"]) && $PROFILE['activeFeatures'][$data['vanetFeature']] === FALSE) {
                         continue;
                     }
 
