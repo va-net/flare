@@ -545,4 +545,75 @@ class VANet
         $req->setMethod('DELETE')
             ->execute();
     }
+
+    /**
+     * @return array|null
+     * @param bool $prerelease Whether Check for Prerelease Updates
+     */
+    public static function pluginUpdates($prerelease = false)
+    {
+        $key = Config::get('INSTANCE_ID');
+        if (empty($key) || $prerelease) return self::manualPluginUpdates($prerelease);
+
+        $req = new HttpRequest(self::$BASE . '/flare/v1/plugins/updates');
+        $req->setRequestHeaders(["X-Api-Key: {$key}"])
+            ->execute();
+        $data = Json::decode($req->getResponse());
+        if (!$data || $data['status'] != 0) {
+            var_dump($data);
+            return null;
+        }
+
+        return $data['result'];
+    }
+
+    /**
+     * @return array|null
+     * @param bool $prerelease Whether Check for Prerelease Updates
+     */
+    private static function manualPluginUpdates($prerelease = false)
+    {
+        $body = [];
+        foreach ($GLOBALS['INSTALLED_PLUGINS'] as $p) {
+            $match = Regex::match("/^v\d+.\d+.\d+-[a-z]+.\d+$/", $p['versionTag']);
+            $body[] = [
+                'pluginId' => $p['pluginInfo']['id'],
+                'versionTag' => $p['versionTag'],
+                'checkPrerelease' => $prerelease || $match,
+            ];
+        }
+
+        $data = HttpRequest::hacky(
+            self::$BASE . '/flare/v1/plugins/updates',
+            'POST',
+            Json::encode($body),
+            ['Content-Type: application/json']
+        );
+        $res = Json::decode($data);
+
+        if (!$res || $res['status'] != 0) {
+            var_dump($res);
+            return null;
+        }
+
+        return $res['result'];
+    }
+
+    public static function pluginUpdateDetails($id, $prerelease = false)
+    {
+        $key = Config::get('INSTANCE_ID');
+
+        $req = new HttpRequest(self::$BASE . '/flare/v1/plugins/updates/' . urlencode($id) . ($prerelease ? '?prerelease=true' : ''));
+        if (!empty($key)) $req->setRequestHeaders(["X-Api-Key: {$key}"]);
+
+        $req->setMethod('POST')
+            ->execute();
+
+        $response = Json::decode($req->getResponse());
+        if ($req->getHttpCode() != 200 || !$response || $response['status'] != 0) {
+            return null;
+        }
+
+        return $response['result'];
+    }
 }

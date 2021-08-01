@@ -1019,4 +1019,18 @@ Router::add('/plugins', function () {
     ]);
 });
 
+// Get Plugin Updates
+Router::add('/plugins/updates', function () {
+    global $user;
+    if (!$user->hasPermission('site')) accessDenied();
+
+    $res = VANet::pluginUpdates(Input::get('prerelease') == 'true');
+    if ($res === null) internalError();
+
+    echo Json::encode([
+        'status' => ErrorCode::NoError,
+        'result' => $res,
+    ]);
+});
+
 Router::run('/api.php');

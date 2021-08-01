@@ -108,6 +108,9 @@ $ACTIVE_CATEGORY = 'plugins';
                                     <input hidden name="action" value="removeplugin" />
                                     <input hidden name="plugin" id="removeplugin-id" />
                                 </form>
+                                <form id="updateplugin" method="post" action="/admin/plugins">
+                                    <input hidden name="action" value="updateplugin" />
+                                </form>
                                 <table class="table datatable-nosearch">
                                     <thead>
                                         <tr>
@@ -123,7 +126,7 @@ $ACTIVE_CATEGORY = 'plugins';
                                             echo $p['pluginInfo']['name'];
                                             echo '</td><td class="align-middle">';
                                             echo $p['versionTag'];
-                                            echo '</td><td class="align-middle">';
+                                            echo '</td><td class="align-middle" id="pluginactions-' . $p['pluginInfo']['id'] . '">';
                                             echo '<button class="btn btn-danger removeBtn" data-id="' . $p['pluginInfo']['id'] . '" data-name="' . $p['pluginInfo']['name'] . '"><i class="fa fa-trash"></i></button>';
                                             echo '</td></tr>';
                                         }
@@ -142,7 +145,7 @@ $ACTIVE_CATEGORY = 'plugins';
                             $(".removeBtn").click(function() {
                                 var id = $(this).data('id');
 
-                                var conf = confirm('Are you sure you want to Remove the plugin "' + $(this).data('name') + '"?');
+                                var conf = confirm('Are you sure you want to remove the plugin "' + $(this).data('name') + '"?');
                                 if (conf) {
                                     $("#removeplugin-id").val(id);
                                     $("#removeplugin").submit();
@@ -153,7 +156,7 @@ $ACTIVE_CATEGORY = 'plugins';
                                 $("#search-results").text('Loading...');
                                 $.get(
                                     `/api.php/plugins?search=${encodeURIComponent($("#pluginsearch-search").val())}&prerelease=${$("#pluginsearch-prerelease").is(':checked') ? 'true' : 'false'}`,
-                                    function(data, status) {
+                                    function(data) {
                                         $("#search-results").html(data.result.data.map((p) => {
                                             return `<div class="card">
                                                 <div class="card-body">
@@ -176,7 +179,20 @@ $ACTIVE_CATEGORY = 'plugins';
                             $("#pluginsearch-prerelease").change(function(e) {
                                 $("#installplugin-prerelease").val(e.target.checked ? '1' : '0');
                                 refreshPlugins();
-                            })
+                            });
+
+                            $.get('/api.php/plugins/updates', function(data) {
+                                var updates = data.result;
+                                if (!updates) return;
+
+                                for (var u of updates) {
+                                    $(`#pluginactions-${u.pluginId}`).prepend(
+                                        `<button class="mr-2 btn bg-custom" type="submit" form="updateplugin" name="plugin" value="${u.pluginId}">
+                                            <i class="fa fa-sync"></i>
+                                        </button>`
+                                    );
+                                }
+                            });
                         </script>
                     </div>
                 </div>
