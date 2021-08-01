@@ -680,5 +680,32 @@
         "queries": [],
         "deletedFiles": [],
         "newFolders": []
+    },
+    {
+        "tag": "v2.0.0-beta.7",
+        "name": "Version 2.0.0 Beta 7",
+        "date": "2021-08-01",
+        "notes": "Reworked plugins system, Performance improvements, Added Active ATC Panel",
+        "prerelease": true,
+        "useUpdater": true,
+        "files": [
+            "assets/tailwind.index.css",
+            "api.php",
+            "classes/controllers/admin/PluginsController.php",
+            "classes/data/VANet.php",
+            "core/init.php",
+            "themes/default/views/admin/plugins.php",
+            "themes/default/includes/navbar.php",
+            "themes/default/includes/sidebar.php",
+            "themes/tailwind/includes/header.php",
+            "classes/app/Router.php",
+            "assets/js/tailwind.js",
+            "themes/default/views/home.php",
+            "themes/tailwind/views/home.php",
+            "plugins.json"
+        ],
+        "queries": [],
+        "deletedFiles": ["core/listeners.php"],
+        "newFolders": []
     }
 ]
