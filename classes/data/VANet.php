@@ -14,6 +14,11 @@ class VANet
     public static $BASE = "https://api.vanet.app";
 
     /**
+     * @var array|null
+     */
+    private static $_profile = null;
+
+    /**
      * @return array|null
      * @param string $key VANet API Key
      */
@@ -26,9 +31,12 @@ class VANet
         }
 
         if ($wasNull) {
+            if (self::$_profile !== null) return self::$_profile;
+
             $cache = Cache::get('myinfo');
             if ($cache != '') {
-                return Json::decode($cache);
+                self::$_profile = Json::decode($cache);
+                return self::$_profile;
             }
         }
 
@@ -42,6 +50,7 @@ class VANet
 
         if ($wasNull) {
             Cache::set('myinfo', Json::encode($response['result']), date("Y-m-d H:i:s", strtotime('+24 hours')));
+            self::$_profile = $response['result'];
         }
 
         return $response['result'];
@@ -71,6 +80,18 @@ class VANet
 
         $myinfo = self::myInfo($key);
         return $myinfo != null;
+    }
+
+    /**
+     * @return bool
+     * @param string $id Feature ID
+     */
+    public static function featureEnabled($id)
+    {
+        $info = self::myInfo();
+        if (!$info) return false;
+
+        return !(isset($info['activeFeatures'][$id]) && $info['activeFeatures'][$id] === FALSE);
     }
 
     /**
