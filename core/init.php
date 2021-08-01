@@ -33,32 +33,29 @@ spl_autoload_register(function ($class) {
     }
 });
 
-if (Config::isReady() && strlen(Config::get('INSTANCE_ID')) < 1 && !file_exists(__DIR__ . '/../.development')) {
-    Analytics::register();
-} elseif (!Config::isReady() && !isset($IS_INSTALLER)) {
-    Redirect::to('/install/install.php');
-}
-
-$ACTIVE_THEME = Config::get('ACTIVE_THEME');
-array_unshift($classdirs, "../themes/{$ACTIVE_THEME}/controllers");
-
 require_once __DIR__ . '/../vendor/autoload.php';
 
 // Listen to required events and import data files
 Events::listen('*', 'Logger::logEvent');
 Events::listen('*', 'Notifications::handleEvent');
-require_once __DIR__ . '/listeners.php';
-require_once __DIR__ . '/menus.php';
+Events::listen('site/updated', 'Analytics::reportUpdate');
 require_once __DIR__ . '/functions.php';
 
-$slash = "/";
-if (strpos(strtolower(php_uname('s')), "window") !== FALSE) {
-    $slash = "\\";
-}
-$INSTALLED_PLUGINS = Json::decode(file_get_contents(__DIR__ . $slash . '..' . $slash . 'plugins.json'));
-foreach ($INSTALLED_PLUGINS as $p) {
-    $classname = $p["class"];
-    $classname::init();
+if (!isset($IS_API) || !$IS_API) {
+    if (Config::isReady() && strlen(Config::get('INSTANCE_ID')) < 1 && !file_exists(__DIR__ . '/../.development')) {
+        Analytics::register();
+    } elseif (!Config::isReady() && !isset($IS_INSTALLER)) {
+        Redirect::to('/install/install.php');
+    }
+
+    require_once __DIR__ . '/menus.php';
+
+    $ACTIVE_THEME = Config::get('ACTIVE_THEME');
+    array_unshift($classdirs, "../themes/{$ACTIVE_THEME}/controllers");
 }
 
-Events::listen('site/updated', 'Analytics::reportUpdate');
+$INSTALLED_PLUGINS = Json::decode(file_get_contents(__DIR__ . '/../plugins.json'));
+foreach ($INSTALLED_PLUGINS as $p) {
+    $classname = $p['className'];
+    $classname::init();
+}
