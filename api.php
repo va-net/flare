@@ -7,6 +7,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+$IS_API = true;
 require_once './core/init.php';
 header('Content-Type: application/json');
 
@@ -133,6 +134,8 @@ if ($user->isLoggedIn()) {
 } else {
     unauthorized();
 }
+
+$guid = '([0-9a-zA-z]{8}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{12})';
 
 // Not Found
 Router::pathNotFound('notFound');
@@ -384,7 +387,7 @@ Router::add('/events', function () {
 });
 
 // View Specific Event
-Router::add('/events/([0-9a-zA-z]{8}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{12})', function ($eventId) {
+Router::add('/events/' . $guid, function ($eventId) {
     if (!VANet::isGold()) badReq(ErrorCode::VaNotGold);
 
     $event = VANet::findEvent($eventId);
@@ -397,7 +400,7 @@ Router::add('/events/([0-9a-zA-z]{8}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4
 });
 
 // Sign up to/pull out of Event
-Router::add('/events/([0-9a-zA-z]{8}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{12})', function ($eventId) {
+Router::add('/events/' . $guid, function ($eventId) {
     global $_authType, $_apiUser;
     if ($_authType == AuthType::ApiKey) {
         accessDenied();
@@ -496,7 +499,7 @@ Router::add('/codeshares', function () {
 }, 'post');
 
 // Get Codeshare Request
-Router::add('/codeshares/([0-9a-zA-z]{8}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{12})', function ($id) {
+Router::add('/codeshares/' . $guid, function ($id) {
     global $user;
     if (!$user->hasPermission('opsmanage')) accessDenied();
 
@@ -510,7 +513,7 @@ Router::add('/codeshares/([0-9a-zA-z]{8}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-
 });
 
 // Import Codeshare
-Router::add('/codeshares/([0-9a-zA-z]{8}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{12})', function ($id) {
+Router::add('/codeshares/' . $guid, function ($id) {
     global $user;
     if (!$user->hasPermission('opsmanage')) accessDenied();
 
@@ -550,7 +553,7 @@ Router::add('/codeshares/([0-9a-zA-z]{8}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-
 }, 'put');
 
 // Delete Codeshare
-Router::add('/codeshares/([0-9a-zA-z]{8}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{12})', function ($id) {
+Router::add('/codeshares/' . $guid, function ($id) {
     global $user;
     if (!$user->hasPermission('opsmanage')) accessDenied();
 
@@ -1000,6 +1003,33 @@ Router::add('/repair', function () {
     echo Json::encode([
         'status' => ErrorCode::NoError,
         'result' => null,
+    ]);
+});
+
+// Get/Search Plugins
+Router::add('/plugins', function () {
+    global $user;
+    if (!$user->hasPermission('site')) accessDenied();
+
+    $search = empty(Input::get('search')) ? null : Input::get('search');
+    $page = empty(Input::get('page')) ? 1 : Input::get('page');
+    echo Json::encode([
+        'status' => ErrorCode::NoError,
+        'result' => VANet::getPlugins($search, Input::get('prerelease') == 'true', $page),
+    ]);
+});
+
+// Get Plugin Updates
+Router::add('/plugins/updates', function () {
+    global $user;
+    if (!$user->hasPermission('site')) accessDenied();
+
+    $res = VANet::pluginUpdates(Input::get('prerelease') == 'true');
+    if ($res === null) internalError();
+
+    echo Json::encode([
+        'status' => ErrorCode::NoError,
+        'result' => $res,
     ]);
 });
 

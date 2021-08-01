@@ -19,34 +19,9 @@ class PluginsController extends Controller
         $data->is_gold = VANet::isGold();
         $data->pending = Pirep::fetchPending();
 
-        $url = "https://raw.githubusercontent.com/va-net/flare-plugins/v2/plugins.tsv";
-        $opts = array(
-            'http' => array(
-                'method' => "GET",
-                'header' => "User-Agent: va-net\r\n"
-            )
-        );
-        $context = stream_context_create($opts);
-        $plugins = file_get_contents($url, false, $context);
-        preg_match_all('/\n.*/m', $plugins, $lines);
-        $data->all = array_map(function ($l) {
-            $segments = explode("\t", $l);
-            $segments = array_map(function ($x) {
-                return trim($x);
-            }, $segments);
-            return [
-                "name" => $segments[0],
-                "slug" => $segments[1],
-                "author" => $segments[2],
-                "version" => $segments[3],
-                "update-date" => $segments[4],
-                "tags" => explode(',', $segments[5]),
-                "description" => $segments[6],
-            ];
-        }, array_filter($lines[0], function ($x) {
-            return !empty($x);
-        }));
-        $data->installed = Json::decode(file_get_contents(__DIR__ . '/../../../plugins.json'));
+
+        $data->installed = $GLOBALS['INSTALLED_PLUGINS'];
+        $data->all = VANet::getPlugins();
 
         $this->render('admin/plugins', $data);
     }
@@ -60,6 +35,8 @@ class PluginsController extends Controller
                 $this->install();
             case 'removeplugin':
                 $this->remove();
+            case 'updateplugin':
+                $this->update();
             default:
                 $this->get();
         }
@@ -67,9 +44,13 @@ class PluginsController extends Controller
 
     private function install()
     {
-        $GH_BRANCH = "v2";
+        $plugin = VANet::pluginInstallDetails(Input::get('plugin'), !empty(Input::get('prerelease')));
 
-        $url = "https://raw.githubusercontent.com/va-net/flare-plugins/{$GH_BRANCH}/plugins.tsv";
+        if ($plugin == null) {
+            Session::flash('error', 'Plugin Not Found');
+            $this->get();
+        }
+
         $opts = array(
             'http' => array(
                 'method' => "GET",
@@ -77,53 +58,22 @@ class PluginsController extends Controller
             )
         );
         $context = stream_context_create($opts);
-        $plugins = file_get_contents($url, false, $context);
-        $pluginbasic = null;
-        preg_match_all('/\n.*/m', $plugins, $lines);
-        foreach ($lines[0] as $l) {
-            $l = trim($l);
-            $l = explode("\t", $l);
-            if ($pluginbasic == null && $l[1] == Input::get('plugin')) {
-                $pluginbasic = array(
-                    "name" => $l[0],
-                    "slug" => $l[1],
-                    "author" => $l[2],
-                    "version" => $l[3],
-                    "update-date" => $l[4],
-                    "tags" => explode(",", $l[5])
-                );
-                break;
-            }
-        }
 
-        $pluginbasic["slug"] = strtolower($pluginbasic["slug"]);
-
-        $version = Updater::getVersion();
-        $pluginadv = Json::decode(file_get_contents("https://raw.githubusercontent.com/va-net/flare-plugins/{$GH_BRANCH}/" . $pluginbasic["slug"] . "/plugin.json", false, $context));
-
-        foreach ($pluginadv["installation"]["files"] as $f) {
-            if (file_exists(__DIR__ . '/../../../' . $f)) {
-                if (unlink(__DIR__ . '/../../../' . $f) !== TRUE) {
-                    Session::flash('error', 'File "' . $f . '" already exists, failed to delete it.');
-                    $this->redirect('/admin/plugins');
-                }
-
-                Logger::log('File "' . __DIR__ . '/../../../' . $f . '" was deleted while installing plugin ' . $pluginbasic["name"]);
-            }
-        }
-        foreach ($pluginadv["installation"]["files"] as $f) {
-            $data = file_get_contents("https://raw.githubusercontent.com/va-net/flare-plugins/{$GH_BRANCH}/" . $pluginbasic["slug"] . "/" . $f, false, $context);
-            file_put_contents(__DIR__ . '/../../../' . $f, $data);
+        foreach ($plugin['fileUrls'] as $name => $url) {
+            $data = file_get_contents($url, false, $context);
+            file_put_contents(__DIR__ . '/../../../' . $name, $data);
         }
 
         $db = DB::getInstance();
-        foreach ($pluginadv["installation"]["queries"] as $q) {
+        foreach ($plugin['sqlQueries'] as $q) {
             $db->query($q);
         }
 
         $currentplugins = Json::decode(file_get_contents(__DIR__ . '/../../../plugins.json'));
-        array_push($currentplugins, $pluginadv);
-        file_put_contents('./plugins.json', Json::encode($currentplugins, true));
+        array_push($currentplugins, $plugin);
+        file_put_contents(__DIR__ . '/../../../plugins.json', Json::encode($currentplugins, true));
+        @$plugin['className']::init();
+        if (method_exists($plugin['className'], 'installed')) @$plugin['className']::installed();
 
         Session::flash('success', 'Plugin Installed!');
         $this->redirect('/admin/plugins?tab=installed');
@@ -132,32 +82,88 @@ class PluginsController extends Controller
     private function remove()
     {
         $plugins = Json::decode(file_get_contents(__DIR__ . '/../../../plugins.json'));
-        $theplugin = null;
+        $GLOBALS['plugin'] = null;
         foreach ($plugins as $p) {
-            if ($theplugin == null && $p["name"] == Input::get('plugin')) {
-                $theplugin = $p;
-                $newplugins = [];
-                foreach ($plugins as $pp) {
-                    if ($pp == $theplugin) continue;
-
-                    $newplugins[] = $pp;
-                }
-                file_put_contents(__DIR__ . '/../../../plugins.json', Json::encode($newplugins, true));
+            if ($GLOBALS['plugin'] == null && $p['pluginInfo']['id'] == Input::get('plugin')) {
+                $GLOBALS['plugin'] = $p;
                 break;
             }
         }
 
-        foreach ($theplugin["installation"]["files"] as $file) {
+        $newplugins = array_filter($plugins, function ($p) {
+            global $plugin;
+            return $p['pluginInfo']['id'] != $plugin['pluginInfo']['id'];
+        });
+        file_put_contents(__DIR__ . '/../../../plugins.json', Json::encode($newplugins, true));
+
+        foreach ($GLOBALS['plugin']['fileUrls'] as $file => $_) {
             $path = __DIR__ . '/../../../' . $file;
             if (!file_exists($path)) continue;
 
             if (unlink($path) === FALSE) {
                 Session::flash('error', 'Failed to remove file - ' . $path);
-                $this->redirect('/admin/plugins');
+                $this->get();
             }
         }
 
+        VANet::pluginUninstalled($GLOBALS['plugin']['pluginInfo']['id']);
         Session::flash('success', 'Plugin Removed');
+        $this->redirect('/admin/plugins?tab=installed');
+    }
+
+    private function update()
+    {
+        $installed = null;
+        foreach ($GLOBALS['INSTALLED_PLUGINS'] as $p) {
+            if ($p['pluginInfo']['id'] == Input::get('plugin')) {
+                $installed = $p;
+                break;
+            }
+        }
+
+        if ($installed == null) {
+            Session::flash('error', 'Failed to Update Plugin');
+            $this->get();
+        }
+
+        $GLOBALS['installed'] = $installed;
+
+        // Only update to prerelease if we are already on a prerelease version
+        $prerelease = Regex::match("/^v\d+.\d+.\d+-[a-z]+.\d+$/", $installed['versionTag']);
+        $plugin = VANet::pluginUpdateDetails(Input::get('plugin'), $prerelease);
+
+        if ($plugin == null) {
+            Session::flash('error', 'Plugin Not Found');
+            $this->redirect('/admin/plugins?tab=installed');
+        }
+
+        $opts = array(
+            'http' => array(
+                'method' => "GET",
+                'header' => "User-Agent: va-net\r\n"
+            )
+        );
+        $context = stream_context_create($opts);
+
+        foreach ($plugin['fileUrls'] as $name => $url) {
+            $data = file_get_contents($url, false, $context);
+            file_put_contents(__DIR__ . '/../../../' . $name, $data);
+        }
+
+        $db = DB::getInstance();
+        foreach ($plugin['sqlQueries'] as $q) {
+            $db->query($q);
+        }
+
+        $GLOBALS['INSTALLED_PLUGINS'] = array_filter($GLOBALS['INSTALLED_PLUGINS'], function ($p) {
+            return $p['pluginInfo']['id'] != $GLOBALS['installed']['pluginInfo']['id'];
+        });
+        $GLOBALS['INSTALLED_PLUGINS'][] = $plugin;
+        file_put_contents(__DIR__ . '/../../../plugins.json', Json::encode($GLOBALS['INSTALLED_PLUGINS'], true));
+        @$plugin['className']::init();
+        if (method_exists($plugin['className'], 'updated')) @$plugin['className']::updated();
+
+        Session::flash('success', 'Plugin Updated!');
         $this->redirect('/admin/plugins?tab=installed');
     }
 }
