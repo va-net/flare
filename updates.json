@@ -707,5 +707,20 @@
         "queries": [],
         "deletedFiles": ["core/listeners.php"],
         "newFolders": []
+    },
+    {
+        "tag": "v2.0.0-beta.8",
+        "name": "Version 2.0.0 Beta 8",
+        "date": "2021-08-01",
+        "notes": "TODO",
+        "prerelease": true,
+        "useUpdater": true,
+        "files": [],
+        "queries": [
+            "CREATE TABLE `awards` ( `id` INT NOT NULL AUTO_INCREMENT , `name` TEXT NOT NULL , `description` TEXT NOT NULL , `imageurl` TEXT NOT NULL , PRIMARY KEY (`id`));",
+            "CREATE TABLE `awards_granted` ( `id` INT NOT NULL AUTO_INCREMENT , `awardid` INT NOT NULL , `pilotid` INT NOT NULL , `dateawarded` DATE NOT NULL , PRIMARY KEY (`id`));"
+        ],
+        "deletedFiles": [],
+        "newFolders": []
     }
 ]

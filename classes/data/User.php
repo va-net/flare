@@ -537,6 +537,19 @@ class User
     }
 
     /**
+     * @return array
+     * @param int|null $id Pilot ID
+     */
+    public function getAwards($id = null)
+    {
+        if (!$id && $this->isLoggedIn()) {
+            $id = $this->data()->id;
+        }
+
+        return Awards::awardsForPilot($id);
+    }
+
+    /**
      * @return int
      */
     public static function pendingCount()
