@@ -49,5 +49,20 @@ $user = Page::$pageData->user->data();
             Save
         </button>
     </div>
+    <div class="col-span-2 p-3 bg-gray-100 border border-gray-200 rounded-md shadow dark:border-0 dark:bg-gray-600">
+        <h2 class="mb-2 text-2xl font-bold">Your Awards</h2>
+        <?php if (count(Page::$pageData->awards) < 1) : ?>
+            <p>None Yet!</p>
+        <?php else : ?>
+            <ul>
+                <?php foreach (Page::$pageData->awards as $a) : ?>
+                    <li>
+                        <img src="<?= $a->imageurl ?>" style="height: 25px; width: auto; display: inline;" />
+                        <?= $a->name ?>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        <?php endif; ?>
+    </div>
 </div>
 <?php require_once __DIR__ . '/../includes/footer.php'; ?>

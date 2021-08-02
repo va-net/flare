@@ -150,6 +150,17 @@ Page::setTitle('Home - ' . Page::$pageData->va_name);
                                     <td class="align-middle"><b>PIREPs</b></td>
                                     <td class="align-middle"><?= escape(Page::$pageData->user->numPirepsFiled()) ?></td>
                                 </tr>
+                                <?php $awards = Page::$pageData->user->getAwards(); ?>
+                                <?php if (count($awards) > 0) : ?>
+                                    <tr>
+                                        <td class="align-middle"><b>Awards</b></td>
+                                        <td class="align-middle">
+                                            <?php foreach ($awards as $a) : ?>
+                                                <img src="<?= $a->imageurl ?>" data-toggle="tooltip" title="<?= $a->name ?>" style="height: 25px; width: auto; margin-right: 2px;" />
+                                            <?php endforeach; ?>
+                                        </td>
+                                    </tr>
+                                <?php endif; ?>
                             </table>
                         </section>
                         <!-- news -->

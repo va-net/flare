@@ -23,6 +23,7 @@ class TailwindController extends Controller
         $this->authenticate($user);
         $data = new stdClass;
         $data->user = $user;
+        $data->awards = $user->getAwards();
         $this->render('profile', $data);
     }
 
