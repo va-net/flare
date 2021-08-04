@@ -20,8 +20,8 @@ Page::setTitle('Routes - ' . Page::$pageData->va_name);
         <?php require_once __DIR__ . '/../includes/navbar.php'; ?>
     </nav>
     <div class="container-fluid">
-        <div class="container-fluid mt-4 text-center" style="overflow: auto;">
-            <div class="row m-0 p-0">
+        <div class="mt-4 text-center container-fluid" style="overflow: auto;">
+            <div class="p-0 m-0 row">
                 <?php require_once __DIR__ . '/../includes/sidebar.php'; ?>
                 <div class="col-lg-9 main-content">
                     <div id="loader-wrapper">
@@ -49,8 +49,8 @@ Page::setTitle('Routes - ' . Page::$pageData->va_name);
                                     <option value="">Any Aircraft</option>
                                     <?php
                                     foreach (Page::$pageData->aircraft as $ac) {
-                                        $notes = $ac->notes == null ? '' : ' - ' . $ac->notes;
-                                        echo '<option value="' . $ac->id . '">' . $ac->name . ' (' . $ac->liveryname . ')' . $notes . '</option>';
+                                        $notes = $ac['notes'] == null ? '' : ' - ' . $ac['notes'];
+                                        echo '<option value="' . $ac['id'] . '">' . $ac['name'] . ' (' . $ac['liveryname'] . ')' . $notes . '</option>';
                                     }
                                     ?>
                                 </select>
@@ -77,7 +77,7 @@ Page::setTitle('Routes - ' . Page::$pageData->va_name);
                     </div>
                 </div>
             </div>
-            <footer class="container-fluid text-center">
+            <footer class="text-center container-fluid">
                 <?php require_once __DIR__ . '/../includes/footer.php'; ?>
             </footer>
         </div>
