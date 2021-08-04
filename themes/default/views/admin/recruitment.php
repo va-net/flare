@@ -23,8 +23,8 @@ $ACTIVE_CATEGORY = 'user-management';
         <?php require_once __DIR__ . '/../../includes/navbar.php'; ?>
     </nav>
     <div class="container-fluid">
-        <div class="container-fluid mt-4 text-center" style="overflow: auto;">
-            <div class="row m-0 p-0">
+        <div class="mt-4 text-center container-fluid" style="overflow: auto;">
+            <div class="p-0 m-0 row">
                 <?php require_once __DIR__ . '/../../includes/sidebar.php'; ?>
                 <div class="col-lg-9 main-content">
                     <div id="loader-wrapper">
@@ -33,14 +33,14 @@ $ACTIVE_CATEGORY = 'user-management';
                     <div class="loaded">
                         <?php
                         if (file_exists(__DIR__ . '/../install/install.php') && !file_exists(__DIR__ . '/../.development')) {
-                            echo '<div class="alert alert-danger text-center">The Install Folder still Exists! Please delete it immediately, it poses a severe security risk.</div>';
+                            echo '<div class="text-center alert alert-danger">The Install Folder still Exists! Please delete it immediately, it poses a severe security risk.</div>';
                         }
 
                         if (Session::exists('error')) {
-                            echo '<div class="alert alert-danger text-center">Error: ' . Session::flash('error') . '</div>';
+                            echo '<div class="text-center alert alert-danger">Error: ' . Session::flash('error') . '</div>';
                         }
                         if (Session::exists('success')) {
-                            echo '<div class="alert alert-success text-center">' . Session::flash('success') . '</div>';
+                            echo '<div class="text-center alert alert-success">' . Session::flash('success') . '</div>';
                         }
                         ?>
                         <h3>Recruitment</h3>
@@ -85,9 +85,9 @@ $ACTIVE_CATEGORY = 'user-management';
                                 foreach (Page::$pageData->users as $user) {
                                     echo '<tr><td class="align-middle">';
                                     echo $user["name"];
-                                    echo '</td><td class="mobile-hidden align-middle">';
+                                    echo '</td><td class="align-middle mobile-hidden">';
                                     echo $user["email"];
-                                    echo '</td><td class="mobile-hidden align-middle">';
+                                    echo '</td><td class="align-middle mobile-hidden">';
                                     $username = explode('/', $user['ifc']);
                                     if ($username === FALSE || count($username) < 5) {
                                         $username = '';
@@ -110,6 +110,10 @@ $ACTIVE_CATEGORY = 'user-management';
                                     echo '</td><td class="align-middle">&nbsp;';
                                     if (!array_key_exists(strtolower($username), $blacklist)) echo '<button class="btn btn-success text-light" value="' . $user['id'] . '" form="accept" type="submit" name="accept"><i class="fa fa-check"></i></button>&nbsp;';
                                     echo '<button value="' . $user['id'] . '" id="delconfirmbtn" data-toggle="modal" data-target="#user' . $x . 'declinemodal" class="btn btn-danger text-light" name="decline"><i class="fa fa-times"></i></button>&nbsp;';
+                                    if (Page::$pageData->is_gold && VANet::featureEnabled('airline-userlookup')) {
+                                        echo '<a href="/admin/users/lookup/' . (empty($user['ifuserid']) ? $username . '?ifc=true' : $user['ifuserid']) . '" class="btn bg-custom">
+                                        <i class="fa fa-search"></i></a>&nbsp;';
+                                    }
                                     echo '<button id="delconfirmbtn" class="btn btn-primary text-light" data-toggle="modal" data-target="#user' . $x . 'modal"><i class="fa fa-plus"></i></button>';
                                     echo '</td>';
                                     $x++;
@@ -195,7 +199,7 @@ $ACTIVE_CATEGORY = 'user-management';
                     </div>
                 </div>
             </div>
-            <footer class="container-fluid text-center">
+            <footer class="text-center container-fluid">
                 <?php require_once __DIR__ . '/../../includes/footer.php'; ?>
             </footer>
         </div>

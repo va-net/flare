@@ -662,4 +662,36 @@ class VANet
 
         return $data['result'];
     }
+
+    /**
+     * @return array|null
+     * @param string $search User ID or IFC
+     * @param bool $isIfc Whether the search value is an IFC Username
+     */
+    public static function lookupUser($search, $isIfc = false)
+    {
+        if (!self::isGold()) return null;
+
+        $key = Config::get('vanet/api_key');
+
+        if ($isIfc) {
+            $req = new HttpRequest(self::$BASE . '/airline/v1/user?ifc=' . urlencode($search));
+            $req->setRequestHeaders([
+                "X-Api-Key: {$key}"
+            ])->execute();
+            $res = Json::decode($req->getResponse());
+            if (!$res || $res['status'] != 0) return null;
+
+            return $res['result'];
+        }
+
+        $req = new HttpRequest(self::$BASE . '/airline/v1/user/' . urlencode($search));
+        $req->setRequestHeaders([
+            "X-Api-Key: {$key}"
+        ])->execute();
+        $res = Json::decode($req->getResponse());
+        if (!$res || $res['status'] != 0) return null;
+
+        return $res['result'];
+    }
 }

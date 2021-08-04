@@ -297,4 +297,24 @@ class UsersController extends Controller
 
         $this->get_awards();
     }
+
+    public function lookup($value)
+    {
+        $gold = VANet::isGold();
+        if (!$gold || !VANet::featureEnabled('airline-userlookup')) $this->notFound();
+
+        $user = new User;
+        $this->authenticate($user, true, 'usermanage');
+        $data = new stdClass;
+        $data->user = $user;
+        $data->is_gold = $gold;
+        $data->lookup = VANet::lookupUser($value, !empty(Input::get('ifc')));
+        if ($data->lookup == null) {
+            $this->notFound(
+                'User Not Found. If searching by IFC Username, the pilot must have Show Username enabled in Infinite Flight.'
+            );
+        }
+
+        $this->render('admin/user_lookup', $data);
+    }
 }

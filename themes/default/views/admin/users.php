@@ -69,6 +69,13 @@ $ACTIVE_CATEGORY = 'user-management';
                                         $rowClassName = 'inactive-row';
                                         $rowStyle = 'display: none;';
                                     }
+                                    $username = explode('/', $user['ifc']);
+                                    if ($username === FALSE || count($username) < 5) {
+                                        $username = '';
+                                    } else {
+                                        $username = $username[4];
+                                    }
+
                                     echo '<tr class="' . $rowClassName . '" style="' . $rowStyle . '"><td class="align-middle">';
                                     echo $user["callsign"];
                                     echo '</td><td class="align-middle mobile-hidden">';
@@ -78,6 +85,10 @@ $ACTIVE_CATEGORY = 'user-management';
                                     echo '</td><td class="align-middle">';
                                     echo $user["status"];
                                     echo '</td><td class="align-middle">';
+                                    if (Page::$pageData->is_gold && VANet::featureEnabled('airline-userlookup')) {
+                                        echo '<a href="/admin/users/lookup/' . (empty($user['ifuserid']) ? $username . '?ifc=true' : $user['ifuserid']) . '" class="btn bg-custom">
+                                        <i class="fa fa-search"></i></a>&nbsp;';
+                                    }
                                     echo '<button class="btn btn-primary text-light userEdit" data-callsign="' . $user['callsign'] . '" 
                                     data-name="' . $user['name'] . '" data-email="' . $user['email'] . '" data-ifc="' . $user['ifc'] . '" 
                                     data-joined="' . date_format(date_create($user['joined']), 'Y-m-d') . '" data-status="' . $user['status'] . '" 

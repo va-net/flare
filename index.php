@@ -73,6 +73,7 @@ Router::add('/admin/users/staff', [new UsersController, 'get_staff']);
 Router::add('/admin/users/staff', [new UsersController, 'post_staff'], 'post');
 Router::add('/admin/users/awards', [new UsersController, 'get_awards']);
 Router::add('/admin/users/awards', [new UsersController, 'post_awards'], 'post');
+Router::add('/admin/users/lookup/(.+)', [new UsersController, 'lookup']);
 Router::add('/admin/pireps', [new AdminPirepsController, 'get']);
 Router::add('/admin/pireps', [new AdminPirepsController, 'post'], 'post');
 Router::add('/admin/pireps/multipliers', [new AdminPirepsController, 'get_multis']);
