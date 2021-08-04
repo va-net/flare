@@ -207,4 +207,94 @@ class UsersController extends Controller
         Session::flash('success', 'Staff Member Edited Successfully!');
         $this->redirect('/admin/users/staff');
     }
+
+    public function get_awards()
+    {
+        $user = new User;
+        $this->authenticate($user, true, 'usermanage');
+        $data = new stdClass;
+        $data->user = $user;
+        $data->all_users = $user->getAllUsers();
+        $data->awards = Awards::getAll();
+        $this->render('admin/awards', $data);
+    }
+
+    public function post_awards()
+    {
+        $user = new User;
+        $this->authenticate($user, true, 'usermanage');
+
+        switch (Input::get('action')) {
+            case 'addaward':
+                $this->award_create();
+            case 'editaward':
+                $this->award_edit();
+            case 'delaward':
+                $this->award_delete();
+            case 'giveaward':
+                $this->award_give();
+            default:
+                $this->get_awards();
+        }
+    }
+
+    private function award_create()
+    {
+        $res = Awards::create([
+            'name' => Input::get('name'),
+            'description' => Input::get('description'),
+            'imageurl' => Input::get('image'),
+        ]);
+
+        if ($res) {
+            Session::flash('success', 'Award Created');
+        } else {
+            Session::flash('error', 'Failed to Create Award');
+        }
+
+        $this->get_awards();
+    }
+
+    private function award_edit()
+    {
+        $res = Awards::update(Input::get('id'), [
+            'name' => Input::get('name'),
+            'description' => Input::get('description'),
+            'imageurl' => Input::get('image'),
+        ]);
+
+        if ($res) {
+            Session::flash('success', 'Award Updated');
+        } else {
+            Session::flash('error', 'Failed to Update Award');
+        }
+
+        $this->get_awards();
+    }
+
+    private function award_delete()
+    {
+        $res = Awards::delete(Input::get('id'));
+
+        if ($res) {
+            Session::flash('success', 'Award Deleted');
+        } else {
+            Session::flash('error', 'Failed to Delete Award');
+        }
+
+        $this->get_awards();
+    }
+
+    private function award_give()
+    {
+        $res = Awards::give(Input::get('award'), Input::get('pilot'));
+
+        if ($res) {
+            Session::flash('success', 'Award Given');
+        } else {
+            Session::flash('error', 'Failed to Give Award');
+        }
+
+        $this->get_awards();
+    }
 }

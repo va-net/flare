@@ -9,7 +9,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 $GLOBALS['admin-menu']["Operations Management"] = array(
     "Manage Ranks" => [
         "link" => "/admin/operations/ranks",
-        "icon" => "fa-medal",
+        "icon" => "fa-chart-line",
         "permission" => "opsmanage",
         "needsGold" => false,
         "vanetFeature" => null,
@@ -70,7 +70,14 @@ $GLOBALS['admin-menu']["User Management"] = array(
         "permission" => "recruitment",
         "needsGold" => false,
         "badgeid" => "recruitment",
-    ]
+    ],
+    "Awards" => [
+        "link" => "/admin/users/awards",
+        "icon" => "fa-medal",
+        "permission" => "usermanage",
+        "needsGold" => false,
+        "badgeid" => null,
+    ],
 );
 
 $GLOBALS['admin-menu']["PIREP Management"] = array(
