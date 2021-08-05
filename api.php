@@ -175,9 +175,9 @@ Router::add('/pireps', function () {
 
 // View Specific PIREP
 Router::add('/pireps/([0-9]+)', function ($pirepId) {
-    global $_apiUser;
+    global $user;
 
-    $pirep = Pirep::find($pirepId, $_apiUser->id);
+    $pirep = Pirep::find($pirepId, $user->hasPermission('pirepmanage') ? null : $user->data()->id);
     if ($pirep === FALSE) {
         notFound();
     }
@@ -197,8 +197,8 @@ Router::add('/pireps/([0-9]+)', function ($pirepId) {
 });
 
 // Edit PIREP
-Router::add('/pireps/([0-9]*)', function ($pirepId) {
-    global $_apiUser, $_authType;
+Router::add('/pireps/([0-9]+)', function ($pirepId) {
+    global $_authType;
     if ($_authType == AuthType::ApiKey) {
         accessDenied();
     }
@@ -217,6 +217,88 @@ Router::add('/pireps/([0-9]*)', function ($pirepId) {
         "result" => null,
     ]);
 }, 'put');
+
+// View PIREP Comments
+Router::add('/pireps/([0-9]+)/comments', function ($pirepId) {
+    global $user;
+
+    $pirep = Pirep::find($pirepId, $user->hasPermission('pirepmanage') ? null : $user->data()->id);
+    if ($pirep === FALSE) {
+        notFound();
+    }
+
+    $comments = Pirep::getComments($pirepId);
+    if ($comments === NULL) internalError();
+
+    echo Json::encode([
+        "status" => ErrorCode::NoError,
+        "result" => $comments,
+    ]);
+});
+
+// Add PIREP Comment
+Router::add('/pireps/([0-9]+)/comments', function ($pirepId) {
+    global $_authType, $user;
+    if ($_authType == AuthType::ApiKey) {
+        accessDenied();
+    }
+
+    $pirep = Pirep::find($pirepId, $user->hasPermission('pirepmanage') ? null : $user->data()->id);
+    if ($pirep === FALSE) {
+        notFound();
+    }
+
+    $res = Pirep::addComment([
+        'content' => Input::get('content'),
+        'pirepid' => $pirepId,
+        'userid' => $user->data()->id,
+    ]);
+    if (!$res) internalError();
+
+    echo Json::encode([
+        'status' => ErrorCode::NoError,
+        'result' => null,
+    ]);
+}, 'post');
+
+// Get PIREP Comment
+Router::add('/pireps/([0-9]+)/comments/([0-9]+)', function ($pirepId, $commentId) {
+    global $user;
+
+    $pirep = Pirep::find($pirepId, $user->hasPermission('pirepmanage') ? null : $user->data()->id);
+    if ($pirep === FALSE) {
+        notFound();
+    }
+
+    try {
+        $comment = Pirep::findComment($commentId);
+    } catch (Exception $e) {
+        internalError();
+    }
+
+    if (!$comment) notFound();
+
+    return Json::encode([
+        'status' => ErrorCode::NoError,
+        'result' => $comment,
+    ]);
+});
+
+// Delete PIREP Comment
+Router::add('/pireps/([0-9]+)/comments/([0-9]+)', function ($pirepId, $commentId) {
+    global $_authType, $user;
+    if ($_authType == AuthType::ApiKey || !$user->hasPermission('pirepmanage')) {
+        accessDenied();
+    }
+
+    $res = Pirep::deleteComment($commentId);
+    if (!$res) internalError();
+
+    echo Json::encode([
+        'status' => ErrorCode::NoError,
+        'result' => null,
+    ]);
+}, 'delete');
 
 // File PIREP
 Router::add('/pireps', function () {
