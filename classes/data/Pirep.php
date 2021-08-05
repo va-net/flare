@@ -257,4 +257,83 @@ class Pirep
 
         return false;
     }
+
+    /**
+     * @return array|null
+     * @param int $pirepid PIREP ID
+     */
+    public static function getComments($pirepid)
+    {
+        self::init();
+        $q = self::$_db->query(
+            "SELECT c.id, c.content, c.dateposted, p.name AS userName FROM pireps_comments c INNER JOIN pilots p ON c.userid=p.id WHERE c.pirepid=? ORDER BY c.dateposted",
+            [$pirepid]
+        );
+        if ($q->error()) return null;
+
+        return $q->results();
+    }
+
+    /**
+     * @return array|null
+     * @param int $id Comment ID
+     */
+    public static function findComment($id)
+    {
+        self::init();
+        $q = self::$_db->query(
+            "SELECT c.id, c.content, c.dateposted, p.name AS userName FROM pireps_comments c INNER JOIN pilots p ON c.userid=p.id WHERE c.id=?",
+            [$id]
+        );
+        if ($q->error()) throw new Exception("Failed to fetch PIREP comment");
+        if ($q->count() < 1) return null;
+
+        return $q->first();
+    }
+
+    /**
+     * @return bool
+     * @param array $obj Comment Data
+     */
+    public static function addComment($obj)
+    {
+        self::init();
+
+        $q = self::$_db->insert('pireps_comments', $obj);
+
+        if (!$q->error()) Events::trigger('pirep/comment_added', $obj);
+
+        return !$q->error();
+    }
+
+    /**
+     * @return bool
+     * @param int $id Comment ID
+     * @param array $obj Updated Comment Data
+     */
+    public static function updateComment($id, $obj)
+    {
+        self::init();
+
+        $q = self::$_db->update('pireps_comments', $id, 'id', $obj);
+
+        if (!isset($obj['id'])) $obj['id'] = $id;
+        if (!$q->error()) Events::trigger('pirep/comment_updated', $obj);
+
+        return !$q->error();
+    }
+
+    /**
+     * @return bool
+     * @param int $id Comment ID
+     */
+    public static function deleteComment($id)
+    {
+        self::init();
+
+        $q = self::$_db->delete('pireps_comments', ['id', '=', $id]);
+        if (!$q->error()) Events::trigger('pirep/comment_deleted', ['id' => $id]);
+
+        return !$q->error();
+    }
 }
