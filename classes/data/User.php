@@ -377,10 +377,10 @@ class User
             $statuses = array('Pending', 'Approved', 'Denied');
             return array(
                 'id' => $pirep->id,
-                'number' => $pirep->flightnum,
+                'fnum' => $pirep->flightnum,
                 'departure' => $pirep->departure,
                 'arrival' => $pirep->arrival,
-                'date' => $pirep->date,
+                'date' => date_format(date_create($pirep->date), 'Y-m-d'),
                 'status' => $statuses[$pirep->status],
                 'flighttime' => $pirep->flighttime,
                 'multi' => $pirep->multi,
