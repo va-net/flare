@@ -213,6 +213,8 @@ async function handleComment(e, val, pirep, setComments, setValue) {
     e.preventDefault();
     if (!val) return;
 
+    setValue('');
+
     const data = new FormData();
     data.append('content', val);
     const req = await fetch(
@@ -236,7 +238,6 @@ async function handleComment(e, val, pirep, setComments, setValue) {
     );
     const res = await req2.json();
     setComments(res.result);
-    setValue('');
 }
 
 document.addEventListener('alpine:initializing', () => {
