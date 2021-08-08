@@ -14,6 +14,9 @@ Page::setTitle('All PIREPs - ' . Page::$pageData->va_name);
 
 <head>
     <?php require_once __DIR__ . '/../includes/header.php'; ?>
+    <script type="application/json" id="all-pireps">
+        <?= Json::encode(Page::$pageData->pireps) ?>
+    </script>
 </head>
 
 <body>
@@ -21,8 +24,8 @@ Page::setTitle('All PIREPs - ' . Page::$pageData->va_name);
         <?php require_once __DIR__ . '/../includes/navbar.php'; ?>
     </nav>
     <div class="container-fluid">
-        <div class="container-fluid mt-4 text-center" style="overflow: auto;">
-            <div class="row m-0 p-0">
+        <div class="mt-4 text-center container-fluid" style="overflow: auto;">
+            <div class="p-0 m-0 row">
                 <?php require_once __DIR__ . '/../includes/sidebar.php'; ?>
                 <div class="col-lg-9 main-content">
                     <div id="loader-wrapper">
@@ -31,10 +34,10 @@ Page::setTitle('All PIREPs - ' . Page::$pageData->va_name);
                     <div class="loaded">
                         <?php
                         if (Session::exists('error')) {
-                            echo '<div class="alert alert-danger text-center">Error: ' . Session::flash('error') . '</div>';
+                            echo '<div class="text-center alert alert-danger">Error: ' . Session::flash('error') . '</div>';
                         }
                         if (Session::exists('success')) {
-                            echo '<div class="alert alert-success text-center">' . Session::flash('success') . '</div>';
+                            echo '<div class="text-center alert alert-success">' . Session::flash('success') . '</div>';
                         }
                         ?>
                         <h3>My Recent PIREPs</h3>
@@ -53,75 +56,150 @@ Page::setTitle('All PIREPs - ' . Page::$pageData->va_name);
                             </thead>
                             <tbody>
                                 <?php
-                                $x = 0;
                                 foreach (Page::$pageData->pireps as $pirep) {
-                                    echo '<tr><td class="mobile-hidden align-middle">';
-                                    echo $pirep["number"];
+                                    echo '<tr><td class="align-middle mobile-hidden">';
+                                    echo $pirep["fnum"];
                                     echo '</td><td class="align-middle">';
                                     echo $pirep["departure"] . '-' . $pirep["arrival"];
-                                    echo '</td><td class="mobile-hidden align-middle">';
+                                    echo '</td><td class="align-middle mobile-hidden">';
                                     echo date_format(date_create($pirep['date']), 'Y-m-d');
-                                    echo '</td><td class="mobile-hidden align-middle">';
+                                    echo '</td><td class="align-middle mobile-hidden">';
                                     echo $pirep["aircraft"];
                                     echo '</td><td class="align-middle">';
                                     echo $pirep["status"];
                                     echo '</td><td class="align-middle">';
-                                    echo '<button class="btn text-light btn-primary" data-toggle="modal" data-target="#pirep' . $x . '"><i class="fa fa-edit"></i></button>';
+                                    echo '<button class="btn text-light btn-primary editPirep" data-pirepid="' . $pirep['id'] . '"><i class="fa fa-edit"></i></button>';
                                     echo '</td></tr>';
-                                    $x++;
                                 }
                                 ?>
                             </tbody>
                         </table>
 
-                        <?php
-                        $x = 0;
-                        foreach (Page::$pageData->pireps as $pirep) {
-                            echo
-                            '
-                            <div class="modal fade" id="pirep' . $x . '" tabindex="-1" role="dialog" aria-labelledby="pirep' . $x . 'label" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="pirep' . $x . 'title">Edit PIREP</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <div class="modal fade" id="pirepmodal" tabindex="-1" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog modal-xl" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="pirepmodal-title"></h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <form action="/pireps" method="post">
-                                                <input hidden name="action" value="editpirep">
-                                                <input hidden name="id" value="' . $pirep['id'] . '">
-                                                <div class="form-group">
-                                                    <label for="date">Date of Flight</label>
-                                                    <input required type="date" value="' . date_format(date_create($pirep['date']), 'Y-m-d') . '" class="form-control" name="date">
+                                        </button>
+                                    </div>
+                                    <div class="text-left modal-body row">
+                                        <form action="/pireps" method="post" class="mb-4 col-xl mb-md-0">
+                                            <h4>PIREP Details</h4>
+                                            <input hidden name="action" value="editpirep">
+                                            <input hidden name="id" id="pirepmodal-id" value="">
+                                            <div class="form-group">
+                                                <label for="pirepmodal-date">Date of Flight</label>
+                                                <input required type="date" id="pirepmodal-date" class="form-control" name="date" value="">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="pirepmodal-fnum">Flight Number</label>
+                                                <input required type="text" class="form-control" name="fnum" id="pirepmodal-fnum" value="">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="pirepmodal-dep">Departure</label>
+                                                <input required maxlength="4" minlength="4" type="text" id="pirepmodal-dep" value="" class="form-control" name="dep">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="pirepmodal-arr">Arrival</label>
+                                                <input required maxlength="4" minlength="4" type="text" id="pirepmodal-arr" value="" class="form-control" name="arr">
+                                            </div>
+                                            <input type="submit" class="btn bg-custom" value="Save">
+                                        </form>
+                                        <div class="col-xl h-100">
+                                            <h4>PIREP Comments</h4>
+                                            <div id="pirepmodal-comments" class="mb-3">
+                                                <div class="text-center">
+                                                    <div class="spinner-border spinner-border-sm spinner-custom" style="height: 30px; width: 30px;"></div>
                                                 </div>
-                                                <div class="form-group">
-                                                    <label for="fnum">Flight Number</label>
-                                                    <input required type="text" class="form-control" name="fnum" value="' . $pirep['number'] . '">
+                                            </div>
+                                            <form id="pirepmodal-comments-form" class="form-inline d-flex">
+                                                <div style="flex: 1 1 0%;" class="pr-1">
+                                                    <label class="sr-only" for="pirepmodal-comments-form-input">Name</label>
+                                                    <input type="text" class="mb-2 form-control mr-sm-2 w-100" id="pirepmodal-comments-form-input" placeholder="Add Comment...">
                                                 </div>
-                                                <div class="form-group">
-                                                    <label for="dep">Departure</label>
-                                                    <input required maxlength="4" minlength="4" type="text" value="' . $pirep['departure'] . '" class="form-control" name="dep">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="arr">Arrival</label>
-                                                    <input required maxlength="4" minlength="4" type="text" value="' . $pirep['arrival'] . '" class="form-control" name="arr">
-                                                </div>
-                                                <input type="submit" class="btn bg-custom" value="Save">    
-                                            </form>                                      
+
+                                                <button type="submit" class="mb-2 btn bg-custom" style="flex: none;">Send</button>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            ';
-                            $x++;
-                        }
-                        ?>
+                        </div>
+
+                        <script>
+                            $('.editPirep').click(function() {
+                                var id = $(this).data('pirepid');
+                                var all = JSON.parse($("#all-pireps").html());
+                                var pirep = all.find((p) => p.id == id);
+
+                                $("#pirepmodal-title").text(`Edit PIREP: ${pirep.departure}-${pirep.arrival} on ${pirep.date}`);
+                                $("#pirepmodal-id").val(pirep.id);
+                                $("#pirepmodal-date").val(pirep.date);
+                                $("#pirepmodal-fnum").val(pirep.fnum);
+                                $("#pirepmodal-dep").val(pirep.departure);
+                                $("#pirepmodal-arr").val(pirep.arrival);
+                                $("#pirepmodal").modal('show');
+
+                                fetchComments(pirep.id);
+                            });
+
+                            $("#pirepmodal").on('hidden.bs.modal', function() {
+                                $("#pirepmodal-comments").html(`
+                                    <div class="text-center">
+                                        <div class="spinner-border spinner-border-sm spinner-custom" style="height: 30px; width: 30px;"></div>
+                                    </div>
+                                `);
+                            });
+
+                            $("#pirepmodal-comments-form").submit(function(e) {
+                                e.preventDefault();
+
+                                var id = $("#pirepmodal-id").val();
+                                if (!id) return;
+
+                                $.post(`/api.php/pireps/${encodeURIComponent(id)}/comments`, {
+                                    content: $("#pirepmodal-comments-form-input").val(),
+                                }, function(_, status) {
+                                    if (status != 'success') {
+                                        alert('Failed to add comment');
+                                        return;
+                                    }
+
+                                    $("#pirepmodal-comments-form-input").val('');
+                                    $("#pirepmodal-comments").html(`
+                                        <div class="text-center">
+                                            <div class="spinner-border spinner-border-sm spinner-custom" style="height: 30px; width: 30px;"></div>
+                                        </div>
+                                    `);
+                                    fetchComments(id);
+                                });
+                            });
+
+                            function fetchComments(pirepid) {
+                                $.getJSON(`/api.php/pireps/${encodeURIComponent(pirepid)}/comments`, function(result) {
+                                    result = result.result;
+                                    $("#pirepmodal-comments").html('');
+                                    for (const c of result) {
+                                        $("#pirepmodal-comments").append(`
+                                            <div id="pirepmodal-comment-${c.id}" class="mb-1 d-flex">
+                                                <span style="flex: 1 1 0%;">
+                                                    <b>${c.userName}:</b> ${c.content}
+                                                </span>
+                                                <span class="text-sm text-muted" style="flex: none;">
+                                                    <small>${new Date(`${c.dateposted}Z`).toLocaleString()}</small>
+                                                </span>
+                                            </div>
+                                        `);
+                                    }
+                                });
+                            }
+                        </script>
                     </div>
                 </div>
             </div>
-            <footer class="container-fluid text-center">
+            <footer class="text-center container-fluid">
                 <?php require_once __DIR__ . '/../includes/footer.php'; ?>
             </footer>
         </div>
