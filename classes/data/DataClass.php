@@ -16,7 +16,7 @@ interface DataClass
     public static function getAll();
 
     /**
-     * @return array|null
+     * @return object|null
      * @param int $id Object ID
      */
     public static function get($id);

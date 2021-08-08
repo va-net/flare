@@ -26,6 +26,8 @@ class Notifications
         "pirep/accepted" => "handlePirep",
         "pirep/denied" => "handlePirep",
         "user/promoted" => "handlePromotion",
+        "pirep/comment_added" => "handlePirepComment",
+        "award/given" => "handleAward"
     ];
 
     private static function init()
@@ -147,6 +149,10 @@ class Notifications
         }
     }
 
+    /**
+     * @return void
+     * @param Event $ev
+     */
     private static function handlePromotion($ev)
     {
         self::init();
@@ -158,5 +164,38 @@ class Notifications
             if (strlen($content) > 60) return;
         }
         self::notify(0, "fa-medal", "Promotion", $content);
+    }
+
+    /**
+     * @return void
+     * @param Event $ev
+     */
+    private static function handleAward($ev)
+    {
+        $usr = (new User)->getUser($ev->params['pilotid']);
+        $award = Awards::get($ev->params['awardid']);
+        $content = "{$usr->name} was just awarded {$award->name}. Congratulations!";
+        if (strlen($content) > 60) {
+            $content = "{$usr->name} was just awarded {$award->name}";
+            if (strlen($content) > 60) return;
+        }
+        self::notify(0, "fa-star", "Award Given", $content);
+    }
+
+    /**
+     * @return void
+     * @param Event $ev
+     */
+    private static function handlePirepComment($ev)
+    {
+        $pirep = Pirep::find($ev->params['pirepid']);
+        $user = (new User)->getUser($ev->params['userid']);
+        // if ($user->id == $pirep->pilotid) return;
+        $content = "{$user->name} posted a comment on your PIREP from {$pirep->departure} to {$pirep->arrival}.";
+        if (strlen($content) > 60) {
+            $content = "{$user->name} posted a comment on your PIREP.";
+            if (strlen($content) > 60) return;
+        }
+        self::notify(0, "fa-comment", "PIREP Comment", $content);
     }
 }
