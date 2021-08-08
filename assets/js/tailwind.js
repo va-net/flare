@@ -209,6 +209,36 @@ function toggleEventSignup(id) {
     alert('Updating, please wait.');
 }
 
+async function handleComment(e, val, pirep, setComments, setValue) {
+    e.preventDefault();
+    if (!val) return;
+
+    const data = new FormData();
+    data.append('content', val);
+    const req = await fetch(
+        `/api.php/pireps/${encodeURIComponent(pirep)}/comments`,
+        {
+            method: 'POST',
+            credentials: 'include',
+            body: data,
+        }
+    );
+    if (!req.ok) {
+        alert('Failed to add comment');
+        return;
+    }
+
+    const req2 = await fetch(
+        `/api.php/pireps/${encodeURIComponent(pirep)}/comments`,
+        {
+            credentials: 'include',
+        }
+    );
+    const res = await req2.json();
+    setComments(res.result);
+    setValue('');
+}
+
 document.addEventListener('alpine:initializing', () => {
     Alpine.directive(
         'html',

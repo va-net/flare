@@ -12,6 +12,7 @@ class TailwindController extends Controller
         $data->user = $user;
         $data->pirep = Pirep::find($id, $user->hasPermission('pirepmanage') ? null : $user->data()->id);
         if ($data->pirep === FALSE) $this->notFound();
+        $data->comments = Pirep::getComments($id);
         $data->aircraft = $user->getAvailableAircraft();
 
         $this->render('pireps_view', $data);
