@@ -1008,6 +1008,7 @@ Router::add('/menu', function () {
 // Get Menu Badges
 Router::add('/menu/badges', function () {
     global $user;
+    require_once __DIR__ . '/core/menus.php';
     $IS_GOLD = VANet::isGold();
     $ids = [];
     foreach ($GLOBALS['admin-menu'] as $cName => $cData) {
