@@ -317,8 +317,11 @@ $ACTIVE_CATEGORY = 'pirep-management';
                                         var id = $("#editpirep-id").val();
                                         if (!id) return;
 
+                                        var content = $("#editpirep-comments-form-input").val();
+                                        if (!content) return;
+
                                         $.post(`/api.php/pireps/${encodeURIComponent(id)}/comments`, {
-                                            content: $("#editpirep-comments-form-input").val(),
+                                            content,
                                         }, function(_, status) {
                                             if (status != 'success') {
                                                 alert('Failed to add comment');

@@ -156,23 +156,26 @@ Page::setTitle('All PIREPs - ' . Page::$pageData->va_name);
                             $("#pirepmodal-comments-form").submit(function(e) {
                                 e.preventDefault();
 
-                                var id = $("#pirepmodal-id").val();
+                                var id = $("#editpirep-id").val();
                                 if (!id) return;
 
+                                var content = $("#editpirep-comments-form-input").val();
+                                if (!content) return;
+
                                 $.post(`/api.php/pireps/${encodeURIComponent(id)}/comments`, {
-                                    content: $("#pirepmodal-comments-form-input").val(),
+                                    content,
                                 }, function(_, status) {
                                     if (status != 'success') {
                                         alert('Failed to add comment');
                                         return;
                                     }
 
-                                    $("#pirepmodal-comments-form-input").val('');
-                                    $("#pirepmodal-comments").html(`
-                                        <div class="text-center">
-                                            <div class="spinner-border spinner-border-sm spinner-custom" style="height: 30px; width: 30px;"></div>
-                                        </div>
-                                    `);
+                                    $("#editpirep-comments-form-input").val('');
+                                    $("#editpirep-comments").html(`
+                                                <div class="text-center">
+                                                    <div class="spinner-border spinner-border-sm spinner-custom" style="height: 30px; width: 30px;"></div>
+                                                </div>
+                                            `);
                                     fetchComments(id);
                                 });
                             });
