@@ -162,7 +162,7 @@ $ACTIVE_CATEGORY = 'pirep-management';
 
                                 <!-- Edit PIREP Modal -->
                                 <div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="editpirep-modal">
-                                    <div class="modal-dialog modal-lg">
+                                    <div class="modal-dialog modal-xl">
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <h5 class="modal-title">Edit PIREP</h5>
@@ -170,8 +170,9 @@ $ACTIVE_CATEGORY = 'pirep-management';
                                                     <span aria-hidden="true">&times;</span>
                                                 </button>
                                             </div>
-                                            <div class="modal-body">
-                                                <form action="/admin/pireps" method="post">
+                                            <div class="text-left modal-body row">
+                                                <form action="/admin/pireps" method="post" class="mb-4 col-xl mb-xl-0">
+                                                    <h4>PIREP Details</h4>
                                                     <input hidden name="action" value="editpirep">
                                                     <input hidden name="id" id="editpirep-id">
                                                     <div class="form-group">
@@ -252,6 +253,22 @@ $ACTIVE_CATEGORY = 'pirep-management';
                                                     </div>
                                                     <input type="submit" class="btn bg-custom" value="Save">
                                                 </form>
+                                                <div class="col-xl">
+                                                    <h4>PIREP Comments</h4>
+                                                    <div id="editpirep-comments" class="mb-3">
+                                                        <div class="text-center">
+                                                            <div class="spinner-border spinner-border-sm spinner-custom" style="height: 30px; width: 30px;"></div>
+                                                        </div>
+                                                    </div>
+                                                    <form id="editpirep-comments-form" class="form-inline d-flex">
+                                                        <div style="flex: 1 1 0%;" class="pr-1">
+                                                            <label class="sr-only" for="editpirep-comments-form-input">Name</label>
+                                                            <input type="text" class="mb-2 form-control mr-sm-2 w-100" id="editpirep-comments-form-input" placeholder="Add Comment...">
+                                                        </div>
+
+                                                        <button type="submit" class="mb-2 btn bg-custom" style="flex: none;">Send</button>
+                                                    </form>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -281,7 +298,10 @@ $ACTIVE_CATEGORY = 'pirep-management';
                                         $("#editpirep-ftime-mins").val(mins);
                                         formatFlightTime();
                                         $("#editpirep-modal").modal('show');
+
+                                        fetchComments(pirep.id);
                                     });
+
                                     $(".delpirepbtn").click(function() {
                                         var conf = confirm('Are you sure you want to PERMANETLY delete this PIREP?');
                                         if (!conf) return;
@@ -290,6 +310,57 @@ $ACTIVE_CATEGORY = 'pirep-management';
                                         $("#delpirep-id").val(id);
                                         $("#delpirep").submit();
                                     });
+
+                                    $("#editpirep-comments-form").submit(function(e) {
+                                        e.preventDefault();
+
+                                        var id = $("#editpirep-id").val();
+                                        if (!id) return;
+
+                                        $.post(`/api.php/pireps/${encodeURIComponent(id)}/comments`, {
+                                            content: $("#editpirep-comments-form-input").val(),
+                                        }, function(_, status) {
+                                            if (status != 'success') {
+                                                alert('Failed to add comment');
+                                                return;
+                                            }
+
+                                            $("#editpirep-comments-form-input").val('');
+                                            $("#editpirep-comments").html(`
+                                                <div class="text-center">
+                                                    <div class="spinner-border spinner-border-sm spinner-custom" style="height: 30px; width: 30px;"></div>
+                                                </div>
+                                            `);
+                                            fetchComments(id);
+                                        });
+                                    });
+
+                                    $("#editpirep-modal").on('hidden.bs.modal', function() {
+                                        $("#editpirep-comments").html(`
+                                            <div class="text-center">
+                                                <div class="spinner-border spinner-border-sm spinner-custom" style="height: 30px; width: 30px;"></div>
+                                            </div>
+                                        `);
+                                    });
+
+                                    function fetchComments(pirepid) {
+                                        $.getJSON(`/api.php/pireps/${encodeURIComponent(pirepid)}/comments`, function(result) {
+                                            result = result.result;
+                                            $("#editpirep-comments").html('');
+                                            for (const c of result) {
+                                                $("#editpirep-comments").append(`
+                                                    <div id="pirepmodal-comment-${c.id}" class="mb-1 d-flex">
+                                                        <span style="flex: 1 1 0%;">
+                                                            <b>${c.userName}:</b> ${c.content}
+                                                        </span>
+                                                        <span class="text-sm text-muted" style="flex: none;">
+                                                            <small>${new Date(`${c.dateposted}Z`).toLocaleString()}</small>
+                                                        </span>
+                                                    </div>
+                                                `);
+                                            }
+                                        });
+                                    }
                                 </script>
                             </div>
                         </div>

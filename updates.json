@@ -737,7 +737,8 @@
             "assets/js/tailwind.js",
             "assets/tailwind.index.css",
             "themes/tailwind/views/pireps_view.php",
-            "classes/data/Notifications.php"
+            "classes/data/Notifications.php",
+            "themes/default/views/admin/pireps.php"
         ],
         "queries": [
             "CREATE TABLE `awards` ( `id` INT NOT NULL AUTO_INCREMENT , `name` TEXT NOT NULL , `description` TEXT NOT NULL , `imageurl` TEXT NOT NULL , PRIMARY KEY (`id`));",
