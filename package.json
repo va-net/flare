@@ -9,7 +9,6 @@
     "keywords": [],
     "author": "",
     "license": "ISC",
-    "dependencies": {},
     "devDependencies": {
         "@tailwindcss/forms": "^0.3.3",
         "autoprefixer": "^10.2.6",
