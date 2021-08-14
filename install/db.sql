@@ -93,12 +93,12 @@ CREATE TABLE IF NOT EXISTS `route_aircraft` (
 );
 
 CREATE TABLE `notifications` ( 
-  `id` INT NOT NULL AUTO_INCREMENT , 
-  `pilotid` INT NOT NULL , 
-  `icon` VARCHAR(20) NOT NULL , 
-  `subject` VARCHAR(20) NOT NULL , 
-  `content` VARCHAR(60) NOT NULL , 
-  `datetime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , 
+  `id` INT NOT NULL AUTO_INCREMENT, 
+  `pilotid` INT NOT NULL, 
+  `icon` VARCHAR(20) NOT NULL, 
+  `subject` VARCHAR(20) NOT NULL, 
+  `content` VARCHAR(60) NOT NULL, 
+  `datetime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, 
   PRIMARY KEY (`id`)
 );
 
@@ -132,6 +132,31 @@ CREATE TABLE IF NOT EXISTS `cache` (
   `value` TEXT NOT NULL, 
   `expiry` DATETIME NULL, 
   PRIMARY KEY (`name`)
+);
+
+CREATE TABLE IF NOT EXISTS `awards` ( 
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` TEXT NOT NULL,
+  `description` TEXT NOT NULL,
+  `imageurl` TEXT NOT NULL,
+  PRIMARY KEY (`id`)
+);
+
+CREATE TABLE `awards_granted` ( 
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `awardid` INT NOT NULL,
+  `pilotid` INT NOT NULL,
+  `dateawarded` DATE NOT NULL,
+  PRIMARY KEY (`id`)
+);
+
+CREATE TABLE `pireps_comments` ( 
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `pirepid` INT NOT NULL,
+  `userid` INT NOT NULL,
+  `content` TEXT NOT NULL,
+  `dateposted` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
 );
 
 INSERT INTO `options` (`name`, `value`) VALUES ('FORCE_SERVER', '0');
