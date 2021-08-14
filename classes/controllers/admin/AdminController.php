@@ -104,11 +104,16 @@ class AdminController extends Controller
         $this->authenticate($user, true, 'site');
         switch (Input::get('action')) {
             case 'vasettingsupdate':
+                $pre = true;
+                if (!Updater::getVersion()['prerelease']) {
+                    $pre = Config::replace("CHECK_PRERELEASE", Input::get('checkpre'));
+                }
+
                 if (
                     !Config::replace('name', Input::get('vaname'))
                     || !Config::replace('identifier', Input::get('vaabbrv'))
                     || !Config::replace("FORCE_SERVER", Input::get('forceserv'))
-                    || !Config::replace("CHECK_PRERELEASE", Input::get('checkpre'))
+                    || !$pre
                     || !Config::replace("VA_CALLSIGN_FORMAT", Input::get('vaident'))
                     || !Config::replace("VA_LOGO_URL", Input::get('valogo'))
                 ) {
