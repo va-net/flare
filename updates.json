@@ -747,5 +747,22 @@
         ],
         "deletedFiles": [],
         "newFolders": []
+    },
+    {
+        "tag": "v2.0.0-beta.9",
+        "name": "Version 2.0.0 Beta 9",
+        "date": "2021-08-14",
+        "notes": "Various bug fixes",
+        "prerelease": true,
+        "useUpdater": true,
+        "files": [
+            "themes/default/views/admin/pireps.php",
+            "themes/default/views/pireps_all.php",
+            "api.php",
+            "classes/controllers/admin/AdminController.php"
+        ],
+        "queries": ["ALTER TABLE `routes` CHANGE `fltnum` `fltnum` TEXT"],
+        "deletedFiles": [],
+        "newFolders": []
     }
 ]
