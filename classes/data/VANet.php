@@ -185,12 +185,8 @@ class VANet
 
         $response = Json::decode(@HttpRequest::hacky(self::baseUrl() . "/airline/v1/flights", "POST", $data, ["X-Api-Key: {$key}", "Content-Type: application/json"]));
         if (!$response || $response['status'] != 0) {
-            return false;
+            die('Error Connecting to VANet');
         }
-
-        if (!$response || $response['status'] != 0) return false;
-
-        return true;
     }
 
     /**

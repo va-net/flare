@@ -104,22 +104,6 @@ class PirepsController extends Controller
             $this->get_new();
         }
 
-        $response = VANet::sendPirep(array(
-            'aircraftLiveryId' => Aircraft::idToLiveryId(Input::get('aircraft')),
-            'arrivalIcao' => strtoupper(Input::get('arr')),
-            'date' => Input::get('date'),
-            'departureIcao' => strtoupper(Input::get('dep')),
-            'flightTime' => Time::strToSecs(Input::get('ftime')),
-            'fuelUsed' => Input::get('fuel'),
-            'pilotId' => $user->data()->ifuserid
-        ));
-
-        if (!$response) {
-            Session::flash('error', 'There was an Error Connecting to VANet.');
-            $this->get_new();
-            die();
-        }
-
         if (!Pirep::file(array(
             'flightnum' => Input::get('fnum'),
             'departure' => strtoupper(Input::get('dep')),
