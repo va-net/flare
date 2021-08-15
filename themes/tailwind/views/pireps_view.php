@@ -31,11 +31,15 @@ $disabled = Page::$pageData->user->hasPermission('pirepmanage') ? 'required' : '
                 </div>
                 <div class="space-y-1">
                     <label for="dep">Departure ICAO</label>
-                    <input id="dep" name="dep" type="text" value="<?= Page::$pageData->pirep->departure ?>" maxlength="4" required class="form-control" placeholder="KLAX" />
+                    <input id="dep" name="dep" type="text" value="<?= Page::$pageData->pirep->departure ?>" maxlength="4" required class="form-control" placeholder="ICAO" />
                 </div>
                 <div class="space-y-1">
                     <label for="arr">Arrival ICAO</label>
-                    <input id="arr" name="arr" type="text" value="<?= Page::$pageData->pirep->arrival ?>" maxlength="4" required class="form-control" placeholder="KJFK" />
+                    <input id="arr" name="arr" type="text" value="<?= Page::$pageData->pirep->arrival ?>" maxlength="4" required class="form-control" placeholder="ICAO" />
+                </div>
+                <div class="space-y-1">
+                    <label for="fuel">Fuel Used (kg)</label>
+                    <input id="fuel" name="fuel" type="number" value="<?= Page::$pageData->pirep->fuelused ?>" min="1" required class="form-control" placeholder="1234" />
                 </div>
                 <div class="space-y-1">
                     <label for="aircraft">Aircraft</label>

@@ -105,6 +105,10 @@ Page::setTitle('All PIREPs - ' . Page::$pageData->va_name);
                                                 <label for="pirepmodal-arr">Arrival</label>
                                                 <input required maxlength="4" minlength="4" type="text" id="pirepmodal-arr" value="" class="form-control" name="arr">
                                             </div>
+                                            <div class="form-group">
+                                                <label for="pirepmodal-fuel">Fuel Used (kg)</label>
+                                                <input required min="1" type="number" id="pirepmodal-fuel" value="" class="form-control" name="fuel">
+                                            </div>
                                             <input type="submit" class="btn bg-custom" value="Save">
                                         </form>
                                         <div class="col-xl h-100">
@@ -140,6 +144,7 @@ Page::setTitle('All PIREPs - ' . Page::$pageData->va_name);
                                 $("#pirepmodal-fnum").val(pirep.fnum);
                                 $("#pirepmodal-dep").val(pirep.departure);
                                 $("#pirepmodal-arr").val(pirep.arrival);
+                                $("#pirepmodal-fuel").val(pirep.fuelused);
                                 $("#pirepmodal").modal('show');
 
                                 fetchComments(pirep.id);

@@ -166,13 +166,23 @@ class VANet
     }
 
     /**
-     * @return bool
-     * @param array $fields PIREP Fields
+     * @return void
+     * @param Event $ev
      */
-    public static function sendPirep($fields)
+    public static function sendPirep($ev)
     {
         $key = Config::get('vanet/api_key');
-        $data = Json::encode($fields);
+
+        $data = Json::encode([
+            'aircraftLiveryId' => Aircraft::idToLiveryId($ev->params['aircraftid']),
+            'arrivalIcao' => $ev->params['arrival'],
+            'date' => $ev->params['date'],
+            'departureIcao' => $ev->params['departure'],
+            'flightTime' => $ev->params['flighttime'],
+            'fuelUsed' => $ev->params['fuelused'],
+            'pilotId' => (new User)->getUser($ev->params['pilotid']),
+        ]);
+
         $response = Json::decode(@HttpRequest::hacky(self::baseUrl() . "/airline/v1/flights", "POST", $data, ["X-Api-Key: {$key}", "Content-Type: application/json"]));
         if (!$response || $response['status'] != 0) {
             return false;

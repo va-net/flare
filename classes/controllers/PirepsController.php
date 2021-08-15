@@ -37,11 +37,12 @@ class PirepsController extends Controller
             'departure' => Input::get('dep'),
             'arrival' => Input::get('arr'),
             'date' => Input::get('date'),
+            'fuelused' => Input::get('fuel'),
         ];
         if ($user->hasPermission('pirepmanage')) {
-            $data['flighttime'] = Time::strToSecs(Input::get('ftime'));
-            $data['aircraftid'] = Input::get('aircraft');
-            $data['status'] = Input::get('status');
+            if (!empty(Input::get('ftime'))) $data['flighttime'] = Time::strToSecs(Input::get('ftime'));
+            if (!empty(Input::get('aircraft'))) $data['aircraftid'] = Input::get('aircraft');
+            if (!empty(Input::get('status'))) $data['status'] = Input::get('status');
         }
         if (!Pirep::update(Input::get('id'), $data)) {
             Session::flash('error', 'There was an Error Editing the PIREP');
@@ -127,7 +128,8 @@ class PirepsController extends Controller
             'pilotid' => $user->data()->id,
             'date' => Input::get('date'),
             'aircraftid' => Input::get('aircraft'),
-            'multi' => $multi
+            'multi' => $multi,
+            'fuelused' => Input::get('fuel'),
         ))) {
             Session::flash('error', 'There was an Error Filing the PIREP.');
             $this->redirect('/pireps');

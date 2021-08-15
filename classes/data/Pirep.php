@@ -145,6 +145,8 @@ class Pirep
         if ($beforeRank != $afterRank) {
             Events::trigger('user/promoted', ["pilot" => $pirep->pilotid, "rank" => $afterRank]);
         }
+
+        $pirep->status = 1;
         Events::trigger('pirep/accepted', (array)$pirep);
     }
 

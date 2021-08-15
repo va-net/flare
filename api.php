@@ -332,20 +332,6 @@ Router::add('/pireps', function () {
         badReq(ErrorCode::RankNotSufficent);
     }
 
-    $response = VANet::sendPirep(array(
-        'aircraftLiveryId' => Aircraft::idToLiveryId(Input::get('aircraft')),
-        'arrivalIcao' => Input::get('arr'),
-        'date' => Input::get('date'),
-        'departureIcao' => Input::get('dep'),
-        'flightTime' => Time::strToSecs(Input::get('ftime')),
-        'fuelUsed' => Input::get('fuel'),
-        'pilotId' => $user->data()->ifuserid
-    ));
-
-    if (!$response) {
-        internalError();
-    }
-
     if (!Pirep::file(array(
         'flightnum' => Input::get('flightnum'),
         'departure' => Input::get('departure'),
@@ -354,7 +340,8 @@ Router::add('/pireps', function () {
         'pilotid' => $user->data()->id,
         'date' => Input::get('date'),
         'aircraftid' => Input::get('aircraft'),
-        'multi' => $multi
+        'multi' => $multi,
+        'fuelused' => Input::get('fuel'),
     ))) {
         internalError();
     } else {

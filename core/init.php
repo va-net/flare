@@ -39,6 +39,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 Events::listen('*', 'Logger::logEvent');
 Events::listen('*', 'Notifications::handleEvent');
 Events::listen('site/updated', 'Analytics::reportUpdate');
+Events::listen('pirep/accepted', 'VANet::sendPirep');
 require_once __DIR__ . '/functions.php';
 
 if (!isset($IS_API) || !$IS_API) {

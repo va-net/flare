@@ -31,11 +31,11 @@ require_once __DIR__ . '/../includes/header.php';
         </div>
         <div class="space-y-1">
             <label for="dep">Departure ICAO</label>
-            <input id="dep" name="dep" type="text" value="<?= Input::get('dep') ?>" maxlength="4" required class="form-control" placeholder="KLAX" />
+            <input id="dep" name="dep" type="text" value="<?= Input::get('dep') ?>" maxlength="4" required class="form-control" placeholder="ICAO" />
         </div>
         <div class="space-y-1">
             <label for="arr">Arrival ICAO</label>
-            <input id="arr" name="arr" type="text" value="<?= Input::get('arr') ?>" maxlength="4" required class="form-control" placeholder="KJFK" />
+            <input id="arr" name="arr" type="text" value="<?= Input::get('arr') ?>" maxlength="4" required class="form-control" placeholder="ICAO" />
         </div>
         <div class="space-y-1">
             <label for="aircraft">Aircraft</label>
