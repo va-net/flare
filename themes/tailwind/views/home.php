@@ -132,10 +132,7 @@ require_once __DIR__ . '/../includes/header.php';
                         <thead>
                             <tr>
                                 <th>Airport</th>
-                                <th>Station</th>
-                                <th class="hidden md:table-cell">
-                                    Controller
-                                </th>
+                                <th>Stations</th>
                             </tr>
                         </thead>
                         <tbody x-html="atctable(data.atc)"></tbody>

@@ -144,36 +144,44 @@ function newsfeed(data) {
 
 function atctable(data) {
     if (!data) {
-        return `<tr class="border-b-2 border-black dark:border-white hover:bg-black hover:bg-opacity-20">
-            <td class="px-3 py-2 text-center" colspan="3">Loading...</td>
+        return `<tr class="border-b-2 border-black dark:border-white">
+            <td class="px-3 py-2 text-center" colspan="2">Loading...</td>
         </tr>`;
     }
 
-    const stationTypes = [
-        'Ground',
-        'Tower',
-        'Unicom',
-        'Delivery',
-        'Approach',
-        'Departure',
-        'Center',
-        'ATIS',
-        'Aircraft',
-        'Recorded',
-        'Unknown',
-        'Unused',
-    ];
+    const stationTypes = ['G', 'T', '', '', 'A', 'D', 'C', 'S', '', '', '', ''];
 
-    return data
+    data = data.sort((a, b) => {
+        if (a.type < b.type) {
+            return -1;
+        } else if (a.type > b.type) {
+            return 1;
+        } else {
+            return 0;
+        }
+    });
+
+    let airports = {};
+    for (const s of data) {
+        if (!s.airportName) {
+            s.airportName = 'N/A';
+        }
+
+        if (!airports[s.airportName]) {
+            airports[s.airportName] = stationTypes[s.type];
+        } else {
+            airports[s.airportName] += stationTypes[s.type];
+        }
+    }
+
+    return Object.entries(airports)
         .map(
-            (s) => `
+            ([a, s]) => `
                 <tr>
                     <td>
-                        ${s.airportName || 'N/A'}
+                        ${a}
                     </td><td>
-                        ${stationTypes[s.type]}
-                    </td><td class="hidden md:table-cell">
-                        ${s.username}
+                        ${s}
                     </td>
                 </tr>
             `
