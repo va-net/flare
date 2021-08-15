@@ -1,7 +1,15 @@
 <?php
 
+$classdirs = ['.', 'app', 'data', 'plugins', 'util', 'controllers', 'controllers/admin'];
 spl_autoload_register(function ($class) {
-    require_once __DIR__ . '/../classes/' . $class . '.php';
+    global $classdirs;
+    foreach ($classdirs as $d) {
+        $file = __DIR__ . '/../classes/' . $d . '/' . $class . '.php';
+        if (file_exists($file)) {
+            include $file;
+            return;
+        }
+    }
 });
 
 if (file_exists(__DIR__ . '/config.new.php')) die();
