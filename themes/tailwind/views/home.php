@@ -4,7 +4,7 @@ require_once __DIR__ . '/../includes/header.php';
 ?>
 <div id="content" x-data="{ data: { events: null, pireps: null, news: null, atc: null, } }" x-init="inithome(data)">
     <div class="w-full p-5 shadow-lg bg-primary text-primary-text h-36 pt-7">
-        <h2 class="text-4xl font-bold text-center">
+        <h2 class="text-2xl font-bold text-center lg:text-4xl">
             Welcome, <?= escape(Page::$pageData->user->data()->name) ?>
         </h2>
     </div>
