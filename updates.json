@@ -764,5 +764,37 @@
         "queries": ["ALTER TABLE `routes` CHANGE `fltnum` `fltnum` TEXT"],
         "deletedFiles": [],
         "newFolders": []
+    },
+    {
+        "tag": "v2.0.0-beta.10",
+        "name": "Version 2.0.0 Beta 10",
+        "date": "2021-08-15",
+        "notes": "Various bug fixes and improvements",
+        "prerelease": true,
+        "useUpdater": true,
+        "files": [
+            "classes/data/VANet.php",
+            "api.php",
+            "classes/controllers/admin/AdminController.php",
+            "themes/default/views/admin/settings.php",
+            "classes/app/Updater.php",
+            "updater.php",
+            "assets/tailwind.index.css",
+            "themes/tailwind/views/home.php",
+            "assets/js/tailwind.js",
+            "classes/controllers/PirepsController.php",
+            "classes/data/Pirep.php",
+            "classes/data/VANet.php",
+            "core/init.php",
+            "themes/default/views/pireps_all.php",
+            "themes/tailwind/views/pireps_new.php",
+            "themes/tailwind/views/pireps_view.php"
+        ],
+        "queries": [
+            "ALTER TABLE `pireps` CHANGE `flightnum` `flightnum` TEXT;",
+            "ALTER TABLE `pireps` ADD `fuelused` INT NOT NULL AFTER `aircraftid`;"
+        ],
+        "deletedFiles": [],
+        "newFolders": []
     }
 ]
