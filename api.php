@@ -1129,4 +1129,43 @@ Router::add('/atc', function () {
     ]);
 });
 
+Router::add('/config_migrate', function () {
+    global $user;
+    if (!$user->hasPermission('site')) accessDenied();
+
+    if (file_exists(__DIR__ . '/core/config.new.php') || !file_exists(__DIR__ . '/core/config.php')) {
+        badReq(ErrorCode::MethodNotAllowed);
+    }
+
+    $ignore = [
+        'FLARE_DEFAULTS_FULLADMINPERMISSIONS',
+        'FLARE_DEFAULTS_PERMISSIONS',
+        'FLARE_VANET_BASE_URL',
+        'FLARE_SESSION_TOKEN_NAME',
+        'FLARE_SESSION_SESSION_NAME',
+        'FLARE_REMEMBER_COOKIE_EXPIRY',
+        'FLARE_REMEMBER_COOKIE_NAME'
+    ];
+
+    $res = "<?php\n\n";
+
+    $config = $GLOBALS['config'];
+    foreach ($config as $category => $items) {
+        foreach ($items as $key => $value) {
+            $constName = 'FLARE_' . implode('_', array_map('strtoupper', [$category, $key]));
+            if (in_array($constName, $ignore)) continue;
+
+            $res .= "define('{$constName}', '{$value}');\n";
+        }
+    }
+
+    file_put_contents(__DIR__ . '/core/config.new.php', $res);
+    rename(__DIR__ . '/core/config.php', __DIR__ . '/core/config.old.php');
+
+    echo Json::encode([
+        'status' => ErrorCode::NoError,
+        'result' => null,
+    ]);
+});
+
 Router::run('/api.php');

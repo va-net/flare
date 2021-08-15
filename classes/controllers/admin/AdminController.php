@@ -87,6 +87,7 @@ class AdminController extends Controller
         $data->text_color = Config::get('TEXT_COLOUR');
         $data->analytics_enabled = !empty(Config::get('INSTANCE_ID'));
         $data->custom_css = Config::getCss();
+        $data->migrate_config = !file_exists(__DIR__ . '/../../../core/config.new.php');
         $data->themes = array_filter(scandir(__DIR__ . '/../../../themes'), function ($x) {
             return strpos($x, '.') !== 0;
         });
