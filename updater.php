@@ -20,8 +20,7 @@ if (!$user->hasPermission('opsmanage')) {
 }
 
 $RELEASES_URL = Updater::releasesUrl();
-$TAGS_URL = Updater::tagsUrl();
-$RAW_URL = Updater::rawUrl();
+$DL_URL = Updater::downloadUrl();
 $BRANCH = Updater::githubDefaultBranch();
 
 $current = Updater::getVersion();
@@ -39,7 +38,9 @@ if (!empty($auth)) {
     $ops['http']['header'] .= "Authorization: Basic " . base64_encode($auth) . "\r\n";
 }
 $context = stream_context_create($opts);
-$releases = Json::decode(file_get_contents($RELEASES_URL, false, $context));
+$releases = array_filter(Json::decode(file_get_contents($RELEASES_URL, false, $context)), function ($release) {
+    return !$release['draft'];
+});
 
 // Find next applicable release
 $currentFound = false;
@@ -69,18 +70,9 @@ if ($next["tag_name"] != $releases[0]["tag_name"]) {
     After this operation is complete, refresh the page then run the updater again.<br /><br />';
 }
 
-// Get Tag Info
-$tags = Json::decode(file_get_contents($TAGS_URL, false, $context));
-$nextTag = null;
-foreach ($tags as $t) {
-    if ($t["name"] == $next["tag_name"] && $nextTag == null) {
-        $nextTag = $t;
-        break;
-    }
-}
-
 // Get the updates.json file
-$updateData = @file_get_contents($RAW_URL . $BRANCH . "/updates.json");
+$updateResponse = Json::decode(file_get_contents("{$DL_URL}/updates.json?ref=" . urlencode($BRANCH), false, $context));
+$updateData = base64_decode($updateResponse["content"]);
 // Check Release is Compatible
 if ($updateData === FALSE) {
     echo "This Version of Flare does not support the Updater.";
@@ -91,7 +83,7 @@ if ($updateData === FALSE) {
 $updateData = Json::decode($updateData);
 $nextUpdate = null;
 foreach ($updateData as $upd) {
-    if ($upd["tag"] == $nextTag["name"]) {
+    if ($upd["tag"] == $next["tag_name"]) {
         $nextUpdate = $upd;
     }
 }
@@ -153,7 +145,8 @@ if (array_key_exists('newFolders', $nextUpdate)) {
 
 // Update Files
 foreach ($nextUpdate["files"] as $file) {
-    $fileData = file_get_contents($RAW_URL . urlencode($nextTag["commit"]["sha"]) . "/" . urlencode($file));
+    $fileInfo = Json::decode(file_get_contents($DL_URL . "/" . $file . '?ref=' . urlencode($next["tag_name"]), false, $context));
+    $fileData = base64_decode($fileInfo["content"]);
     if ($fileData === FALSE || file_put_contents(__DIR__ . '/' . $file, $fileData) === FALSE) {
         echo "Error Updating File " . $file;
         die();
@@ -162,7 +155,8 @@ foreach ($nextUpdate["files"] as $file) {
 echo "Updated Files Successfully<br />";
 
 // Update Version File
-$vData = file_get_contents($RAW_URL . urlencode($nextTag["commit"]["sha"]) . "/version.json");
+$vInfo = Json::decode(file_get_contents($DL_URL . "/version.json?ref=" . urlencode($next["tag_name"]), false, $context));
+$vData = base64_decode($vInfo["content"]);
 file_put_contents(__DIR__ . '/' . "version.json", $vData);
 echo "Updated Version File<br />";
 

@@ -88,23 +88,12 @@ class Updater
     /**
      * @return string
      */
-    public static function tagsUrl()
-    {
-        $conf = Config::get('updater/tags_url');
-        if (!empty($conf)) return $conf;
-
-        return 'https://api.github.com/repos/va-net/flare/tags';
-    }
-
-    /**
-     * @return string
-     */
-    public static function rawUrl()
+    public static function downloadUrl()
     {
         $conf = Config::get('updater/raw_url');
         if (!empty($conf)) return $conf;
 
-        return 'https://raw.githubusercontent.com/va-net/flare/';
+        return 'https://api.github.com/repos/va-net/flare/contents';
     }
 
     /**
