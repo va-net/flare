@@ -796,5 +796,20 @@
         ],
         "deletedFiles": [],
         "newFolders": []
+    },
+    {
+        "tag": "v2.0.0-beta.11",
+        "name": "Version 2.0.0 Beta 11",
+        "date": "2021-08-16",
+        "notes": "Fixed PIREP bug",
+        "prerelease": true,
+        "useUpdater": true,
+        "files": [
+            "classes/controllers/PirepsController.php",
+            "classes/data/VANet.php"
+        ],
+        "queries": [],
+        "deletedFiles": [],
+        "newFolders": []
     }
 ]
