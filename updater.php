@@ -7,7 +7,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-require_once './core/init.php';
+require_once __DIR__ . '/core/init.php';
 
 $user = new User();
 
@@ -19,12 +19,14 @@ if (!$user->hasPermission('opsmanage')) {
     die();
 }
 
-$RELEASES_URL = "https://api.github.com/repos/va-net/flare/releases";
-$TAGS_URL = "https://api.github.com/repos/va-net/flare/tags";
-$RAW_URL = "https://raw.githubusercontent.com/va-net/flare/";
-$BRANCH = "master";
+$RELEASES_URL = Updater::releasesUrl();
+$TAGS_URL = Updater::tagsUrl();
+$RAW_URL = Updater::rawUrl();
+$BRANCH = Updater::githubDefaultBranch();
 
 $current = Updater::getVersion();
+
+$auth = Updater::authentication();
 
 // Get Releases
 $opts = array(
@@ -33,6 +35,9 @@ $opts = array(
         'header' => "User-Agent: va-net\r\n"
     )
 );
+if (!empty($auth)) {
+    $ops['http']['header'] .= "Authorization: Basic " . base64_encode($auth) . "\r\n";
+}
 $context = stream_context_create($opts);
 $releases = Json::decode(file_get_contents($RELEASES_URL, false, $context));
 
@@ -45,7 +50,7 @@ foreach (array_reverse($releases) as $r) {
     } elseif ($currentFound && $next == null) {
         if (Config::get('CHECK_PRERELEASE') == 1) {
             $next = $r;
-            $BRANCH = "beta";
+            $BRANCH = Updater::githubPrereleaseBranch();
             break;
         } elseif (!$r["prerelease"]) {
             $next = $r;

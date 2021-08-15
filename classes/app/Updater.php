@@ -73,4 +73,70 @@ class Updater
     {
         return self::checkUpdate(Config::get('CHECK_PRERELEASE') == 1) !== FALSE;
     }
+
+    /**
+     * @return string
+     */
+    public static function releasesUrl()
+    {
+        $conf = Config::get('updater/releases_url');
+        if (!empty($conf)) return $conf;
+
+        return 'https://api.github.com/repos/va-net/flare/releases';
+    }
+
+    /**
+     * @return string
+     */
+    public static function tagsUrl()
+    {
+        $conf = Config::get('updater/tags_url');
+        if (!empty($conf)) return $conf;
+
+        return 'https://api.github.com/repos/va-net/flare/tags';
+    }
+
+    /**
+     * @return string
+     */
+    public static function rawUrl()
+    {
+        $conf = Config::get('updater/raw_url');
+        if (!empty($conf)) return $conf;
+
+        return 'https://raw.githubusercontent.com/va-net/flare/';
+    }
+
+    /**
+     * @return string
+     */
+    public static function githubDefaultBranch()
+    {
+        $conf = Config::get('updater/github_branch');
+        if (!empty($conf)) return $conf;
+
+        return 'master';
+    }
+
+    /**
+     * @return string
+     */
+    public static function githubPrereleaseBranch()
+    {
+        $conf = Config::get('updater/github_branch_prerelease');
+        if (!empty($conf)) return $conf;
+
+        return 'beta';
+    }
+
+    /**
+     * @return string|null
+     */
+    public static function authentication()
+    {
+        $conf = Config::get('updater/authentication');
+        if (!empty($conf)) return $conf;
+
+        return null;
+    }
 }
