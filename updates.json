@@ -824,7 +824,7 @@
             "classes/data/Aircraft.php",
             "themes/tailwind/views/pireps_all.php",
             "classes/data/DB.php",
-            "clasess/app/Dependencies.php",
+            "classes/app/Dependencies.php",
             "index.php"
         ],
         "queries": [],
