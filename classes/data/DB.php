@@ -10,15 +10,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 class DB
 {
-
-    private static $_instance = null;
     private $_pdo,
         $_query,
         $_error = false,
         $_results,
         $_count = 0;
 
-    private function __construct($ignore = false)
+    public function __construct($ignore = false)
     {
         try {
             $this->_pdo = new PDO('mysql:host=' . Config::get('mysql/host') . ';dbname=' . Config::get('mysql/db') . ';port=' . Config::get('mysql/port'), Config::get('mysql/username'), Config::get('mysql/password'));
@@ -32,11 +30,7 @@ class DB
      */
     public static function &getInstance()
     {
-        if (!isset(self::$_instance)) {
-            self::$_instance = new DB();
-        }
-
-        return self::$_instance;
+        return Dependencies::get(self::class);
     }
 
     /**
