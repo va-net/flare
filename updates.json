@@ -811,5 +811,24 @@
         "queries": [],
         "deletedFiles": [],
         "newFolders": []
+    },
+    {
+        "tag": "v2.0.0-beta.12",
+        "name": "Version 2.0.0 Beta 12",
+        "date": "2021-08-17",
+        "notes": "Fixed PIREP accepting bug, Fixed fleet page bug, Fixed Tailwind My PIREPs page, Performance improvements",
+        "prerelease": true,
+        "useUpdater": true,
+        "files": [
+            "classes/data/VANet.php",
+            "classes/data/Aircraft.php",
+            "themes/tailwind/views/pireps_all.php",
+            "classes/data/DB.php",
+            "clasess/app/Dependencies.php",
+            "index.php"
+        ],
+        "queries": [],
+        "deletedFiles": [],
+        "newFolders": []
     }
 ]
