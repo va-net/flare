@@ -37,13 +37,13 @@ require_once __DIR__ . '/../includes/header.php';
                                 <?= date_format(date_create($pirep['date']), 'Y-m-d') ?>
                             </td>
                             <td class="hidden lg:table-cell">
-                                <?= $pirep['number'] ?>
+                                <?= $pirep['fnum'] ?>
                             </td>
                             <td>
                                 <?= $pirep['departure'] . '-' . $pirep['arrival'] ?>
                             </td>
                             <td class="hidden lg:table-cell">
-                                <?= $pirep['number'] ?>
+                                <?= $pirep['aircraft'] ?>
                             </td>
                             <td>
                                 <?php
