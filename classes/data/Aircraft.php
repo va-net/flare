@@ -27,7 +27,7 @@ class Aircraft
     public static function fetchAllAircraftFromVANet()
     {
         $key = Config::get('vanet/api_key');
-        $response = HttpRequest::hacky(VANet::$BASE . '/public/v1/aircraft', 'GET', '', ["X-Api-Key: {$key}"]);
+        $response = HttpRequest::hacky(VANet::baseUrl() . '/public/v1/aircraft', 'GET', '', ["X-Api-Key: {$key}"]);
         $response = Json::decode($response);
 
         if ($response['status'] != 0) return [];
@@ -50,7 +50,7 @@ class Aircraft
     public static function fetchAllLiveriesFromVANet()
     {
         $key = Config::get('vanet/api_key');
-        $response = HttpRequest::hacky(VANet::$BASE . '/public/v1/aircraft', 'GET', '', ["X-Api-Key: {$key}"]);
+        $response = HttpRequest::hacky(VANet::baseUrl() . '/public/v1/aircraft', 'GET', '', ["X-Api-Key: {$key}"]);
         return Json::decode($response)['result'];
     }
 
@@ -61,7 +61,7 @@ class Aircraft
     public static function fetchLiveryIdsForAircraft($aircraftid)
     {
         $key = Config::get('vanet/api_key');
-        $response = HttpRequest::hacky(VANet::$BASE . '/public/v1/aircraft/' . urlencode($aircraftid), 'GET', '', ["X-Api-Key: {$key}"]);
+        $response = HttpRequest::hacky(VANet::baseUrl() . '/public/v1/aircraft/' . urlencode($aircraftid), 'GET', '', ["X-Api-Key: {$key}"]);
         $all = Json::decode($response)['result'];
         foreach ($all as $aircraft) {
             $final[$aircraft['liveryName']] = $aircraft['liveryID'];
@@ -78,7 +78,7 @@ class Aircraft
     public static function fetchAircraftFromVANet($liveryId)
     {
         $key = Config::get('vanet/api_key');
-        $response = HttpRequest::hacky(VANet::$BASE . '/public/v1/aircraft/livery/' . urlencode($liveryId), 'GET', '', ["X-Api-Key: {$key}"]);
+        $response = HttpRequest::hacky(VANet::baseUrl() . '/public/v1/aircraft/livery/' . urlencode($liveryId), 'GET', '', ["X-Api-Key: {$key}"]);
         return Json::decode($response)['result'];
     }
 

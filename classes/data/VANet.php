@@ -11,7 +11,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 class VANet
 {
 
-    private static function baseUrl()
+    public static function baseUrl()
     {
         if (!empty(Config::get('vanet/base_url')) && Config::get('vanet/base_url') != 'https://vanet.app') {
             return Config::get('vanet/base_url');
