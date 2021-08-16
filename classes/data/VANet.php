@@ -180,11 +180,12 @@ class VANet
             'departureIcao' => $ev->params['departure'],
             'flightTime' => $ev->params['flighttime'],
             'fuelUsed' => $ev->params['fuelused'],
-            'pilotId' => (new User)->getUser($ev->params['pilotid']),
+            'pilotId' => (new User)->getUser($ev->params['pilotid'])->ifuserid,
         ]);
 
         $response = Json::decode(@HttpRequest::hacky(self::baseUrl() . "/airline/v1/flights", "POST", $data, ["X-Api-Key: {$key}", "Content-Type: application/json"]));
         if (!$response || $response['status'] != 0) {
+            var_dump($response);
             die('Error Connecting to VANet');
         }
     }
