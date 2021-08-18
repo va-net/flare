@@ -52,30 +52,24 @@ class AdminEventsController extends EventsController
             $gates[] = trim($g);
         }
 
-        $vis = 'true';
-        if (Input::get('visible') == 0) {
-            $vis = 'false';
-        }
+        $datetime = Input::get('date') . 'T' . substr(Input::get('time'), 0, 2) . ':' . substr(Input::get('time'), 2, 2) . ':00Z';
 
-        $datetime = Input::get('date') . ' ' . substr(Input::get('time'), 0, 2) . ':' . substr(Input::get('time'), 2, 2);
-
-        try {
-            VANet::createEvent(array(
-                "name" => Input::get('name'),
-                "description" => Input::get('description'),
-                "date" => $datetime,
-                "departureIcao" => Input::get('dep'),
-                "arrivalIcao" => Input::get('arr'),
-                "aircraftLiveryId" => Input::get('aircraft'),
-                "server" => Input::get('server'),
-                "gateNames" => $gates
-            ));
+        $res = VANet::createEvent(array(
+            "name" => Input::get('name'),
+            "description" => Input::get('description'),
+            "date" => $datetime,
+            "departureIcao" => Input::get('dep'),
+            "arrivalIcao" => Input::get('arr'),
+            "aircraftLiveryId" => Input::get('aircraft'),
+            "server" => Input::get('server'),
+            "gateNames" => $gates
+        ));
+        if ($res) {
             Session::flash('success', 'Event Added Successfully!');
-        } catch (Exception $e) {
+        } else {
             Session::flash('error', 'Error Creating Event');
-        } finally {
-            $this->redirect('/admin/operations/events');
         }
+        $this->redirect('/admin/operations/events');
     }
 
     private function edit()
