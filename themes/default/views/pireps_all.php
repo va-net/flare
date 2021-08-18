@@ -41,8 +41,6 @@ Page::setTitle('All PIREPs - ' . Page::$pageData->va_name);
                         }
                         ?>
                         <h3>My Recent PIREPs</h3>
-                        <p>Showing your 30 Most Recent PIREPs</p>
-                        <br />
                         <table class="table table-striped datatable">
                             <thead class="bg-custom">
                                 <tr>
