@@ -30,6 +30,10 @@ class Updater
                 'header' => "User-Agent: va-net\r\n"
             )
         );
+        $auth = self::authentication();
+        if (!empty($auth)) {
+            $opts['http']['header'] .= "Authorization: Basic " . base64_encode($auth) . "\r\n";
+        }
         $context = stream_context_create($opts);
         $releases = Json::decode(file_get_contents("https://api.github.com/repos/va-net/flare/releases", false, $context));
 

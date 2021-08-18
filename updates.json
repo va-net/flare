@@ -844,7 +844,8 @@
             "classes/data/User.php",
             "themes/default/views/pireps_all.php",
             "themes/tailwind/views/pireps_all.php",
-            "updater.php"
+            "updater.php",
+            "classes/app/Updater.php"
         ],
         "queries": [],
         "deletedFiles": [],
