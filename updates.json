@@ -830,5 +830,23 @@
         "queries": [],
         "deletedFiles": [],
         "newFolders": []
+    },
+    {
+        "tag": "v2.0.0-beta.13",
+        "name": "Version 2.0.0 Beta 13",
+        "date": "2021-08-19",
+        "notes": "Fixed event creation, Fixed PIREP ordering",
+        "prerelease": true,
+        "useUpdater": true,
+        "files": [
+            "classes/controllers/admin/AdminEventsController.php",
+            "classes/controllers/PirepsController.php",
+            "classes/data/User.php",
+            "themes/default/views/pireps_all.php",
+            "themes/tailwind/views/pireps_all.php"
+        ],
+        "queries": [],
+        "deletedFiles": [],
+        "newFolders": []
     }
 ]
