@@ -35,7 +35,7 @@ $opts = array(
     )
 );
 if (!empty($auth)) {
-    $ops['http']['header'] .= "Authorization: Basic " . base64_encode($auth) . "\r\n";
+    $opts['http']['header'] .= "Authorization: Basic " . base64_encode($auth) . "\r\n";
 }
 $context = stream_context_create($opts);
 $releases = array_filter(Json::decode(file_get_contents($RELEASES_URL, false, $context)), function ($release) {
