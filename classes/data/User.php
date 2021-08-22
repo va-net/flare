@@ -348,7 +348,8 @@ class User
             throw new Exception("Limit Parameter is NaN");
         }
 
-        $sql = "SELECT pireps.*, aircraft.name AS aircraft FROM pireps INNER JOIN aircraft ON pireps.aircraftid=aircraft.id WHERE pilotid = ? ORDER BY date ASC";
+        $order = $limit == null ? 'DESC' : 'ASC';
+        $sql = "SELECT pireps.*, aircraft.name AS aircraft FROM pireps INNER JOIN aircraft ON pireps.aircraftid=aircraft.id WHERE pilotid = ? ORDER BY date {$order}";
         if ($limit != null) {
             $sql .= " LIMIT {$limit}";
         }
