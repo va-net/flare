@@ -27,41 +27,23 @@ class Installer
     public static function createConfig($data = array())
     {
 
-        $template = file_get_contents('./templates/config.php');
+        $template = file_get_contents(__DIR__ . '/templates/config.php');
         foreach ($data as $name => $val) {
-            $template = str_replace($name, $val, $template);
+            $template = str_replace("'{$name}'", "'{$val}'", $template);
         }
 
-        $file = fopen('../core/config.php', 'w');
-
-        if (!$file) {
-            return false;
-        }
-
-        fwrite($file, $template);
-        fclose($file);
-
-        return true;
+        return file_put_contents(__DIR__ . '/../core/config.new.php', $template);
     }
 
     public static function appendConfig($data = array())
     {
 
-        $currentConf = file_get_contents(__DIR__ . '/../core/config.php');
+        $currentConf = file_get_contents(__DIR__ . '/../core/config.new.php');
         foreach ($data as $name => $val) {
-            $currentConf = str_replace($name, $val, $currentConf);
+            $currentConf = str_replace("'{$name}'", "'{$val}'", $currentConf);
         }
 
-        $file = fopen('../core/config.php', 'w+');
-
-        if (!$file) {
-            return false;
-        }
-
-        fwrite($file, $currentConf);
-        fclose($file);
-
-        return true;
+        return file_put_contents(__DIR__ . '/../core/config.new.php', $currentConf);
     }
 
     public static function setupDb()

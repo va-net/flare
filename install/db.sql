@@ -50,13 +50,14 @@ CREATE TABLE IF NOT EXISTS `permissions` (
 
 CREATE TABLE IF NOT EXISTS `pireps` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `flightnum` varchar(10) NOT NULL,
+  `flightnum` TEXT NOT NULL,
   `departure` varchar(4) NOT NULL,
   `arrival` varchar(4) NOT NULL,
   `flighttime` int(11) NOT NULL,
   `pilotid` int(11) NOT NULL,
   `date` date NOT NULL,
   `aircraftid` int(11) NOT NULL,
+  `fuelused` int(11) NOT NULL,
   `multi` text NOT NULL,
   `status` int(11) DEFAULT '0',
   PRIMARY KEY (`id`)
@@ -77,7 +78,7 @@ INSERT INTO `ranks` (`name`, `timereq`) VALUES
 
 CREATE TABLE IF NOT EXISTS `routes` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `fltnum` varchar(10) NOT NULL,
+  `fltnum` TEXT NOT NULL,
   `dep` varchar(4) NOT NULL,
   `arr` varchar(4) NOT NULL,
   `duration` int(11) NOT NULL,
