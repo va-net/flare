@@ -12,6 +12,31 @@ spl_autoload_register(function ($class) {
     }
 });
 
+$db = DB::getInstance();
+$tables = array_map(function ($x) {
+    return ((array)$x)['Tables_in_' . Config::get('mysql/db')];
+}, $db->query('SHOW TABLES')->results());
+if (!in_array('pilots', $tables)) {
+    $branch = Updater::getVersion()['prerelease'] ? Updater::githubPrereleaseBranch() : Updater::githubDefaultBranch();
+    $dl = Updater::downloadUrl();
+    $auth = Updater::authentication();
+
+    $opts = array(
+        'http' => array(
+            'method' => "GET",
+            'header' => "User-Agent: va-net\r\n"
+        )
+    );
+    if (!empty($auth)) {
+        $opts['http']['header'] .= "Authorization: Basic " . base64_encode($auth) . "\r\n";
+    }
+    $context = stream_context_create($opts);
+
+    $res = Json::decode(file_get_contents("{$DL_URL}/install/db.sql?ref=" . urlencode($branch), false, $context));
+    $sql = base64_decode($res["content"]);
+    $db->query($sql);
+}
+
 if (file_exists(__DIR__ . '/config.new.php')) die();
 
 $output = "<?php\n";
