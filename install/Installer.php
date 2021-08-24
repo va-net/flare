@@ -54,13 +54,6 @@ class Installer
         if (!$db->query($sql)) {
             return false;
         }
-        $all = Aircraft::fetchAllAircraftFromVANet();
-        foreach ($all as $id => $name) {
-            $db->insert('aircraft', array(
-                'ifaircraftid' => $id,
-                'name' => $name
-            ));
-        }
         return true;
     }
 }

@@ -93,7 +93,7 @@ CREATE TABLE IF NOT EXISTS `route_aircraft` (
   PRIMARY KEY (`id`)
 );
 
-CREATE TABLE `notifications` ( 
+CREATE TABLE IF NOT EXISTS `notifications` ( 
   `id` INT NOT NULL AUTO_INCREMENT, 
   `pilotid` INT NOT NULL, 
   `icon` VARCHAR(20) NOT NULL, 
@@ -143,7 +143,7 @@ CREATE TABLE IF NOT EXISTS `awards` (
   PRIMARY KEY (`id`)
 );
 
-CREATE TABLE `awards_granted` ( 
+CREATE TABLE IF NOT EXISTS `awards_granted` ( 
   `id` INT NOT NULL AUTO_INCREMENT,
   `awardid` INT NOT NULL,
   `pilotid` INT NOT NULL,
@@ -151,7 +151,7 @@ CREATE TABLE `awards_granted` (
   PRIMARY KEY (`id`)
 );
 
-CREATE TABLE `pireps_comments` ( 
+CREATE TABLE IF NOT EXISTS `pireps_comments` ( 
   `id` INT NOT NULL AUTO_INCREMENT,
   `pirepid` INT NOT NULL,
   `userid` INT NOT NULL,
