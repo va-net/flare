@@ -3,7 +3,8 @@ Page::setTitle('My PIREPs - ' . Page::$pageData->va_name);
 require_once __DIR__ . '/../includes/header.php';
 ?>
 <div id="content" class="m-5 text-black dark:text-white">
-    <h1 class="mb-3 text-3xl font-bold">My PIREPs</h1>
+    <h1 class="text-3xl font-bold">My PIREPs</h1>
+    <p class="mb-3">Showing your 30 most recent PIREPs</p>
     <div class="inline-block w-full align-middle">
         <div class="table-wrapper">
             <table class="table">
