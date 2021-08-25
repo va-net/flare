@@ -7,83 +7,105 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-require_once __DIR__ . '/core/init.php';
+require_once './core/init.php';
 
-$theme = Config::get('ACTIVE_THEME');
-if (empty($theme)) $theme = 'default';
-
-Router::pathNotFound(function () {
-    http_response_code(404);
-    echo 'Not Found';
-    die();
-});
-Router::methodNotAllowed(function () {
-    http_response_code(405);
-    echo 'Method Not Allowed';
-    die();
-});
-
-// Pilot Pages
-Router::add('(/login)?', [Dependencies::get(AuthController::class), 'get']);
-Router::add('(/login)?', [Dependencies::get(AuthController::class), 'post'], 'post');
-Router::add('/apply', [Dependencies::get(AuthController::class), 'apply_get']);
-Router::add('/apply', [Dependencies::get(AuthController::class), 'apply_post'], 'post');
-Router::add('/logout', [Dependencies::get(AuthController::class), 'logout']);
-Router::add('/home', [Dependencies::get(HomeController::class), 'get']);
-Router::add('/home', [Dependencies::get(HomeController::class), 'post'], 'post');
-Router::add('/pireps', [Dependencies::get(PirepsController::class), 'get_all']);
-Router::add('/pireps', [Dependencies::get(PirepsController::class), 'post_all'], 'post');
-Router::add('/pireps/new', [Dependencies::get(PirepsController::class), 'get_new']);
-Router::add('/pireps/new', [Dependencies::get(PirepsController::class), 'post_new'], 'post');
-Router::add('/pireps/setup', [Dependencies::get(PirepsController::class), 'get_setup']);
-Router::add('/pireps/setup', [Dependencies::get(PirepsController::class), 'post_setup'], 'post');
-Router::add('/pireps/acars', [Dependencies::get(PirepsController::class), 'acars']);
-Router::add('/pireps/acars', [Dependencies::get(PirepsController::class), 'acars_post'], 'post');
-Router::add('/routes', [Dependencies::get(RoutesController::class), 'get']);
-Router::add('/routes/search', [Dependencies::get(RoutesController::class), 'search']);
-Router::add('/routes/([0-9]+)', [Dependencies::get(RoutesController::class), 'view']);
-Router::add('/map', [Dependencies::get(MapController::class), 'get']);
-Router::add('/events', [Dependencies::get(EventsController::class), 'get']);
-Router::add('/events/([0-9a-zA-z]{8}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{12})', [Dependencies::get(EventsController::class), 'view']);
-
-// Admin Pages
-Router::add('/admin(/home|/stats)?', [Dependencies::get(AdminController::class), 'dashboard']);
-Router::add('/admin/stats', [Dependencies::get(AdminController::class), 'stats']);
-Router::add('/admin/news', [Dependencies::get(NewsController::class), 'get']);
-Router::add('/admin/news', [Dependencies::get(NewsController::class), 'post'], 'post');
-Router::add('/admin/settings', [Dependencies::get(AdminController::class), 'settings']);
-Router::add('/admin/settings', [Dependencies::get(AdminController::class), 'settings_post'], 'post');
-Router::add('/admin/operations/ranks', [Dependencies::get(OperationsController::class), 'ranks_get']);
-Router::add('/admin/operations/ranks', [Dependencies::get(OperationsController::class), 'ranks_post'], 'post');
-Router::add('/admin/operations/fleet', [Dependencies::get(OperationsController::class), 'fleet_get']);
-Router::add('/admin/operations/fleet', [Dependencies::get(OperationsController::class), 'fleet_post'], 'post');
-Router::add('/admin/operations/routes', [Dependencies::get(OperationsController::class), 'routes_get']);
-Router::add('/admin/operations/routes', [Dependencies::get(OperationsController::class), 'routes_post'], 'post');
-Router::add('/admin/operations/routes/import', [Dependencies::get(OperationsController::class), 'import_get']);
-Router::add('/admin/operations/routes/import', [Dependencies::get(OperationsController::class), 'import_post'], 'post');
-Router::add('/admin/operations/codeshares', [Dependencies::get(CodesharesController::class), 'get']);
-Router::add('/admin/operations/codeshares', [Dependencies::get(CodesharesController::class), 'post'], 'post');
-Router::add('/admin/operations/events', [Dependencies::get(AdminEventsController::class), 'get']);
-Router::add('/admin/operations/events', [Dependencies::get(AdminEventsController::class), 'post'], 'post');
-Router::add('/admin/users', [Dependencies::get(UsersController::class), 'get']);
-Router::add('/admin/users', [Dependencies::get(UsersController::class), 'post'], 'post');
-Router::add('/admin/users/pending', [Dependencies::get(UsersController::class), 'get_pending']);
-Router::add('/admin/users/pending', [Dependencies::get(UsersController::class), 'post_pending'], 'post');
-Router::add('/admin/users/staff', [Dependencies::get(UsersController::class), 'get_staff']);
-Router::add('/admin/users/staff', [Dependencies::get(UsersController::class), 'post_staff'], 'post');
-Router::add('/admin/users/awards', [Dependencies::get(UsersController::class), 'get_awards']);
-Router::add('/admin/users/awards', [Dependencies::get(UsersController::class), 'post_awards'], 'post');
-Router::add('/admin/users/lookup/(.+)', [Dependencies::get(UsersController::class), 'lookup']);
-Router::add('/admin/pireps', [Dependencies::get(AdminPirepsController::class), 'get']);
-Router::add('/admin/pireps', [Dependencies::get(AdminPirepsController::class), 'post'], 'post');
-Router::add('/admin/pireps/multipliers', [Dependencies::get(AdminPirepsController::class), 'get_multis']);
-Router::add('/admin/pireps/multipliers', [Dependencies::get(AdminPirepsController::class), 'post_multis'], 'post');
-Router::add('/admin/plugins', [Dependencies::get(PluginsController::class), 'get']);
-Router::add('/admin/plugins', [Dependencies::get(PluginsController::class), 'post'], 'post');
-
-$initfile = __DIR__ . "/themes/{$theme}/_init.php";
-if (file_exists($initfile)) {
-    include $initfile;
+if (!Config::isReady()) {
+    Redirect::to('/install/install.php');
 }
 
-Router::run();
+Page::setTitle('Login - ' . Config::get('va/name'));
+Page::excludeAsset('datatables');
+Page::excludeAsset('chartjs');
+Page::excludeAsset('momentjs');
+
+$user = new User();
+if ($user->isLoggedIn()) {
+    Redirect::to('home.php');
+}
+
+if (Input::exists()) {
+    if (Token::check(Input::get('token'))) {
+        $validate = new Validate();
+        $validation = $validate->check($_POST, array(
+            'email' => array(
+                'required' => true
+            ),
+            'password' => array(
+                'required' => true
+            )
+        ));
+
+        if ($validation->passed()) {
+
+            $remember = (Input::get('remember') === 'on') ? true : false;
+
+            if ($user->login(Input::get('email'), Input::get('password'), $remember)) {
+                Redirect::to('home.php');
+            } else {
+                $user->logout();
+                Session::flash('error', 'Login Failed. Your application may still be pending or it may have been denied. Please contact us for more details if you believe this is an error.');
+            }
+        } else {
+            foreach ($validation->errors() as $error) {
+                echo $error, '<br>';
+            }
+        }
+    }
+}
+?>
+<!DOCTYPE html>
+<html>
+
+<head>
+    <?php include './includes/header.php'; ?>
+</head>
+
+<body>
+    <style>
+        #loader {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            z-index: 1;
+            width: 150px;
+            height: 150px;
+            margin: -75px 0 0 -75px;
+            width: 120px;
+            height: 120px;
+        }
+    </style>
+
+    <nav class="navbar navbar-dark navbar-expand-lg bg-custom">
+        <?php include './includes/navbar.php'; ?>
+    </nav>
+    <div class="container-fluid">
+        <div class="container-fluid mt-4 text-center" style="overflow: auto;">
+            <h1 class="text-center pb-0 mb-0"><?= escape(Config::get('va/name')) ?></h1>
+            <h3 class="text-center py-0 my-0">Pilot Login<br><br></h3>
+            <div class="container justify-content-center">
+                <?php
+                if (Session::exists('error')) {
+                    echo '<div class="alert alert-danger text-center">Error: ' . Session::flash('error') . '</div>';
+                }
+                if (Session::exists('success')) {
+                    echo '<div class="alert alert-success text-center">' . Session::flash('success') . '</div>';
+                }
+
+                $form = new Form();
+                $form->setAction('')
+                    ->setSubmitText('Log In')
+                    ->addField('text', true, false, '', 'action', 'authenticate', [], 'login_action')
+                    ->addField('email', false, true, 'Email Address', 'email', '', [], 'login_email')
+                    ->addField('password', false, true, 'Password', 'password', '', [], 'login_pass')
+                    ->addField('hidden', true, true, '', 'token', Token::generate(), [], 'login_token')
+                    ->render();
+                ?>
+            </div>
+            <footer class="container-fluid text-center">
+                <?php include './includes/footer.php'; ?>
+            </footer>
+        </div>
+    </div>
+</body>
+
+</html>

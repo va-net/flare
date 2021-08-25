@@ -7,7 +7,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-require_once __DIR__ . '/core/init.php';
+require_once './core/init.php';
 
 $user = new User();
 
@@ -19,13 +19,12 @@ if (!$user->hasPermission('opsmanage')) {
     die();
 }
 
-$RELEASES_URL = Updater::releasesUrl();
-$DL_URL = Updater::downloadUrl();
-$BRANCH = Updater::githubDefaultBranch();
+$RELEASES_URL = "https://api.github.com/repos/va-net/flare/releases";
+$TAGS_URL = "https://api.github.com/repos/va-net/flare/tags";
+$RAW_URL = "https://raw.githubusercontent.com/va-net/flare/";
+$BRANCH = "master";
 
 $current = Updater::getVersion();
-
-$auth = Updater::authentication();
 
 // Get Releases
 $opts = array(
@@ -34,13 +33,8 @@ $opts = array(
         'header' => "User-Agent: va-net\r\n"
     )
 );
-if (!empty($auth)) {
-    $opts['http']['header'] .= "Authorization: Basic " . base64_encode($auth) . "\r\n";
-}
 $context = stream_context_create($opts);
-$releases = array_filter(Json::decode(file_get_contents($RELEASES_URL, false, $context)), function ($release) {
-    return !$release['draft'];
-});
+$releases = Json::decode(file_get_contents($RELEASES_URL, false, $context));
 
 // Find next applicable release
 $currentFound = false;
@@ -51,7 +45,7 @@ foreach (array_reverse($releases) as $r) {
     } elseif ($currentFound && $next == null) {
         if (Config::get('CHECK_PRERELEASE') == 1) {
             $next = $r;
-            $BRANCH = Updater::githubPrereleaseBranch();
+            $BRANCH = "beta";
             break;
         } elseif (!$r["prerelease"]) {
             $next = $r;
@@ -70,9 +64,18 @@ if ($next["tag_name"] != $releases[0]["tag_name"]) {
     After this operation is complete, refresh the page then run the updater again.<br /><br />';
 }
 
+// Get Tag Info
+$tags = Json::decode(file_get_contents($TAGS_URL, false, $context));
+$nextTag = null;
+foreach ($tags as $t) {
+    if ($t["name"] == $next["tag_name"] && $nextTag == null) {
+        $nextTag = $t;
+        break;
+    }
+}
+
 // Get the updates.json file
-$updateResponse = Json::decode(file_get_contents("{$DL_URL}/updates.json?ref=" . urlencode($BRANCH), false, $context));
-$updateData = base64_decode($updateResponse["content"]);
+$updateData = @file_get_contents($RAW_URL . $BRANCH . "/updates.json");
 // Check Release is Compatible
 if ($updateData === FALSE) {
     echo "This Version of Flare does not support the Updater.";
@@ -83,7 +86,7 @@ if ($updateData === FALSE) {
 $updateData = Json::decode($updateData);
 $nextUpdate = null;
 foreach ($updateData as $upd) {
-    if ($upd["tag"] == $next["tag_name"]) {
+    if ($upd["tag"] == $nextTag["name"]) {
         $nextUpdate = $upd;
     }
 }
@@ -99,6 +102,11 @@ if (!$nextUpdate["useUpdater"]) {
     echo "This version contains changes that cannot be installed with the updater. ";
     echo "Please update manually using the instructions available on <a href=\"{$next['html_url']}\" target=\"_blank\">GitHub</a>.";
     die();
+}
+
+$slash = "/";
+if (strpos(strtolower(php_uname('s')), "window") !== FALSE) {
+    $slash = "\\";
 }
 
 // Run DB Queries
@@ -118,12 +126,12 @@ echo "Updated Database Successfully<br />";
 // Delete Files to Delete
 if (!($current["prerelease"] && !$next["prerelease"])) {
     foreach ($nextUpdate["deletedFiles"] as $delFile) {
-        if (is_dir(__DIR__ . '/' . $delFile)) {
-            if (!rrmdir(__DIR__ . '/' . $delFile)) {
+        if (is_dir(__DIR__ . $slash . $delFile)) {
+            if (!rmdir(__DIR__ . $slash . $delFile)) {
                 echo "There was an error deleting " . $delFile;
             }
         } else {
-            if (!unlink(__DIR__ . '/' . $delFile)) {
+            if (!unlink(__DIR__ . $slash . $delFile)) {
                 echo "There was an error deleting " . $delFile;
             }
         }
@@ -134,8 +142,9 @@ if (!($current["prerelease"] && !$next["prerelease"])) {
 // Add Directories
 if (array_key_exists('newFolders', $nextUpdate)) {
     foreach ($nextUpdate['newFolders'] as $dir) {
-        if (!file_exists(__DIR__ . '/' . $dir)) {
-            if (mkdir(__DIR__ . '/' . $dir) === FALSE) {
+        $dir = str_replace("/", $slash, $dir);
+        if (!file_exists(__DIR__ . $slash . $dir)) {
+            if (mkdir(__DIR__ . $slash . $dir) === FALSE) {
                 echo "Error Creating Directory " . $dir;
                 die();
             }
@@ -145,9 +154,9 @@ if (array_key_exists('newFolders', $nextUpdate)) {
 
 // Update Files
 foreach ($nextUpdate["files"] as $file) {
-    $fileInfo = Json::decode(file_get_contents($DL_URL . "/" . $file . '?ref=' . urlencode($next["tag_name"]), false, $context));
-    $fileData = base64_decode($fileInfo["content"]);
-    if ($fileData === FALSE || file_put_contents(__DIR__ . '/' . $file, $fileData) === FALSE) {
+    $fileData = file_get_contents($RAW_URL . urlencode($nextTag["commit"]["sha"]) . "/" . urlencode($file));
+    $file = str_replace("/", $slash, $file);
+    if ($fileData === FALSE || file_put_contents(__DIR__ . $slash . $file, $fileData) === FALSE) {
         echo "Error Updating File " . $file;
         die();
     }
@@ -155,9 +164,8 @@ foreach ($nextUpdate["files"] as $file) {
 echo "Updated Files Successfully<br />";
 
 // Update Version File
-$vInfo = Json::decode(file_get_contents($DL_URL . "/version.json?ref=" . urlencode($next["tag_name"]), false, $context));
-$vData = base64_decode($vInfo["content"]);
-file_put_contents(__DIR__ . '/' . "version.json", $vData);
+$vData = file_get_contents($RAW_URL . urlencode($nextTag["commit"]["sha"]) . "/version.json");
+file_put_contents(__DIR__ . $slash . "version.json", $vData);
 echo "Updated Version File<br />";
 
 Events::trigger('site/updated', $nextUpdate);
