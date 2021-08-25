@@ -10,4 +10,3 @@ core/logs/*
 docker*
 vendor
 install
-node_modules

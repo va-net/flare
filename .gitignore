@@ -6,4 +6,3 @@ test.php
 core/logs/*
 .development
 .env
-node_modules
