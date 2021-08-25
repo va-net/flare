@@ -17,7 +17,7 @@ class PirepsController extends Controller
         $data->user = $user;
         $data->va_name = Config::get('va/name');
         $data->is_gold = VANet::isGold();
-        $data->pireps = $user->recentPireps(null, 30);
+        $data->pireps = $user->recentPireps(null, null);
         $this->render('pireps_all', $data);
     }
 
