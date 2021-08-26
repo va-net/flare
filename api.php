@@ -445,10 +445,9 @@ Router::add('/about', function () {
 
 // View All Events
 Router::add('/events', function () {
-    global $user;
-    if (!VANet::isGold()) badReq(ErrorCode::VaNotGold);
-
     $events = VANet::getEvents();
+    if ($events === null) internalError();
+
     echo Json::encode([
         "status" => ErrorCode::NoError,
         "result" => $events,
@@ -457,8 +456,6 @@ Router::add('/events', function () {
 
 // View Specific Event
 Router::add('/events/' . $guid, function ($eventId) {
-    if (!VANet::isGold()) badReq(ErrorCode::VaNotGold);
-
     $event = VANet::findEvent($eventId);
     if ($event === FALSE) notFound();
 
@@ -474,7 +471,6 @@ Router::add('/events/' . $guid, function ($eventId) {
     if ($_authType == AuthType::ApiKey) {
         accessDenied();
     }
-    if (!VANet::isGold()) badReq(ErrorCode::VaNotGold);
     if ($_apiUser->ifuserid == null) badReq(ErrorCode::NoIfUid);
 
     $event = VANet::findEvent($eventId);
@@ -1105,8 +1101,6 @@ Router::add('/plugins/updates', function () {
 
 // Get Active ATC (Gold Only)
 Router::add('/atc', function () {
-    if (!VANet::isGold()) accessDenied();
-
     $res = VANet::getAtc(empty(Input::get('server')) ? 'expert' : Input::get('server'));
     if (!$res) internalError();
 
