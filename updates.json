@@ -852,9 +852,30 @@
         "newFolders": []
     },
     {
+        "tag": "v2.0.0-beta.14",
+        "name": "Version 2.0.0 Beta 14",
+        "date": "2021-08-26",
+        "notes": "Various bug fixes",
+        "prerelease": true,
+        "useUpdater": true,
+        "files": [
+            "classes/data/User.php",
+            "classes/controllers/admin/AdminEventsController.php",
+            "classes/controllers/PirepsController.php",
+            "themes/default/views/pireps_all.php",
+            "themes/tailwind/views/pireps_all.php",
+            "api.php",
+            "classes/app/Updater.php",
+            "updater.php"
+        ],
+        "queries": [],
+        "deletedFiles": [],
+        "newFolders": []
+    },
+    {
         "tag": "v2.0.0",
         "name": "Version 2.0.0",
-        "date": "2021-08-25",
+        "date": "2021-08-27",
         "notes": "See https://github.com/va-net/flare/releases/tag/v2.0.0",
         "prerelease": false,
         "useUpdater": true,
