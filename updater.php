@@ -15,13 +15,13 @@ if (!$user->isLoggedIn()) {
     Redirect::to('index.php');
 }
 
-if (!$user->hasPermission('opsmanage')) {
+if (!$user->hasPermission('site')) {
     die();
 }
 
 $RELEASES_URL = Updater::releasesUrl();
-$DL_URL = Updater::downloadUrl();
 $BRANCH = Updater::githubDefaultBranch();
+$DL_URL = Updater::downloadUrl($BRANCH);
 
 $current = Updater::getVersion();
 
@@ -41,6 +41,16 @@ $context = stream_context_create($opts);
 $releases = array_filter(Json::decode(file_get_contents($RELEASES_URL, false, $context)), function ($release) {
     return !$release['draft'];
 });
+usort($releases, function ($x, $y) {
+    if ($x['published_at'] == $y['published_at']) {
+        return 0;
+    }
+
+    $a = new DateTime($x['published_at']);
+    $b = new DateTime($y['published_at']);
+    $diff = $a->diff($b);
+    return $diff->invert ? -1 : 1;
+});
 
 // Find next applicable release
 $currentFound = false;
@@ -52,6 +62,7 @@ foreach (array_reverse($releases) as $r) {
         if (Config::get('CHECK_PRERELEASE') == 1) {
             $next = $r;
             $BRANCH = Updater::githubPrereleaseBranch();
+            $DL_URL = Updater::downloadUrl($BRANCH);
             break;
         } elseif (!$r["prerelease"]) {
             $next = $r;
@@ -71,16 +82,14 @@ if ($next["tag_name"] != $releases[0]["tag_name"]) {
 }
 
 // Get the updates.json file
-$updateResponse = Json::decode(file_get_contents("{$DL_URL}/updates.json?ref=" . urlencode($BRANCH), false, $context));
-$updateData = base64_decode($updateResponse["content"]);
+$updateData = Json::decode(file_get_contents("{$DL_URL}/updates.json", false, $context));
 // Check Release is Compatible
-if ($updateData === FALSE) {
+if (empty($updateData)) {
     echo "This Version of Flare does not support the Updater.";
     die();
 }
 
 // Process updates.json File
-$updateData = Json::decode($updateData);
 $nextUpdate = null;
 foreach ($updateData as $upd) {
     if ($upd["tag"] == $next["tag_name"]) {
@@ -100,6 +109,8 @@ if (!$nextUpdate["useUpdater"]) {
     echo "Please update manually using the instructions available on <a href=\"{$next['html_url']}\" target=\"_blank\">GitHub</a>.";
     die();
 }
+
+$DL_URL = Updater::downloadUrl($next['tag_name']);
 
 // Run DB Queries
 if (count($nextUpdate["queries"]) != 0 && !($current["prerelease"] && !$next["prerelease"])) {
@@ -145,9 +156,8 @@ if (array_key_exists('newFolders', $nextUpdate)) {
 
 // Update Files
 foreach ($nextUpdate["files"] as $file) {
-    $fileInfo = Json::decode(file_get_contents($DL_URL . "/" . $file . '?ref=' . urlencode($next["tag_name"]), false, $context));
-    $fileData = base64_decode($fileInfo["content"]);
-    if ($fileData === FALSE || file_put_contents(__DIR__ . '/' . $file, $fileData) === FALSE) {
+    $fileData = file_get_contents($DL_URL . '/' . $file, false, $context);
+    if (empty($fileData) || file_put_contents(__DIR__ . '/' . $file, $fileData) === FALSE) {
         echo "Error Updating File " . $file;
         die();
     }
@@ -155,8 +165,7 @@ foreach ($nextUpdate["files"] as $file) {
 echo "Updated Files Successfully<br />";
 
 // Update Version File
-$vInfo = Json::decode(file_get_contents($DL_URL . "/version.json?ref=" . urlencode($next["tag_name"]), false, $context));
-$vData = base64_decode($vInfo["content"]);
+$vData = file_get_contents($DL_URL . "/version.json", false, $context);
 file_put_contents(__DIR__ . '/' . "version.json", $vData);
 echo "Updated Version File<br />";
 
