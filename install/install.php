@@ -58,7 +58,7 @@ switch (Input::get('page')) {
         break;
     case 'db-setup-cont':
         if (Input::get('submit')) {
-            sleep(8);
+            sleep(3);
             if (!Installer::setupDb()) {
                 Session::flash('error', 'Hmm. Looks like there was an error setting up the database. Ensure you have entered the correct database details, and try again.');
                 Redirect::to('?page=db-setup');

@@ -27,7 +27,7 @@ class Installer
     public static function createConfig($data = array())
     {
 
-        $template = file_get_contents(__DIR__ . '/templates/config.php');
+        $template = file_get_contents(__DIR__ . '/templates/config.new.php');
         foreach ($data as $name => $val) {
             $template = str_replace("'{$name}'", "'{$val}'", $template);
         }
@@ -50,7 +50,7 @@ class Installer
     {
 
         $sql = file_get_contents(__DIR__ . '/db.sql');
-        $db = DB::getInstance();
+        $db = DB::newInstance();
         if (!$db->query($sql)) {
             return false;
         }
