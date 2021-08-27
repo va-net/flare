@@ -91,13 +91,14 @@ class Updater
 
     /**
      * @return string
+     * @param string $ref
      */
-    public static function downloadUrl()
+    public static function downloadUrl($ref)
     {
         $conf = Config::get('updater/raw_url');
         if (!empty($conf)) return $conf;
 
-        return 'https://api.github.com/repos/va-net/flare/contents';
+        return 'https://raw.githubusercontent.com/va-net/flare/' . urlencode($ref) . '/';
     }
 
     /**
