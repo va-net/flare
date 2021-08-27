@@ -50,13 +50,14 @@ CREATE TABLE IF NOT EXISTS `permissions` (
 
 CREATE TABLE IF NOT EXISTS `pireps` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `flightnum` varchar(10) NOT NULL,
+  `flightnum` TEXT NOT NULL,
   `departure` varchar(4) NOT NULL,
   `arrival` varchar(4) NOT NULL,
   `flighttime` int(11) NOT NULL,
   `pilotid` int(11) NOT NULL,
   `date` date NOT NULL,
   `aircraftid` int(11) NOT NULL,
+  `fuelused` int(11) NOT NULL,
   `multi` text NOT NULL,
   `status` int(11) DEFAULT '0',
   PRIMARY KEY (`id`)
@@ -77,7 +78,7 @@ INSERT INTO `ranks` (`name`, `timereq`) VALUES
 
 CREATE TABLE IF NOT EXISTS `routes` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `fltnum` varchar(10) NOT NULL,
+  `fltnum` TEXT NOT NULL,
   `dep` varchar(4) NOT NULL,
   `arr` varchar(4) NOT NULL,
   `duration` int(11) NOT NULL,
@@ -92,13 +93,13 @@ CREATE TABLE IF NOT EXISTS `route_aircraft` (
   PRIMARY KEY (`id`)
 );
 
-CREATE TABLE `notifications` ( 
-  `id` INT NOT NULL AUTO_INCREMENT , 
-  `pilotid` INT NOT NULL , 
-  `icon` VARCHAR(20) NOT NULL , 
-  `subject` VARCHAR(20) NOT NULL , 
-  `content` VARCHAR(60) NOT NULL , 
-  `datetime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , 
+CREATE TABLE IF NOT EXISTS `notifications` ( 
+  `id` INT NOT NULL AUTO_INCREMENT, 
+  `pilotid` INT NOT NULL, 
+  `icon` VARCHAR(20) NOT NULL, 
+  `subject` VARCHAR(20) NOT NULL, 
+  `content` VARCHAR(60) NOT NULL, 
+  `datetime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, 
   PRIMARY KEY (`id`)
 );
 
@@ -134,8 +135,32 @@ CREATE TABLE IF NOT EXISTS `cache` (
   PRIMARY KEY (`name`)
 );
 
+CREATE TABLE IF NOT EXISTS `awards` ( 
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` TEXT NOT NULL,
+  `description` TEXT NOT NULL,
+  `imageurl` TEXT NOT NULL,
+  PRIMARY KEY (`id`)
+);
+
+CREATE TABLE IF NOT EXISTS `awards_granted` ( 
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `awardid` INT NOT NULL,
+  `pilotid` INT NOT NULL,
+  `dateawarded` DATE NOT NULL,
+  PRIMARY KEY (`id`)
+);
+
+CREATE TABLE IF NOT EXISTS `pireps_comments` ( 
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `pirepid` INT NOT NULL,
+  `userid` INT NOT NULL,
+  `content` TEXT NOT NULL,
+  `dateposted` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+);
+
 INSERT INTO `options` (`name`, `value`) VALUES ('FORCE_SERVER', '0');
 INSERT INTO `options` (`name`, `value`) VALUES ('CHECK_PRERELEASE', '0');
 INSERT INTO `options` (`name`, `value`) VALUES ('TEXT_COLOUR', '#fff');
 INSERT INTO `options` (`name`, `value`) VALUES ('VA_CALLSIGN_FORMAT', '/.*/i');
-INSERT INTO `options` (`name`, `value`) VALUES ('AUTO_CALLSIGNS', '0');

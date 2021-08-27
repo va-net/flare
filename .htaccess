@@ -1,4 +1,13 @@
-Redirect /core/ /
-Redirect /includes/ /
-Redirect /classes/ /
-Redirect /vendor/ /
+RedirectMatch 403 ^/classes/.*?$
+RedirectMatch 403 ^/core/.*?$
+RedirectMatch 403 ^/docker-compose/.*?$
+RedirectMatch 403 ^/themes/.*?$
+RedirectMatch 403 ^/vendor/.*?$
+
+Options +FollowSymLinks
+Options All -Indexes 
+
+RewriteEngine on
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php?q=$1  [QSA,L]

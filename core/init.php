@@ -15,39 +15,48 @@ doing! If updating, please backup this file prior to doing so.
 
 session_start();
 
-spl_autoload_register(function ($class) {
-    require_once __DIR__ . '/../classes/' . $class . '.php';
-});
-
 if (file_exists(__DIR__ . '/config.php')) {
     require_once __DIR__ . '/config.php';
 } elseif (file_exists(__DIR__ . '/config.new.php')) {
     require_once __DIR__ . '/config.new.php';
 }
 
-if (Config::isReady() && strlen(Config::get('INSTANCE_ID')) < 1) {
-    Analytics::register();
-}
+$classdirs = ['.', 'app', 'data', 'plugins', 'util', 'controllers', 'controllers/admin'];
+spl_autoload_register(function ($class) {
+    global $classdirs;
+    foreach ($classdirs as $d) {
+        $file = __DIR__ . '/../classes/' . $d . '/' . $class . '.php';
+        if (file_exists($file)) {
+            include $file;
+            return;
+        }
+    }
+});
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
 // Listen to required events and import data files
 Events::listen('*', 'Logger::logEvent');
 Events::listen('*', 'Notifications::handleEvent');
-require_once __DIR__ . '/listeners.php';
-require_once __DIR__ . '/../functions/escape.php';
-require_once __DIR__ . '/../functions/daterange.php';
-require_once __DIR__ . '/../includes/menus.php';
+Events::listen('site/updated', 'Analytics::reportUpdate');
+Events::listen('pirep/accepted', 'VANet::sendPirep');
+require_once __DIR__ . '/functions.php';
 
-// Index installed plugins
-$slash = "/";
-if (strpos(strtolower(php_uname('s')), "window") !== FALSE) {
-    $slash = "\\";
+if (!isset($IS_API) || !$IS_API) {
+    if (Config::isReady() && strlen(Config::get('INSTANCE_ID')) < 1 && !file_exists(__DIR__ . '/../.development')) {
+        Analytics::register();
+    } elseif (!Config::isReady() && !isset($IS_INSTALLER)) {
+        Redirect::to('/install/install.php');
+    }
+
+    require_once __DIR__ . '/menus.php';
+
+    $ACTIVE_THEME = Config::get('ACTIVE_THEME');
+    array_unshift($classdirs, "../themes/{$ACTIVE_THEME}/controllers");
 }
-$INSTALLED_PLUGINS = Json::decode(file_get_contents(__DIR__ . $slash . '..' . $slash . 'plugins.json'));
+
+$INSTALLED_PLUGINS = Json::decode(file_get_contents(__DIR__ . '/../plugins.json'));
 foreach ($INSTALLED_PLUGINS as $p) {
-    $classname = $p["class"];
+    $classname = $p['className'];
     $classname::init();
 }
-
-Events::listen('site/updated', 'Analytics::reportUpdate');
