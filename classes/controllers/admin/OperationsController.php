@@ -259,6 +259,7 @@ class OperationsController extends Controller
             Session::flash('error', 'Upload failed. Maybe your file is too big?');
             $this->redirect('/admin/operations/routes/import');
         }
+
         $route_data = file_get_contents($file["tmp_name"]);
         preg_match_all('/\r?\n.*/m', $route_data, $routelines);
         $data->routes = array_map(function ($l) {
@@ -276,6 +277,16 @@ class OperationsController extends Controller
                 "aircraftid" => $segments[5]
             );
         }, $routelines[0]);
+
+        foreach ($data->routes as $r) {
+            foreach ($r as $k => $v) {
+                if (strlen($v) < 1) {
+                    Session::flash('error', 'Invalid CSV File');
+                    $this->import_get();
+                }
+            }
+        }
+
         $this->render('admin/import_choose', $data);
     }
 
