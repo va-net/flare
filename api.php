@@ -1066,6 +1066,32 @@ Router::add('/repair', function () {
         Config::replace('CHECK_PRERELEASE', $v['prerelease'] ? '1' : '0');
     }
 
+    // Remove old plugins
+    $files = [
+        'classes/ActivityPlugin.php',
+        'admin/activity.php',
+        'admin/activity_settings.php',
+        'admin/loa.php',
+        'leave.php',
+        'classes/Example.php',
+        'admin/exampleplugin.php',
+        'classes/HubsPlugin.php',
+        'admin/hubs_plugin.php',
+        'hub.php',
+        'classes/MenuPlugin.php',
+        'admin/menu_plugin.php',
+        'classes/NotifyPlugin.php',
+        'admin/notify_plugin.php',
+        'classes/SecurityPlugin.php',
+        'admin/security_plugin.php',
+        'temppass.php'
+    ];
+    foreach ($files as $file) {
+        if (file_exists(__DIR__ . '/' . $file)) {
+            unlink(__DIR__ . '/' . $file);
+        }
+    }
+
     echo Json::encode([
         'status' => ErrorCode::NoError,
         'result' => null,

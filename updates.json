@@ -1100,5 +1100,21 @@
             "themes/tailwind/includes",
             "themes/tailwind/views"
         ]
+    },
+    {
+        "tag": "v2.0.1",
+        "name": "Version 2.0.1",
+        "date": "2021-09-06",
+        "notes": "Various bug fixes",
+        "prerelease": false,
+        "useUpdater": true,
+        "files": [
+            "themes/default/views/admin/recruitment.php",
+            "api.php",
+            "classes/controllers/admin/OperationsController.php"
+        ],
+        "queries": [],
+        "deletedFiles": [],
+        "newFolders": []
     }
 ]
