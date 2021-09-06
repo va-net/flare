@@ -178,7 +178,7 @@ $ACTIVE_CATEGORY = 'user-management';
                                             </button>
                                         </div>
                                         <div class="modal-body">
-                                            <form action="/admin/users/pending" method="post" id="declinemodal">
+                                            <form action="/admin/users/pending" method="post" id="declinemodal<?= $x ?>-form">
                                                 <input hidden class="form-control" name="action" value="declineapplication" />
                                                 <input hidden class="form-control" name="id" value="<?= $user['id'] ?>">
                                                 <div class="form-group">
@@ -188,7 +188,7 @@ $ACTIVE_CATEGORY = 'user-management';
                                             </form>
                                         </div>
                                         <div class="modal-footer">
-                                            <button class="btn btn-danger" form="declinemodal" type="submit">Decline</button>
+                                            <button class="btn btn-danger" form="declinemodal<?= $x ?>-form" type="submit">Decline</button>
                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                         </div>
                                     </div>
