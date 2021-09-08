@@ -276,7 +276,9 @@ class OperationsController extends Controller
                 "duration" => Time::strToSecs(str_replace('.', ':', $segments[10])),
                 "aircraftid" => $segments[5]
             );
-        }, $routelines[0]);
+        }, array_filter($routelines[0], function ($l) {
+            return strlen(trim($l)) > 0;
+        }));
 
         foreach ($data->routes as $r) {
             foreach ($r as $k => $v) {
