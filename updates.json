@@ -1116,5 +1116,17 @@
         "queries": [],
         "deletedFiles": [],
         "newFolders": []
+    },
+    {
+        "tag": "v2.0.2",
+        "name": "Version 2.0.2",
+        "date": "2021-09-09",
+        "notes": "Fix importer validation",
+        "prerelease": false,
+        "useUpdater": true,
+        "files": ["classes/controllers/admin/OperationsController.php"],
+        "queries": [],
+        "deletedFiles": [],
+        "newFolders": []
     }
 ]
