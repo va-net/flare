@@ -634,6 +634,14 @@ class VANet
     }
 
     /**
+     * @return bool
+     */
+    public static function pluginUpdatesAvailable()
+    {
+        return count(self::pluginUpdates()) > 0;
+    }
+
+    /**
      * @return array|null
      * @param string $id Plugin ID
      * @param bool $prerelease Whether to install prerelease version

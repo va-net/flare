@@ -16,6 +16,7 @@ class Page
         "recruitment" => "User::pendingCount",
         "pireps" => "Pirep::pendingCount",
         "settings" => "Updater::updateAvailable",
+        "plugins" => "VANet::pluginUpdatesAvailable",
     ];
     /**
      * @var stdClass

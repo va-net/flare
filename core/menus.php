@@ -134,7 +134,7 @@ $GLOBALS['admin-menu']["Plugins"] = array(
         "icon" => "fa-plug",
         "permission" => "site",
         "needsGold" => false,
-        "badgeid" => null,
+        "badgeid" => "plugins",
     ],
 );
 
