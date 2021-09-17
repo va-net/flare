@@ -46,7 +46,7 @@ if (Page::$pageData->user->hasPermission('admin')) {
                         <?= Page::$pageData->va_name ?>
                     </h1>
                 </div>
-                <ul id="sidebar-nav" class="mx-3" x-data="{ openDropdown: <?= isset(Page::$pageData->active_dropdown) ? '\'' . Page::$pageData->active_dropdown . '\'' : 'null' ?> }">
+                <ul id="sidebar-nav" class="mx-3" x-data="{ openDropdown: <?= isset(Page::$pageData->active_dropdown) ? '\'' . Page::$pageData->active_dropdown . '\'' : 'null' ?>, badges: {} }" x-init="initbadges(badges)">
                     <?php foreach ($GLOBALS['pilot-menu'] as $name => $data) : ?>
                         <?php
                         if (isset($data["vanetFeature"]) && Page::$pageData->va_profile['activeFeatures'][$data['vanetFeature']] === FALSE) {
@@ -63,17 +63,43 @@ if (Page::$pageData->user->hasPermission('admin')) {
                         <?php endif; ?>
                     <?php endforeach; ?>
                     <?php foreach ($adminmenu as $name => $items) : ?>
-                        <li :class="`mb-2 p-2 rounded font-semibold flex justify-[right] cursor-pointer ${openDropdown == '<?= $name ?>' ? 'bg-black/20 dark:bg-black' : 'hover:bg-black hover:bg-opacity-10 dark:hover:bg-opacity-40'}`" @click="openDropdown = openDropdown == '<?= $name ?>' ? null : '<?= $name ?>'">
-                            <span class="flex items-center">
-                                <?= TailwindIcons::icon("admin:{$name}", 'text-xl text-black dark:text-white opacity-70 h-6 w-6 mr-2') ?>
-                                <?= $name ?>
-                            </span>
+                        <?php $catId = preg_replace("/\s/", '-', strtolower($name)); ?>
+                        <script id="badges_<?= $catId ?>" type="application/json">
+                            <?=
+                            Json::encode(array_values(array_filter(array_map(function ($x) {
+                                return $x["badgeid"];
+                            }, array_values($items)), function ($x) {
+                                return !empty($x);
+                            })));
+                            ?>
+                        </script>
+                        <li :class="`mb-2 p-2 rounded font-semibold flex justify-[right] cursor-pointer ${openDropdown == '<?= $catId ?>' ? 'bg-black/20 dark:bg-black' : 'hover:bg-black hover:bg-opacity-10 dark:hover:bg-opacity-40'}`" @click="openDropdown = openDropdown == '<?= $catId ?>' ? null : '<?= $catId ?>'">
+                            <div class="flex items-center">
+                                <span class="relative">
+                                    <?= TailwindIcons::icon("admin:{$name}", 'text-xl text-black dark:text-white opacity-70 h-6 w-6 mr-2') ?>
+                                    <span class="absolute top-0 left-0 flex w-2 h-2" x-show="anyCategoryBadge('<?= $catId ?>', badges)">
+                                        <span class="absolute inline-flex w-full h-full bg-red-400 rounded-full opacity-75 motion-safe:animate-ping"></span>
+                                        <span class="relative inline-flex w-2 h-2 bg-red-600 rounded-full"></span>
+                                    </span>
+                                </span>
+                                <div class="flex-1">
+                                    <?= $name ?>
+                                </div>
+                            </div>
                         </li>
-                        <div x-show="openDropdown == '<?= $name ?>'" x-cloak>
+                        <div x-show="openDropdown == '<?= $catId ?>'" x-cloak>
                             <?php foreach ($items as $label => $data) : ?>
                                 <li class="ml-5 mb-1 py-1 px-2 rounded font-semibold flex justify-[right] cursor-pointer hover:bg-black hover:bg-opacity-10 dark:hover:bg-opacity-40">
-                                    <a class="flex items-center" href="<?= $data['link'] ?>">
-                                        <?= $label ?>
+                                    <a class="flex items-center w-full" href="<?= $data['link'] ?>">
+                                        <div class="flex-1"><?= $label ?></div>
+                                        <?php if ($data['badgeid'] !== null) : ?>
+                                            <span class="px-2 text-xs font-semibold leading-5 text-white bg-red-500 rounded-full" x-show="typeof badges?.<?= $data['badgeid'] ?> === 'string' && badges?.<?= $data['badgeid'] ?> != 0" x-text="badges?.<?= $data['badgeid'] ?>"></span>
+                                            <span class="text-red-500" x-show="typeof badges?.<?= $data['badgeid'] ?> === 'boolean'">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                                                </svg>
+                                            </span>
+                                        <?php endif; ?>
                                     </a>
                                 </li>
                             <?php endforeach; ?>

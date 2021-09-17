@@ -207,7 +207,7 @@ function inithome(data) {
 function initevents(data) {
     fetch('/api.php/events')
         .then((r) => r.json())
-        .then((r) => (data.events = r.result));
+        .then((r) => (data = r.result));
 }
 
 function toggleEventSignup(id) {
@@ -215,6 +215,25 @@ function toggleEventSignup(id) {
         method: 'PUT',
     }).then(() => location.reload());
     alert('Updating, please wait.');
+}
+
+function initbadges(data) {
+    fetch('/api.php/menu/badges')
+        .then((r) => r.json())
+        .then((r) => {
+            for (const [k, v] of Object.entries(r.result)) {
+                data[k] = v;
+            }
+        });
+}
+
+function anyCategoryBadge(id, badges) {
+    const badgeIds = JSON.parse(
+        document.getElementById(`badges_${id}`).innerHTML
+    );
+    return Object.keys(badges).some(
+        (k) => badgeIds.includes(k) && badges[k] != 0
+    );
 }
 
 async function handleComment(e, val, pirep, setComments, setValue) {
