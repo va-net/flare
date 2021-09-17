@@ -46,7 +46,7 @@ if (Page::$pageData->user->hasPermission('admin')) {
                         <?= Page::$pageData->va_name ?>
                     </h1>
                 </div>
-                <ul id="sidebar-nav" class="mx-3">
+                <ul id="sidebar-nav" class="mx-3" x-data="{ openDropdown: <?= isset(Page::$pageData->active_dropdown) ? '\'' . Page::$pageData->active_dropdown . '\'' : 'null' ?> }">
                     <?php foreach ($GLOBALS['pilot-menu'] as $name => $data) : ?>
                         <?php
                         if (isset($data["vanetFeature"]) && Page::$pageData->va_profile['activeFeatures'][$data['vanetFeature']] === FALSE) {
@@ -63,17 +63,21 @@ if (Page::$pageData->user->hasPermission('admin')) {
                         <?php endif; ?>
                     <?php endforeach; ?>
                     <?php foreach ($adminmenu as $name => $items) : ?>
-                        <li :class="`mb-2 p-2 rounded font-semibold flex justify-[right] cursor-pointer ${isOpen ? 'bg-black/20 dark:bg-black' : 'hover:bg-black hover:bg-opacity-10 dark:hover:bg-opacity-40'}`" x-data="{ isOpen: false }" @click="isOpen = !isOpen">
+                        <li :class="`mb-2 p-2 rounded font-semibold flex justify-[right] cursor-pointer ${openDropdown == '<?= $name ?>' ? 'bg-black/20 dark:bg-black' : 'hover:bg-black hover:bg-opacity-10 dark:hover:bg-opacity-40'}`" @click="openDropdown = openDropdown == '<?= $name ?>' ? null : '<?= $name ?>'">
                             <span class="flex items-center">
                                 <?= TailwindIcons::icon("admin:{$name}", 'text-xl text-black dark:text-white opacity-70 h-6 w-6 mr-2') ?>
                                 <?= $name ?>
                             </span>
-                            <div x-show="isOpen" x-cloak @click.away="isOpen = false" class="z-30 fixed w-44 transform translate-y-8 lg:translate-y-0 lg:translate-x-[260px] bg-white text-black dark:bg-gray-700 dark:text-white shadow-lg border border-gray-500 dark:border-white rounded object-right" x-transition:enter="transition ease-out duration-100" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95">
-                                <?php foreach ($items as $label => $data) : ?>
-                                    <a href="<?= $data['link'] ?>" class="block px-4 py-2 hover:bg-black/10 dark:hover:bg-black/40"><?= $label ?></a>
-                                <?php endforeach; ?>
-                            </div>
                         </li>
+                        <div x-show="openDropdown == '<?= $name ?>'" x-cloak>
+                            <?php foreach ($items as $label => $data) : ?>
+                                <li class="ml-5 mb-1 py-1 px-2 rounded font-semibold flex justify-[right] cursor-pointer hover:bg-black hover:bg-opacity-10 dark:hover:bg-opacity-40">
+                                    <a class="flex items-center" href="<?= $data['link'] ?>">
+                                        <?= $label ?>
+                                    </a>
+                                </li>
+                            <?php endforeach; ?>
+                        </div>
                     <?php endforeach; ?>
                 </ul>
             </aside>
