@@ -144,6 +144,20 @@ class PirepsController extends Controller
         $this->render('pireps_setup', $data);
     }
 
+    public function get_pirep($id)
+    {
+        $user = new User;
+        $this->authenticate($user);
+        $data = new stdClass;
+        $data->user = $user;
+        $data->pirep = Pirep::find($id, $user->hasPermission('pirepmanage') ? null : $user->data()->id);
+        if ($data->pirep === FALSE) $this->notFound();
+        $data->comments = Pirep::getComments($id);
+        $data->aircraft = $user->getAvailableAircraft();
+
+        $this->render('pireps_view', $data);
+    }
+
     public function acars()
     {
         $user = new User;

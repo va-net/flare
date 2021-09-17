@@ -29,10 +29,13 @@ Router::add('(/login)?', [Dependencies::get(AuthController::class), 'post'], 'po
 Router::add('/apply', [Dependencies::get(AuthController::class), 'apply_get']);
 Router::add('/apply', [Dependencies::get(AuthController::class), 'apply_post'], 'post');
 Router::add('/logout', [Dependencies::get(AuthController::class), 'logout']);
+Router::add('/profile', [Dependencies::get(AuthController::class), 'get_profile']);
+Router::add('/profile', [Dependencies::get(AuthController::class), 'post_profile'], 'post');
 Router::add('/home', [Dependencies::get(HomeController::class), 'get']);
 Router::add('/home', [Dependencies::get(HomeController::class), 'post'], 'post');
 Router::add('/pireps', [Dependencies::get(PirepsController::class), 'get_all']);
 Router::add('/pireps', [Dependencies::get(PirepsController::class), 'post_all'], 'post');
+Router::add('/pireps/(\d+)', [Dependencies::get(PirepsController::class), 'get_pirep']);
 Router::add('/pireps/new', [Dependencies::get(PirepsController::class), 'get_new']);
 Router::add('/pireps/new', [Dependencies::get(PirepsController::class), 'post_new'], 'post');
 Router::add('/pireps/setup', [Dependencies::get(PirepsController::class), 'get_setup']);
