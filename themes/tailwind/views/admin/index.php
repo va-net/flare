@@ -8,12 +8,12 @@ $days = Page::$pageData->days;
     Chart.defaults.color = color;
 </script>
 <div id="content" class="text-black dark:text-white" x-init="$watch('isDarkMode', () => location.reload())">
-    <div class="flex w-full p-5 dark:bg-gray-600 bg-gray-200 py-7 mb-4 items-center">
+    <div class="flex w-full p-5 dark:bg-gray-600 bg-gray-100 py-7 mb-4 items-center">
         <h2 class="flex-1 text-2xl font-bold lg:text-4xl">
             Site Dashboard
         </h2>
-        <form class="block" method="get">
-            <input class="form-control w-auto placeholder-white" name="days" type="number" placeholder="Days" value="<?= $days ?>" />
+        <form class="block flex-none" method="get">
+            <input class="form-control w-auto max-w-[150px] lg:max-w-none placeholder-white" name="days" type="number" placeholder="Days" value="<?= $days ?>" />
         </form>
     </div>
     <div class="z-10 flex-row w-full gap-5 px-5 space-y-3 text-black md:flex md:space-y-0 mb-7">
@@ -53,7 +53,7 @@ $days = Page::$pageData->days;
             </div>
         </div>
     </div>
-    <div class="lg:grid grid-cols-2 gap-4 mx-5">
+    <div class="lg:grid grid-cols-2 gap-4 mx-5 space-y-4 lg:space-y-0">
         <div class="dark:bg-white/30 bg-gray-100 rounded p-3 shadow">
             <h2 class="text-2xl font-bold">PIREPs (<?= $days ?> days)</h2>
             <canvas id="pireps-chart" x-init="$nextTick(() => pirepsChart.render())"></canvas>
@@ -92,7 +92,7 @@ $days = Page::$pageData->days;
             <h2 class="text-2xl font-bold mb-3">Top Pilots (7 days)</h2>
             <table class="table">
                 <thead>
-                    <th>#</th>
+                    <th class="hidden md:table-cell">#</th>
                     <th>Pilot</th>
                     <th>Flight Time</th>
                 </thead>
@@ -100,7 +100,7 @@ $days = Page::$pageData->days;
                     <?php $i = 1; ?>
                     <?php foreach (Page::$pageData->leaderboard as $pilot) : ?>
                         <tr>
-                            <td>
+                            <td class="hidden md:table-cell">
                                 <?= $i ?>
                             </td>
                             <td>
