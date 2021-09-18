@@ -18,17 +18,25 @@ class AdminController extends Controller
         $data->va_name = Config::get('va/name');
         $data->va_color = Config::get('site/colour_main_hex');
         $data->is_gold = VANet::isGold();
-        $data->pireps_90 = Stats::totalFlights(90);
-        $data->hrs_90 = Time::secsToString(Stats::totalHours(90));
-        $data->pilots_90 = Stats::pilotsApplied(90);
-        $data->leaderboard = Stats::pilotLeaderboard(5, 'flighttime');
 
-        $dates = daterange(date("Y-m-d", strtotime("-30 days")), date("Y-m-d"));
+        $days = 90;
+        if (!empty(Input::get('days')) && is_numeric(Input::get('days'))) {
+            $days = intval(Input::get('days'));
+        }
+        $data->days = $days;
+
+        $data->pireps = Stats::totalFlights($days);
+        $data->hrs = Time::secsToString(Stats::totalHours($days));
+        $data->pilots = Stats::pilotsApplied($days);
+        $data->leaderboard = Stats::pilotLeaderboard(5, 'flighttime');
+        $data->active_dropdown = 'site-management';
+
+        $dates = daterange(date("Y-m-d", strtotime("-{$days} days")), date("Y-m-d"));
         $vals = array_map(function () {
             return 0;
         }, $dates);
 
-        $allpireps = Pirep::fetchPast(30);
+        $allpireps = Pirep::fetchPast($days);
         $pirepsAssoc = array_combine($dates, $vals);
         foreach ($allpireps as $p) {
             $p['date'] = date_format(date_create($p['date']), "Y-m-d");
@@ -37,7 +45,7 @@ class AdminController extends Controller
         $data->pireps_chart_labels = array_keys($pirepsAssoc);
         $data->pireps_chart_data = array_values($pirepsAssoc);
 
-        $allpilots = User::fetchPast(30);
+        $allpilots = User::fetchPast($days);
         $pilotsAssoc = array_combine($dates, $vals);
         foreach ($allpilots as $p) {
             $p['joined'] = date_format(date_create($p['joined']), "Y-m-d");
@@ -47,24 +55,6 @@ class AdminController extends Controller
         $data->pilots_chart_data = array_values($pilotsAssoc);
 
         $this->render('admin/index', $data);
-    }
-
-    public function stats()
-    {
-        $user = new User;
-        $this->authenticate($user, true, 'statsviewing');
-        $data = new stdClass;
-        $data->user = $user;
-        $data->va_name = Config::get('va/name');
-        $data->is_gold = VANet::isGold();
-        $data->hours = Time::secsToString(Stats::totalHours());
-        $data->flights = Stats::totalFlights();
-        $data->pilots = Stats::numPilots();
-        $data->routes = Stats::numRoutes();
-        if ($data->is_gold) {
-            $data->stats = VANet::getStats();
-        }
-        $this->render('admin/stats', $data);
     }
 
     public function settings()
