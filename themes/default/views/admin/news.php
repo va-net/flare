@@ -155,10 +155,6 @@ $ACTIVE_CATEGORY = 'site-management';
                                 <label>Content</label>
                                 <textarea class="form-control" name="content"></textarea>
                             </div>
-                            <div class="form-group">
-                                <label>Author</label>
-                                <input readonly type="text" value="<?= escape(Page::$pageData->user->data()->name) ?>" class="form-control" name="author">
-                            </div>
                             <input type="submit" class="btn bg-custom" value="Save">
                         </form>
 

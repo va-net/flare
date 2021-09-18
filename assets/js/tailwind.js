@@ -236,6 +236,11 @@ function anyCategoryBadge(id, badges) {
     );
 }
 
+function resizeTextarea(el) {
+    el.style.height = 'auto';
+    el.style.height = el.scrollHeight + 5 + 'px';
+}
+
 async function handleComment(e, val, pirep, setComments, setValue) {
     e.preventDefault();
     if (!val) return;

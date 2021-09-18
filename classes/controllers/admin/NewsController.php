@@ -93,7 +93,7 @@ class NewsController extends Controller
         News::add([
             'subject' => Input::get('title'),
             'content' => Input::get('content'),
-            'author' => Input::get('author'),
+            'author' => (new User)->data()->name,
         ]);
         Session::flash('success', 'News Added');
     }
