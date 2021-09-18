@@ -35,6 +35,7 @@ if (Page::$pageData->user->hasPermission('admin')) {
     <link rel="stylesheet" href="/assets/fontawesome.min.css" />
     <title><?= Page::getTitle() ?></title>
     <script src="/assets/js/tailwind.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.1/chart.min.js"></script>
 </head>
 
 <body>
