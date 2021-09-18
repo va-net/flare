@@ -7,156 +7,107 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-class OperationsController extends Controller
+class AdminRoutesController extends Controller
 {
-    public function ranks_get()
+    public function get_index()
     {
         $user = new User;
         $this->authenticate($user, true, 'opsmanage');
         $data = new stdClass;
         $data->user = $user;
-        $data->va_name = Config::get('va/name');
-        $data->is_gold = VANet::isGold();
-        $data->ranks = Rank::fetchAllNames()->results();
-        $this->render('admin/ranks', $data);
-    }
 
-    public function ranks_post()
-    {
-        $user = new User;
-        $this->authenticate($user, true, 'opsmanage');
-        switch (Input::get('action')) {
-            case 'addrank':
-                $this->rank_add();
-            case 'editrank':
-                $this->rank_edit();
-            case 'delrank':
-                $this->rank_delete();
-            default:
-                $this->ranks_get();
-        }
-    }
-
-    private function rank_add()
-    {
-        Rank::add(Input::get('name'), Time::hrsToSecs(Input::get('time')));
-        Session::flash('success', 'Rank Added Successfully!');
-        $this->redirect('/admin/operations/ranks');
-    }
-
-    private function rank_edit()
-    {
-        try {
-            Rank::update(Input::get('id'), array(
-                'name' => Input::get('name'),
-                'timereq' => Time::hrsToSecs(Input::get('time'))
-            ));
-        } catch (Exception $e) {
-            Session::flash('error', 'There was an Error Editing the Rank');
-            $this->redirect('/admin/operations/ranks');
-        }
-        Session::flash('success', 'Rank Edited Successfully');
-        $this->redirect('/admin/operations/ranks');
-    }
-
-    private function rank_delete()
-    {
-        $ranks = Rank::fetchAllNames()->count();
-        if ($ranks <= 1) {
-            Session::flash('error', 'You cannot delete the one remaining rank!');
-            $this->redirect('/admin/operations/ranks');
-        }
-        $ret = Rank::delete(Input::get('delete'));
-        if (!$ret) {
-            Session::flash('error', 'There was an Error Deleting the Rank');
-            $this->redirect('/admin/operations/ranks');
-        } else {
-            Session::flash('success', 'Rank Deleted Successfully');
-            $this->redirect('/admin/operations/ranks');
-        }
-    }
-
-    public function fleet_get()
-    {
-        $user = new User;
-        $this->authenticate($user, true, 'opsmanage');
-        $data = new stdClass;
-        $data->user = $user;
-        $data->va_name = Config::get('va/name');
-        $data->is_gold = VANet::isGold();
-        $data->fleet = Aircraft::fetchActiveAircraft()->results();
-        $data->ranks = Rank::fetchAllNames()->results();
-        $data->types = Aircraft::fetchAllAircraftFromVANet();
-        $this->render('admin/fleet', $data);
-    }
-
-    public function fleet_post()
-    {
-        $user = new User;
-        $this->authenticate($user, true, 'opsmanage');
-        switch (Input::get('action')) {
-            case 'addaircraft':
-                $this->fleet_add();
-            case 'deleteaircraft':
-                $this->fleet_delete();
-            case 'editfleet':
-                $this->fleet_edit();
-            default:
-                $this->fleet_get();
-        }
-    }
-
-    private function fleet_add()
-    {
-        Aircraft::add(Input::get('livery'), Input::get('rank'), Input::get('notes'));
-        Session::flash('success', 'Aircraft Added Successfully! ');
-        $this->redirect('/admin/operations/fleet');
-    }
-
-    private function fleet_delete()
-    {
-        Aircraft::archive(Input::get('delete'));
-        Session::flash('success', 'Aircraft Archived Successfully! ');
-        $this->redirect('/admin/operations/fleet');
-    }
-
-    private function fleet_edit()
-    {
-        Aircraft::update(Input::get('rank'), Input::get('notes'), Input::get('id'));
-        Session::flash('success', 'Aircraft Updated Successfully!');
-        $this->redirect('/admin/operations/fleet');
-    }
-
-    public function routes_get()
-    {
-        $user = new User;
-        $this->authenticate($user, true, 'opsmanage');
-        $data = new stdClass;
-        $data->user = $user;
-        $data->va_name = Config::get('va/name');
-        $data->is_gold = VANet::isGold();
         $data->routes = Route::fetchAll();
         $data->fleet = Aircraft::fetchActiveAircraft()->results();
         $this->render('admin/routes', $data);
     }
 
-    public function routes_post()
+    public function post_index()
     {
         $user = new User;
         $this->authenticate($user, true, 'opsmanage');
+
         switch (Input::get('action')) {
             case 'editroute':
-                $this->route_edit();
+                $this->update();
+                break;
             case 'addroute':
-                $this->route_add();
+                $this->create();
+                break;
             case 'deleteroute':
-                $this->route_delete();
+                $this->delete();
+                break;
+        }
+
+        $this->get_index();
+    }
+
+    public function get_edit($id)
+    {
+        $user = new User;
+        $this->authenticate($user, true, 'opsmanage');
+        $data = new stdClass;
+        $data->user = $user;
+
+        $data->route = Route::find($id);
+        $data->aircraft = Route::aircraft($id);
+
+        $this->render('admin/routes_edit', $data);
+    }
+
+    public function post_edit($id)
+    {
+        $user = new User;
+        $this->authenticate($user, true, 'opsmanage');
+
+        $this->update();
+        $this->get_edit($id);
+    }
+
+    public function get_new()
+    {
+        $user = new User;
+        $this->authenticate($user, true, 'opsmanage');
+        $data = new stdClass;
+        $data->user = $user;
+
+        $this->render('admin/routes_new', $data);
+    }
+
+    public function post_new()
+    {
+        $user = new User;
+        $this->authenticate($user, true, 'opsmanage');
+
+        $this->create();
+        $this->get_index();
+    }
+
+    public function get_import()
+    {
+        $user = new User;
+        $this->authenticate($user, true, 'opsmanage');
+        $data = new stdClass;
+        $data->user = $user;
+
+        $this->render('admin/import', $data);
+    }
+
+    public function post_import()
+    {
+        $user = new User;
+        $this->authenticate($user, true, 'opsmanage');
+
+        switch (Input::get('action')) {
+            case 'choose':
+                $this->import_choose();
+            case 'import':
+                $this->import_import();
             default:
-                $this->routes_get();
+                $this->get_import();
         }
     }
 
-    private function route_add()
+    private function create()
     {
         $notes = empty(Input::get('notes')) ? null : Input::get('notes');
         Route::add([
@@ -171,17 +122,15 @@ class OperationsController extends Controller
             Route::addAircraft($id, $acId);
         }
         Session::flash('success', 'Route Added Successfully!');
-        $this->redirect('/admin/operations/routes');
     }
 
-    private function route_delete()
+    private function delete()
     {
         Route::delete(Input::get('delete'));
         Session::flash('success', 'Route Removed Successfully!');
-        $this->redirect('/admin/operations/routes');
     }
 
-    private function route_edit()
+    private function update()
     {
         $oldAc = array_map(function ($a) {
             return $a->id;
@@ -212,35 +161,8 @@ class OperationsController extends Controller
 
         if ($ret === FALSE) {
             Session::flash('error', 'Error Updating Route');
-            $this->redirect('/admin/operations/routes');
-        }
-
-        Session::flash('success', 'Route Updated Successfully!');
-        $this->redirect('/admin/operations/routes');
-    }
-
-    public function import_get()
-    {
-        $user = new User;
-        $this->authenticate($user, true, 'opsmanage');
-        $data = new stdClass;
-        $data->user = $user;
-        $data->va_name = Config::get('va/name');
-        $data->is_gold = VANet::isGold();
-        $this->render('admin/import', $data);
-    }
-
-    public function import_post()
-    {
-        $user = new User;
-        $this->authenticate($user, true, 'opsmanage');
-        switch (Input::get('action')) {
-            case 'choose':
-                $this->import_choose();
-            case 'import':
-                $this->import_import();
-            default:
-                $this->import_get();
+        } else {
+            Session::flash('success', 'Route Updated Successfully!');
         }
     }
 
@@ -284,7 +206,7 @@ class OperationsController extends Controller
             foreach ($r as $k => $v) {
                 if (strlen($v) < 1) {
                     Session::flash('error', 'Invalid CSV File');
-                    $this->import_get();
+                    $this->get_import();
                 }
             }
         }

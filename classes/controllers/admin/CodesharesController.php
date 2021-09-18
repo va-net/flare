@@ -124,6 +124,6 @@ class CodesharesController extends Controller
         VANet::deleteCodeshare($codeshare["id"]);
         Cache::delete('badge_codeshares');
         Session::flash('success', "Codeshare Routes Imported Successfully!");
-        $this->redirect('/admin/operations/routes');
+        $this->redirect('/admin/routes');
     }
 }

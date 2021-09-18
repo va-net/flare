@@ -9,7 +9,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 class AdminPirepsController extends Controller
 {
-    public function get()
+    public function get_index()
     {
         $user = new User;
         $this->authenticate($user, true, 'pirepmanage');
@@ -22,70 +22,26 @@ class AdminPirepsController extends Controller
         $this->render('admin/pireps', $data);
     }
 
-    public function post()
+    public function post_index()
     {
         $user = new User;
         $this->authenticate($user, true, 'pirepmanage');
         switch (Input::get('action')) {
             case 'acceptpirep':
                 $this->accept();
+                $this->get_index();
             case 'declinepirep':
                 $this->decline();
+                $this->get_index();
             case 'editpirep':
-                $this->edit();
+                $this->update();
+                $this->redirect('/admin/pireps?tab=all');
             case 'delpirep':
                 $this->delete();
-            default:
-                $this->get();
-        }
-    }
-
-    private function accept()
-    {
-        Pirep::accept(Input::get('accept'));
-        Cache::delete('badge_pireps');
-        Session::flash('success', 'PIREP Accepted Successfully!');
-        $this->redirect('/admin/pireps');
-    }
-
-    private function decline()
-    {
-        Pirep::decline(Input::get('decline'));
-        Cache::delete('badge_pireps');
-        Session::flash('success', 'PIREP Declined Successfully');
-        $this->redirect('/admin/pireps');
-    }
-
-    private function edit()
-    {
-        $data = [
-            'flightnum' => Input::get('fnum'),
-            'departure' => Input::get('dep'),
-            'arrival' => Input::get('arr'),
-            'date' => Input::get('date'),
-            'flighttime' => Time::strToSecs(Input::get('ftime')),
-            'aircraftid' => Input::get('aircraft'),
-            'status' => Input::get('status'),
-        ];
-        if (!Pirep::update(Input::get('id'), $data)) {
-            Session::flash('error', 'There was an Error Editing the PIREP');
-            $this->redirect('/admin/pireps?tab=all');
-        } else {
-            Cache::delete('badge_pireps');
-            Session::flash('success', 'PIREP Edited Successfully!');
-            $this->redirect('/admin/pireps?tab=all');
-        }
-    }
-
-    private function delete()
-    {
-        if (Pirep::delete(Input::get('id'))) {
-            Session::flash('success', 'PIREP Deleted');
-        } else {
-            Session::flash('error', 'Failed to Delete PIREP');
+                $this->redirect('/admin/pireps?tab=all');
         }
 
-        $this->redirect('/admin/pireps?tab=all');
+        $this->get_index();
     }
 
     public function get_multis()
@@ -108,9 +64,71 @@ class AdminPirepsController extends Controller
             case 'deletemulti':
                 $this->delete_multi();
             case 'addmulti':
-                $this->add_multi();
+                $this->create_multi();
             default:
                 $this->get_multis();
+        }
+    }
+
+    public function get_mutli_new()
+    {
+        $user = new User;
+        $this->authenticate($user, true, 'pirepmanage');
+        $data = new stdClass;
+        $data->user = $user;
+
+        $this->render('admin/multipliers_new', $data);
+    }
+
+    public function post_mutli_new()
+    {
+        $user = new User;
+        $this->authenticate($user, true, 'pirepmanage');
+
+        $this->create_multi();
+        $this->redirect('/admin/pireps/multipliers');
+    }
+
+    private function accept()
+    {
+        Pirep::accept(Input::get('accept'));
+        Cache::delete('badge_pireps');
+        Session::flash('success', 'PIREP Accepted Successfully!');
+    }
+
+    private function decline()
+    {
+        Pirep::decline(Input::get('decline'));
+        Cache::delete('badge_pireps');
+        Session::flash('success', 'PIREP Declined Successfully');
+    }
+
+    private function update()
+    {
+        $data = [
+            'flightnum' => Input::get('fnum'),
+            'departure' => Input::get('dep'),
+            'arrival' => Input::get('arr'),
+            'date' => Input::get('date'),
+            'flighttime' => Time::strToSecs(Input::get('ftime')),
+            'aircraftid' => Input::get('aircraft'),
+            'status' => Input::get('status'),
+        ];
+
+        if (!Pirep::update(Input::get('id'), $data)) {
+            Session::flash('error', 'There was an Error Editing the PIREP');
+        } else {
+            Cache::delete('badge_pireps');
+            Session::flash('success', 'PIREP Edited Successfully!');
+        }
+    }
+
+    private function delete()
+    {
+        if (Pirep::delete(Input::get('id'))) {
+            Session::flash('success', 'PIREP Deleted');
+        } else {
+            Session::flash('error', 'Failed to Delete PIREP');
         }
     }
 
@@ -118,10 +136,9 @@ class AdminPirepsController extends Controller
     {
         Pirep::deleteMultiplier(Input::get('delete'));
         Session::flash('success', 'Multiplier Deleted Successfully!');
-        $this->redirect('/admin/pireps/multipliers');
     }
 
-    private function add_multi()
+    private function create_multi()
     {
         Pirep::addMultiplier([
             "code" => Pirep::generateMultiCode(),
@@ -129,6 +146,5 @@ class AdminPirepsController extends Controller
             "multiplier" => Input::get("multi")
         ]);
         Session::flash('success', 'Multiplier Added Successfully!');
-        $this->redirect('/admin/pireps/multipliers');
     }
 }

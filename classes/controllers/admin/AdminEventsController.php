@@ -28,20 +28,56 @@ class AdminEventsController extends EventsController
         switch (Input::get('action')) {
             case 'deleteevent':
                 $this->delete();
+                break;
             case 'addevent':
                 $this->add();
+                break;
             case 'editevent':
                 $this->edit();
-            default:
-                $this->get();
+                break;
         }
+
+        $this->get();
+    }
+
+    public function get_event($id)
+    {
+        $user = new User;
+        $this->authenticate($user, true, 'opsmanage');
+        $data = new stdClass;
+        $data->user = $user;
+
+        $data->event = VANet::findEvent($id);
+        if ($data->event == null) {
+            $this->notFound();
+        }
+
+        $this->render('admin/events_edit', $data);
+    }
+
+    public function post_event($id)
+    {
+        $this->authenticate(new User, true, 'opsmanage');
+
+        switch (Input::get('action')) {
+            case 'deleteevent':
+                $this->delete();
+                $this->get();
+            case 'addevent':
+                $this->add();
+                break;
+            case 'editevent':
+                $this->edit();
+                break;
+        }
+
+        $this->get_event($id);
     }
 
     private function delete()
     {
         VANet::deleteEvent(Input::get('delete'));
         Session::flash('success', 'Event Deleted Successfully');
-        $this->redirect('/admin/operations/events');
     }
 
     private function add()
@@ -69,7 +105,6 @@ class AdminEventsController extends EventsController
         } else {
             Session::flash('error', 'Error Creating Event');
         }
-        $this->redirect('/admin/operations/events');
     }
 
     private function edit()
@@ -87,10 +122,8 @@ class AdminEventsController extends EventsController
 
         if (!$ret) {
             Session::flash('error', "Error Updating Event");
-            $this->redirect('/admin/operations/events');
         } else {
             Session::flash('success', "Event Updated Successfully");
-            $this->redirect('/admin/operations/events');
         }
     }
 }
