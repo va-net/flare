@@ -241,6 +241,49 @@ function resizeTextarea(el) {
     el.style.height = el.scrollHeight + 5 + 'px';
 }
 
+async function repairSite() {
+    await fetch('/api.php/repair', {
+        credentials: 'include',
+    });
+}
+
+async function migrateConfig() {
+    await fetch('/api.php/config_migrate', {
+        credentials: 'include',
+    });
+}
+
+function updaterOverlay(enabled) {
+    if (enabled) {
+        const overlay = document.createElement('div');
+        overlay.className =
+            'fixed top-0 left-0 w-screen h-screen bg-black/70 z-50 flex text-white';
+        overlay.id = 'updater-overlay';
+        overlay.innerHTML = `
+            <div class="m-auto text-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 animate-spin-backwards mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                <h1 class="text-4xl font-bold mb-2">Updating...</h1>
+                <p>Please wait while the site is updated</p>
+            </div>
+        `;
+        document.getElementById('root')?.appendChild(overlay);
+    } else {
+        document.getElementById('updater-overlay')?.remove();
+    }
+}
+
+async function updateSite(el) {
+    updaterOverlay(true);
+    const req = await fetch('/updater.php', {
+        credentials: 'include',
+    });
+    const res = await req.text();
+    el.innerHTML = res;
+    updaterOverlay(false);
+}
+
 async function handleComment(e, val, pirep, setComments, setValue) {
     e.preventDefault();
     if (!val) return;

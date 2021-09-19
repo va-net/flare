@@ -38,7 +38,7 @@ if (Page::$pageData->user->hasPermission('admin')) {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.1/chart.min.js"></script>
 </head>
 
-<body>
+<body x-data="{ flashSuccess: <?= Session::exists('success') ? "'" . Session::flash('success') . "'" : 'null' ?>, flashError: <?= Session::exists('error') ? "'" . Session::flash('error') . "'" : 'null' ?> }">
     <div class="flex flex-col w-full min-h-screen" id="root">
         <div :class="`md:flex md:flex-row min-h-full flex-grow ${isDarkMode ? 'dark' : 'light'}`" x-data="{ sidebarOpen: Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0) >= 1024, isDarkMode: false, account: false, notifications: false, }" x-cloak="md" x-init="() => { if ('darkMode' in localStorage && localStorage.getItem('darkMode') == 1) isDarkMode = true; }">
             <aside id="sidebar" class="w-screen max-w-[275px] absolute md:sticky md:top-0 h-screen md:border-r md:border-gray-200 dark:border-none bg-gray-100 text-black dark:bg-gray-800 dark:text-white md:shadow-inner shadow-xl overflow-y-auto z-20" x-show="sidebarOpen" x-transition:enter="transform transition-transform duration-500" x-transition:enter-start="-translate-x-full" x-transition:enter-end="translate-x-0" x-transition:leave="transform transition-transform duration-500" x-transition:leave-start="translate-x-0" x-transition:leave-end="-translate-x-full" @click.away="if (Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0) < 1024) sidebarOpen = false">
