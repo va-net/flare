@@ -54,7 +54,7 @@ $days = Page::$pageData->days;
         </div>
     </div>
     <div class="lg:grid grid-cols-2 gap-4 mx-5 space-y-4 lg:space-y-0">
-        <div class="dark:bg-white/30 bg-gray-100 rounded p-3 shadow">
+        <div class="dark:bg-white/10 bg-gray-100 rounded p-3 shadow">
             <h2 class="text-2xl font-bold">PIREPs (<?= $days ?> days)</h2>
             <canvas id="pireps-chart" x-init="$nextTick(() => pirepsChart.render())"></canvas>
             <script>
@@ -71,7 +71,7 @@ $days = Page::$pageData->days;
                 });
             </script>
         </div>
-        <div class="dark:bg-white/30 bg-gray-100 rounded p-3 shadow">
+        <div class="dark:bg-white/10 bg-gray-100 rounded p-3 shadow">
             <h2 class="text-2xl font-bold">New Pilots (<?= $days ?> days)</h2>
             <canvas id="pilots-chart" x-init="$nextTick(() => pilotsChart.render())"></canvas>
             <script>
@@ -88,7 +88,7 @@ $days = Page::$pageData->days;
                 });
             </script>
         </div>
-        <div class="dark:bg-white/30 bg-gray-100 rounded p-3 shadow col-span-2">
+        <div class="dark:bg-white/10 bg-gray-100 rounded p-3 shadow col-span-2">
             <h2 class="text-2xl font-bold mb-3">Top Pilots (7 days)</h2>
             <table class="table">
                 <thead>
