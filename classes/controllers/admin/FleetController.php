@@ -19,6 +19,7 @@ class FleetController extends Controller
         $data->fleet = Aircraft::fetchActiveAircraft()->results();
         $data->ranks = Rank::fetchAllNames()->results();
         $data->types = Aircraft::fetchAllAircraftFromVANet();
+        $data->active_dropdown = 'operations-management';
 
         $this->render('admin/fleet', $data);
     }
@@ -51,9 +52,11 @@ class FleetController extends Controller
         $data->user = $user;
 
         $data->aircraft = Aircraft::fetch($id);
+        $data->ranks = Rank::fetchAllNames()->results();
         if ($data->aircraft === false) {
             $this->notFound();
         }
+        $data->active_dropdown = 'operations-management';
 
         $this->render('admin/fleet_edit', $data);
     }
@@ -74,6 +77,10 @@ class FleetController extends Controller
         $data = new stdClass;
         $data->user = $user;
 
+        $data->types = Aircraft::fetchAllAircraftFromVANet();
+        $data->ranks = Rank::fetchAllNames()->results();
+        $data->active_dropdown = 'operations-management';
+
         $this->render('admin/fleet_new', $data);
     }
 
@@ -89,21 +96,18 @@ class FleetController extends Controller
     private function create()
     {
         Aircraft::add(Input::get('livery'), Input::get('rank'), Input::get('notes'));
-        Session::flash('success', 'Aircraft Added Successfully! ');
-        $this->redirect('/admin/operations/fleet');
+        Session::flash('success', 'Aircraft Added Successfully!');
     }
 
     private function delete()
     {
         Aircraft::archive(Input::get('delete'));
-        Session::flash('success', 'Aircraft Archived Successfully! ');
-        $this->redirect('/admin/operations/fleet');
+        Session::flash('success', 'Aircraft Archived Successfully!');
     }
 
     private function update()
     {
         Aircraft::update(Input::get('rank'), Input::get('notes'), Input::get('id'));
         Session::flash('success', 'Aircraft Updated Successfully!');
-        $this->redirect('/admin/operations/fleet');
     }
 }

@@ -242,15 +242,11 @@ function resizeTextarea(el) {
 }
 
 async function repairSite() {
-    await fetch('/api.php/repair', {
-        credentials: 'include',
-    });
+    await fetch('/api.php/repair');
 }
 
 async function migrateConfig() {
-    await fetch('/api.php/config_migrate', {
-        credentials: 'include',
-    });
+    await fetch('/api.php/config_migrate');
 }
 
 function updaterOverlay(enabled) {
@@ -276,9 +272,7 @@ function updaterOverlay(enabled) {
 
 async function updateSite(el) {
     updaterOverlay(true);
-    const req = await fetch('/updater.php', {
-        credentials: 'include',
-    });
+    const req = await fetch('/updater.php');
     const res = await req.text();
     el.innerHTML = res;
     updaterOverlay(false);
@@ -296,7 +290,6 @@ async function handleComment(e, val, pirep, setComments, setValue) {
         `/api.php/pireps/${encodeURIComponent(pirep)}/comments`,
         {
             method: 'POST',
-            credentials: 'include',
             body: data,
         }
     );
@@ -306,13 +299,18 @@ async function handleComment(e, val, pirep, setComments, setValue) {
     }
 
     const req2 = await fetch(
-        `/api.php/pireps/${encodeURIComponent(pirep)}/comments`,
-        {
-            credentials: 'include',
-        }
+        `/api.php/pireps/${encodeURIComponent(pirep)}/comments`
     );
     const res = await req2.json();
     setComments(res.result);
+}
+
+async function fetchLiveries(aircraftid) {
+    const req = await fetch(
+        `/api.php/liveries?aircraftid=${encodeURIComponent(aircraftid)}`
+    );
+    const res = await req.json();
+    return res.result;
 }
 
 document.addEventListener('alpine:initializing', () => {
