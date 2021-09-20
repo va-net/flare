@@ -1136,6 +1136,29 @@ Router::add('/atc', function () {
     ]);
 });
 
+// Get Airport Information
+Router::add('/airport/([A-Z0-9]+)', function ($icao) {
+    $res = VANet::getAirport($icao);
+    if (!$res) internalError();
+
+    echo Json::encode([
+        'status' => ErrorCode::NoError,
+        'result' => $res
+    ]);
+});
+
+// Get Airport ATIS
+Router::add('/airport/([A-Z0-9]+)/atis', function ($icao) {
+    $res = VANet::getAtis($icao);
+    if (!$res) notFound();
+
+    echo Json::encode([
+        'status' => ErrorCode::NoError,
+        'result' => $res
+    ]);
+});
+
+// Migrate Configuration
 Router::add('/config_migrate', function () {
     global $user;
     if (!$user->hasPermission('site')) accessDenied();

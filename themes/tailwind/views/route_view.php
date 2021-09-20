@@ -17,10 +17,12 @@ require_once __DIR__ . '/../includes/header.php';
                     <b>Flight Number:</b> <?= Page::$pageData->route->fltnum ?>
                 </li>
                 <li>
-                    <b>Departure:</b> <?= Page::$pageData->route->dep ?>
+                    <b>Departure:</b>
+                    <a href="/airport/<?= urlencode(Page::$pageData->route->dep) ?>" class="hover:underline"><?= Page::$pageData->route->dep ?></a>
                 </li>
                 <li>
-                    <b>Arrival:</b> <?= Page::$pageData->route->arr ?>
+                    <b>Arrival:</b>
+                    <a href="/airport/<?= urlencode(Page::$pageData->route->arr) ?>" class="hover:underline"><?= Page::$pageData->route->arr ?></a>
                 </li>
                 <li>
                     <b>Approx. Duration:</b> <?= Time::secsToString(Page::$pageData->route->duration) ?>

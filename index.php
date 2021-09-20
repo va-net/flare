@@ -45,6 +45,7 @@ Router::add('/routes/([0-9]+)', [Dependencies::get(RoutesController::class), 'vi
 Router::add('/map', [Dependencies::get(MapController::class), 'get']);
 Router::add('/events', [Dependencies::get(EventsController::class), 'get']);
 Router::add('/events/([0-9a-zA-z]{8}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{12})', [Dependencies::get(EventsController::class), 'view']);
+Router::add('/airport/([A-Z0-9]+)', [Dependencies::get(AirportController::class), 'get_airport']);
 
 // Admin Pages
 Router::add('/admin(/home|/stats)?', [Dependencies::get(AdminController::class), 'dashboard']);

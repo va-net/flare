@@ -191,4 +191,16 @@ class Route
                 WHERE pireps.flightnum=? AND pireps.status=1";
         return self::$_db->query($sql, [$fltnum], true)->results();
     }
+
+    /**
+     * @return array
+     * @param string $icao Airport ICAO
+     */
+    public static function getByAirport($icao)
+    {
+        self::init();
+
+        $sql = "SELECT * FROM routes WHERE dep=? OR arr=?";
+        return self::$_db->query($sql, [$icao, $icao])->results();
+    }
 }

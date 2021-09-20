@@ -1,6 +1,6 @@
 function eventstable(data) {
     if (!data) {
-        return `<tr class="border-b-2 border-black dark:border-white hover:bg-black hover:bg-opacity-20">
+        return `<tr class="hover:bg-opacity-20">
             <td class="px-3 py-2 text-center" colspan="3">Loading...</td>
         </tr>`;
     }
@@ -26,7 +26,7 @@ function eventstable(data) {
 
 function pirepstable(data) {
     if (!data) {
-        return `<tr class="border-b-2 border-black dark:border-white hover:bg-black hover:bg-opacity-20">
+        return `<tr class="hover:bg-opacity-20">
             <td class="px-3 py-2 text-center" colspan="3">Loading...</td>
         </tr>`;
     }
@@ -36,7 +36,7 @@ function pirepstable(data) {
         .map((p) => {
             let pirepStatus = ['Pending', 'Approved', 'Denied'];
             return `
-            <tr class="border-b-2 border-black dark:border-white hover:bg-black hover:bg-opacity-20">
+            <tr class="hover:bg-opacity-20">
                 <td class="px-3 py-2">${p.departure}-${p.arrival}</td>
                 <td class="px-3 py-2 hidden md:table-cell">${p.aircraft}</td>
                 <td class="px-3 py-2">${pirepStatus[p.status]}</td>
@@ -144,7 +144,7 @@ function newsfeed(data) {
 
 function atctable(data) {
     if (!data) {
-        return `<tr class="border-b-2 border-black dark:border-white">
+        return `<tr>
             <td class="px-3 py-2 text-center" colspan="2">Loading...</td>
         </tr>`;
     }
@@ -179,9 +179,71 @@ function atctable(data) {
             ([a, s]) => `
                 <tr>
                     <td>
-                        ${a}
+                        ${
+                            a == 'N/A'
+                                ? a
+                                : `<a href="/airport/${encodeURIComponent(
+                                      a
+                                  )}" class="hover:underline">${a}</a>`
+                        }
                     </td><td>
                         ${s}
+                    </td>
+                </tr>
+            `
+        )
+        .join('');
+}
+
+function airportAtcTable(data, icao) {
+    if (!data) {
+        return `<tr>
+            <td class="px-3 py-2 text-center" colspan="2">Loading...</td>
+        </tr>`;
+    }
+
+    const stationTypes = [
+        'Ground',
+        'Tower',
+        '',
+        '',
+        'Approach',
+        'Departure',
+        'Center',
+        'ATIS',
+        '',
+        '',
+        '',
+        '',
+    ];
+
+    data = data
+        .filter((x) => x.airportName == icao)
+        .sort((a, b) => {
+            if (a.type < b.type) {
+                return -1;
+            } else if (a.type > b.type) {
+                return 1;
+            } else {
+                return 0;
+            }
+        });
+
+    if (data.length < 1) {
+        return `<tr>
+            <td class="px-3 py-2 text-center" colspan="2">No Active ATC</td>
+        </tr>`;
+    }
+
+    return data
+        .map(
+            (station) => `
+                <tr>
+                    <td>
+                        ${stationTypes[station.type]}
+                    </td>
+                    <td>
+                        ${station.username}
                     </td>
                 </tr>
             `
@@ -207,7 +269,16 @@ function inithome(data) {
 function initevents(data) {
     fetch('/api.php/events')
         .then((r) => r.json())
-        .then((r) => (data = r.result));
+        .then((r) => (data.events = r.result));
+}
+
+function initairport(data, icao) {
+    fetch('/api.php/atc')
+        .then((r) => r.json())
+        .then((r) => (data.atc = r.result));
+    fetch(`/api.php/airport/${encodeURIComponent(icao)}/atis`)
+        .then((r) => r.json())
+        .then((r) => (data.atis = r.result));
 }
 
 function toggleEventSignup(id) {
@@ -235,6 +306,11 @@ function anyCategoryBadge(id, badges) {
         (k) => badgeIds.includes(k) && badges[k] != 0
     );
 }
+
+function generateId() {
+    return this.toLowerCase().replace(/\s/g, '-');
+}
+String.prototype.generateId = generateId;
 
 async function handleComment(e, val, pirep, setComments, setValue) {
     e.preventDefault();
