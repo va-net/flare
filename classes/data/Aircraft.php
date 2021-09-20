@@ -298,4 +298,14 @@ class Aircraft
 
         return $res->res;
     }
+
+    public static function unlockedAtRank($rankId)
+    {
+        self::init();
+
+        $sql = 'SELECT * FROM aircraft WHERE rankreq = ? AND status = 1';
+        $result = self::$_db->query($sql, [$rankId]);
+
+        return $result->results();
+    }
 }

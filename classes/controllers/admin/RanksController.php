@@ -16,6 +16,7 @@ class RanksController extends Controller
         $data = new stdClass;
         $data->user = $user;
         $data->ranks = Rank::fetchAllNames()->results();
+        $data->active_dropdown = 'operations-management';
         $this->render('admin/ranks', $data);
     }
 
@@ -51,6 +52,7 @@ class RanksController extends Controller
         }
 
         $data->rank = $rank;
+        $data->active_dropdown = 'operations-management';
         $this->render('admin/ranks_edit', $data);
     }
 
@@ -69,6 +71,7 @@ class RanksController extends Controller
         $this->authenticate($user, true, 'opsmanage');
         $data = new stdClass;
         $data->user = $user;
+        $data->active_dropdown = 'operations-management';
 
         $this->render('admin/ranks_new', $data);
     }
@@ -109,6 +112,12 @@ class RanksController extends Controller
             Session::flash('error', 'You cannot delete the one remaining rank!');
             $this->redirect('/admin/operations/ranks');
         }
+        $aircraft = Aircraft::unlockedAtRank(Input::get('id'));
+        if (count($aircraft) > 0) {
+            Session::flash('error', 'You cannot delete this rank as it is currently assigned to ' . count($aircraft) . ' aircraft!');
+            $this->redirect('/admin/operations/ranks');
+        }
+
         $ret = Rank::delete(Input::get('delete'));
         if (!$ret) {
             Session::flash('error', 'There was an Error Deleting the Rank');
