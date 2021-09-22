@@ -26,10 +26,16 @@
         @apply block w-full border-gray-300 rounded-md shadow-sm disabled:bg-gray-300 readonly:bg-gray-300 dark:border-transparent focus:shadow-md focus:ring-primary focus:ring-2 dark:disabled:bg-gray-800 dark:readonly:bg-gray-800 dark:disabled:text-gray-400 dark:readonly:text-gray-400 dark:bg-white/10 dark:text-white;
     }
     select.form-control {
-        @apply block w-full border-gray-300 rounded-md shadow-sm dark:border-transparent disabled:bg-gray-300 readonly:bg-gray-300 focus:shadow-md focus:ring-primary focus:ring-2 dark:text-white dark:bg-gray-600 dark:disabled:bg-gray-800 dark:readonly:bg-gray-800 dark:disabled:text-gray-400 dark:readonly:text-gray-400;
+        @apply block w-full border-gray-300 rounded-md shadow-sm dark:border-transparent disabled:bg-gray-300 readonly:bg-gray-300 focus:shadow-md focus:ring-primary focus:ring-2 dark:text-white dark:bg-white/10 dark:disabled:bg-gray-800 dark:readonly:bg-gray-800 dark:disabled:text-gray-400 dark:readonly:text-gray-400;
+    }
+    select.form-control option {
+        @apply bg-white dark:bg-gray-500;
     }
     textarea.form-control {
-        @apply block w-full h-auto resize-y border-gray-300 rounded-md shadow-sm dark:border-transparent disabled:bg-gray-300 readonly:bg-gray-300 focus:shadow-md focus:ring-primary focus:ring-2 dark:text-white dark:bg-gray-600 dark:disabled:bg-gray-800 dark:readonly:bg-gray-800 dark:disabled:text-gray-400 dark:readonly:text-gray-400;
+        @apply block w-full h-auto resize-y border-gray-300 rounded-md shadow-sm dark:border-transparent disabled:bg-gray-300 readonly:bg-gray-300 focus:shadow-md focus:ring-primary focus:ring-2 dark:text-white dark:bg-white/10 dark:disabled:bg-gray-800 dark:readonly:bg-gray-800 dark:disabled:text-gray-400 dark:readonly:text-gray-400;
+    }
+    .button-primary {
+        @apply px-3 py-2 mt-3 rounded-md shadow-md bg-primary text-primary-text focus:outline-none focus:ring-2 focus:ring-transparent focus:ring-offset-1 focus:ring-offset-black dark:focus:ring-offset-white disabled:bg-gray-300 disabled:text-gray-700 dark:disabled:bg-gray-600 disabled:cursor-not-allowed;
     }
     .table-wrapper {
         @apply overflow-hidden shadow sm:rounded-lg;
@@ -44,7 +50,7 @@
         @apply px-6 py-3 text-xs font-medium tracking-wider text-left uppercase;
     }
     .table tbody {
-        @apply bg-white divide-y divide-gray-200 dark:bg-gray-600;
+        @apply bg-white divide-y divide-gray-200 dark:bg-white/10;
     }
     .table tbody tr td {
         @apply px-6 py-3 whitespace-nowrap;

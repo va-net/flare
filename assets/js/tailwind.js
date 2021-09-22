@@ -241,6 +241,17 @@ function resizeTextarea(el) {
     el.style.height = el.scrollHeight + 5 + 'px';
 }
 
+function formatFlightTime() {
+    const val = typeof this == 'string' ? parseInt(this) : this;
+    const hours = Math.floor(val / 3600);
+    const minutes = (val % 3600) / 60;
+    return `${hours.toString().padStart(2, '0')}:${minutes
+        .toString()
+        .padStart(2, '0')}`;
+}
+Number.prototype.formatFlightTime = formatFlightTime;
+String.prototype.formatFlightTime = formatFlightTime;
+
 async function repairSite() {
     await fetch('/api.php/repair');
 }
@@ -311,6 +322,38 @@ async function fetchLiveries(aircraftid) {
     );
     const res = await req.json();
     return res.result;
+}
+
+function updateDataTable(allEntries, data) {
+    let current = allEntries;
+    if (data.search) {
+        current = current.filter((x) => {
+            return Object.values(x).some((v) =>
+                v.toString().toLowerCase().includes(data.search.toLowerCase())
+            );
+        });
+    }
+    if (data.orderBy) {
+        current = current.sort((a, b) => {
+            const x = data.orderBy(a);
+            const y = data.orderBy(b);
+            if (x < y) return data.order === 'asc' ? -1 : 1;
+            if (x > y) return data.order === 'asc' ? 1 : -1;
+            return 0;
+        });
+    }
+
+    data.current = [...current];
+}
+
+function dataTableOrder(fn, name, tableData) {
+    tableData.orderBy = fn;
+    tableData.order =
+        tableData.order == 'asc' && tableData.orderByName == name
+            ? 'desc'
+            : 'asc';
+    tableData.orderByName = name;
+    updateDataTable(allEntries, tableData);
 }
 
 document.addEventListener('alpine:initializing', () => {

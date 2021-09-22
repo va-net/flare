@@ -18,6 +18,7 @@ class AdminRoutesController extends Controller
 
         $data->routes = Route::fetchAll();
         $data->fleet = Aircraft::fetchActiveAircraft()->results();
+        $data->active_dropdown = 'operations-management';
         $this->render('admin/routes', $data);
     }
 
@@ -50,6 +51,8 @@ class AdminRoutesController extends Controller
 
         $data->route = Route::find($id);
         $data->aircraft = Route::aircraft($id);
+        $data->fleet = Aircraft::fetchActiveAircraft()->results();
+        $data->active_dropdown = 'operations-management';
 
         $this->render('admin/routes_edit', $data);
     }
@@ -69,6 +72,8 @@ class AdminRoutesController extends Controller
         $this->authenticate($user, true, 'opsmanage');
         $data = new stdClass;
         $data->user = $user;
+        $data->aircraft = Aircraft::fetchActiveAircraft()->results();
+        $data->active_dropdown = 'operations-management';
 
         $this->render('admin/routes_new', $data);
     }
@@ -79,7 +84,7 @@ class AdminRoutesController extends Controller
         $this->authenticate($user, true, 'opsmanage');
 
         $this->create();
-        $this->get_index();
+        $this->redirect('/admin/routes');
     }
 
     public function get_import()
@@ -88,6 +93,7 @@ class AdminRoutesController extends Controller
         $this->authenticate($user, true, 'opsmanage');
         $data = new stdClass;
         $data->user = $user;
+        $data->active_dropdown = 'operations-management';
 
         $this->render('admin/import', $data);
     }
@@ -179,7 +185,7 @@ class AdminRoutesController extends Controller
         $file = Input::getFile('routes-upload');
         if ($file["error"] == 1 || $file["error"] === TRUE) {
             Session::flash('error', 'Upload failed. Maybe your file is too big?');
-            $this->redirect('/admin/operations/routes/import');
+            $this->get_import();
         }
 
         $route_data = file_get_contents($file["tmp_name"]);
@@ -270,7 +276,7 @@ class AdminRoutesController extends Controller
                 $sql = preg_replace($from, $rpl, $sql, 1);
             }
             Session::flash('error', "Failed to Import Routes");
-            $this->redirect('/admin/operations/routes/import');
+            $this->get_import();
         }
 
         Events::trigger('route/import');

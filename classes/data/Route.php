@@ -42,41 +42,11 @@ class Route
         self::init();
 
         $ret = [];
-        $sql = "SELECT DISTINCT r.*, a.name AS aircraft_name, a.liveryname AS aircraft_livery, a.ifliveryid AS aircraft_liveryid, a.id AS aircraft_id
-        FROM (
-            route_aircraft ra INNER JOIN aircraft a ON a.id=ra.aircraftid
-        ) RIGHT JOIN routes r ON r.id=ra.routeid";
+        $sql = "SELECT * FROM routes ORDER BY fltnum";
         $data = self::$_db->query($sql, [], true)->results();
-        foreach ($data as $d) {
-            if (gettype($d->id) != 'string') $d->id = strval($d->id);
-            if (!array_key_exists($d->id, $ret)) {
-                $ac = $d->aircraft_name == null ? [] : [
-                    [
-                        "id" => $d->aircraft_id,
-                        "name" => $d->aircraft_name,
-                        "livery" => $d->aircraft_livery,
-                        "liveryid" => $d->aircraft_liveryid,
-                    ],
-                ];
-                $ret[$d->id] = [
-                    "fltnum" => $d->fltnum,
-                    "dep" => $d->dep,
-                    "arr" => $d->arr,
-                    "duration" => $d->duration,
-                    "notes" => $d->notes,
-                    "aircraft" => $ac,
-                ];
-            } else {
-                $ret[$d->id]['aircraft'][] = [
-                    "id" => $d->aircraft_id,
-                    "name" => $d->aircraft_name,
-                    "livery" => $d->aircraft_livery,
-                    "liveryid" => $d->aircraft_liveryid,
-                ];
-            }
-        }
-
-        return $ret;
+        return array_map(function ($x) {
+            return (array)$x;
+        }, $data);
     }
 
     /**
@@ -88,7 +58,8 @@ class Route
 
         self::init();
 
-        self::$_db->delete('routes', array('id', '=', $id));
+        self::$_db->delete('routes', ['id', '=', $id]);
+        self::$_db->delete('route_aircraft', ['routeid', '=', $id]);
         Events::trigger('route/deleted', ["id" => $id]);
     }
 
