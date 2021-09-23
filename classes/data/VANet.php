@@ -149,20 +149,31 @@ class VANet
     }
 
     /**
-     * @return array
+     * @return array|null
      * @param string $icao ICAO Code
+     * @param bool $noCache Whether to bypass cache
      */
-    public static function getAirport($icao)
+    public static function getAirport($icao, $noCache = false)
     {
+        if (!$noCache) {
+            $cache = Cache::get("airport_{$icao}");
+            if (!empty($cache)) return Json::decode($cache);
+        }
+
         $icao = urlencode($icao);
         $key = Config::get('vanet/api_key');
         $req = new HttpRequest(self::baseUrl() . "/public/v1/airport/{$icao}");
         $req->setRequestHeaders(["X-Api-Key: {$key}"])->execute();
         if ($req->getHttpCode() != 200) {
-            return false;
+            return null;
         }
 
-        return Json::decode($req->getResponse())['result'];
+        $res = Json::decode($req->getResponse())['result'];
+        if (!$noCache) {
+            Cache::set("airport_{$icao}", Json::encode($res), date("Y-m-d H:i:s", strtotime('+7 days')));
+        }
+
+        return $res;
     }
 
     /**
@@ -682,6 +693,35 @@ class VANet
         if (!$data || $data['status'] != 0) return null;
 
         return $data['result'];
+    }
+
+    /**
+     * @return string|null
+     * @param string $icao Airport ICAO
+     * @param bool $noCache Whether to bypass cache
+     */
+    public static function getAtis($icao, $noCache = false)
+    {
+        if (!$noCache) {
+            $cache = Cache::get('atis_' . $icao);
+            if (!empty($cache)) return $cache;
+        }
+
+        $key = Config::get('vanet/api_key');
+
+        $req = new HttpRequest(self::baseUrl() . '/public/v1/airport/' . urlencode($icao) . '/atis');
+        $req->setRequestHeaders(["X-Api-Key: {$key}"])
+            ->execute();
+
+        $data = Json::decode($req->getResponse());
+        if (!$data || $data['status'] != 0) return null;
+
+        $res = $data['result'];
+        if (!$noCache) {
+            Cache::set('atis_' . $icao, $res, date("Y-m-d H:i:s", strtotime('+15 minutes')));
+        }
+
+        return $res;
     }
 
     /**

@@ -42,11 +42,15 @@ $pilots = array_combine($ids, $names);
                 </li>
                 <li>
                     <b>Departure:</b>
-                    <?= Page::$pageData->event['departureIcao'] ?>
+                    <a href="/airport/<?= urlencode(Page::$pageData->event['departureIcao']) ?>" class="hover:underline">
+                        <?= Page::$pageData->event['departureIcao'] ?>
+                    </a>
                 </li>
                 <li>
                     <b>Arrival:</b>
-                    <?= Page::$pageData->event['arrivalIcao'] ?>
+                    <a href="/airport/<?= urlencode(Page::$pageData->event['arrivalIcao']) ?>" class="hover:underline">
+                        <?= Page::$pageData->event['arrivalIcao'] ?>
+                    </a>
                 </li>
                 <li>
                     <b>Aircraft:</b>

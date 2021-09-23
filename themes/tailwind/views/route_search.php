@@ -65,11 +65,20 @@ require_once __DIR__ . '/../includes/header.php';
                     <div class="flex px-4 py-3">
                         <div class="flex-1">
                             <h4 class="text-xl font-bold">Flight <?= $route->fltnum ?></h4>
-                            <p class="ml-3">
-                                <b>Route:</b> <?= $route->dep ?> to <?= $route->arr ?><br />
-                                <b>Flight Time:</b> <?= Time::secsToString($route->duration) ?>
-                                <?= $route->notes == null ? '' : '<br /><b>Notes:</b> ' . $route->notes; ?>
-                            </p>
+                            <ul class="ml-3">
+                                <li>
+                                    <b>Route:</b>
+                                    <a href="/airport/<?= urlencode($route->dep) ?>" class="hover:underline">
+                                        <?= $route->dep ?>
+                                    </a>
+                                    -
+                                    <a href="/airport/<?= urlencode($route->arr) ?>" class="hover:underline">
+                                        <?= $route->arr ?>
+                                    </a>
+                                </li>
+                                <li><b>Flight Time:</b> <?= Time::secsToString($route->duration) ?></li>
+                                <?= $route->notes == null ? '' : '<li><b>Notes:</b> ' . $route->notes . '</li>'; ?>
+                            </ul>
                         </div>
                         <div class="flex items-center flex-none">
                             <a href="/routes/<?= $route->id ?>" class="inline-flex p-2 rounded-md shadow-md bg-primary text-primary-text focus:outline-none focus:ring-2 focus:ring-transparent focus:ring-offset-1 focus:ring-offset-black dark:focus:ring-offset-white">

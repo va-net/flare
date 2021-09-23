@@ -338,4 +338,15 @@ class Pirep
 
         return !$q->error();
     }
+
+    public static function getByAirport($icao)
+    {
+        self::init();
+
+        $sql = "SELECT pireps.*, pilots.name AS pilotname FROM pireps INNER JOIN pilots ON pireps.pilotid=pilots.id WHERE pireps.departure=? OR pireps.arrival=? ORDER BY pireps.date DESC";
+        $q = self::$_db->query($sql, [$icao, $icao]);
+        if ($q->error()) return null;
+
+        return $q->results();
+    }
 }

@@ -196,6 +196,6 @@ class Notifications
             $content = "{$user->name} posted a comment on your PIREP.";
             if (strlen($content) > 60) return;
         }
-        self::notify(0, "fa-comment", "PIREP Comment", $content);
+        self::notify($user->id, "fa-comment", "PIREP Comment", $content);
     }
 }
