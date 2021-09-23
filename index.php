@@ -28,6 +28,8 @@ Router::add('(/login)?', [Dependencies::get(AuthController::class), 'get']);
 Router::add('(/login)?', [Dependencies::get(AuthController::class), 'post'], 'post');
 Router::add('/apply', [Dependencies::get(AuthController::class), 'apply_get']);
 Router::add('/apply', [Dependencies::get(AuthController::class), 'apply_post'], 'post');
+Router::add('/oauth/login', [Dependencies::get(OauthController::class), 'auth_redirect']);
+Router::add('/oauth/callback', [Dependencies::get(OauthController::class), 'auth_callback']);
 Router::add('/logout', [Dependencies::get(AuthController::class), 'logout']);
 Router::add('/home', [Dependencies::get(HomeController::class), 'get']);
 Router::add('/home', [Dependencies::get(HomeController::class), 'post'], 'post');

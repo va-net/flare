@@ -22,7 +22,14 @@ Page::setTitle('Login - ' . Config::get('va/name'));
     <div class="container-fluid">
         <div class="container-fluid mt-4 text-center" style="overflow: auto;">
             <h1 class="text-center pb-0 mb-0"><?= escape(Config::get('va/name')) ?></h1>
-            <h3 class="text-center py-0 my-0">Pilot Login<br><br></h3>
+            <h3 class="text-center py-0 mt-0">Pilot Login</h3>
+            <?php if (Page::$pageData->vanet_signin) : ?>
+                <div class="text-center mb-3">
+                    <a href="/oauth/login" class="btn btn-secondary d-inline-flex align-items-center" style="gap: 8px;">
+                        <img src="https://vanet.app/logo.png" style="height: 20px; width: auto;" /> <span>Login with VANet</span>
+                    </a>
+                </div>
+            <?php endif; ?>
             <div class="container justify-content-center">
                 <?php
                 if (Session::exists('error')) {

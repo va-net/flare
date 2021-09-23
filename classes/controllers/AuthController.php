@@ -23,7 +23,7 @@ class AuthController extends Controller
         if ($user->isLoggedIn()) {
             $this->redirect('/home');
         }
-        $data->va_name = Config::get('va/name');
+        $data->vanet_signin = !empty(Config::get('oauth/client_id')) && VANet::featureEnabled('airline-membership');
         $this->render('login', $data);
     }
 

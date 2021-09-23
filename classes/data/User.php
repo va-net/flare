@@ -106,22 +106,6 @@ class User
             if ($user) {
                 if (Hash::check($password, $this->data()->password)) {
                     Session::create($this->_sessionName, $this->data()->id);
-
-                    if ($remember) {
-                        $hash = Hash::unique();
-                        $hashCheck = $this->_db->get('sessions', array('user_id', '=', $this->data()->id));
-
-                        if (!$hashCheck->count()) {
-                            $this->_db->insert('sessions', array(
-                                'user_id' => $this->data()->id,
-                                'hash' => $hash
-                            ));
-                        } else {
-                            $hash = $hashCheck->first()->hash;
-                        }
-
-                        Cookie::create($this->_cookieName, $hash, Config::get('remember/cookie_expiry'));
-                    }
                     Events::trigger('user/logged-in', (array)$this->data());
                     return true;
                 }
@@ -130,6 +114,23 @@ class User
         $_SESSION = array();
         Events::trigger('user/login-failed');
         return false;
+    }
+
+    /**
+     * @return bool
+     * @param string $vanetId VANet User ID
+     */
+    public function vanetLogin($vanetId)
+    {
+        $user = self::fetchByVanetId($vanetId);
+        if (empty($user)) {
+            return false;
+        }
+
+        $this->find($user->id);
+        Session::create($this->_sessionName, $user->id);
+        Events::trigger('user/logged-in', (array)$this->data());
+        return true;
     }
 
     /**
@@ -593,5 +594,22 @@ class User
         }
 
         return $usersarray;
+    }
+
+    /**
+     * @return object|null
+     * @param int $id User VANet ID
+     */
+    public static function fetchByVanetId($id)
+    {
+        $db = DB::getInstance();
+
+        $sql = "SELECT * FROM pilots WHERE vanetid=?";
+        $results = $db->query($sql, [$id]);
+        if ($results->count() == 0) {
+            return null;
+        }
+
+        return $results->first();
     }
 }

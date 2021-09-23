@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /*
 Flare, a fully featured and easy to use crew centre, designed for Infinite Flight.
@@ -8,20 +8,23 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-class Token {
+class Token
+{
 
     /**
      * @return string
      */
-    public static function generate() {
-        return Session::create('token', Hash::make(uniqid()));
+    public static function generate()
+    {
+        return Session::create('token', md5(uniqid()));
     }
 
     /**
      * @return bool
      * @param string $token Token to Check
      */
-    public static function check($token) {
+    public static function check($token)
+    {
         $tokenName = 'token';
 
         if (Session::exists($tokenName) && $token === Session::get($tokenName)) {
@@ -31,5 +34,4 @@ class Token {
 
         return false;
     }
-
 }
