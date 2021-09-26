@@ -88,6 +88,7 @@ class AdminController extends Controller
         $data->analytics_enabled = !empty(Config::get('INSTANCE_ID'));
         $data->custom_css = Config::getCss();
         $data->migrate_config = !file_exists(__DIR__ . '/../../../core/config.new.php');
+        $data->setup_app = (empty(Config::get('oauth/client_id')) || empty(Config::get('oauth/client_secret'))) && VANet::featureEnabled('airline-membership') && file_exists(__DIR__ . '/../../../core/config.new.php');
         $data->themes = array_filter(scandir(__DIR__ . '/../../../themes'), function ($x) {
             return strpos($x, '.') !== 0;
         });
@@ -161,6 +162,19 @@ class AdminController extends Controller
                 Session::flash('success', 'Cache Cleared');
                 $this->redirect('/admin/settings?tab=maintenance');
                 break;
+            case 'setupapp':
+                $app = VANet::registerApp();
+                if (empty($app)) {
+                    Session::flash('error', 'Error Registering App');
+                    $this->settings();
+                }
+
+                Config::add('oauth/client_id', $app['clientId'], false);
+                Config::add('oauth/client_secret', $app['clientSecret'], false);
+
+                VANet::updateAppRedirects([Analytics::url() . '/oauth/callback']);
+                Session::flash('success', 'App Registered');
+                $this->redirect('/admin/settings?tab=interaction');
             default:
                 $this->settings();
         }
