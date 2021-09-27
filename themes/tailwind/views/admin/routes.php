@@ -3,11 +3,7 @@ Page::setTitle('Manage Routes - ' . Page::$pageData->va_name);
 require_once __DIR__ . '/../../includes/header.php';
 ?>
 <script type="application/json" id="allEntries">
-    <?= Json::encode(array_map(function ($x) {
-        $x['duration'] = intval($x['duration']);
-        $x['id'] = intval($x['id']);
-        return $x;
-    }, Page::$pageData->routes)) ?>
+    <?= Json::encode(Page::$pageData->routes) ?>
 </script>
 <script>
     var allEntries = JSON.parse(document.getElementById('allEntries').innerHTML);
@@ -27,14 +23,13 @@ require_once __DIR__ . '/../../includes/header.php';
 
     <div class="md:px-5 px-2 max-w-full">
         <div class="flex gap-2 items-center mb-2">
-            <input type="text" :value="table.search" class="form-control flex-1" x-ref="searchinput" placeholder="Search" @input="table.search = $event.target.value; updateDataTable(allEntries, table);" />
+            <input type="text" :value="table.search" class="form-control flex-1" placeholder="Search" @input="table.search = $event.target.value; updateDataTable(allEntries, table);" />
             <div class="text-sm">
                 <p x-text="`Ordering by ${table.orderByName}`"></p>
                 <p x-text="`${table.current.length} result${table.current.length == 1 ? '' : 's'}`"></p>
             </div>
         </div>
         <div class="table-wrapper mb-2">
-            <!-- TODO: Edit Route Page -->
             <table class="table" x-init="refresh()">
                 <thead>
                     <tr>
@@ -66,6 +61,7 @@ require_once __DIR__ . '/../../includes/header.php';
                 </tbody>
             </table>
         </div>
+
     </div>
 </div>
 <?php require_once __DIR__ . '/../../includes/footer.php'; ?>
