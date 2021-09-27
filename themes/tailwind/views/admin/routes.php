@@ -13,12 +13,15 @@ require_once __DIR__ . '/../../includes/header.php';
     var allEntries = JSON.parse(document.getElementById('allEntries').innerHTML);
 </script>
 <div id="content" class="text-black dark:text-white" x-data="{ table: { current: [], orderBy: (x) => x.fltnum, orderByName: 'Flight Number', order: 'asc', search: '' }, refresh() { return updateDataTable(allEntries, this.table) }, }">
-    <div class="flex w-full p-5 dark:bg-gray-600 bg-gray-100 py-7 mb-4 items-center">
+    <div class="flex w-full p-5 dark:bg-gray-600 bg-gray-100 py-7 mb-4 items-center gap-2">
         <h2 class="flex-1 text-2xl font-bold lg:text-4xl">
             Manage Routes
         </h2>
         <a href="/admin/routes/new" class="inline-block px-3 py-1 text-lg font-semibold rounded-md shadow-md hover:shadow-lg bg-primary text-primary-text focus:outline-none focus:ring-2 focus:ring-transparent focus:ring-offset-1 focus:ring-offset-black dark:focus:ring-offset-white">
             Create Route
+        </a>
+        <a href="/admin/routes/import" class="inline-block px-3 py-1 text-lg font-semibold rounded-md shadow-md hover:shadow-lg bg-primary text-primary-text focus:outline-none focus:ring-2 focus:ring-transparent focus:ring-offset-1 focus:ring-offset-black dark:focus:ring-offset-white">
+            Import Routes
         </a>
     </div>
 

@@ -217,6 +217,7 @@ class AdminRoutesController extends Controller
             }
         }
 
+        $data->active_dropdown = 'operations-management';
         $this->render('admin/import_choose', $data);
     }
 
@@ -282,6 +283,6 @@ class AdminRoutesController extends Controller
         Events::trigger('route/import');
 
         Session::flash('success', "Routes Imported Successfully!");
-        $this->redirect('/admin/operations/routes');
+        $this->redirect('/admin/routes');
     }
 }

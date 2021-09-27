@@ -431,6 +431,20 @@ function dataTableOrder(fn, name, tableData) {
     updateDataTable(allEntries, tableData);
 }
 
+async function spinAndChange(el, newHtml) {
+    el.classList.add('animate-spin-fast-ease');
+    await wait(250);
+    el.innerHTML = newHtml;
+    await wait(250);
+    el.classList.remove('animate-spin-fast-ease');
+}
+
+async function wait(ms) {
+    return new Promise((resolve) => {
+        setTimeout(resolve, ms);
+    });
+}
+
 document.addEventListener('alpine:initializing', () => {
     Alpine.directive(
         'html',

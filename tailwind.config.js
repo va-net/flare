@@ -17,6 +17,7 @@ module.exports = {
             },
             animation: {
                 'spin-backwards': 'spin-backwards 1s linear infinite',
+                'spin-fast-ease': 'spin 500ms ease-in-out infinite',
             },
         },
     },
