@@ -45,7 +45,7 @@ $ACTIVE_CATEGORY = 'operations-management';
                         <p>
                             Here, you can import your routes from the phpVMS CSV Format.
                         </p>
-                        <form method="post" enctype="multipart/form-data" action="/admin/operations/routes/import">
+                        <form method="post" enctype="multipart/form-data">
                             <input hidden name="action" value="choose" />
                             <div class="custom-file mb-2">
                                 <input required type="file" class="custom-file-input" name="routes-upload" accept=".csv" id="routes-upload">

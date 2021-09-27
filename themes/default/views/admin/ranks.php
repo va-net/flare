@@ -52,7 +52,7 @@ $ACTIVE_CATEGORY = 'operations-management';
                                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                                     </div>
                                     <div class="modal-body">
-                                        <form action="/admin/operations/ranks" method="post">
+                                        <form action="/admin/ranks" method="post">
                                             <input hidden name="action" value="addrank">
                                             <div class="form-group">
                                                 <label for="name">Name</label>
@@ -69,7 +69,7 @@ $ACTIVE_CATEGORY = 'operations-management';
                             </div>
                         </div>
 
-                        <form id="delrank" action="/admin/operations/ranks" method="post">
+                        <form id="delrank" action="/admin/ranks" method="post">
                             <input hidden name="action" value="delrank" />
                         </form>
 
@@ -109,7 +109,7 @@ $ACTIVE_CATEGORY = 'operations-management';
                                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                                     </div>
                                     <div class="modal-body">
-                                        <form action="/admin/operations/ranks" method="post">
+                                        <form action="/admin/ranks" method="post">
                                             <input hidden name="action" value="editrank">
                                             <input hidden name="id" id="rankmodal-id">
                                             <div class="form-group">

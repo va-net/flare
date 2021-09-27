@@ -57,7 +57,7 @@ $ACTIVE_CATEGORY = 'operations-management';
 
                                     <div class="modal-body">
                                         Are you sure you want to delete this Event?
-                                        <form id="deleteevent" action="/admin/operations/events" method="post">
+                                        <form id="deleteevent" action="/admin/events" method="post">
                                             <input hidden name="action" value="deleteevent" />
                                             <input hidden name="delete" id="confirmEventDelete-id" />
                                             <input type="submit" class="btn btn-danger" value="Delete" />
@@ -82,7 +82,7 @@ $ACTIVE_CATEGORY = 'operations-management';
                                     </div>
 
                                     <div class="modal-body">
-                                        <form action="/admin/operations/events" method="post">
+                                        <form action="/admin/events" method="post">
                                             <input hidden name="action" value="addevent" />
                                             <div class="form-group">
                                                 <label for="event-name">Event Name</label>
@@ -224,7 +224,7 @@ $ACTIVE_CATEGORY = 'operations-management';
                                     </div>
 
                                     <div class="modal-body">
-                                        <form action="/admin/operations/events" method="post">
+                                        <form action="/admin/events" method="post">
                                             <input hidden name="action" value="editevent" />
                                             <input hidden name="id" id="editevent-id" />
                                             <div class="form-group">

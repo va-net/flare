@@ -51,7 +51,7 @@ $ACTIVE_CATEGORY = 'operations-management';
                                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                                     </div>
                                     <div class="modal-body">
-                                        <form action="/admin/operations/fleet" method="post">
+                                        <form action="/admin/fleet" method="post">
                                             <input hidden name="action" value="addaircraft">
                                             <div class="form-group">
                                                 <label for="aircraft">Type</label>
@@ -118,7 +118,7 @@ $ACTIVE_CATEGORY = 'operations-management';
 
                                     <div class="modal-body">
                                         Are you sure you want to delete this Aircraft?
-                                        <form id="deleteaircraft" action="/admin/operations/fleet" method="post">
+                                        <form id="deleteaircraft" action="/admin/fleet" method="post">
                                             <input hidden name="action" value="deleteaircraft" />
                                             <input hidden name="delete" id="confirmFleetDelete-id" />
                                             <input type="submit" class="btn btn-danger" value="Delete" />
@@ -177,7 +177,7 @@ $ACTIVE_CATEGORY = 'operations-management';
                                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                                     </div>
                                     <div class="modal-body">
-                                        <form action="/admin/operations/fleet" method="post">
+                                        <form action="/admin/fleet" method="post">
                                             <input hidden name="action" value="editfleet" />
                                             <input hidden name="id" id="fleetedit-id" />
                                             <div class="form-group">

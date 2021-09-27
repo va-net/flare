@@ -100,7 +100,7 @@ class RanksController extends Controller
             ));
         } catch (Exception $e) {
             Session::flash('error', 'There was an Error Editing the Rank');
-            $this->redirect('/admin/operations/ranks');
+            $this->redirect('/admin/ranks');
         }
         Session::flash('success', 'Rank Edited Successfully');
     }
@@ -110,12 +110,12 @@ class RanksController extends Controller
         $ranks = Rank::fetchAllNames()->count();
         if ($ranks <= 1) {
             Session::flash('error', 'You cannot delete the one remaining rank!');
-            $this->redirect('/admin/operations/ranks');
+            $this->redirect('/admin/ranks');
         }
         $aircraft = Aircraft::unlockedAtRank(Input::get('id'));
         if (count($aircraft) > 0) {
             Session::flash('error', 'You cannot delete this rank as it is currently assigned to ' . count($aircraft) . ' aircraft!');
-            $this->redirect('/admin/operations/ranks');
+            $this->redirect('/admin/ranks');
         }
 
         $ret = Rank::delete(Input::get('delete'));

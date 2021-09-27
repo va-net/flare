@@ -53,7 +53,7 @@ $ACTIVE_CATEGORY = 'operations-management';
                             $aircraftOptions .= '<option value="' . $id . '">' . $name . '</option>';
                         }
 
-                        echo '<form action="/admin/operations/routes/import" method="post">';
+                        echo '<form action="/admin/routes/import" method="post">';
                         echo '<input hidden name="action" value="import" />';
                         echo "<input hidden name='rJson' value='$routesJson' />";
                         echo '<table class="w-100 mb-2">';

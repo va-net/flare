@@ -52,7 +52,7 @@ $ACTIVE_CATEGORY = 'operations-management';
                                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                                     </div>
                                     <div class="modal-body">
-                                        <form action="/admin/operations/routes" method="post" id="addroute-form">
+                                        <form action="/admin/routes" method="post" id="addroute-form">
                                             <input hidden name="action" value="addroute">
                                             <div class="form-group">
                                                 <label for="">Departure Airport</label>
@@ -164,7 +164,7 @@ $ACTIVE_CATEGORY = 'operations-management';
                                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                                     </div>
                                     <div class="modal-body">
-                                        <form action="/admin/operations/routes" method="post" id="routeedit-form">
+                                        <form action="/admin/routes" method="post" id="routeedit-form">
                                             <input hidden name="action" value="editroute">
                                             <input hidden name="id" id="routeedit-id" />
                                             <div class="form-group">
@@ -242,8 +242,8 @@ $ACTIVE_CATEGORY = 'operations-management';
                                 </div>
                             </div>
                         </div>
-                        <a href="/admin/operations/routes/import">Import Routes</a>
-                        <form id="deleteroute" method="post" action="/admin/operations/routes">
+                        <a href="/admin/routes/import">Import Routes</a>
+                        <form id="deleteroute" method="post" action="/admin/routes">
                             <input hidden value="deleteroute" name="action" />
                             <input hidden name="delete" id="deleteroute-id" />
                         </form>
