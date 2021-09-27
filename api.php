@@ -531,13 +531,11 @@ Router::add('/codeshares', function () {
     $dbRoutes = Route::fetchAll();
     foreach ($inputRoutes as $input) {
         if (!array_key_exists($input, $dbRoutes)) {
-            Session::flash('error', 'Could not Find Route ' . $input);
-            $this->redirect('/admin/operations/codeshares');
+            notFound();
         }
         $r = $dbRoutes[$input];
         if (count($r['aircraft']) < 1) {
-            Session::flash('error', 'This route does not have any aircraft attached - ' . $input);
-            $this->redirect('/admin/operations/codeshares');
+            notFound();
         }
         array_push($routes, array(
             "flightNumber" => $r['fltnum'],
@@ -554,12 +552,12 @@ Router::add('/codeshares', function () {
         "routes" => $routes
     ));
     if (!$ret) {
-        Session::flash('error', "Error Connnecting to VANet");
-        $this->redirect('/admin/operations/codeshares');
-        die();
+        internalError();
     } else {
-        Session::flash('success', "Codeshare Sent Successfully!");
-        $this->redirect('/admin/operations/codeshares');
+        echo Json::encode([
+            "status" => ErrorCode::NoError,
+            "result" => null,
+        ]);
     }
 }, 'post');
 
