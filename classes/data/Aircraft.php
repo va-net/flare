@@ -294,9 +294,9 @@ class Aircraft
     {
         self::init();
         $data = self::$_db->query("SHOW TABLE STATUS")->results();
-        $table = array_filter($data, function ($x) {
+        $table = array_values(array_filter($data, function ($x) {
             return $x->Name == 'aircraft';
-        })[0];
+        }))[0];
         return $table->Auto_increment;
     }
 

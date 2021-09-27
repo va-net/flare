@@ -30,6 +30,7 @@ $aircraftoptions = implode("\n", $aircraftoptions);
                     <p class="font-bold text-lg"><?= $aircraftid ?></p>
                 </div>
                 <div class="col-span-2" x-data="{ liveries: [] }">
+                    <input type="hidden" name="rego<?= $i ?>" value="<?= $aircraftid ?>" />
                     <select required class="form-control mb-2" name="aircraft<?= $i ?>" @change="fetch(`/api.php/liveries?aircraftid=${encodeURIComponent($event.target.value)}`).then(r => r.json()).then((r) => (liveries = r.result))">
                         <option value="">Aircraft Type</option>
                         <?= $aircraftoptions ?>
