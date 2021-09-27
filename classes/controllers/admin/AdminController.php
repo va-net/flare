@@ -86,6 +86,7 @@ class AdminController extends Controller
             $data->active_theme = 'default';
         }
 
+        $data->active_dropdown = 'site-management';
         $this->render('admin/settings', $data);
     }
 
