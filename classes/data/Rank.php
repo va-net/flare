@@ -113,10 +113,13 @@ class Rank
         self::init();
 
         $ret = self::$_db->delete('ranks', array('id', '=', $id));
+        if ($ret->error()) return false;
+
+        $lowRank = self::getFirstRank();
+        self::$_db->query("UPDATE aircraft SET rankreq=? WHERE rankreq=?", [$lowRank->id, $id]);
 
         Events::trigger('rank/deleted', ['id' => $id]);
-
-        return !($ret->error());
+        return true;
     }
 
     /**
