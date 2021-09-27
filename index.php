@@ -95,7 +95,7 @@ Router::add('/admin/events/([0-9a-zA-z]{8}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-z
 Router::add('/admin/events/([0-9a-zA-z]{8}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{4}-[0-9a-zA-z]{12})', [Dependencies::get(AdminEventsController::class), 'post_edit'], 'post');
 
 Router::add('/admin/users', [Dependencies::get(UsersController::class), 'get_index']);
-Router::add('/admin/users', [Dependencies::get(UsersController::class), 'post'], 'post_index');
+Router::add('/admin/users', [Dependencies::get(UsersController::class), 'post_index'], 'post');
 Router::add('/admin/users/pending', [Dependencies::get(UsersController::class), 'get_pending']);
 Router::add('/admin/users/pending', [Dependencies::get(UsersController::class), 'post_pending'], 'post');
 Router::add('/admin/users/staff', [Dependencies::get(UsersController::class), 'get_staff']);
