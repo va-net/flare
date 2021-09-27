@@ -410,8 +410,17 @@ function updateDataTable(allEntries, data) {
     }
     if (data.orderBy) {
         current = current.sort((a, b) => {
-            const x = data.orderBy(a);
-            const y = data.orderBy(b);
+            let x = data.orderBy(a);
+            let y = data.orderBy(b);
+            if (
+                typeof x == 'string' &&
+                typeof y == 'string' &&
+                x.isNumeric() &&
+                y.isNumeric()
+            ) {
+                x = parseFloat(x);
+                y = parseFloat(y);
+            }
             if (x < y) return data.order === 'asc' ? -1 : 1;
             if (x > y) return data.order === 'asc' ? 1 : -1;
             return 0;
@@ -430,6 +439,11 @@ function dataTableOrder(fn, name, tableData) {
     tableData.orderByName = name;
     updateDataTable(allEntries, tableData);
 }
+
+function isNumeric() {
+    return !isNaN(this) && !isNaN(parseFloat(this)) && isFinite(this);
+}
+String.prototype.isNumeric = isNumeric;
 
 async function spinAndChange(el, newHtml) {
     el.classList.add('animate-spin-fast-ease');
