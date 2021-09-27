@@ -10,6 +10,14 @@ module.exports = {
                 primary: 'var(--va-theme-color)',
                 'primary-text': 'var(--va-text-color)',
             },
+            keyframes: {
+                'spin-backwards': {
+                    to: { transform: 'rotate(-360deg)' },
+                },
+            },
+            animation: {
+                'spin-backwards': 'spin-backwards 1s linear infinite',
+            },
         },
     },
     variants: {

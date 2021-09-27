@@ -10,15 +10,6 @@
     [x-cloak='md'] {
         @apply md:hidden;
     }
-
-    @keyframes spin-backwards {
-        to {
-            transform: rotate(-360deg);
-        }
-    }
-    .animate-spin-backwards {
-        animation: spin-backwards 1s linear infinite;
-    }
 }
 
 @layer components {
