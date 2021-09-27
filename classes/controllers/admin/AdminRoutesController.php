@@ -123,7 +123,7 @@ class AdminRoutesController extends Controller
             "duration" => Time::strToSecs(Input::get('duration')),
             "notes" => $notes,
         ]);
-        $id = Route::lastId();
+        $id = Route::nextId() - 1;
         foreach (explode(',', Input::get('aircraft')) as $acId) {
             Route::addAircraft($id, $acId);
         }
@@ -248,19 +248,19 @@ class AdminRoutesController extends Controller
         }
 
         $routes = Json::decode($routes);
-        $lastId = Route::lastId();
+        $nextId = Route::nextId();
 
         $sql = "INSERT INTO routes (id, fltnum, dep, arr, duration) VALUES";
         $params = array();
         $j = 0;
         foreach ($routes as $item) {
             $sql .= "\n(?, ?, ?, ?, ?),";
-            array_push($params, $lastId + $j + 1);
+            array_push($params, $nextId + $j);
             array_push($params, $item["fltnum"]);
             array_push($params, $item["dep"]);
             array_push($params, $item["arr"]);
             array_push($params, $item["duration"]);
-            Route::addAircraft($lastId + $j + 1, $item["aircraftid"]);
+            Route::addAircraft($nextId + $j, $item["aircraftid"]);
 
             $j++;
         }

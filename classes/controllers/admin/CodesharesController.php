@@ -109,7 +109,7 @@ class CodesharesController extends Controller
             $ac = -1;
             if (!array_key_exists($route['aircraftLiveryId'], $dbaircraft)) {
                 Aircraft::add($route['aircraftLiveryId'], $lowrank->id);
-                $ac = Aircraft::lastId();
+                $ac = Aircraft::nextId() - 1;
             } else {
                 $ac = $dbaircraft[$route['aircraftLiveryId']]->id;
             }
@@ -119,7 +119,7 @@ class CodesharesController extends Controller
                 'arr' => $route['arrivalIcao'],
                 'duration' => $route['flightTime'],
             ]);
-            Route::addAircraft(Route::lastId(), $ac);
+            Route::addAircraft(Route::nextId() - 1, $ac);
         }
         VANet::deleteCodeshare($codeshare["id"]);
         Cache::delete('badge_codeshares');

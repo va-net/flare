@@ -290,13 +290,14 @@ class Aircraft
     /**
      * @return int
      */
-    public static function lastId()
+    public static function nextId()
     {
         self::init();
-        $res = self::$_db->query("SELECT MAX(id) AS res FROM aircraft")->first();
-        if ($res === FALSE) return 0;
-
-        return $res->res;
+        $data = self::$_db->query("SHOW TABLE STATUS")->results();
+        $table = array_filter($data, function ($x) {
+            return $x->Name == 'aircraft';
+        })[0];
+        return $table->Auto_increment;
     }
 
     public static function unlockedAtRank($rankId)

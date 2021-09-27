@@ -138,14 +138,14 @@ class Route
     /**
      * @return int
      */
-    public static function lastId()
+    public static function nextId()
     {
         self::init();
-        $sql = "SELECT id FROM routes ORDER BY id DESC LIMIT 1";
-        $res = self::$_db->query($sql)->first();
-        if ($res === FALSE) return 0;
-
-        return $res->id;
+        $data = self::$_db->query("SHOW TABLE STATUS")->results();
+        $table = array_filter($data, function ($x) {
+            return $x->Name == 'routes';
+        })[0];
+        return $table->Auto_increment;
     }
 
     /**
@@ -173,5 +173,16 @@ class Route
 
         $sql = "SELECT * FROM routes WHERE dep=? OR arr=?";
         return self::$_db->query($sql, [$icao, $icao])->results();
+    }
+
+    /**
+     * @return object[]
+     */
+    public static function fetchAllAircraftJoins()
+    {
+        self::init();
+
+        $sql = "SELECT * FROM route_aircraft WHERE routeid IN (SELECT id FROM routes)";
+        return self::$_db->query($sql, [], true)->results();
     }
 }

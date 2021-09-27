@@ -594,7 +594,7 @@ Router::add('/codeshares/' . $guid, function ($id) {
         $ac = -1;
         if (!array_key_exists($route['aircraftLiveryId'], $dbaircraft)) {
             Aircraft::add($route['aircraftLiveryId'], $lowrank->id);
-            $ac = Aircraft::lastId();
+            $ac = Aircraft::nextId() - 1;
         } else {
             $ac = $dbaircraft[$route['aircraftLiveryId']]->id;
         }
@@ -604,7 +604,7 @@ Router::add('/codeshares/' . $guid, function ($id) {
             'arr' => $route['arrivalIcao'],
             'duration' => $route['flightTime'],
         ]);
-        Route::addAircraft(Route::lastId(), $ac);
+        Route::addAircraft(Route::nextId() - 1, $ac);
     }
     VANet::deleteCodeshare($codeshare["id"]);
     Cache::delete('badge_codeshares');
@@ -790,7 +790,7 @@ Router::add('/routes', function () {
         "arr" => Input::get('arr'),
         "duration" => Input::get('duration'),
     ]);
-    $routeId = Route::lastId();
+    $routeId = Route::nextId() - 1;
     foreach (Input::get('aircraft') as $a) {
         Route::addAircraft($routeId, $a);
     }
