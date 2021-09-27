@@ -403,8 +403,13 @@ function updateDataTable(allEntries, data) {
     let current = allEntries;
     if (data.search) {
         current = current.filter((x) => {
-            return Object.values(x).some((v) =>
-                v.toString().toLowerCase().includes(data.search.toLowerCase())
+            return Object.values(x).some(
+                (v) =>
+                    v &&
+                    v
+                        .toString()
+                        .toLowerCase()
+                        .includes(data.search.toLowerCase())
             );
         });
     }
