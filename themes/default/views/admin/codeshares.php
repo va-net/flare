@@ -139,16 +139,22 @@ $ACTIVE_CATEGORY = 'operations-management';
                                 <select multiple class="form-control selectpicker" data-live-search="true" id="codeshare-routes-select" required>
                                     <option value>Select</option>
                                     <?php
-                                    foreach (Page::$pageData->routes as $id => $r) {
-                                        echo '<option value="' . $id . '">' . $r['fltnum'] . ' (' . $r['dep'] . ' - ' . $r['arr'] . ')</option>';
+                                    foreach (Page::$pageData->routes as $r) {
+                                        echo '<option value="' . $r['id'] . '">' . $r['fltnum'] . ' (' . $r['dep'] . ' - ' . $r['arr'] . ')</option>';
                                     }
                                     ?>
                                 </select>
-                                <input required hidden type="text" name="routes" id="codeshare-routes" />
+                                <div id="routes-inputs"></div>
                                 <script>
                                     $("#codeshare-routes-select").on('changed.bs.select', function() {
                                         var routes = $("#codeshare-routes-select").val();
-                                        $("#codeshare-routes").val(routes.join(','));
+                                        var html = '';
+                                        for (var i = 0; i < routes.length; i++) {
+                                            html += `
+                                                <input type="hidden" name="routes[]" value="${routes[i]}" />
+                                            `.trim();
+                                        }
+                                        $("#routes-inputs").html(html);
                                     });
                                 </script>
                             </div>

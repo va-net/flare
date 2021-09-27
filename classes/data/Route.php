@@ -182,7 +182,7 @@ class Route
     {
         self::init();
 
-        $sql = "SELECT * FROM route_aircraft WHERE routeid IN (SELECT id FROM routes)";
+        $sql = "SELECT r.*, a.ifliveryid AS aircraftliveryid FROM route_aircraft r INNER JOIN aircraft a ON r.aircraftid=a.id WHERE routeid IN (SELECT id FROM routes)";
         return self::$_db->query($sql, [], true)->results();
     }
 }
