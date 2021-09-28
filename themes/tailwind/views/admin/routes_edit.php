@@ -15,7 +15,7 @@ require_once __DIR__ . '/../../includes/header.php';
 
 <div id="content" class="text-black dark:text-white m-5">
     <h1 class="mb-3 text-3xl font-bold">Edit Route</h1>
-    <form method="post" id="add-route" x-data="{ aircraft: routeaircraft }">
+    <form method="post" x-data="{ aircraft: routeaircraft }">
         <div class="lg:flex space-y-4 lg:space-y-0 gap-4">
             <div class="flex-1 space-y-2 p-3 dark:bg-white/10 bg-gray-100 rounded">
                 <h2 class="text-2xl font-bold">Route Information</h2>
@@ -61,7 +61,7 @@ require_once __DIR__ . '/../../includes/header.php';
                 </div>
             </div>
         </div>
-        <button type="submit" :disabled="aircraft.length < 1" class="button-primary">
+        <button type="submit" :disabled="aircraft.length < 1" class="button-primary text-lg font-semibold">
             Save
         </button>
     </form>
