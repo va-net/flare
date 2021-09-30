@@ -68,14 +68,14 @@ class Permissions
     {
         self::init();
 
-        $ret = self::$_db->query("DELETE FROM permissions WHERE userid=? AND name=?", array($userid, $perm));
+        $ret = self::$_db->query("DELETE FROM permissions WHERE userid=? AND `name`=?", array($userid, $perm));
         Events::trigger('permission/revoked', ["userid" => $userid, "name" => $perm]);
 
         return !($ret->error());
     }
 
     /**
-     * @return array
+     * @return string[]
      * @param int $userid User ID
      */
     public static function forUser($userid)
@@ -83,12 +83,9 @@ class Permissions
         self::init();
 
         $tempperms = self::$_db->get('permissions', array('userid', '=', $userid))->results();
-        $permissions = [];
-        foreach ($tempperms as $p) {
-            array_push($permissions, $p->name);
-        }
-
-        return $permissions;
+        return array_map(function ($x) {
+            return $x->name;
+        }, $tempperms);
     }
 
     /**
@@ -123,7 +120,7 @@ class Permissions
     }
 
     /**
-     * @return array
+     * @return object[]
      * @param string $perm Permission Key
      */
     public static function usersWith($perm)

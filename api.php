@@ -35,6 +35,8 @@ abstract class ErrorCode
     const MethodNotAllowed = 12;
     const NoIfUid = 13;
     const NoGateAvailable = 14;
+    const AwardAlreadyGiven = 15;
+    const PermissionAlreadyGranted = 16;
 }
 
 function unauthorized()
@@ -388,8 +390,8 @@ Router::add('/pireps/deny/([0-9]+)', function ($pirepId) {
     ]);
 });
 
-// View User Info
-Router::add('/about', function () {
+// View Current User
+Router::add('/profile', function () {
     global $_apiUser, $_authType;
     echo Json::encode([
         "status" => ErrorCode::NoError,
@@ -408,8 +410,8 @@ Router::add('/about', function () {
     ]);
 });
 
-// Update User Info
-Router::add('/about', function () {
+// Update Current User
+Router::add('/profile', function () {
     global $_authType, $user, $_apiUser;
     if ($_authType == AuthType::ApiKey) {
         accessDenied();
@@ -442,6 +444,213 @@ Router::add('/about', function () {
         internalError();
     }
 }, 'put');
+
+// Get All Users
+Router::add('/users', function () {
+    global $user;
+    if (!$user->hasPermission('usermanage')) {
+        accessDenied();
+    }
+
+    $users = $user->getAllUsers();
+    echo Json::encode([
+        "status" => ErrorCode::NoError,
+        "result" => $users,
+    ]);
+});
+
+// Get User
+Router::add('/users/(\d+)', function ($userId) {
+    global $user;
+    if (!$user->hasPermission('usermanage')) {
+        accessDenied();
+    }
+
+    $user = $user->getUser($userId);
+    if (empty($user)) {
+        notFound();
+    }
+
+    echo Json::encode([
+        "status" => ErrorCode::NoError,
+        "result" => $user,
+    ]);
+});
+
+// Get User Awards
+Router::add('/users/(\d+)/awards', function ($userId) {
+    global $user;
+    if (!$user->hasPermission('usermanage')) {
+        accessDenied();
+    }
+
+    $u = $user->getUser($userId);
+    if (empty($u)) notFound();
+
+    $awards = $user->getAwards($userId);
+    echo Json::encode([
+        "status" => ErrorCode::NoError,
+        "result" => $awards,
+    ]);
+});
+
+// Get User Award
+Router::add('/users/(\d+)/awards/(\d+)', function ($userId, $awardId) {
+    global $user;
+    if (!$user->hasPermission('usermanage')) accessDenied();
+
+    $u = $user->getUser($userId);
+    if (empty($u)) notFound();
+
+    $award = Awards::get($awardId);
+    if (empty($award)) notFound();
+
+    $recipients = Awards::awardRecipients($awardId);
+    foreach ($recipients as $recipient) {
+        if ($recipient->id == $userId) {
+            echo Json::encode([
+                "status" => ErrorCode::NoError,
+                "result" => $award,
+            ]);
+            return;
+        }
+    }
+
+    notFound();
+});
+
+// Give User Award
+Router::add('/users/(\d+)/awards/(\d+)', function ($userId, $awardId) {
+    global $_authType, $user;
+    if ($_authType == AuthType::ApiKey) {
+        accessDenied();
+    }
+    if (!$user->hasPermission('usermanage')) {
+        accessDenied();
+    }
+
+    $u = $user->getUser($userId);
+    if (empty($u)) notFound();
+
+    $award = Awards::get($awardId);
+    if (!$award) notFound();
+
+    $recipients = Awards::awardRecipients($awardId);
+    foreach ($recipients as $r) {
+        if ($r->id == $userId) {
+            badReq(ErrorCode::AwardAlreadyGiven);
+        }
+    }
+
+    Awards::give($awardId, $userId);
+    echo Json::encode([
+        "status" => ErrorCode::NoError,
+        "result" => null,
+    ]);
+}, 'post');
+
+// Remove User Award
+Router::add('/users/(\d+)/awards/(\d+)', function ($userId, $awardId) {
+    global $_authType, $user;
+    if ($_authType == AuthType::ApiKey) {
+        accessDenied();
+    }
+    if (!$user->hasPermission('usermanage')) {
+        accessDenied();
+    }
+
+    $u = $user->getUser($userId);
+    if (empty($u)) notFound();
+
+    $award = Awards::get($awardId);
+    if (!$award) notFound();
+
+    $recipients = Awards::awardRecipients($awardId);
+    foreach ($recipients as $r) {
+        if ($r->id == $userId) {
+            Awards::revoke($awardId, $userId);
+            echo Json::encode([
+                "status" => ErrorCode::NoError,
+                "result" => null,
+            ]);
+            return;
+        }
+    }
+
+    notFound();
+}, 'delete');
+
+// Get User Permissions
+Router::add('/users/(\d+)/permissions', function ($userId) {
+    global $user;
+    if (!$user->hasPermission('usermanage')) accessDenied();
+
+    $u = $user->getUser($userId);
+    if (empty($u)) notFound();
+
+    $permissions = Permissions::forUser($userId);
+    echo Json::encode([
+        "status" => ErrorCode::NoError,
+        "result" => $permissions,
+    ]);
+});
+
+// Get User Permission
+Router::add('/users/(\d+)/permissions/([a-z]+)', function ($userId, $permission) {
+    global $user;
+    if (!$user->hasPermission('usermanage')) accessDenied();
+
+    $u = $user->getUser($userId);
+    if (empty($u)) notFound();
+
+    $permission = $user->hasPermission($permission, $userId);
+    echo Json::encode([
+        "status" => ErrorCode::NoError,
+        "result" => $permission,
+    ]);
+});
+
+// Give User Permission
+Router::add('/users/(\d+)/permissions/([a-z]+)', function ($userId, $permission) {
+    global $_authType, $user;
+    if ($_authType == AuthType::ApiKey) accessDenied();
+    if (!$user->hasPermission('staffmanage')) accessDenied();
+
+    $u = $user->getUser($userId);
+    if (empty($u)) notFound();
+
+    $permission = $user->hasPermission($permission, $userId);
+    if ($permission) {
+        badReq(ErrorCode::PermissionAlreadyGranted);
+    }
+
+    Permissions::give($userId, $permission);
+    echo Json::encode([
+        "status" => ErrorCode::NoError,
+        "result" => null,
+    ]);
+}, 'post');
+
+// Revoke User Permission
+Router::add('/users/(\d+)/permissions/([a-z]+)', function ($userId, $permission) {
+    global $_authType, $user;
+    if ($_authType == AuthType::ApiKey) accessDenied();
+    if (!$user->hasPermission('staffmanage')) accessDenied();
+
+    $u = $user->getUser($userId);
+    if (empty($u)) notFound();
+
+    $p = $user->hasPermission($permission, $userId);
+    if (!$p) badReq(ErrorCode::NotFound);
+
+    $res = Permissions::revoke($userId, $permission);
+    if (!$res) internalError();
+
+    echo Json::encode([
+        "status" => ErrorCode::NoError,
+        "result" => null,
+    ]);
+}, 'delete');
 
 // View All Events
 Router::add('/events', function () {
@@ -1153,6 +1362,25 @@ Router::add('/airport/([A-Z0-9]+)/atis', function ($icao) {
     echo Json::encode([
         'status' => ErrorCode::NoError,
         'result' => $res
+    ]);
+});
+
+// Get All Awards
+Router::add('/awards', function () {
+    echo Json::encode([
+        'status' => ErrorCode::NoError,
+        'result' => Awards::getAll(),
+    ]);
+});
+
+// Get Award
+Router::add('/awards/(\d+)', function ($id) {
+    $award = Awards::get($id);
+    if (!$award) notFound();
+
+    echo Json::encode([
+        'status' => ErrorCode::NoError,
+        'result' => $award,
     ]);
 });
 

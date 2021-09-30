@@ -12,7 +12,7 @@ class NewsController extends Controller
     public function get_index()
     {
         $user = new User;
-        $this->authenticate($user, true, 'site');
+        $this->authenticate($user, true, 'newsmanage');
         $data = new stdClass;
         $data->user = $user;
         $data->va_name = Config::get('va/name');
@@ -25,7 +25,7 @@ class NewsController extends Controller
     public function post_index()
     {
         $user = new User;
-        $this->authenticate($user, true, 'site');
+        $this->authenticate($user, true, 'newsmanage');
         switch (Input::get('action')) {
             case 'deletearticle':
                 $this->delete();
@@ -44,7 +44,7 @@ class NewsController extends Controller
     public function get_new()
     {
         $user = new User;
-        $this->authenticate($user, true, 'site');
+        $this->authenticate($user, true, 'newsmanage');
         $data = new stdClass;
         $data->user = $user;
         $data->active_dropdown = 'site-management';
@@ -55,7 +55,7 @@ class NewsController extends Controller
     public function post_new()
     {
         $user = new User;
-        $this->authenticate($user, true, 'site');
+        $this->authenticate($user, true, 'newsmanage');
 
         $this->add();
         $this->redirect('/admin/news');
@@ -64,7 +64,7 @@ class NewsController extends Controller
     public function get_edit($id)
     {
         $user = new User;
-        $this->authenticate($user, true, 'site');
+        $this->authenticate($user, true, 'newsmanage');
         $data = new stdClass;
         $data->user = $user;
 
@@ -76,7 +76,7 @@ class NewsController extends Controller
     public function post_edit($id)
     {
         $user = new User;
-        $this->authenticate($user, true, 'site');
+        $this->authenticate($user, true, 'newsmanage');
 
         $this->update($id);
         $this->get_edit($id);

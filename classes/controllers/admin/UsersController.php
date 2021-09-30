@@ -18,6 +18,7 @@ class UsersController extends Controller
         $data->va_name = Config::get('va/name');
         $data->is_gold = VANet::isGold();
         $data->users = $user->getAllUsers();
+        $data->active_dropdown = 'user-management';
         $this->render('admin/users', $data);
     }
 
@@ -49,6 +50,7 @@ class UsersController extends Controller
         $data->va_name = Config::get('va/name');
         $data->is_gold = VANet::isGold();
         $data->users = $user->getAllPendingUsers();
+        $data->active_dropdown = 'user-management';
         $this->render('admin/recruitment', $data);
     }
 
@@ -77,6 +79,7 @@ class UsersController extends Controller
         $data->va_name = Config::get('va/name');
         $data->is_gold = VANet::isGold();
         $data->staff = $user->getAllStaff();
+        $data->active_dropdown = 'user-management';
         $this->render('admin/staff', $data);
     }
 
@@ -117,6 +120,11 @@ class UsersController extends Controller
         $data->user = $user;
 
         $data->edit_user = $user->getUser($id);
+        $data->pireps = $user->fetchPireps($id)->results();
+        $data->user_awards = $user->getAwards($id);
+        $data->all_awards = Awards::getAll();
+        $data->permissions = array_unique(Permissions::forUser($id));
+        $data->active_dropdown = 'user-management';
         $this->render('admin/users_edit', $data);
     }
 
@@ -146,6 +154,7 @@ class UsersController extends Controller
             );
         }
 
+        $data->active_dropdown = 'user-management';
         $this->render('admin/user_lookup', $data);
     }
 
