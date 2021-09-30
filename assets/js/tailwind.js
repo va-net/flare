@@ -417,6 +417,9 @@ function updateDataTable(allEntries, data) {
         current = current.sort((a, b) => {
             let x = data.orderBy(a);
             let y = data.orderBy(b);
+
+            const dateRegex =
+                /\d{4}-\d{2}-\d{2}(\s?T?\s?\d{2}:\d{2}(:\d{2})?Z?)?/;
             if (
                 typeof x == 'string' &&
                 typeof y == 'string' &&
@@ -425,11 +428,25 @@ function updateDataTable(allEntries, data) {
             ) {
                 x = parseFloat(x);
                 y = parseFloat(y);
+            } else if (
+                typeof x == 'string' &&
+                typeof y == 'string' &&
+                dateRegex.test(x) &&
+                dateRegex.test(y)
+            ) {
+                x = new Date(x);
+                y = new Date(y);
             }
+
             if (x < y) return data.order === 'asc' ? -1 : 1;
             if (x > y) return data.order === 'asc' ? 1 : -1;
             return 0;
         });
+    }
+    if (data.filters) {
+        for (const f of data.filters) {
+            current = current.filter(f);
+        }
     }
 
     data.current = [...current];
