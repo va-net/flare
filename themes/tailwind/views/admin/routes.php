@@ -61,7 +61,6 @@ require_once __DIR__ . '/../../includes/header.php';
                 </tbody>
             </table>
         </div>
-
     </div>
 </div>
 <?php require_once __DIR__ . '/../../includes/footer.php'; ?>

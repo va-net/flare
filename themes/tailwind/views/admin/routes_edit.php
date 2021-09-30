@@ -45,20 +45,24 @@ require_once __DIR__ . '/../../includes/header.php';
             </div>
             <div class="flex-1 p-3 dark:bg-white/10 bg-gray-100 rounded">
                 <h2 class="text-2xl font-bold mb-2">Route Aircraft</h2>
-                <ul class="list-disc mb-3 ml-5">
+                <ul class="mb-3 space-y-0.5">
                     <template x-for="a in aircraft" :key="a.id">
-                        <li x-text="`${a.name} (${a.liveryname})`"></li>
+                        <li class="flex group">
+                            <span class="inline-block flex-1" x-text="`${a.name} (${a.liveryname})`"></span>
+                            <span class="invisible group-hover:visible flex-none text-gray-400 cursor-pointer" title="Remove Aircraft" @click="aircraft = aircraft.filter(ac => ac.id != a.id)">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                </svg>
+                            </span>
+                        </li>
                     </template>
                 </ul>
-                <div class="space-y-1">
-                    <label for="newaircraft">Add Aircraft</label>
-                    <select id="newaircraft" x-ref="newaircraft" class="form-control" @change.prevent="if ($event.target.value) { aircraft.push(allaircraft.find(a => a.ifliveryid == $event.target.value)); $refs.newaircraft.value = ''; }">
-                        <option value>Select</option>
-                        <template x-for="a in allaircraft.filter(ac => !aircraft.includes(ac))">
-                            <option :value="a.ifliveryid" x-text="`${a.name} (${a.liveryname})`"></option>
-                        </template>
-                    </select>
-                </div>
+                <select class="form-control" @change.prevent="if ($event.target.value) { aircraft.push(allaircraft.find(a => a.ifliveryid == $event.target.value)); $el.value = ''; }">
+                    <option value>Add Aircraft</option>
+                    <template x-for="a in allaircraft.filter(ac => !aircraft.some(a => a.id == ac.id))">
+                        <option :value="a.ifliveryid" x-text="`${a.name} (${a.liveryname})`"></option>
+                    </template>
+                </select>
             </div>
         </div>
         <button type="submit" :disabled="aircraft.length < 1" class="button-primary text-lg font-semibold">
