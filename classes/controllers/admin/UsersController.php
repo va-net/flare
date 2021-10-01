@@ -47,10 +47,42 @@ class UsersController extends Controller
         $this->authenticate($user, true, 'recruitment');
         $data = new stdClass;
         $data->user = $user;
-        $data->va_name = Config::get('va/name');
-        $data->is_gold = VANet::isGold();
+
         $data->users = $user->getAllPendingUsers();
         $data->active_dropdown = 'user-management';
+
+        $lists = Cache::get('ifvarbLists');
+        if (!$lists) {
+            $lists = Json::decode(file_get_contents("https://ifvarb.com/watchlist_api.php?apikey=a5f2963d-29b1-40e4-8867-a4fbb384002c"));
+            Cache::set('ifvarbLists', Json::encode($lists), date('Y-m-d H:i:s', strtotime('+3 hours')));
+        } else {
+            $lists = Json::decode($lists);
+        }
+        $watchlist = [];
+        $blacklist = [];
+        $prevwatch = [];
+        $prevblack = [];
+        foreach ($lists as $l) {
+            if (new DateTime("now") > new DateTime($l['expire_date'])) {
+                if ($l["type"] == "Watchlist") {
+                    $prevwatch[strtolower($l["ifc"])] = "{$l["notes"]} - Expired {$l["expire_date"]}";
+                } else {
+                    $prevblack[strtolower($l["ifc"])] = "{$l["notes"]} - Expired {$l["expire_date"]}";
+                }
+                continue;
+            }
+            if ($l["type"] == "Watchlist") {
+                $watchlist[strtolower($l["ifc"])] = $l["notes"];
+            } else {
+                $blacklist[strtolower($l["ifc"])] = $l["notes"];
+            }
+        }
+
+        $data->watchlist = $watchlist;
+        $data->blacklist = $blacklist;
+        $data->previousWatchlist = $prevwatch;
+        $data->previousBlacklist = $prevblack;
+
         $this->render('admin/recruitment', $data);
     }
 

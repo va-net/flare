@@ -60,27 +60,6 @@ $ACTIVE_CATEGORY = 'user-management';
                             </thead>
                             <tbody>
                                 <?php
-                                $lists = Json::decode(file_get_contents("https://ifvarb.com/watchlist_api.php?apikey=a5f2963d-29b1-40e4-8867-a4fbb384002c"));
-                                $watchlist = [];
-                                $blacklist = [];
-                                $prevwatch = [];
-                                $prevblack = [];
-                                foreach ($lists as $l) {
-                                    if (new DateTime("now") > new DateTime($l['expire_date'])) {
-                                        if ($l["type"] == "Watchlist") {
-                                            $prevwatch[strtolower($l["ifc"])] = "{$l["notes"]} - Expired {$l["expire_date"]}";
-                                        } else {
-                                            $prevblack[strtolower($l["ifc"])] = "{$l["notes"]} - Expired {$l["expire_date"]}";
-                                        }
-                                        continue;
-                                    }
-                                    if ($l["type"] == "Watchlist") {
-                                        $watchlist[strtolower($l["ifc"])] = $l["notes"];
-                                    } else {
-                                        $blacklist[strtolower($l["ifc"])] = $l["notes"];
-                                    }
-                                }
-
                                 $x = 0;
                                 foreach (Page::$pageData->users as $user) {
                                     echo '<tr><td class="align-middle">';
@@ -96,19 +75,19 @@ $ACTIVE_CATEGORY = 'user-management';
                                     }
                                     echo '<a href="' . $user['ifc'] . '" target="_blank">' . $username . '</a>';
                                     echo '</td><td class="align-middle">';
-                                    if (array_key_exists(strtolower($username), $blacklist)) {
-                                        echo '<span class="badge badge-danger" data-toggle="tooltip" title="' . $blacklist[strtolower($username)] . '">Blacklisted</span>';
-                                    } elseif (array_key_exists(strtolower($username), $watchlist)) {
-                                        echo '<span class="badge badge-warning" data-toggle="tooltip" title="' . $watchlist[strtolower($username)] . '">Watchlisted</span>';
-                                    } elseif (array_key_exists(strtolower($username), $prevblack)) {
-                                        echo '<span class="badge badge-warning" data-toggle="tooltip" title="' . $prevblack[strtolower($username)] . '">Previous Blacklist</span>';
-                                    } elseif (array_key_exists(strtolower($username), $prevwatch)) {
-                                        echo '<span class="badge badge-info" data-toggle="tooltip" title="' . $prevwatch[strtolower($username)] . '">Previous Watchlist</span>';
+                                    if (array_key_exists(strtolower($username), Page::$pageData->blacklist)) {
+                                        echo '<span class="badge badge-danger" data-toggle="tooltip" title="' . Page::$pageData->blacklist[strtolower($username)] . '">Blacklisted</span>';
+                                    } elseif (array_key_exists(strtolower($username), Page::$pageData->watchlist)) {
+                                        echo '<span class="badge badge-warning" data-toggle="tooltip" title="' . Page::$pageData->watchlist[strtolower($username)] . '">Watchlisted</span>';
+                                    } elseif (array_key_exists(strtolower($username), Page::$pageData->previousBlacklist)) {
+                                        echo '<span class="badge badge-warning" data-toggle="tooltip" title="' . Page::$pageData->previousBlacklist[strtolower($username)] . '">Previous Blacklist</span>';
+                                    } elseif (array_key_exists(strtolower($username), Page::$pageData->previousWatchlist)) {
+                                        echo '<span class="badge badge-info" data-toggle="tooltip" title="' . Page::$pageData->previousWatchlist[strtolower($username)] . '">Previous Watchlist</span>';
                                     } else {
                                         echo '<span class="badge badge-success">None</span>';
                                     }
                                     echo '</td><td class="align-middle">&nbsp;';
-                                    if (!array_key_exists(strtolower($username), $blacklist)) echo '<button class="btn btn-success text-light" value="' . $user['id'] . '" form="accept" type="submit" name="accept"><i class="fa fa-check"></i></button>&nbsp;';
+                                    if (!array_key_exists(strtolower($username), Page::$pageData->blacklist)) echo '<button class="btn btn-success text-light" value="' . $user['id'] . '" form="accept" type="submit" name="accept"><i class="fa fa-check"></i></button>&nbsp;';
                                     echo '<button value="' . $user['id'] . '" id="delconfirmbtn" data-toggle="modal" data-target="#user' . $x . 'declinemodal" class="btn btn-danger text-light" name="decline"><i class="fa fa-times"></i></button>&nbsp;';
                                     if (Page::$pageData->is_gold && VANet::featureEnabled('airline-userlookup')) {
                                         echo '<a href="/admin/users/lookup/' . (empty($user['ifuserid']) ? $username . '?ifc=true' : $user['ifuserid']) . '" class="btn bg-custom">
