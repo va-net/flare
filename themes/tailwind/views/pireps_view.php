@@ -8,7 +8,7 @@ $disabled = Page::$pageData->user->hasPermission('pirepmanage') ? 'required' : '
 
     <div class="grid-cols-2 gap-3 space-y-3 lg:grid lg:space-y-0">
         <div class="p-3 rounded bg-black/5 dark:bg-white/20">
-            <form action="/pireps" method="post" class="space-y-2" id="edit-pirep">
+            <form method="post" class="space-y-2" id="edit-pirep">
                 <h2 class="text-2xl font-bold">PIREP Details</h2>
                 <input type="hidden" class="hidden" name="action" value="editpirep" />
                 <input type="hidden" class="hidden" name="id" value="<?= Page::$pageData->pirep->id ?>" />
