@@ -36,6 +36,7 @@ Router::add('/home', [Dependencies::get(HomeController::class), 'post'], 'post')
 Router::add('/pireps', [Dependencies::get(PirepsController::class), 'get_all']);
 Router::add('/pireps', [Dependencies::get(PirepsController::class), 'post_all'], 'post');
 Router::add('/pireps/(\d+)', [Dependencies::get(PirepsController::class), 'get_pirep']);
+Router::add('/pireps/(\d+)', [Dependencies::get(PirepsController::class), 'post_pirep'], 'post');
 Router::add('/pireps/new', [Dependencies::get(PirepsController::class), 'get_new']);
 Router::add('/pireps/new', [Dependencies::get(PirepsController::class), 'post_new'], 'post');
 Router::add('/pireps/setup', [Dependencies::get(PirepsController::class), 'get_setup']);
