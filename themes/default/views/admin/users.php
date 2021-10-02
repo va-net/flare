@@ -7,11 +7,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-$user = new User();
-
-Page::setTitle('Users Admin - ' . Config::get('va/name'));
-
-$ACTIVE_CATEGORY = 'user-management';
+Page::setTitle('Users Admin - ' . Page::$pageData->va_name);
 ?>
 <!DOCTYPE html>
 <html>
@@ -336,7 +332,7 @@ $ACTIVE_CATEGORY = 'user-management';
     </div>
     <script>
         $(document).ready(function() {
-            $(".<?= $ACTIVE_CATEGORY ?>").collapse('show');
+            $(".<?= Page::$pageData->active_dropdown ?>").collapse('show');
         });
     </script>
 </body>

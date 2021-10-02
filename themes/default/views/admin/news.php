@@ -7,7 +7,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 Page::setTitle('News Admin - ' . Page::$pageData->va_name);
-$ACTIVE_CATEGORY = 'site-management';
 ?>
 <!DOCTYPE html>
 <html>
@@ -175,7 +174,7 @@ $ACTIVE_CATEGORY = 'site-management';
     </div>
     <script>
         $(document).ready(function() {
-            $(".<?= $ACTIVE_CATEGORY ?>").collapse('show');
+            $(".<?= Page::$pageData->active_dropdown ?>").collapse('show');
         });
     </script>
 </body>

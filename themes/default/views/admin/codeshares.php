@@ -8,7 +8,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 Page::setTitle('Codeshares Admin - ' . Page::$pageData->va_name);
-$ACTIVE_CATEGORY = 'operations-management';
 ?>
 <!DOCTYPE html>
 <html>
@@ -174,7 +173,7 @@ $ACTIVE_CATEGORY = 'operations-management';
     </div>
     <script>
         $(document).ready(function() {
-            $(".<?= $ACTIVE_CATEGORY ?>").collapse('show');
+            $(".<?= Page::$pageData->active_dropdown ?>").collapse('show');
         });
     </script>
 </body>
