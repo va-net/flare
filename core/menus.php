@@ -81,9 +81,15 @@ $GLOBALS['admin-menu']["User Management"] = array(
 );
 
 $GLOBALS['admin-menu']["PIREP Management"] = array(
-    "Manage PIREPs" => [
+    "All PIREPs" => [
         "link" => "/admin/pireps",
         "icon" => "fa-folder-open",
+        "permission" => "pirepmanage",
+        "needsGold" => false,
+    ],
+    "Pending PIREPs" => [
+        "link" => "/admin/pireps/pending",
+        "icon" => "fa-clipboard-check",
         "permission" => "pirepmanage",
         "needsGold" => false,
         "badgeid" => "pireps",

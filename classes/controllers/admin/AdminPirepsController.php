@@ -15,10 +15,9 @@ class AdminPirepsController extends Controller
         $this->authenticate($user, true, 'pirepmanage');
         $data = new stdClass;
         $data->user = $user;
-        $data->va_name = Config::get('va/name');
-        $data->is_gold = VANet::isGold();
-        $data->pending = Pirep::fetchPending();
-        $data->all = Pirep::fetchAll();
+
+        $data->pireps = Pirep::fetchAll();
+        $data->active_dropdown = 'pirep-management';
         $this->render('admin/pireps', $data);
     }
 
@@ -29,10 +28,44 @@ class AdminPirepsController extends Controller
         switch (Input::get('action')) {
             case 'acceptpirep':
                 $this->accept();
-                $this->get_index();
+                break;
             case 'declinepirep':
                 $this->decline();
-                $this->get_index();
+                break;
+            case 'editpirep':
+                $this->update();
+                break;
+            case 'delpirep':
+                $this->delete();
+                break;
+        }
+
+        $this->get_index();
+    }
+
+    public function get_pending()
+    {
+        $user = new User;
+        $this->authenticate($user, true, 'pirepmanage');
+        $data = new stdClass;
+        $data->user = $user;
+
+        $data->pending = Pirep::fetchPending();
+        $data->active_dropdown = 'pirep-management';
+        $this->render('admin/pireps_pending', $data);
+    }
+
+    public function post_pending()
+    {
+        $user = new User;
+        $this->authenticate($user, true, 'pirepmanage');
+        switch (Input::get('action')) {
+            case 'acceptpirep':
+                $this->accept();
+                $this->get_pending();
+            case 'declinepirep':
+                $this->decline();
+                $this->get_pending();
             case 'editpirep':
                 $this->update();
                 $this->redirect('/admin/pireps?tab=all');
@@ -41,7 +74,7 @@ class AdminPirepsController extends Controller
                 $this->redirect('/admin/pireps?tab=all');
         }
 
-        $this->get_index();
+        $this->get_pending();
     }
 
     public function get_multis()
@@ -50,8 +83,8 @@ class AdminPirepsController extends Controller
         $this->authenticate($user, true, 'pirepmanage');
         $data = new stdClass;
         $data->user = $user;
-        $data->va_name = Config::get('va/name');
-        $data->is_gold = VANet::isGold();
+
+        $data->active_dropdown = 'pirep-management';
         $data->multis = Pirep::fetchMultipliers();
         $this->render('admin/multipliers', $data);
     }
@@ -77,6 +110,7 @@ class AdminPirepsController extends Controller
         $data = new stdClass;
         $data->user = $user;
 
+        $data->active_dropdown = 'pirep-management';
         $this->render('admin/multipliers_new', $data);
     }
 

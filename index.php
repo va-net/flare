@@ -111,8 +111,11 @@ Router::add('/admin/award/(\d+)', [Dependencies::get(AwardsController::class), '
 Router::add('/admin/awards/new', [Dependencies::get(AwardsController::class), 'get_new']);
 Router::add('/admin/awards/new', [Dependencies::get(AwardsController::class), 'post_new'], 'post');
 
-Router::add('/admin/pireps', [Dependencies::get(AdminPirepsController::class), 'get']);
-Router::add('/admin/pireps', [Dependencies::get(AdminPirepsController::class), 'post'], 'post');
+Router::add('/admin/pireps', [Dependencies::get(AdminPirepsController::class), 'get_index']);
+Router::add('/admin/pireps', [Dependencies::get(AdminPirepsController::class), 'post_index'], 'post');
+Router::add('/admin/pireps/pending', [Dependencies::get(AdminPirepsController::class), 'get_pending']);
+Router::add('/admin/pireps/pending', [Dependencies::get(AdminPirepsController::class), 'post_pending'], 'post');
+
 Router::add('/admin/pireps/multipliers', [Dependencies::get(AdminPirepsController::class), 'get_multis']);
 Router::add('/admin/pireps/multipliers', [Dependencies::get(AdminPirepsController::class), 'post_multis'], 'post');
 Router::add('/admin/pireps/multipliers/new', [Dependencies::get(AdminPirepsController::class), 'get_multis_new']);
