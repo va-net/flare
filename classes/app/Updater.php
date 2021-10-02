@@ -98,7 +98,7 @@ class Updater
         $conf = Config::get('updater/raw_url');
         if (!empty($conf)) return $conf;
 
-        return 'https://raw.githubusercontent.com/va-net/flare/' . urlencode($ref) . '/';
+        return 'https://raw.githubusercontent.com/va-net/flare/' . urlencode($ref);
     }
 
     /**

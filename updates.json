@@ -1223,13 +1223,14 @@
             "themes/default/views/admin/stats.php",
             "themes/default/views/admin/user_lookup.php",
             "themes/default/views/admin/users.php",
-            "themes/default/views/admin/events_list.php",
+            "themes/default/views/admin/events.php",
             "themes/default/views/login.php",
             "themes/default/views/map.php",
             "themes/tailwind/views/admin/pireps.php",
             "themes/tailwind/views/admin/pireps_pending.php",
             "themes/tailwind/views/pireps_view.php",
-            "updater.php"
+            "updater.php",
+            "classes/app/Updater.php"
         ],
         "queries": [],
         "deletedFiles": [
