@@ -109,7 +109,7 @@ class AdminEventsController extends EventsController
 
     private function edit()
     {
-        $datetime = Input::get('date') . 'T' . substr(Input::get('time'), 0, 2) . ':' . substr(Input::get('time'), 2, 2) . ':00Z';
+        $datetime = Input::get('date') . 'T' . substr(Input::get('time'), 0, 2) . ':' . substr(Input::get('time'), 3, 2) . ':00Z';
         $ret = VANet::editEvent(Input::get('id'), array(
             "name" => Input::get('name'),
             "description" => Input::get('description'),
