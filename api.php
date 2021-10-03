@@ -619,8 +619,8 @@ Router::add('/users/(\d+)/permissions/([a-z]+)', function ($userId, $permission)
     $u = $user->getUser($userId);
     if (empty($u)) notFound();
 
-    $permission = $user->hasPermission($permission, $userId);
-    if ($permission) {
+    $p = $user->hasPermission($permission, $userId);
+    if ($p) {
         badReq(ErrorCode::PermissionAlreadyGranted);
     }
 
