@@ -7,7 +7,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 Page::setTitle('Import Routes - ' . Page::$pageData->va_name);
-$ACTIVE_CATEGORY = 'operations-management';
 ?>
 <!DOCTYPE html>
 <html>
@@ -45,7 +44,7 @@ $ACTIVE_CATEGORY = 'operations-management';
                         <p>
                             Here, you can import your routes from the phpVMS CSV Format.
                         </p>
-                        <form method="post" enctype="multipart/form-data" action="/admin/operations/routes/import">
+                        <form method="post" enctype="multipart/form-data">
                             <input hidden name="action" value="choose" />
                             <div class="custom-file mb-2">
                                 <input required type="file" class="custom-file-input" name="routes-upload" accept=".csv" id="routes-upload">
@@ -69,7 +68,7 @@ $ACTIVE_CATEGORY = 'operations-management';
     </div>
     <script>
         $(document).ready(function() {
-            $(".<?= $ACTIVE_CATEGORY ?>").collapse('show');
+            $(".<?= Page::$pageData->active_dropdown ?>").collapse('show');
         });
     </script>
 </body>

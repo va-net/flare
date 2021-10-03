@@ -29,7 +29,7 @@ Page::setTitle('Live Map - ' . Page::$pageData->va_name);
                     </div>
                     <div class="loaded">
                         <h3>Live Map</h3>
-                        <p>Here you can view all the pilots that are currently flying through the Infinite Flight skies, using their <?= Config::get('va/name') ?> callsign.</p>
+                        <p>Here you can view all the pilots that are currently flying through the Infinite Flight skies, using their <?= Page::$pageData->va_name ?> callsign.</p>
                         <iframe src='https://ifvarb.com/liveflightmap.php?callsign=<?= Page::$pageData->va_ident ?>&color=red&apikey=b48e66-79248c-d11549-090d5f-b39ea4' width='100%;' height='600px;' frameborder='0' scrolling='no'></iframe>
                     </div>
                 </div>

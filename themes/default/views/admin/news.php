@@ -7,7 +7,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 Page::setTitle('News Admin - ' . Page::$pageData->va_name);
-$ACTIVE_CATEGORY = 'site-management';
 ?>
 <!DOCTYPE html>
 <html>
@@ -155,10 +154,6 @@ $ACTIVE_CATEGORY = 'site-management';
                                 <label>Content</label>
                                 <textarea class="form-control" name="content"></textarea>
                             </div>
-                            <div class="form-group">
-                                <label>Author</label>
-                                <input readonly type="text" value="<?= escape(Page::$pageData->user->data()->name) ?>" class="form-control" name="author">
-                            </div>
                             <input type="submit" class="btn bg-custom" value="Save">
                         </form>
 
@@ -179,7 +174,7 @@ $ACTIVE_CATEGORY = 'site-management';
     </div>
     <script>
         $(document).ready(function() {
-            $(".<?= $ACTIVE_CATEGORY ?>").collapse('show');
+            $(".<?= Page::$pageData->active_dropdown ?>").collapse('show');
         });
     </script>
 </body>

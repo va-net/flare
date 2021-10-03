@@ -174,4 +174,43 @@ class AuthController extends Controller
 
         $this->redirect('/');
     }
+
+    public function get_profile()
+    {
+        $user = new User;
+        $this->authenticate($user);
+        $data = new stdClass;
+        $data->user = $user;
+        $data->awards = $user->getAwards();
+        $this->render('profile', $data);
+    }
+
+    public function post_profile()
+    {
+        $user = new User;
+        $csPattern = Config::get('VA_CALLSIGN_FORMAT');
+        $trimmedPattern = preg_replace("/\/[a-z]*$/", '', preg_replace("/^\//", '', $csPattern));
+
+        if (Callsign::assigned(Input::get('callsign'), $user->data()->id)) {
+            Session::flash('error', 'Callsign is Already Taken!');
+            $this->get_profile();
+        } elseif (!Regex::match($csPattern, Input::get('callsign'))) {
+            Session::flash('error', 'Callsign does not match the required format! Try <b>' . RegRev::generate($trimmedPattern) . '</b> instead.');
+            $this->get_profile();
+        } else {
+            try {
+                $user->update(array(
+                    'name' => Input::get('name'),
+                    'callsign' => Input::get('callsign'),
+                    'email' => Input::get('email'),
+                    'ifc' => Input::get('ifc')
+                ));
+            } catch (Exception $e) {
+                Session::flash('error', $e->getMessage());
+                $this->get_profile();
+            }
+            Session::flash('success', 'Profile updated successfully!');
+            $this->get_profile();
+        }
+    }
 }

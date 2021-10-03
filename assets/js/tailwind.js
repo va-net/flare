@@ -307,6 +307,58 @@ function anyCategoryBadge(id, badges) {
     );
 }
 
+function resizeTextarea(el) {
+    el.style.height = 'auto';
+    el.style.height = el.scrollHeight + 5 + 'px';
+}
+
+function formatFlightTime() {
+    const val = typeof this == 'string' ? parseInt(this) : this;
+    const hours = Math.floor(val / 3600);
+    const minutes = (val % 3600) / 60;
+    return `${hours.toString().padStart(2, '0')}:${minutes
+        .toString()
+        .padStart(2, '0')}`;
+}
+Number.prototype.formatFlightTime = formatFlightTime;
+String.prototype.formatFlightTime = formatFlightTime;
+
+async function repairSite() {
+    await fetch('/api.php/repair');
+}
+
+async function migrateConfig() {
+    await fetch('/api.php/config_migrate');
+}
+
+function updaterOverlay(enabled) {
+    if (enabled) {
+        const overlay = document.createElement('div');
+        overlay.className =
+            'fixed top-0 left-0 w-screen h-screen bg-black/70 z-50 flex text-white';
+        overlay.id = 'updater-overlay';
+        overlay.innerHTML = `
+            <div class="m-auto text-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 animate-spin-backwards mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                <h1 class="text-4xl font-bold mb-2">Updating...</h1>
+                <p>Please wait while the site is updated</p>
+            </div>
+        `;
+        document.getElementById('root')?.appendChild(overlay);
+    } else {
+        document.getElementById('updater-overlay')?.remove();
+    }
+}
+
+async function updateSite(el) {
+    updaterOverlay(true);
+    const req = await fetch('/updater.php');
+    const res = await req.text();
+    el.innerHTML = res;
+    updaterOverlay(false);
+}
 function generateId() {
     return this.toLowerCase().replace(/\s/g, '-');
 }
@@ -324,7 +376,6 @@ async function handleComment(e, val, pirep, setComments, setValue) {
         `/api.php/pireps/${encodeURIComponent(pirep)}/comments`,
         {
             method: 'POST',
-            credentials: 'include',
             body: data,
         }
     );
@@ -334,13 +385,100 @@ async function handleComment(e, val, pirep, setComments, setValue) {
     }
 
     const req2 = await fetch(
-        `/api.php/pireps/${encodeURIComponent(pirep)}/comments`,
-        {
-            credentials: 'include',
-        }
+        `/api.php/pireps/${encodeURIComponent(pirep)}/comments`
     );
     const res = await req2.json();
     setComments(res.result);
+}
+
+async function fetchLiveries(aircraftid) {
+    const req = await fetch(
+        `/api.php/liveries?aircraftid=${encodeURIComponent(aircraftid)}`
+    );
+    const res = await req.json();
+    return res.result;
+}
+
+function updateDataTable(allEntries, data) {
+    let current = allEntries;
+    if (data.search) {
+        current = current.filter((x) => {
+            return Object.values(x).some(
+                (v) =>
+                    v &&
+                    v
+                        .toString()
+                        .toLowerCase()
+                        .includes(data.search.toLowerCase())
+            );
+        });
+    }
+    if (data.orderBy) {
+        current = current.sort((a, b) => {
+            let x = data.orderBy(a);
+            let y = data.orderBy(b);
+
+            const dateRegex =
+                /\d{4}-\d{2}-\d{2}(\s?T?\s?\d{2}:\d{2}(:\d{2})?Z?)?/;
+            if (
+                typeof x == 'string' &&
+                typeof y == 'string' &&
+                x.isNumeric() &&
+                y.isNumeric()
+            ) {
+                x = parseFloat(x);
+                y = parseFloat(y);
+            } else if (
+                typeof x == 'string' &&
+                typeof y == 'string' &&
+                dateRegex.test(x) &&
+                dateRegex.test(y)
+            ) {
+                x = new Date(x);
+                y = new Date(y);
+            }
+
+            if (x < y) return data.order === 'asc' ? -1 : 1;
+            if (x > y) return data.order === 'asc' ? 1 : -1;
+            return 0;
+        });
+    }
+    if (data.filters) {
+        for (const f of data.filters) {
+            current = current.filter(f);
+        }
+    }
+
+    data.current = [...current];
+}
+
+function dataTableOrder(fn, name, tableData) {
+    tableData.orderBy = fn;
+    tableData.order =
+        tableData.order == 'asc' && tableData.orderByName == name
+            ? 'desc'
+            : 'asc';
+    tableData.orderByName = name;
+    updateDataTable(allEntries, tableData);
+}
+
+function isNumeric() {
+    return !isNaN(this) && !isNaN(parseFloat(this)) && isFinite(this);
+}
+String.prototype.isNumeric = isNumeric;
+
+async function spinAndChange(el, newHtml) {
+    el.classList.add('animate-spin-fast-ease');
+    await wait(250);
+    el.innerHTML = newHtml;
+    await wait(250);
+    el.classList.remove('animate-spin-fast-ease');
+}
+
+async function wait(ms) {
+    return new Promise((resolve) => {
+        setTimeout(resolve, ms);
+    });
 }
 
 document.addEventListener('alpine:initializing', () => {

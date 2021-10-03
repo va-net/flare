@@ -8,7 +8,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 $GLOBALS['admin-menu']["Operations Management"] = array(
     "Manage Ranks" => [
-        "link" => "/admin/operations/ranks",
+        "link" => "/admin/ranks",
         "icon" => "fa-chart-line",
         "permission" => "opsmanage",
         "needsGold" => false,
@@ -16,7 +16,7 @@ $GLOBALS['admin-menu']["Operations Management"] = array(
         "badgeid" => null,
     ],
     "Manage Fleet" => [
-        "link" => "/admin/operations/fleet",
+        "link" => "/admin/fleet",
         "icon" => "fa-plane",
         "permission" => "opsmanage",
         "needsGold" => false,
@@ -24,7 +24,7 @@ $GLOBALS['admin-menu']["Operations Management"] = array(
         "badgeid" => null,
     ],
     "Manage Routes" => [
-        "link" => "/admin/operations/routes",
+        "link" => "/admin/routes",
         "icon" => "fa-plane-departure",
         "permission" => "opsmanage",
         "needsGold" => false,
@@ -32,7 +32,7 @@ $GLOBALS['admin-menu']["Operations Management"] = array(
         "badgeid" => null,
     ],
     "Manage Codeshares" => [
-        "link" => "/admin/operations/codeshares",
+        "link" => "/admin/codeshares",
         "icon" => "fa-handshake",
         "permission" => "opsmanage",
         "needsGold" => false,
@@ -40,7 +40,7 @@ $GLOBALS['admin-menu']["Operations Management"] = array(
         "badgeid" => "codeshares",
     ],
     "Manage Events" => [
-        "link" => "/admin/operations/events",
+        "link" => "/admin/events",
         "icon" => "fa-plane-arrival",
         "permission" => "opsmanage",
         "needsGold" => true,
@@ -72,7 +72,7 @@ $GLOBALS['admin-menu']["User Management"] = array(
         "badgeid" => "recruitment",
     ],
     "Awards" => [
-        "link" => "/admin/users/awards",
+        "link" => "/admin/awards",
         "icon" => "fa-medal",
         "permission" => "usermanage",
         "needsGold" => false,
@@ -81,9 +81,15 @@ $GLOBALS['admin-menu']["User Management"] = array(
 );
 
 $GLOBALS['admin-menu']["PIREP Management"] = array(
-    "Manage PIREPs" => [
+    "All PIREPs" => [
         "link" => "/admin/pireps",
         "icon" => "fa-folder-open",
+        "permission" => "pirepmanage",
+        "needsGold" => false,
+    ],
+    "Pending PIREPs" => [
+        "link" => "/admin/pireps/pending",
+        "icon" => "fa-clipboard-check",
         "permission" => "pirepmanage",
         "needsGold" => false,
         "badgeid" => "pireps",
@@ -95,13 +101,6 @@ $GLOBALS['admin-menu']["PIREP Management"] = array(
         "needsGold" => false,
         "badgeid" => null,
     ],
-    "VA Statistics" => [
-        "link" => "/admin/stats",
-        "icon" => "fa-chart-pie",
-        "permission" => "statsviewing",
-        "needsGold" => false,
-        "badgeid" => null,
-    ]
 );
 
 $GLOBALS['admin-menu']["Site Management"] = array(

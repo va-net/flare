@@ -35,9 +35,10 @@ if (Page::$pageData->user->hasPermission('admin')) {
     <link rel="stylesheet" href="/assets/fontawesome.min.css" />
     <title><?= Page::getTitle() ?></title>
     <script src="/assets/js/tailwind.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.1/chart.min.js"></script>
 </head>
 
-<body>
+<body x-data="{ flashSuccess: <?= Session::exists('success') ? "'" . Session::flash('success') . "'" : 'null' ?>, flashError: <?= Session::exists('error') ? "'" . Session::flash('error') . "'" : 'null' ?> }">
     <div class="flex flex-col w-full min-h-screen" id="root">
         <div :class="`md:flex md:flex-row min-h-full flex-grow ${isDarkMode ? 'dark' : 'light'}`" x-data="{ sidebarOpen: Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0) >= 1024, isDarkMode: false, account: false, notifications: false, }" x-cloak="md" x-init="() => { if ('darkMode' in localStorage && localStorage.getItem('darkMode') == 1) isDarkMode = true; }">
             <aside id="sidebar" class="w-screen max-w-[275px] absolute md:sticky md:top-0 h-screen md:border-r md:border-gray-200 dark:border-none bg-gray-100 text-black dark:bg-gray-800 dark:text-white md:shadow-inner shadow-xl overflow-y-auto z-20" x-show="sidebarOpen" x-transition:enter="transform transition-transform duration-500" x-transition:enter-start="-translate-x-full" x-transition:enter-end="translate-x-0" x-transition:leave="transform transition-transform duration-500" x-transition:leave-start="translate-x-0" x-transition:leave-end="-translate-x-full" @click.away="if (Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0) < 1024) sidebarOpen = false">
@@ -94,7 +95,7 @@ if (Page::$pageData->user->hasPermission('admin')) {
                                         <div class="flex-1"><?= $label ?></div>
                                         <?php if ($data['badgeid'] !== null) : ?>
                                             <span class="px-2 text-xs font-semibold leading-5 text-white bg-red-500 rounded-full" x-show="typeof badges?.<?= $data['badgeid'] ?> === 'string' && badges?.<?= $data['badgeid'] ?> != 0" x-text="badges?.<?= $data['badgeid'] ?>"></span>
-                                            <span class="text-red-500" x-show="typeof badges?.<?= $data['badgeid'] ?> === 'boolean'">
+                                            <span class="text-red-500" x-show="typeof badges?.<?= $data['badgeid'] ?> === 'boolean' && badges?.<?= $data['badgeid'] ?>">
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
                                                     <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
                                                 </svg>

@@ -31,7 +31,7 @@ $auth = Updater::authentication();
 $opts = array(
     'http' => array(
         'method' => "GET",
-        'header' => "User-Agent: va-net\r\n"
+        'header' => "User-Agent: va-net\r\nCache-Control: no-cache\r\n"
     )
 );
 if (!empty($auth)) {
@@ -129,6 +129,8 @@ echo "Updated Database Successfully<br />";
 // Delete Files to Delete
 if (!($current["prerelease"] && !$next["prerelease"])) {
     foreach ($nextUpdate["deletedFiles"] as $delFile) {
+        if (!file_exists($delFile)) continue;
+
         if (is_dir(__DIR__ . '/' . $delFile)) {
             if (!rrmdir(__DIR__ . '/' . $delFile)) {
                 echo "There was an error deleting " . $delFile;

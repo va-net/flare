@@ -6,7 +6,7 @@ Copyright (C) 2020  Lucas Rebato
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-Page::setTitle('Events - ' . Config::get('va/name'));
+Page::setTitle('Events - ' . Page::$pageData->va_name);
 ?>
 <html>
 

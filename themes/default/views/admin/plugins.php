@@ -8,7 +8,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 Page::setTitle('Plugins - ' . Page::$pageData->va_name);
-$ACTIVE_CATEGORY = 'plugins';
 ?>
 <!DOCTYPE html>
 <html>
@@ -204,7 +203,7 @@ $ACTIVE_CATEGORY = 'plugins';
     </div>
     <script>
         $(document).ready(function() {
-            $(".<?= $ACTIVE_CATEGORY ?>").collapse('show');
+            $(".<?= Page::$pageData->active_dropdown ?>").collapse('show');
         });
     </script>
 </body>

@@ -18,6 +18,8 @@ class Controller
         $theme = Config::get('ACTIVE_THEME');
         if (empty($theme)) $theme = 'default';
 
+        $fallback = $GLOBALS['FALLBACK_THEME'] ?? 'default';
+
         if (!isset($data->user)) $data->user = new User;
         if (!isset($data->va_name)) $data->va_name = Config::get('va/name');
         if (!isset($data->va_profile)) $data->va_profile = VANet::myInfo();
@@ -26,9 +28,13 @@ class Controller
         Page::$pageData = $data;
 
         $phppath = __DIR__ . "/../../themes/{$theme}/views/{$pagename}.php";
+        $fallbackpath = __DIR__ . "/../../themes/{$fallback}/views/{$pagename}.php";
         $defaultpath = __DIR__ . "/../../themes/default/views/{$pagename}.php";
         if (file_exists($phppath)) {
             include $phppath;
+            die();
+        } else if (file_exists($fallbackpath)) {
+            include $fallbackpath;
             die();
         } else if (file_exists($defaultpath)) {
             include $defaultpath;

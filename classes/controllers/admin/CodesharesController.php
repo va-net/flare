@@ -40,26 +40,43 @@ class CodesharesController extends Controller
     private function new()
     {
         $routes = [];
-        $inputRoutes = explode(",", Input::get('routes'));
 
-        $dbRoutes = Route::fetchAll();
-        foreach ($inputRoutes as $input) {
-            if (!array_key_exists($input, $dbRoutes)) {
-                Session::flash('error', 'Could not Find Route ' . $input);
+        $allroutes = Route::fetchAll();
+        $aircraftentries = Route::fetchAllAircraftJoins();
+        foreach (Input::get('routes') as $rid) {
+            $r = null;
+            foreach ($allroutes as $route) {
+                if ($route['id'] == $rid) {
+                    $r = $route;
+                    break;
+                }
+            }
+            if ($r == null) {
+                Session::flash('error', "Invalid Route ID - {$rid}");
                 $this->get();
             }
-            $r = $dbRoutes[$input];
-            if (count($r['aircraft']) < 1) {
-                Session::flash('error', 'This route does not have any aircraft attached - ' . $input);
+
+            $aircraft = [];
+            foreach ($aircraftentries as $entry) {
+                if ($entry->routeid == $r['id']) {
+                    $aircraft[] = $entry;
+                }
+            }
+            if (empty($aircraft)) {
+                Session::flash('error', "Route #{$rid} has no aircraft attached");
+                $this->get();
+            } elseif (count($aircraft) > 1) {
+                Session::flash('error', "Route #{$rid} has more than one aircraft attached");
                 $this->get();
             }
-            array_push($routes, array(
+
+            $routes[] = [
                 "flightNumber" => $r['fltnum'],
                 "departureIcao" => $r['dep'],
                 "arrivalIcao" => $r['arr'],
-                "aircraftLiveryId" => $r['aircraft'][0]['liveryid'],
+                "AircraftLiveryID" => $aircraft[0]->aircraftliveryid,
                 "flightTime" => $r['duration']
-            ));
+            ];
         }
 
         $ret = VANet::sendCodeshare(array(
@@ -109,7 +126,7 @@ class CodesharesController extends Controller
             $ac = -1;
             if (!array_key_exists($route['aircraftLiveryId'], $dbaircraft)) {
                 Aircraft::add($route['aircraftLiveryId'], $lowrank->id);
-                $ac = Aircraft::lastId();
+                $ac = Aircraft::nextId() - 1;
             } else {
                 $ac = $dbaircraft[$route['aircraftLiveryId']]->id;
             }
@@ -119,11 +136,11 @@ class CodesharesController extends Controller
                 'arr' => $route['arrivalIcao'],
                 'duration' => $route['flightTime'],
             ]);
-            Route::addAircraft(Route::lastId(), $ac);
+            Route::addAircraft(Route::nextId() - 1, $ac);
         }
         VANet::deleteCodeshare($codeshare["id"]);
         Cache::delete('badge_codeshares');
         Session::flash('success', "Codeshare Routes Imported Successfully!");
-        $this->redirect('/admin/operations/routes');
+        $this->redirect('/admin/routes');
     }
 }

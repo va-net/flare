@@ -335,7 +335,7 @@ class User
     }
 
     /**
-     * @return object
+     * @return DB
      * @param int $id User ID
      * @param int $limit Row Limit
      */

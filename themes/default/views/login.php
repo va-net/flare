@@ -6,7 +6,7 @@ Copyright (C) 2020  Lucas Rebato
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-Page::setTitle('Login - ' . Config::get('va/name'));
+Page::setTitle('Login - ' . Page::$pageData->va_name);
 ?>
 <!DOCTYPE html>
 <html>
@@ -21,7 +21,7 @@ Page::setTitle('Login - ' . Config::get('va/name'));
     </nav>
     <div class="container-fluid">
         <div class="container-fluid mt-4 text-center" style="overflow: auto;">
-            <h1 class="text-center pb-0 mb-0"><?= escape(Config::get('va/name')) ?></h1>
+            <h1 class="text-center pb-0 mb-0"><?= escape(Page::$pageData->va_name) ?></h1>
             <h3 class="text-center py-0 mt-0">Pilot Login</h3>
             <?php if (Page::$pageData->vanet_signin) : ?>
                 <div class="text-center mb-3">
