@@ -835,4 +835,32 @@ class VANet
 
         return true;
     }
+
+    /**
+     * @return bool
+     * @param int $uid
+     * @param string $ifId
+     * @param int[] $permissions
+     */
+    public static function registerMembership($uid, $ifId, $permissions = [])
+    {
+        $key = Config::get('vanet/api_key');
+
+        $req = HttpRequest::hacky(self::baseUrl() . '/airline/v1/members', 'POST', Json::encode([
+            'infiniteFlightId' => $ifId,
+            'permissions' => $permissions
+        ]), [
+            "X-Api-Key: {$key}",
+            'Content-Type: application/json'
+        ]);
+        $data = Json::decode($req);
+
+        if (!$data || $data['status'] != 0) return false;
+
+        (new User)->update([
+            'vanet_id' => $data['result']['userId'],
+        ], $uid);
+
+        return true;
+    }
 }

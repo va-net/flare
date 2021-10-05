@@ -16,7 +16,7 @@ class OauthController extends Controller
             $this->notFound();
         }
 
-        $scope = ['profile', 'register:memberships', 'write:flights', 'write:events'];
+        $scope = ['read:profile', 'register:memberships', 'write:flights', 'write:events'];
         $response_type = 'code';
         $redirect_uri = Analytics::url() . '/oauth/callback';
         $state = Token::generate();
@@ -55,12 +55,13 @@ class OauthController extends Controller
         }
 
         $user = new User;
+        $key = Config::get('vanet/api_key');
         if ($user->isLoggedIn()) {
             try {
                 $user->update([
                     'vanet_id' => $profile['sub'],
-                    'vanet_accesstoken' => $accessToken,
-                    'vanet_refreshtoken' => $refreshToken,
+                    'vanet_accesstoken' => Encryption::encrypt($accessToken, $key),
+                    'vanet_refreshtoken' => Encryption::encrypt($refreshToken, $key),
                     'vanet_expiry' => $expiry,
                     'ifuserid' => $profile['vanet_ifuid'],
                 ]);
@@ -74,6 +75,25 @@ class OauthController extends Controller
         }
 
         if ($user->vanetLogin($profile['sub'])) {
+            $this->redirect('/home');
+        } elseif ($profile['vanet_admin']) {
+            $id = User::nextId();
+            $user->create([
+                'id' => $id,
+                'callsign' => '',
+                'name' => $profile['name'],
+                'ifc' => '',
+                'ifuserid' => $profile['vanet_ifuid'],
+                'email' => '',
+                'password' => '',
+                'status' => 1,
+                'vanet_id' => $profile['sub'],
+                'vanet_accesstoken' => Encryption::encrypt($accessToken, $key),
+                'vanet_refreshtoken' => Encryption::encrypt($refreshToken, $key),
+                'vanet_expiry' => $expiry,
+            ]);
+            Permissions::giveAll($id);
+            $user->vanetLogin($profile['sub']);
             $this->redirect('/home');
         } else {
             Session::flash('error', 'Login Failed. Your application may still be pending or it may have been denied. Please contact us for more details if you believe this is an error.');

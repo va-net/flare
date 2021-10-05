@@ -604,12 +604,27 @@ class User
     {
         $db = DB::getInstance();
 
-        $sql = "SELECT * FROM pilots WHERE vanetid=?";
+        $sql = "SELECT * FROM pilots WHERE vanet_id=?";
         $results = $db->query($sql, [$id]);
         if ($results->count() == 0) {
             return null;
         }
 
         return $results->first();
+    }
+
+    /**
+     * @return int
+     */
+    public static function nextId()
+    {
+        $db = DB::getInstance();
+
+        $data = $db->query("SHOW TABLE STATUS")->results();
+        $table = array_values(array_filter($data, function ($x) {
+            return $x->Name == 'aircraft';
+        }))[0];
+
+        return $table->Auto_increment;
     }
 }
