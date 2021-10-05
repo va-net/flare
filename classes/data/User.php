@@ -604,7 +604,7 @@ class User
     {
         $db = DB::getInstance();
 
-        $sql = "SELECT * FROM pilots WHERE vanet_id=?";
+        $sql = "SELECT * FROM pilots WHERE vanet_id=? AND `status`=1";
         $results = $db->query($sql, [$id]);
         if ($results->count() == 0) {
             return null;

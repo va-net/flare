@@ -26,6 +26,11 @@ class OauthController extends Controller
 
     public function auth_callback()
     {
+        $client_id = Config::get('oauth/client_id');
+        if (empty($client_id) || !VANet::featureEnabled('airline-membership')) {
+            $this->notFound();
+        }
+
         if (!empty(Input::get('error'))) {
             Session::flash('error', Input::get('error'));
             $this->redirect('/');
@@ -76,7 +81,7 @@ class OauthController extends Controller
 
         if ($user->vanetLogin($profile['sub'])) {
             $this->redirect('/home');
-        } elseif ($profile['vanet_admin']) {
+        } elseif (!$profile['vanet_admin']) {
             $id = User::nextId();
             $user->create([
                 'id' => $id,
@@ -96,8 +101,17 @@ class OauthController extends Controller
             $user->vanetLogin($profile['sub']);
             $this->redirect('/home');
         } else {
-            Session::flash('error', 'Login Failed. Your application may still be pending or it may have been denied. Please contact us for more details if you believe this is an error.');
-            $this->redirect('/');
+            Session::create('pilot_apply', [
+                'vanet_id' => $profile['sub'],
+                'vanet_accesstoken' => Encryption::encrypt($accessToken, $key),
+                'vanet_refreshtoken' => Encryption::encrypt($refreshToken, $key),
+                'vanet_expiry' => $expiry,
+                'ifuserid' => $profile['vanet_ifuid'],
+                'name' => $profile['name'],
+                'email' => '',
+                'password' => '',
+            ]);
+            $this->redirect('/apply/vanet');
         }
     }
 }

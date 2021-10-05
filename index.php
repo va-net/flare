@@ -28,6 +28,7 @@ Router::add('(/login)?', [Dependencies::get(AuthController::class), 'get']);
 Router::add('(/login)?', [Dependencies::get(AuthController::class), 'post'], 'post');
 Router::add('/apply', [Dependencies::get(AuthController::class), 'apply_get']);
 Router::add('/apply', [Dependencies::get(AuthController::class), 'apply_post'], 'post');
+Router::add('/apply/vanet', [Dependencies::get(AuthController::class), 'apply_vanet_get']);
 Router::add('/oauth/login', [Dependencies::get(OauthController::class), 'auth_redirect']);
 Router::add('/oauth/callback', [Dependencies::get(OauthController::class), 'auth_callback']);
 Router::add('/logout', [Dependencies::get(AuthController::class), 'logout']);
