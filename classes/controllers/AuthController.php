@@ -51,7 +51,7 @@ class AuthController extends Controller
             $remember = Input::get('remember') === 'on';
 
             if ($user->login(Input::get('email'), Input::get('password'), $remember)) {
-                $this->redirect('/home');
+                $this->redirect(Session::exists('login_redirect') ? Session::get('login_redirect') : '/home');
             } else {
                 $user->logout();
                 Session::flash('error', 'Login Failed. Your application may still be pending or it may have been denied. Please contact us for more details if you believe this is an error.');
