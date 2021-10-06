@@ -52,7 +52,7 @@ require_once __DIR__ . '/../../includes/header.php';
                     </select>
                 </div>
             </form>
-            <button type="submit" form="settings-form" class="px-3 py-2 mt-3 rounded-md shadow-md bg-primary text-primary-text focus:outline-none focus:ring-2 focus:ring-transparent focus:ring-offset-1 focus:ring-offset-black dark:focus:ring-offset-white">
+            <button type="submit" form="settings-form" class="button-primary">
                 Save
             </button>
         </div>
@@ -80,11 +80,14 @@ require_once __DIR__ . '/../../includes/header.php';
                     <textarea rows="3" id="customcss" name="customcss" class="form-control font-mono" @keydown="resizeTextarea($el)" x-init="resizeTextarea($el)"><?= escape(Page::$pageData->custom_css) ?></textarea>
                 </div>
             </form>
-            <button type="submit" form="design-form" class="px-3 py-2 mt-3 rounded-md shadow-md bg-primary text-primary-text focus:outline-none focus:ring-2 focus:ring-transparent focus:ring-offset-1 focus:ring-offset-black dark:focus:ring-offset-white">
+            <button type="submit" form="design-form" class="button-primary">
                 Save
             </button>
         </div>
         <div id="interaction" x-show="activeTab == $el.id">
+            <form method="post" id="setupapp">
+                <input hidden name="action" value="setupapp" />
+            </form>
             <form method="post" class="space-y-2" id="interaction-form">
                 <input type="hidden" name="action" value="interactionupdate" />
                 <div class="space-y-1">
@@ -95,40 +98,47 @@ require_once __DIR__ . '/../../includes/header.php';
                     </select>
                 </div>
             </form>
-            <button type="submit" form="interaction-form" class="px-3 py-2 mt-3 rounded-md shadow-md bg-primary text-primary-text focus:outline-none focus:ring-2 focus:ring-transparent focus:ring-offset-1 focus:ring-offset-black dark:focus:ring-offset-white">
-                Save
-            </button>
+            <div>
+                <button type="submit" form="interaction-form" class="button-primary">
+                    Save
+                </button>
+                <?php if (Page::$pageData->setup_app) : ?>
+                    <button type="submit" form="setupapp" class="button-primary ml-2">
+                        Setup App
+                    </button>
+                <?php endif; ?>
+            </div>
         </div>
         <div id="maintenance" x-show="activeTab == $el.id">
-            <div class="lg:flex space-y-2 lg:space-y-0">
+            <div class="md:flex space-y-2 lg:space-y-0">
                 <div class="flex-1 text-center">
                     <form method="post">
                         <input hidden name="action" value="clearlogs" />
                         <input hidden name="period" value="*" />
-                        <input type="submit" class="px-3 py-2 mt-3 rounded-md shadow-md bg-primary text-primary-text focus:outline-none focus:ring-2 focus:ring-transparent focus:ring-offset-1 focus:ring-offset-black dark:focus:ring-offset-white" value="Clear All Logs" />
+                        <input type="submit" class="button-primary" value="Clear All Logs" />
                     </form>
                 </div>
                 <div class="flex-1 text-center">
                     <form method="post">
                         <input hidden name="action" value="clearlogs" />
                         <input hidden name="period" value="30" />
-                        <input type="submit" class="px-3 py-2 mt-3 rounded-md shadow-md bg-primary text-primary-text focus:outline-none focus:ring-2 focus:ring-transparent focus:ring-offset-1 focus:ring-offset-black dark:focus:ring-offset-white" value="Clear Old Logs" />
+                        <input type="submit" class="button-primary" value="Clear Old Logs" />
                     </form>
                 </div>
                 <div class="flex-1 text-center">
                     <form method="post">
                         <input hidden name="action" value="clearcache" />
-                        <input type="submit" class="px-3 py-2 mt-3 rounded-md shadow-md bg-primary text-primary-text focus:outline-none focus:ring-2 focus:ring-transparent focus:ring-offset-1 focus:ring-offset-black dark:focus:ring-offset-white" value="Clear Cache" />
+                        <input type="submit" class="button-primary" value="Clear Cache" />
                     </form>
                 </div>
                 <div class="flex-1 text-center">
-                    <button type="button" @click="await repairSite(); flashSuccess = 'Repair Attempted Successfully';" class="px-3 py-2 mt-3 rounded-md shadow-md bg-primary text-primary-text focus:outline-none focus:ring-2 focus:ring-transparent focus:ring-offset-1 focus:ring-offset-black dark:focus:ring-offset-white">
+                    <button type="button" @click="await repairSite(); flashSuccess = 'Repair Attempted Successfully';" class="button-primary">
                         Repair Site
                     </button>
                 </div>
                 <?php if (Page::$pageData->migrate_config) : ?>
                     <div class="flex-1 text-center">
-                        <button type="button" @click="await migrateConfig(); flashSuccess = 'Configuration Migrated Successfully';" class="px-3 py-2 mt-3 rounded-md shadow-md bg-primary text-primary-text focus:outline-none focus:ring-2 focus:ring-transparent focus:ring-offset-1 focus:ring-offset-black dark:focus:ring-offset-white">
+                        <button type="button" @click="await migrateConfig(); flashSuccess = 'Configuration Migrated Successfully';" class="button-primary">
                             Migrate Configuration
                         </button>
                     </div>
