@@ -70,6 +70,7 @@ class Controller
     protected function authenticate($user, $admin = false, $permission = null)
     {
         if (!$user->isLoggedIn() || ($admin && !$user->hasPermission('admin')) || ($permission != null && !$user->hasPermission($permission))) {
+            Session::create('login_redirect', $_SERVER['REQUEST_URI']);
             $this->redirect('/');
         }
     }
