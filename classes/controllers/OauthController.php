@@ -72,15 +72,15 @@ class OauthController extends Controller
                 ]);
             } catch (Exception $e) {
                 Session::flash('error', 'Failed to link your VANet account.');
-                $this->redirect('/home');
+                $this->redirect(Session::exists('login_redirect') ? Session::get('login_redirect') : '/home');
             }
 
             Session::flash('success', 'Your VANet account has been linked.');
-            $this->redirect('/home');
+            $this->redirect(Session::exists('login_redirect') ? Session::get('login_redirect') : '/home');
         }
 
         if ($user->vanetLogin($profile['sub'])) {
-            $this->redirect('/home');
+            $this->redirect(Session::exists('login_redirect') ? Session::get('login_redirect') : '/home');
         } elseif (!$profile['vanet_admin']) {
             $id = User::nextId();
             $user->create([
@@ -99,7 +99,7 @@ class OauthController extends Controller
             ]);
             Permissions::giveAll($id);
             $user->vanetLogin($profile['sub']);
-            $this->redirect('/home');
+            $this->redirect(Session::exists('login_redirect') ? Session::get('login_redirect') : '/home');
         } else {
             Session::create('pilot_apply', [
                 'vanet_id' => $profile['sub'],
