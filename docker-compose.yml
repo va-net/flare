@@ -25,7 +25,7 @@ services:
             FLARE_VANET_API_KEY: ${API_KEY}
             FLARE_SITE_COLOUR_MAIN_HEX: '#FF7E00'
     db:
-        image: mysql:5.7
+        image: mariadb:latest
         container_name: flare-db
         restart: unless-stopped
         environment:
