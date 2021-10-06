@@ -5,6 +5,7 @@ if (Page::$pageData->user->hasPermission('admin')) {
         $subitems = [];
         foreach ($data as $key => $item) {
             if (
+                isset($item['vanetFeature']) &&
                 isset(Page::$pageData->va_profile['activeFeatures'][$item['vanetFeature']])
                 && Page::$pageData->va_profile['activeFeatures'][$item['vanetFeature']] === FALSE
             ) {
@@ -68,7 +69,7 @@ if (Page::$pageData->user->hasPermission('admin')) {
                         <script id="badges_<?= $catId ?>" type="application/json">
                             <?=
                             Json::encode(array_values(array_filter(array_map(function ($x) {
-                                return $x["badgeid"];
+                                return isset($x["badgeid"]) ? $x["badgeid"] : null;
                             }, array_values($items)), function ($x) {
                                 return !empty($x);
                             })));
@@ -93,7 +94,7 @@ if (Page::$pageData->user->hasPermission('admin')) {
                                 <li class="ml-5 mb-1 py-1 px-2 rounded font-semibold flex justify-[right] cursor-pointer hover:bg-black hover:bg-opacity-10 dark:hover:bg-opacity-40">
                                     <a class="flex items-center w-full" href="<?= $data['link'] ?>">
                                         <div class="flex-1"><?= $label ?></div>
-                                        <?php if ($data['badgeid'] !== null) : ?>
+                                        <?php if (isset($data['badgeid']) && $data['badgeid'] !== null) : ?>
                                             <span class="px-2 text-xs font-semibold leading-5 text-white bg-red-500 rounded-full" x-show="typeof badges?.<?= $data['badgeid'] ?> === 'string' && badges?.<?= $data['badgeid'] ?> != 0" x-text="badges?.<?= $data['badgeid'] ?>"></span>
                                             <span class="text-red-500" x-show="typeof badges?.<?= $data['badgeid'] ?> === 'boolean' && badges?.<?= $data['badgeid'] ?>">
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
