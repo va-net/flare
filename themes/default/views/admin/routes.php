@@ -7,6 +7,21 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 Page::setTitle('Routes Admin - ' . Page::$pageData->va_name);
+$routes = array_map(function ($r) {
+    $r['aircraft'] = [];
+    foreach (Page::$pageData->route_aircraft as $ra) {
+        if ($ra->routeid != $r['id']) continue;
+
+        foreach (Page::$pageData->fleet as $a) {
+            if ($a->id == $ra->aircraftid) {
+                $r['aircraft'][] = $a;
+                break;
+            }
+        }
+    }
+
+    return $r;
+}, Page::$pageData->routes);
 ?>
 <!DOCTYPE html>
 <html>
@@ -139,7 +154,7 @@ Page::setTitle('Routes Admin - ' . Page::$pageData->va_name);
                             </thead>
                             <tbody>
                                 <?php
-                                foreach (Page::$pageData->routes as $id => $route) {
+                                foreach ($routes as $id => $route) {
                                     $route['id'] = $id;
                                     echo '<tr><td class="align-middle mobile-hidden">';
                                     echo $route['fltnum'];

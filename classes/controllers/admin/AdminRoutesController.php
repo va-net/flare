@@ -17,6 +17,7 @@ class AdminRoutesController extends Controller
         $data->user = $user;
 
         $data->routes = Route::fetchAll();
+        $data->route_aircraft = Route::fetchAllAircraftJoins();
         $data->fleet = Aircraft::fetchActiveAircraft()->results();
         $data->active_dropdown = 'operations-management';
         $this->render('admin/routes', $data);
