@@ -7,7 +7,7 @@ require_once __DIR__ . '/../../includes/header.php';
 </script>
 <div id="content" class="text-black dark:text-white m-6" x-data="{ activeTab: '<?= empty(Input::get('tab')) ? 'settings' : Input::get('tab') ?>', alerts: [<?= !empty(Page::$pageData->update) ? "'updates'" : '' ?>] }">
     <h1 class="mb-5 text-4xl font-bold block">Site Settings</h1>
-    <div class="flex gap-3 border-b border-gray-200 dark:border-gray-500 mb-3">
+    <div class="flex gap-3 border-b border-gray-200 dark:border-gray-500 mb-3 overflow-x-auto overflow-y-hidden">
         <template x-for="tab in ['Settings', 'Design', 'Interaction', 'Maintenance', 'Updates']" :key="tab">
             <button :class="`${activeTab == tab.toLowerCase() ? 'border-b-2 border-primary' : 'border-b-2 border-transparent hover:border-black dark:hover:border-white'} pb-1 px-2 mb-[-0.0625rem] cursor-pointer flex items-center font-semibold text-lg`" @click="activeTab = tab.toLowerCase()">
                 <span x-text="tab" class="flex-1"></span>
