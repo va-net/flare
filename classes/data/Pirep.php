@@ -121,7 +121,7 @@ class Pirep
     public static function pendingCount()
     {
         self::init();
-        return intval(self::$_db->query("SELECT COUNT(id) AS result FROM `pireps` WHERE `status`=0")->first()->result);
+        return self::$_db->query("SELECT COUNT(id) AS result FROM `pireps` WHERE `status`=0")->first()->result;
     }
 
     /**
