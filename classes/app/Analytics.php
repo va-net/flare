@@ -117,7 +117,7 @@ class Analytics
     /**
      * @return string
      */
-    private static function url()
+    public static function url()
     {
         return sprintf(
             "%s://%s",

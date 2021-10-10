@@ -23,7 +23,7 @@ class AuthController extends Controller
         if ($user->isLoggedIn()) {
             $this->redirect('/home');
         }
-        $data->va_name = Config::get('va/name');
+        $data->vanet_signin = !empty(Config::get('oauth/client_id')) && VANet::featureEnabled('airline-membership');
         $this->render('login', $data);
     }
 
@@ -94,6 +94,7 @@ class AuthController extends Controller
         }
 
         $data->callsign = $filledCallsign;
+        $data->vanet_signin = !empty(Config::get('oauth/client_id')) && VANet::featureEnabled('airline-membership');
 
         $this->render('apply', $data);
     }
@@ -112,7 +113,6 @@ class AuthController extends Controller
                 'required' => true
             ),
             'email' => array(
-                'required' => true,
                 'min' => 5,
                 'max' => 50
             ),
@@ -126,13 +126,7 @@ class AuthController extends Controller
             'grade' => array(
                 'required' => true
             ),
-            'password' => array(
-                'required' => true,
-                'min' => 6
-            ),
             'password-repeat' => array(
-                'required' => true,
-                'min' => 6,
                 'matches' => 'password'
             )
         ));
@@ -141,7 +135,7 @@ class AuthController extends Controller
         if ($validate->passed() && Regex::match($csPattern, Input::get('callsign')) && !$assigned) {
             try {
                 $user = new User;
-                $user->create(array(
+                $uData = array(
                     'name' => Input::get('name'),
                     'email' => Input::get('email'),
                     'ifc' => Input::get('ifc'),
@@ -150,7 +144,14 @@ class AuthController extends Controller
                     'grade' => Input::get('grade'),
                     'violand' => Input::get('violand'),
                     'notes' => Input::get('notes'),
-                ));
+                );
+                if (Session::exists('pilot_apply')) {
+                    foreach (Session::get('pilot_apply') as $key => $val) {
+                        $uData[$key] = $val;
+                    }
+                    Session::delete('pilot_apply');
+                }
+                $user->create($uData);
             } catch (Exception $e) {
                 die($e->getMessage());
             }
@@ -165,6 +166,50 @@ class AuthController extends Controller
             Session::flash('error', 'Your Callsign is in an Invalid Format');
         }
         $this->apply_get();
+    }
+
+    public function apply_vanet_get()
+    {
+        $client_id = Config::get('oauth/client_id');
+        if (empty($client_id) || !VANet::featureEnabled('airline-membership')) {
+            $this->notFound();
+        }
+
+        $user = new User;
+        $data = new stdClass;
+        $data->user = $user;
+        if ($user->isLoggedIn()) {
+            $this->redirect('/home');
+        }
+
+        if (!Session::exists('pilot_apply')) {
+            die();
+        }
+
+        $data->callsign_format = Config::get('VA_CALLSIGN_FORMAT');
+        $trimmedPattern = preg_replace("/\/[a-z]*$/", '', preg_replace("/^\//", '', $data->callsign_format));
+        $filledCallsign = '';
+        if (!empty($trimmedPattern)) {
+            $callsigns = Callsign::all();
+            if (count($callsigns) < 1) {
+                $filledCallsign = RegRev::generate($trimmedPattern);
+            } else {
+                $filledCallsign = $callsigns[0];
+                $i = 0;
+                while (in_array($filledCallsign, $callsigns) && $i < 50) {
+                    $filledCallsign = RegRev::generate($trimmedPattern);
+                    $i++;
+                }
+                if (in_array($filledCallsign, $callsigns)) {
+                    $filledCallsign = '';
+                }
+            }
+        }
+
+        $data->callsign = $filledCallsign;
+        $data->apply_data = Session::get('pilot_apply');
+
+        $this->render('apply_vanet', $data);
     }
 
     public function logout()

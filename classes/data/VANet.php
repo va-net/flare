@@ -10,7 +10,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 class VANet
 {
-
+    /**
+     * @return string
+     */
     public static function baseUrl()
     {
         if (!empty(Config::get('vanet/base_url')) && Config::get('vanet/base_url') != 'https://vanet.app') {
@@ -754,5 +756,111 @@ class VANet
         if (!$res || $res['status'] != 0) return null;
 
         return $res['result'];
+    }
+
+    /**
+     * @return array|null
+     * @param string $code Authorization Code
+     * @param string $redirect_uri Redirect URL
+     */
+    public static function tokenExchange($code, $redirect_uri)
+    {
+        $client_id = Config::get('oauth/client_id');
+        $client_secret = Config::get('oauth/client_secret');
+        $res = HttpRequest::hacky(
+            self::baseUrl() . '/public/v1/oauth/token',
+            'POST',
+            'grant_type=authorization_code&code=' . urlencode($code) . '&redirect_uri=' . urlencode($redirect_uri),
+            [
+                'Authorization: Basic ' . base64_encode($client_id . ':' . $client_secret),
+                'Content-Type: application/x-www-form-urlencoded'
+            ]
+        );
+        return Json::decode($res);
+    }
+
+    /**
+     * @return array|null
+     * @param string $accessToken
+     */
+    public static function getUserProfile($accessToken)
+    {
+        $res = HttpRequest::hacky(self::baseUrl() . '/public/v1/oauth/userinfo', 'GET', '', [
+            'Authorization: Bearer ' . $accessToken,
+        ]);
+        $data = Json::decode($res);
+        if (!$data || isset($data['error'])) return null;
+
+        return $data;
+    }
+
+    /**
+     * @return array|null
+     */
+    public static function registerApp()
+    {
+        $key = Config::get('vanet/api_key');
+
+        $req = new HttpRequest(self::baseUrl() . '/airline/v1/app');
+        $req->setRequestHeaders(["X-Api-Key: {$key}"])
+            ->setMethod('POST')
+            ->execute();
+
+        $data = Json::decode($req->getResponse());
+        if (!$data || $data['status'] != 0) return null;
+
+        return $data['result'];
+    }
+
+    /**
+     * @return bool
+     * @param array $redirects
+     */
+    public static function updateAppRedirects($redirects)
+    {
+        $key = Config::get('vanet/api_key');
+
+        $res = HttpRequest::hacky(
+            self::baseUrl() . '/airline/v1/app/redirects',
+            'PUT',
+            Json::encode($redirects),
+            [
+                "X-Api-Key: {$key}",
+                'Content-Type: application/json'
+            ]
+        );
+        $data = Json::decode($res);
+
+        if (!$data || $data['status'] != 0) return false;
+
+        return true;
+    }
+
+    /**
+     * @return bool
+     * @param int $uid
+     * @param string $ifId
+     * @param int[] $permissions
+     */
+    public static function registerMembership($uid, $ifId, $permissions = [])
+    {
+        $key = Config::get('vanet/api_key');
+
+        $req = HttpRequest::hacky(self::baseUrl() . '/airline/v1/members', 'POST', Json::encode([
+            'infiniteFlightId' => $ifId,
+            'permissions' => $permissions
+        ]), [
+            "X-Api-Key: {$key}",
+            'Content-Type: application/json'
+        ]);
+        $data = Json::decode($req);
+
+        if (!$data || $data['status'] != 0) return false;
+
+        (new User)->update([
+            'vanet_id' => $data['result']['userId'],
+        ], $uid);
+
+        return true;
     }
 }

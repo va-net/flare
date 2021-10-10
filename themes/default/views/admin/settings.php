@@ -195,6 +195,13 @@ Page::setTitle('Site Admin - ' . Page::$pageData->va_name);
                                     </div>
                                     <input type="submit" class="btn bg-custom" value="Save" />
                                 </form>
+                                <?php if (Page::$pageData->setup_app) : ?>
+                                    <hr />
+                                    <form method="post">
+                                        <input hidden name="action" value="setupapp" />
+                                        <input type="submit" class="btn bg-custom" value="Setup App" />
+                                    </form>
+                                <?php endif; ?>
                             </div>
                             <div id="maint" class="p-3 tab-pane container-fluid fade">
                                 <h4>Site Maintenance</h4>
