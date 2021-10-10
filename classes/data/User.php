@@ -265,18 +265,14 @@ class User
             $id = $this->data()->id;
         }
 
-        $result = Aircraft::getAvailableAircraft($this->rank($id, true))->results();
-        $aircraft = array();
+        $ftime = $this->getFlightTime($id);
+        $sql = "SELECT a.* FROM aircraft a WHERE (a.rankreq IN (SELECT r.id FROM ranks r WHERE r.timereq <= ?) OR a.awardreq IN (SELECT w.id FROM awards w WHERE w.id IN (SELECT g.awardid FROM awards_granted g WHERE pilotid=?))) AND a.status=1";
+        $data = $this->_db->query($sql, [$ftime, $id])->results();
 
-        foreach ($result as $r) {
-            $newdata = array(
-                'name' => $r->name,
-                'liveryname' => $r->liveryname,
-                'id' => $r->id,
-                'notes' => $r->notes
-            );
-            array_push($aircraft, $newdata);
-        }
+        $aircraft = array_map(function ($a) {
+            return (array)$a;
+        }, $data);
+
         return $aircraft;
     }
 

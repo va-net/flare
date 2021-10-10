@@ -18,6 +18,7 @@ class FleetController extends Controller
 
         $data->fleet = Aircraft::fetchActiveAircraft()->results();
         $data->ranks = Rank::fetchAllNames()->results();
+        $data->awards = Awards::getAll();
         $data->types = Aircraft::fetchAllAircraftFromVANet();
         $data->active_dropdown = 'operations-management';
 
@@ -53,6 +54,7 @@ class FleetController extends Controller
 
         $data->aircraft = Aircraft::fetch($id);
         $data->ranks = Rank::fetchAllNames()->results();
+        $data->awards = Awards::getAll();
         if ($data->aircraft === false) {
             $this->notFound();
         }
@@ -79,6 +81,7 @@ class FleetController extends Controller
 
         $data->types = Aircraft::fetchAllAircraftFromVANet();
         $data->ranks = Rank::fetchAllNames()->results();
+        $data->awards = Awards::getAll();
         $data->active_dropdown = 'operations-management';
 
         $this->render('admin/fleet_new', $data);
@@ -95,7 +98,9 @@ class FleetController extends Controller
 
     private function create()
     {
-        Aircraft::add(Input::get('livery'), Input::get('rank'), Input::get('notes'));
+        Aircraft::add(Input::get('livery'), empty(Input::get('rank')) ? null : Input::get('rank'), Input::get('notes'), [
+            'awardreq' => empty(Input::get('award')) ? null : Input::get('award'),
+        ]);
         Session::flash('success', 'Aircraft Added Successfully!');
     }
 
@@ -107,7 +112,11 @@ class FleetController extends Controller
 
     private function update()
     {
-        Aircraft::update(Input::get('rank'), Input::get('notes'), Input::get('id'));
+        Aircraft::updateFields(Input::get('id'), [
+            'rankreq' => empty(Input::get('rank')) ? null : Input::get('rank'),
+            'awardreq' => empty(Input::get('award')) ? null : Input::get('award'),
+            'notes' => Input::get('notes'),
+        ]);
         Session::flash('success', 'Aircraft Updated Successfully!');
     }
 }
