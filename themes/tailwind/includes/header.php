@@ -159,7 +159,11 @@ if (Page::$pageData->user->hasPermission('admin')) {
                     </div>
                     <!-- Account Button -->
                     <button class="flex-none w-6 h-6 rounded-full focus:outline-none bg-primary text-primary-text focus:ring-2 focus:ring-offset-2 focus:ring-transparent focus:ring-offset-black dark:focus:ring-offset-white" @click="account = !account" id="user-menu-button">
-                        <?= substr(Page::$pageData->user->data()->name, 0, 1) ?>
+                        <?php if (Page::$pageData->user->data()->vanet_id) : ?>
+                            <img class="w-6 h-6 rounded-full" src="https://api.vanet.app/public/v1/picture/<?= urlencode(Page::$pageData->user->data()->vanet_id) ?>" />
+                        <?php else : ?>
+                            <?= substr(Page::$pageData->user->data()->name, 0, 1) ?>
+                        <?php endif; ?>
                     </button>
                     <!-- Account Popup Menu -->
                     <div x-show="account" x-cloak x-transition:enter="transition ease-out duration-100" x-transition:enter-start="transform opacity-0 scale-95" x-transition:enter-end="transform opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="transform opacity-100 scale-100" x-transition:leave-end="transform opacity-0 scale-95" @click.away="account = false" class="origin-top-right absolute right-2 top-[3.3rem] mt-2 w-48 rounded-md shadow-lg bg-white text-gray-700 dark:bg-gray-600 dark:text-white ring-1 ring-black ring-opacity-5 focus:outline-none py-1" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
