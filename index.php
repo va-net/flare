@@ -112,8 +112,8 @@ Router::add('/admin/users/lookup/(.+)', [Dependencies::get(UsersController::clas
 
 Router::add('/admin/awards', [Dependencies::get(AwardsController::class), 'get_index']);
 Router::add('/admin/awards', [Dependencies::get(AwardsController::class), 'post_index'], 'post');
-Router::add('/admin/award/(\d+)', [Dependencies::get(AwardsController::class), 'get_edit']);
-Router::add('/admin/award/(\d+)', [Dependencies::get(AwardsController::class), 'post_edit'], 'post');
+Router::add('/admin/awards/(\d+)', [Dependencies::get(AwardsController::class), 'get_edit']);
+Router::add('/admin/awards/(\d+)', [Dependencies::get(AwardsController::class), 'post_edit'], 'post');
 Router::add('/admin/awards/new', [Dependencies::get(AwardsController::class), 'get_new']);
 Router::add('/admin/awards/new', [Dependencies::get(AwardsController::class), 'post_new'], 'post');
 

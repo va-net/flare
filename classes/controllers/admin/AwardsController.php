@@ -50,6 +50,12 @@ class AwardsController extends Controller
         $data->user = $user;
 
         $data->award = Awards::get($id);
+        if (!$data->award) {
+            $this->notFound();
+        }
+        $data->recipients = Awards::awardRecipients($id);
+        $data->users = (new User)->getAllUsers();
+
         $this->render('admin/awards_edit', $data);
     }
 
@@ -58,15 +64,7 @@ class AwardsController extends Controller
         $user = new User;
         $this->authenticate($user, true, 'usermanage');
 
-        switch (Input::get('action')) {
-            case 'editaward':
-                $this->update();
-                break;
-            case 'giveaward':
-                $this->give();
-                break;
-        }
-
+        $this->update();
         $this->get_edit($id);
     }
 
