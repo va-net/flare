@@ -34,6 +34,7 @@ require_once __DIR__ . '/../../includes/header.php';
                         <th class="hidden md:table-cell cursor-pointer" @click="dataTableOrder((x) => x.callsign, $el.textContent, table)">Callsign</th>
                         <th class="cursor-pointer" @click="dataTableOrder((x) => x.name, $el.textContent, table)">Name</th>
                         <th class="hidden md:table-cell cursor-pointer" @click="dataTableOrder((x) => x.email, $el.textContent, table)">Email</th>
+                        <th class="hidden md:table-cell cursor-pointer" @click="dataTableOrder((x) => x.flighttime + x.transhours, $el.textContent, table)">Flight Time</th>
                         <th><span class="sr-only">Actions</span></th>
                     </tr>
                 </thead>
@@ -48,6 +49,7 @@ require_once __DIR__ . '/../../includes/header.php';
                             <td class="hidden md:table-cell" x-text="user.callsign"></td>
                             <td x-text="user.name"></td>
                             <td class="hidden md:table-cell" x-text="user.email"></td>
+                            <td class="hidden md:table-cell" x-text="(parseFloat(user.flighttime) + parseFloat(user.transhours)).formatFlightTime()"></td>
                             <td class="flex justify-end items-center gap-2">
                                 <?php if (Page::$pageData->is_gold && VANet::featureEnabled('airline-userlookup')) : ?>
                                     <a :href="`/admin/users/lookup/${user.ifuserid == null ? encodeURIComponent(user.ifc.split('/')[4]) + '?ifc=true' : encodeURIComponent(user.ifuserid)}`" class="inline-block px-2 py-1 text-lg font-semibold rounded-md shadow-md hover:shadow-lg bg-primary text-primary-text focus:outline-none focus:ring-2 focus:ring-transparent focus:ring-offset-1 focus:ring-offset-black dark:focus:ring-offset-white">
