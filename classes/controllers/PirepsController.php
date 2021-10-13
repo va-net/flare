@@ -152,9 +152,9 @@ class PirepsController extends Controller
             'fuelused' => Input::get('fuel'),
         ];
         if ((new User)->hasPermission('pirepmanage')) {
-            if (!empty(Input::get('ftime'))) $data['flighttime'] = Time::strToSecs(Input::get('ftime'));
-            if (!empty(Input::get('aircraft'))) $data['aircraftid'] = Input::get('aircraft');
-            if (!empty(Input::get('status'))) $data['status'] = Input::get('status');
+            if (Input::get('ftime')) $data['flighttime'] = Time::strToSecs(Input::get('ftime'));
+            if (Input::get('aircraft')) $data['aircraftid'] = Input::get('aircraft');
+            if (strlen(Input::get('status')) > 0) $data['status'] = Input::get('status');
         }
 
         if (!Pirep::update(Input::get('id'), $data)) {
