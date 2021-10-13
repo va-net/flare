@@ -59,7 +59,11 @@ class DB
             $x = 1;
             if (count($params)) {
                 foreach ($params as $param) {
-                    $this->_query->bindValue($x, strip_tags($param));
+                    if ($param === null) {
+                        $this->_query->bindValue($x, null, PDO::PARAM_NULL);
+                    } else {
+                        $this->_query->bindValue($x, strip_tags($param));
+                    }
                     $x++;
                 }
             }

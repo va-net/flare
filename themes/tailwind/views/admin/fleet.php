@@ -23,6 +23,7 @@ require_once __DIR__ . '/../../includes/header.php';
                     <tr>
                         <th>Name</th>
                         <th class="hidden md:table-cell">Min. Rank</th>
+                        <th class="hidden md:table-cell">Award Req.</th>
                         <th><span class="sr-only">Actions</span></th>
                     </tr>
                 </thead>
@@ -33,7 +34,10 @@ require_once __DIR__ . '/../../includes/header.php';
                                 <?= $aircraft->name ?> (<?= $aircraft->liveryname ?>)
                             </td>
                             <td class="hidden md:table-cell">
-                                <?= $aircraft->rank ?>
+                                <?= $aircraft->rank ?? 'None' ?>
+                            </td>
+                            <td class="hidden md:table-cell">
+                                <?= $aircraft->award ?? 'None' ?>
                             </td>
                             <td class="text-right">
                                 <button @click.stop="confirm('Are you sure you want to delete this aircraft?') && (() => { $refs['deleteaircraft-id'].value = '<?= $aircraft->id ?>'; $refs.deleteaircraft.submit(); })" class="px-2 py-1 text-lg font-semibold rounded-md shadow-md hover:shadow-lg bg-red-600 text-white focus:outline-none focus:ring-2 focus:ring-transparent focus:ring-offset-1 focus:ring-offset-black dark:focus:ring-offset-white">

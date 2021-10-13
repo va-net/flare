@@ -50,6 +50,9 @@ Page::setTitle('Fleet Admin - ' . Page::$pageData->va_name);
                                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                                     </div>
                                     <div class="modal-body">
+                                        <p class="small">
+                                            Aircraft can now be assigned a minimum rank and/or an award that is required for a pilot to be able to fly it. If both options are selected, the pilot can have the award OR the minimum rank to fly the aircraft. If no options are selected, the aircraft is not available to pilots.
+                                        </p>
                                         <form action="/admin/fleet" method="post">
                                             <input hidden name="action" value="addaircraft">
                                             <div class="form-group">
@@ -87,11 +90,22 @@ Page::setTitle('Fleet Admin - ' . Page::$pageData->va_name);
                                             </script>
                                             <div class="form-group">
                                                 <label for="rank">Minimum Rank</label>
-                                                <select required class="form-control" name="rank" required>
-                                                    <option value>Select</option>
+                                                <select class="form-control" name="rank">
+                                                    <option value>None</option>
                                                     <?php
                                                     foreach (Page::$pageData->ranks as $rank) {
                                                         echo '<option value="' . $rank->id . '">' . $rank->name . '</option>';
+                                                    }
+                                                    ?>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="award">Award</label>
+                                                <select class="form-control" name="award">
+                                                    <option value>None</option>
+                                                    <?php
+                                                    foreach (Page::$pageData->awards as $a) {
+                                                        echo '<option value="' . $a->id . '">' . $a->name . '</option>';
                                                     }
                                                     ?>
                                                 </select>
@@ -137,6 +151,7 @@ Page::setTitle('Fleet Admin - ' . Page::$pageData->va_name);
                                     <th>Name</th>
                                     <th class="mobile-hidden">Livery</th>
                                     <th class="mobile-hidden">Min. Rank</th>
+                                    <th class="mobile-hidden">Award Req.</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -148,12 +163,14 @@ Page::setTitle('Fleet Admin - ' . Page::$pageData->va_name);
                                     echo '</td><td class="align-middle mobile-hidden">';
                                     echo $aircraft->liveryname;
                                     echo '</td><td class="align-middle mobile-hidden">';
-                                    echo $aircraft->rank;
+                                    echo $aircraft->rank ?? 'None';
+                                    echo '</td><td class="align-middle mobile-hidden">';
+                                    echo $aircraft->award ?? 'None';
                                     echo '</td><td class="align-middle">';
                                     echo '&nbsp;<button data-id="' . $aircraft->id . '" class="btn btn-danger text-light deleteFleet"><i class="fa fa-trash"></i></button>';
                                     echo '&nbsp;<button class="btn btn-primary editFleet" data-acName="' . $aircraft->name . ' (' . $aircraft->liveryname . ')' . '" 
-                                    data-rankReq="' . $aircraft->rankreq . '" data-id="' . $aircraft->id . '" data-notes="' . $aircraft->notes . '">
-                                    <i class="fa fa-edit"></i></button>';
+                                    data-rankReq="' . $aircraft->rankreq . '" data-id="' . $aircraft->id . '" data-notes="' . $aircraft->notes . '" 
+                                    data-awardReq="' . $aircraft->awardreq . '"><i class="fa fa-edit"></i></button>';
                                     echo '</td>';
                                 }
                                 ?>
@@ -176,15 +193,30 @@ Page::setTitle('Fleet Admin - ' . Page::$pageData->va_name);
                                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                                     </div>
                                     <div class="modal-body">
+                                        <p class="small">
+                                            Aircraft can now be assigned a minimum rank and/or an award that is required for a pilot to be able to fly it. If both options are selected, the pilot can have the award OR the minimum rank to fly the aircraft. If no options are selected, the aircraft is not available to pilots.
+                                        </p>
                                         <form action="/admin/fleet" method="post">
                                             <input hidden name="action" value="editfleet" />
                                             <input hidden name="id" id="fleetedit-id" />
                                             <div class="form-group">
                                                 <label for="fleetedit-rank">Minimum Rank</label>
-                                                <select required class="form-control" name="rank" id="fleetedit-rank">
+                                                <select class="form-control" name="rank" id="fleetedit-rank">
+                                                    <option value>None</option>
                                                     <?php
                                                     foreach (Page::$pageData->ranks as $r) {
                                                         echo '<option value="' . $r->id . '">' . $r->name . '</option>';
+                                                    }
+                                                    ?>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="fleetedit-award">Award</label>
+                                                <select class="form-control" name="award" id="fleetedit-award">
+                                                    <option value>None</option>
+                                                    <?php
+                                                    foreach (Page::$pageData->awards as $a) {
+                                                        echo '<option value="' . $a->id . '">' . $a->name . '</option>';
                                                     }
                                                     ?>
                                                 </select>
@@ -204,12 +236,14 @@ Page::setTitle('Fleet Admin - ' . Page::$pageData->va_name);
                             $(".editFleet").click(function() {
                                 var acName = $(this).data('acname');
                                 var acRank = $(this).data('rankreq');
+                                var acAward = $(this).data('awardreq');
                                 var acId = $(this).data('id');
                                 var acNotes = $(this).data('notes');
 
                                 $("#fleetedit-title").text("Edit Aircraft: " + acName);
                                 $("#fleetedit-id").val(acId);
                                 $("#fleetedit-rank").val(acRank);
+                                $("#fleetedit-award").val(acAward);
                                 $("#fleetedit-notes").val(acNotes);
 
                                 $("#fleetedit").modal('show');
