@@ -103,7 +103,7 @@ class AdminPirepsController extends Controller
         }
     }
 
-    public function get_mutli_new()
+    public function get_multis_new()
     {
         $user = new User;
         $this->authenticate($user, true, 'pirepmanage');
@@ -114,7 +114,7 @@ class AdminPirepsController extends Controller
         $this->render('admin/multipliers_new', $data);
     }
 
-    public function post_mutli_new()
+    public function post_multis_new()
     {
         $user = new User;
         $this->authenticate($user, true, 'pirepmanage');
