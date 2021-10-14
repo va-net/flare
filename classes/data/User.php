@@ -552,7 +552,7 @@ class User
     public static function pendingCount()
     {
         $db = DB::getInstance();
-        return intval($db->query("SELECT COUNT(id) AS result FROM `pilots` WHERE `status`=0")->first()->result);
+        return $db->query("SELECT COUNT(id) AS result FROM `pilots` WHERE `status`=0")->first()->result;
     }
 
     /**

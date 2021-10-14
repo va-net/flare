@@ -438,7 +438,7 @@ class VANet
      */
     public static function getCodeshareCount()
     {
-        return count(self::getCodeshares());
+        return strval(count(self::getCodeshares()));
     }
 
     /**

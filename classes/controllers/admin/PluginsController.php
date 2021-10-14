@@ -22,6 +22,7 @@ class PluginsController extends Controller
 
         $data->installed = $GLOBALS['INSTALLED_PLUGINS'];
         $data->all = VANet::getPlugins();
+        $data->active_dropdown = 'plugins';
 
         $this->render('admin/plugins', $data);
     }
@@ -128,8 +129,8 @@ class PluginsController extends Controller
 
         $GLOBALS['installed'] = $installed;
 
-        // Only update to prerelease if we are already on a prerelease version
-        $prerelease = Regex::match("/^v\d+.\d+.\d+-[a-z]+.\d+$/", $installed['versionTag']);
+        // Only update to prerelease if we are already on a prerelease version or the user requested it
+        $prerelease = Regex::match("/^v\d+.\d+.\d+-[a-z]+.\d+$/", $installed['versionTag']) || !empty(Input::get('prerelease'));
         $plugin = VANet::pluginUpdateDetails(Input::get('plugin'), $prerelease);
 
         if ($plugin == null) {
