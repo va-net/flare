@@ -78,7 +78,7 @@ $user = Page::$pageData->user->data();
         </p>
         <?php if (Page::$pageData->user->data()->vanet_id && !empty(Page::$pageData->user->data()->email)) : ?>
             <p>
-                <span class="font-bold">You VANet account is linked.</span>
+                <span class="font-bold">Your VANet account is linked.</span>
                 You can now choose to delete all sensitive data from this Crew Center.
                 This will mean that you must use VANet to log in instead of your email
                 and password.
@@ -91,12 +91,12 @@ $user = Page::$pageData->user->data();
             </form>
         <?php elseif (Page::$pageData->user->data()->vanet_id && empty(Page::$pageData->user->data()->email)) : ?>
             <p>
-                <span class="font-bold">You VANet account is linked and no sensitive data is stored in our database.</span>
+                <span class="font-bold">Your VANet account is linked and no sensitive data is stored in our database.</span>
                 You must use VANet to log in instead of your email and password.
             </p>
         <?php else : ?>
             <p>
-                <span class="font-bold">You VANet account is not linked.</span>
+                <span class="font-bold">Your VANet account is not linked.</span>
                 You can now choose to link your VANet account to Flare in order to log in simply
                 and more securely.
             </p>
