@@ -270,7 +270,8 @@ class UsersController extends Controller
             'ifc' => Input::get('ifc'),
             'transhours' => Time::strToSecs(Input::get('transhours')),
             'transflights' => Input::get('transflights'),
-            'status' => $statuses[Input::get('status')]
+            'status' => $statuses[Input::get('status')],
+            'notes' => Input::get('notes'),
         ], Input::get('id'));
         Session::flash('success', 'User Edited Successfully');
     }

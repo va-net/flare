@@ -455,6 +455,7 @@ class User
                 'isAdmin' => in_array($r->id, $admins) ? 1 : 0,
                 'flighttime' => $r->flighttime == null ? 0 : $r->flighttime,
                 'ifuserid' => $r->ifuserid,
+                'notes' => $r->notes,
             );
             $usersarray[$x] = $newdata;
             $x++;

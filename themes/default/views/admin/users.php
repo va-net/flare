@@ -89,7 +89,7 @@ Page::setTitle('Users Admin - ' . Page::$pageData->va_name);
                                     data-name="' . $user['name'] . '" data-email="' . $user['email'] . '" data-ifc="' . $user['ifc'] . '" 
                                     data-joined="' . date_format(date_create($user['joined']), 'Y-m-d') . '" data-status="' . $user['status'] . '" 
                                     data-id="' . $user['id'] . '" data-thrs="' . Time::secsToString($user["transhours"]) . '" 
-                                    data-admin="' . $user['isAdmin'] . '" data-tflts="' . $user["transflights"] . '"><i class="fa fa-edit"></i>
+                                    data-admin="' . $user['isAdmin'] . '" data-tflts="' . $user["transflights"] . '" data-notes="' . $user['notes'] . '"><i class="fa fa-edit"></i>
                                     </button>';
                                     echo '&nbsp;<button id="delconfirmbtn" class="btn text-light btn-danger" 
                                     data-toggle="modal" data-target="#delconfirmmodal" 
@@ -231,6 +231,10 @@ Page::setTitle('Users Admin - ' . Page::$pageData->va_name);
                                                     <option value="1" id="usermodal-admin-1">Staff Member</option>
                                                 </select>
                                             </div>
+                                            <div class="form-group">
+                                                <label for="usermodal-notes">Notes</label>
+                                                <textarea class="form-control" name="notes" id="usermodal-notes"></textarea>
+                                            </div>
                                             <input type="submit" class="btn bg-custom" value="Save">
                                         </form>
                                     </div>
@@ -277,6 +281,7 @@ Page::setTitle('Users Admin - ' . Page::$pageData->va_name);
                                 var userTflts = $(this).data("tflts");
                                 var userId = $(this).data("id");
                                 var userAdmin = $(this).data("admin");
+                                var userNotes = $(this).data("notes");
 
                                 $("#usermodal-callsign").val(userCallsign);
                                 $("#usermodal-name").val(userName);
@@ -288,6 +293,7 @@ Page::setTitle('Users Admin - ' . Page::$pageData->va_name);
                                 $("#usermodal-tflts").val(userTflts);
                                 $("#usermodal-id").val(userId);
                                 $("#usermodal-admin").val(userAdmin);
+                                $("#usermodal-notes").text(userNotes);
 
                                 $("#usermodal-title").text("Edit User - " + userCallsign);
                                 reverseFormatFlightTime();

@@ -28,19 +28,19 @@ require_once __DIR__ . '/../../includes/header.php';
                 <input type="hidden" name="id" value="<?= Page::$pageData->edit_user->id ?>" />
                 <div class="space-y-1">
                     <label for="callsign">Callsign</label>
-                    <input id="callsign" name="callsign" type="text" required class="form-control" value="<?= Page::$pageData->edit_user->callsign ?>" />
+                    <input id="callsign" name="callsign" type="text" required class="form-control" value="<?= escape(Page::$pageData->edit_user->callsign) ?>" />
                 </div>
                 <div class="space-y-1">
                     <label for="name">Name</label>
-                    <input id="name" name="name" type="text" required class="form-control" value="<?= Page::$pageData->edit_user->name ?>" />
+                    <input id="name" name="name" type="text" required class="form-control" value="<?= escape(Page::$pageData->edit_user->name) ?>" />
                 </div>
                 <div class="space-y-1">
                     <label for="email">Email Address</label>
-                    <input id="email" name="email" type="email" required class="form-control" value="<?= Page::$pageData->edit_user->email ?>" />
+                    <input id="email" name="email" type="email" required class="form-control" value="<?= escape(Page::$pageData->edit_user->email) ?>" />
                 </div>
                 <div class="space-y-1">
                     <label for="ifc">IFC Profile URL</label>
-                    <input id="ifc" name="ifc" type="url" required class="form-control" value="<?= Page::$pageData->edit_user->ifc ?>" />
+                    <input id="ifc" name="ifc" type="url" required class="form-control" value="<?= escape(Page::$pageData->edit_user->ifc) ?>" />
                 </div>
                 <?php $transhours = explode(':', Time::secsToString(Page::$pageData->edit_user->transhours)); ?>
                 <div class="space-y-1" x-data="{ minutes: '<?= $transhours[1] ?>', hours: '<?= $transhours[0] ?>', }">
@@ -75,6 +75,10 @@ require_once __DIR__ . '/../../includes/header.php';
                         <option value="0">Pilot</option>
                         <option value="1">Staff Member</option>
                     </select>
+                </div>
+                <div class="space-y-1">
+                    <label for="notes">Notes</label>
+                    <textarea required id="notes" name="notes" class="form-control"><?= escape(Page::$pageData->edit_user->notes) ?></textarea>
                 </div>
             </form>
             <button type="submit" form="edit-user" class="button-primary mt-3">
