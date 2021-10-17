@@ -182,6 +182,10 @@ class User
             throw new Exception('There was a problem updating the user.');
         }
 
+        foreach ($fields as $k => $v) {
+            $this->_data->$k = $v;
+        }
+
         $fields["id"] = $id;
         Events::trigger('user/updated', $fields);
     }

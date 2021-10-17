@@ -70,6 +70,7 @@ class OauthController extends Controller
                     'vanet_expiry' => $expiry,
                     'ifuserid' => $profile['vanet_ifuid'],
                 ]);
+                if (!$user->data()->vanet_memberid) VANet::refreshMembership($user);
             } catch (Exception $e) {
                 Session::flash('error', 'Failed to link your VANet account.');
                 $this->redirect(Session::exists('login_redirect') ? Session::get('login_redirect') : '/home');
@@ -80,6 +81,7 @@ class OauthController extends Controller
         }
 
         if ($user->vanetLogin($profile['sub'])) {
+            if (!$user->data()->vanet_memberid) VANet::refreshMembership($user);
             $this->redirect(Session::exists('login_redirect') ? Session::get('login_redirect') : '/home');
         } elseif (!$profile['vanet_admin']) {
             $id = User::nextId();

@@ -51,6 +51,13 @@ class AuthController extends Controller
             $remember = Input::get('remember') === 'on';
 
             if ($user->login(Input::get('email'), Input::get('password'), $remember)) {
+                if ($user->data()->vanet_memberid == null && $user->data()->vanet_id != null && VANet::featureEnabled('airline-membership')) {
+                    if (!$user->data()->vanet_memberid) VANet::refreshMembership($user);
+                    $this->redirect('/vanet/signup');
+                } else {
+                    $this->redirect('/home');
+                }
+
                 $this->redirect(Session::exists('login_redirect') ? Session::get('login_redirect') : '/home');
             } else {
                 $user->logout();

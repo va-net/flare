@@ -1305,5 +1305,19 @@
         ],
         "deletedFiles": [],
         "newFolders": []
+    },
+    {
+        "tag": "v2.1.0-beta.3",
+        "name": "Version 2.1.0 Beta 3",
+        "date": "2021-10-18",
+        "notes": "TODO",
+        "prerelease": true,
+        "useUpdater": true,
+        "files": ["TODO"],
+        "queries": [
+            "ALTER TABLE `pilots` ADD `vanet_memberid` TEXT NULL DEFAULT NULL AFTER `vanet_expiry`"
+        ],
+        "deletedFiles": [],
+        "newFolders": []
     }
 ]

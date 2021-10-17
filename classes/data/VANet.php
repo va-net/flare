@@ -863,4 +863,38 @@ class VANet
 
         return true;
     }
+
+    /**
+     * @return void
+     * @param User $user
+     */
+    public static function refreshMembership($user)
+    {
+        if (!$user->data()->vanet_id || !$user->data()->ifuserid) return;
+
+        $key = Config::get('vanet/api_key');
+        $req = HttpRequest::hacky(self::baseUrl() . '/airline/v1/members', 'GET', '', [
+            "X-Api-Key: {$key}"
+        ]);
+        $data = Json::decode($req);
+
+        if (!$data || $data['status'] != 0) return;
+
+        $membership = null;
+        foreach ($data['result'] as $m) {
+            if ($m['userId'] == $user->data()->vanet_id) {
+                $membership = $m;
+                break;
+            }
+        }
+
+        if ($membership == null) {
+            VANet::registerMembership($user->data()->id, $user->data()->ifuserid, $user->hasPermission('pirepmanage') ? [0] : []);
+            return;
+        }
+
+        $user->update([
+            'vanet_memberid' => $membership['id'],
+        ]);
+    }
 }
