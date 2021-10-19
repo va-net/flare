@@ -1329,5 +1329,22 @@
         ],
         "deletedFiles": [],
         "newFolders": []
+    },
+    {
+        "tag": "v2.1.0-beta.4",
+        "name": "Version 2.1.0 Beta 4",
+        "date": "2021-10-19",
+        "notes": "Various bug fixes",
+        "prerelease": true,
+        "useUpdater": true,
+        "files": [
+            "classes/app/Analytics.php",
+            "classes/controllers/AuthController.php",
+            "classes/data/VANet.php",
+            "themes/default/views/admin/routes.php"
+        ],
+        "queries": [],
+        "deletedFiles": [],
+        "newFolders": []
     }
 ]
