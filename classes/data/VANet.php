@@ -895,6 +895,6 @@ class VANet
 
         $user->update([
             'vanet_memberid' => $membership['id'],
-        ]);
+        ], $user->data()->id);
     }
 }
