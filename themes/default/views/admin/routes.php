@@ -154,8 +154,7 @@ $routes = array_map(function ($r) {
                             </thead>
                             <tbody>
                                 <?php
-                                foreach ($routes as $id => $route) {
-                                    $route['id'] = $id;
+                                foreach ($routes as $route) {
                                     echo '<tr><td class="align-middle mobile-hidden">';
                                     echo $route['fltnum'];
                                     echo '</td><td class="align-middle">';
@@ -164,7 +163,7 @@ $routes = array_map(function ($r) {
                                     echo $route['arr'];
                                     echo '</td><td class="align-middle">';
                                     echo '<button class="btn bg-custom editRoute" data-route=\'' . Json::encode($route) . '\'><i class="fa fa-edit"></i></button>';
-                                    echo '&nbsp;<button data-rid="' . $id . '" class="btn btn-danger deleteRoute"><i class="fa fa-trash"></i></button>';
+                                    echo '&nbsp;<button data-rid="' . $route['id'] . '" class="btn btn-danger deleteRoute"><i class="fa fa-trash"></i></button>';
                                     echo '</td></tr>';
                                 }
                                 ?>
@@ -178,7 +177,7 @@ $routes = array_map(function ($r) {
                                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                                     </div>
                                     <div class="modal-body">
-                                        <form action="/admin/routes" method="post" id="routeedit-form">
+                                        <form method="post" id="routeedit-form">
                                             <input hidden name="action" value="editroute">
                                             <input hidden name="id" id="routeedit-id" />
                                             <div class="form-group">
