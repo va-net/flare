@@ -1346,5 +1346,21 @@
         "queries": [],
         "deletedFiles": [],
         "newFolders": []
+    },
+    {
+        "tag": "v2.1.0-beta.5",
+        "name": "Version 2.1.0 Beta 5",
+        "date": "2021-10-25",
+        "notes": "Various bug fixes",
+        "prerelease": true,
+        "useUpdater": true,
+        "files": [
+            "themes/tailwind/includes/header.php",
+            "themes/tailwind/views/admin/users_edit.php",
+            "classes/app/Analytics.php"
+        ],
+        "queries": [],
+        "deletedFiles": [],
+        "newFolders": []
     }
 ]
