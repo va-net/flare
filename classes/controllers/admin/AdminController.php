@@ -61,6 +61,7 @@ class AdminController extends Controller
     {
         $user = new User;
         $this->authenticate($user, true, 'site');
+        $scheme = isset($headers['X-Forwarded-Proto']) ? $headers['X-Forwarded-Proto'] : (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? 'https' : 'http');
 
         $data = new stdClass;
         $data->user = $user;
@@ -78,7 +79,10 @@ class AdminController extends Controller
         $data->analytics_enabled = !empty(Config::get('INSTANCE_ID'));
         $data->custom_css = Config::getCss();
         $data->migrate_config = !file_exists(__DIR__ . '/../../../core/config.new.php');
-        $data->setup_app = (empty(Config::get('oauth/client_id')) || empty(Config::get('oauth/client_secret'))) && VANet::featureEnabled('airline-membership') && file_exists(__DIR__ . '/../../../core/config.new.php');
+        $data->setup_app = (empty(Config::get('oauth/client_id')) || empty(Config::get('oauth/client_secret')))
+            && VANet::featureEnabled('airline-membership')
+            && file_exists(__DIR__ . '/../../../core/config.new.php')
+            && $scheme == 'https';
         $data->themes = array_filter(scandir(__DIR__ . '/../../../themes'), function ($x) {
             return strpos($x, '.') !== 0;
         });
@@ -154,6 +158,12 @@ class AdminController extends Controller
                 $this->redirect('/admin/settings?tab=maintenance');
                 break;
             case 'setupapp':
+                $scheme = isset($headers['X-Forwarded-Proto']) ? $headers['X-Forwarded-Proto'] : (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? 'https' : 'http');
+                if ($scheme == 'http') {
+                    Session::flash('error', 'You must use HTTPS to setup the application');
+                    $this->redirect('/admin/settings?tab=interaction');
+                }
+
                 $app = VANet::registerApp();
                 if (empty($app)) {
                     Session::flash('error', 'Error Registering App');
