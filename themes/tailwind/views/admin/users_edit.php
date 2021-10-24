@@ -78,7 +78,7 @@ require_once __DIR__ . '/../../includes/header.php';
                 </div>
                 <div class="space-y-1">
                     <label for="notes">Notes</label>
-                    <textarea required id="notes" name="notes" class="form-control"><?= escape(Page::$pageData->edit_user->notes) ?></textarea>
+                    <textarea id="notes" name="notes" class="form-control"><?= escape(Page::$pageData->edit_user->notes) ?></textarea>
                 </div>
             </form>
             <button type="submit" form="edit-user" class="button-primary mt-3">
