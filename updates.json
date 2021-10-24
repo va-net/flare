@@ -1357,7 +1357,9 @@
         "files": [
             "themes/tailwind/includes/header.php",
             "themes/tailwind/views/admin/users_edit.php",
-            "classes/app/Analytics.php"
+            "classes/app/Analytics.php",
+            "classes/controllers/admin/AdminController.php",
+            "themes/tailwind/views/login.php"
         ],
         "queries": [],
         "deletedFiles": [],
