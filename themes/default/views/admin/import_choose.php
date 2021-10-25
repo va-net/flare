@@ -7,7 +7,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 Page::setTitle('Import Routes - ' . Page::$pageData->va_name);
-$ACTIVE_CATEGORY = 'operations-management';
 ?>
 <!DOCTYPE html>
 <html>
@@ -53,7 +52,7 @@ $ACTIVE_CATEGORY = 'operations-management';
                             $aircraftOptions .= '<option value="' . $id . '">' . $name . '</option>';
                         }
 
-                        echo '<form action="/admin/operations/routes/import" method="post">';
+                        echo '<form action="/admin/routes/import" method="post">';
                         echo '<input hidden name="action" value="import" />';
                         echo "<input hidden name='rJson' value='$routesJson' />";
                         echo '<table class="w-100 mb-2">';
@@ -110,7 +109,7 @@ $ACTIVE_CATEGORY = 'operations-management';
     </div>
     <script>
         $(document).ready(function() {
-            $(".<?= $ACTIVE_CATEGORY ?>").collapse('show');
+            $(".<?= Page::$pageData->active_dropdown ?>").collapse('show');
         });
     </script>
 </body>

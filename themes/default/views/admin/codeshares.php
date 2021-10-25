@@ -8,7 +8,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 Page::setTitle('Codeshares Admin - ' . Page::$pageData->va_name);
-$ACTIVE_CATEGORY = 'operations-management';
 ?>
 <!DOCTYPE html>
 <html>
@@ -64,7 +63,7 @@ $ACTIVE_CATEGORY = 'operations-management';
 
                                     <div class="modal-body">
                                         Are you sure you want to delete (and hence deny) this Codeshare Request?
-                                        <form id="confirmShareDelete" action="/admin/operations/codeshares" method="post">
+                                        <form id="confirmShareDelete" action="/admin/codeshares" method="post">
                                             <input hidden name="action" value="deletecodeshare" />
                                             <input hidden name="delete" id="confirmShareDelete-id" />
                                             <input type="submit" class="btn btn-danger" value="Delete" />
@@ -79,7 +78,7 @@ $ACTIVE_CATEGORY = 'operations-management';
                             </div>
                         </div>
 
-                        <form id="importcodeshare" action="/admin/operations/codeshares" method="post">
+                        <form id="importcodeshare" action="/admin/codeshares" method="post">
                             <input hidden name="action" value="importcodeshare" />
                         </form>
 
@@ -128,7 +127,7 @@ $ACTIVE_CATEGORY = 'operations-management';
                         </script>
                         <hr />
                         <h4>Make Codeshare Request</h4>
-                        <form action="/admin/operations/codeshares" method="post">
+                        <form action="/admin/codeshares" method="post">
                             <input hidden name="action" value="newcodeshare" />
                             <div class="form-group">
                                 <label for="codeshare-recipid">Recipient Codeshare ID</label>
@@ -139,16 +138,22 @@ $ACTIVE_CATEGORY = 'operations-management';
                                 <select multiple class="form-control selectpicker" data-live-search="true" id="codeshare-routes-select" required>
                                     <option value>Select</option>
                                     <?php
-                                    foreach (Page::$pageData->routes as $id => $r) {
-                                        echo '<option value="' . $id . '">' . $r['fltnum'] . ' (' . $r['dep'] . ' - ' . $r['arr'] . ')</option>';
+                                    foreach (Page::$pageData->routes as $r) {
+                                        echo '<option value="' . $r['id'] . '">' . $r['fltnum'] . ' (' . $r['dep'] . ' - ' . $r['arr'] . ')</option>';
                                     }
                                     ?>
                                 </select>
-                                <input required hidden type="text" name="routes" id="codeshare-routes" />
+                                <div id="routes-inputs"></div>
                                 <script>
                                     $("#codeshare-routes-select").on('changed.bs.select', function() {
                                         var routes = $("#codeshare-routes-select").val();
-                                        $("#codeshare-routes").val(routes.join(','));
+                                        var html = '';
+                                        for (var i = 0; i < routes.length; i++) {
+                                            html += `
+                                                <input type="hidden" name="routes[]" value="${routes[i]}" />
+                                            `.trim();
+                                        }
+                                        $("#routes-inputs").html(html);
                                     });
                                 </script>
                             </div>
@@ -168,7 +173,7 @@ $ACTIVE_CATEGORY = 'operations-management';
     </div>
     <script>
         $(document).ready(function() {
-            $(".<?= $ACTIVE_CATEGORY ?>").collapse('show');
+            $(".<?= Page::$pageData->active_dropdown ?>").collapse('show');
         });
     </script>
 </body>

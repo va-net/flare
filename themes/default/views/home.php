@@ -26,6 +26,9 @@ Page::setTitle('Home - ' . Page::$pageData->va_name);
             <div class="p-0 m-0 row">
                 <?php require_once __DIR__ . '/../includes/sidebar.php'; ?>
                 <div class="col-lg-9 main-content">
+                    <form method="post" id="delsensitive">
+                        <input type="hidden" name="action" value="delsensitive" />
+                    </form>
                     <div id="loader-wrapper">
                         <div id="loader" class="spinner-border spinner-border-sm spinner-custom"></div>
                     </div>
@@ -125,6 +128,18 @@ Page::setTitle('Home - ' . Page::$pageData->va_name);
                                     }
                                     ?>
                                     <td class="align-middle"><a href="<?= Page::$pageData->user->data()->ifc ?>" target="_blank"><?= escape(Page::$pageData->username[4]) ?></td>
+                                </tr>
+                                <tr>
+                                    <td class="align-middle"><b>VANet Account</b></td>
+                                    <td class="align-middle">
+                                        <?php if (Page::$pageData->user->data()->vanet_id && empty(Page::$pageData->user->data()->password)) : ?>
+                                            Linked
+                                        <?php elseif (Page::$pageData->user->data()->vanet_id && !empty(Page::$pageData->user->data()->password)) : ?>
+                                            Linked - <a href="#" onclick="confirm('Are you sure? This will mean that you must use VANet to log in instead of your email and password.') && document.getElementById('delsensitive').submit()">delete sensitive data</a>
+                                        <?php else : ?>
+                                            Not Linked - <a href="/oauth/login">link now</a>
+                                        <?php endif; ?>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td class="align-middle"><b>Callsign</b></td>

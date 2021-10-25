@@ -117,11 +117,13 @@ class Analytics
     /**
      * @return string
      */
-    private static function url()
+    public static function url()
     {
+        $headers = getallheaders();
+        $scheme = isset($headers['X-Forwarded-Proto']) ? $headers['X-Forwarded-Proto'] : (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? 'https' : 'http');
         return sprintf(
             "%s://%s",
-            isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? 'https' : 'http',
+            $scheme,
             $_SERVER['SERVER_NAME']
         );
     }

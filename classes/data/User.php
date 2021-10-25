@@ -106,22 +106,6 @@ class User
             if ($user) {
                 if (Hash::check($password, $this->data()->password)) {
                     Session::create($this->_sessionName, $this->data()->id);
-
-                    if ($remember) {
-                        $hash = Hash::unique();
-                        $hashCheck = $this->_db->get('sessions', array('user_id', '=', $this->data()->id));
-
-                        if (!$hashCheck->count()) {
-                            $this->_db->insert('sessions', array(
-                                'user_id' => $this->data()->id,
-                                'hash' => $hash
-                            ));
-                        } else {
-                            $hash = $hashCheck->first()->hash;
-                        }
-
-                        Cookie::create($this->_cookieName, $hash, Config::get('remember/cookie_expiry'));
-                    }
                     Events::trigger('user/logged-in', (array)$this->data());
                     return true;
                 }
@@ -130,6 +114,23 @@ class User
         $_SESSION = array();
         Events::trigger('user/login-failed');
         return false;
+    }
+
+    /**
+     * @return bool
+     * @param string $vanetId VANet User ID
+     */
+    public function vanetLogin($vanetId)
+    {
+        $user = self::fetchByVanetId($vanetId);
+        if (empty($user)) {
+            return false;
+        }
+
+        $this->find($user->id);
+        Session::create($this->_sessionName, $user->id);
+        Events::trigger('user/logged-in', (array)$this->data());
+        return true;
     }
 
     /**
@@ -179,6 +180,10 @@ class User
 
         if (!$this->_db->update('pilots', $id, 'id', $fields)) {
             throw new Exception('There was a problem updating the user.');
+        }
+
+        foreach ($fields as $k => $v) {
+            $this->_data->$k = $v;
         }
 
         $fields["id"] = $id;
@@ -264,18 +269,14 @@ class User
             $id = $this->data()->id;
         }
 
-        $result = Aircraft::getAvailableAircraft($this->rank($id, true))->results();
-        $aircraft = array();
+        $ftime = $this->getFlightTime($id);
+        $sql = "SELECT a.* FROM aircraft a WHERE (a.rankreq IN (SELECT r.id FROM ranks r WHERE r.timereq <= ?) OR a.awardreq IN (SELECT w.id FROM awards w WHERE w.id IN (SELECT g.awardid FROM awards_granted g WHERE pilotid=?))) AND a.status=1";
+        $data = $this->_db->query($sql, [$ftime, $id])->results();
 
-        foreach ($result as $r) {
-            $newdata = array(
-                'name' => $r->name,
-                'liveryname' => $r->liveryname,
-                'id' => $r->id,
-                'notes' => $r->notes
-            );
-            array_push($aircraft, $newdata);
-        }
+        $aircraft = array_map(function ($a) {
+            return (array)$a;
+        }, $data);
+
         return $aircraft;
     }
 
@@ -334,7 +335,7 @@ class User
     }
 
     /**
-     * @return object
+     * @return DB
      * @param int $id User ID
      * @param int $limit Row Limit
      */
@@ -458,6 +459,7 @@ class User
                 'isAdmin' => in_array($r->id, $admins) ? 1 : 0,
                 'flighttime' => $r->flighttime == null ? 0 : $r->flighttime,
                 'ifuserid' => $r->ifuserid,
+                'notes' => $r->notes,
             );
             $usersarray[$x] = $newdata;
             $x++;
@@ -555,7 +557,7 @@ class User
     public static function pendingCount()
     {
         $db = DB::getInstance();
-        return intval($db->query("SELECT COUNT(id) AS result FROM `pilots` WHERE `status`=0")->first()->result);
+        return $db->query("SELECT COUNT(id) AS result FROM `pilots` WHERE `status`=0")->first()->result;
     }
 
     /**
@@ -593,5 +595,37 @@ class User
         }
 
         return $usersarray;
+    }
+
+    /**
+     * @return object|null
+     * @param int $id User VANet ID
+     */
+    public static function fetchByVanetId($id)
+    {
+        $db = DB::getInstance();
+
+        $sql = "SELECT * FROM pilots WHERE vanet_id=? AND `status`=1";
+        $results = $db->query($sql, [$id]);
+        if ($results->count() == 0) {
+            return null;
+        }
+
+        return $results->first();
+    }
+
+    /**
+     * @return int
+     */
+    public static function nextId()
+    {
+        $db = DB::getInstance();
+
+        $data = $db->query("SHOW TABLE STATUS")->results();
+        $table = array_values(array_filter($data, function ($x) {
+            return $x->Name == 'aircraft';
+        }))[0];
+
+        return $table->Auto_increment;
     }
 }

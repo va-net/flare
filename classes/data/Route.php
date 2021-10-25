@@ -42,41 +42,11 @@ class Route
         self::init();
 
         $ret = [];
-        $sql = "SELECT DISTINCT r.*, a.name AS aircraft_name, a.liveryname AS aircraft_livery, a.ifliveryid AS aircraft_liveryid, a.id AS aircraft_id
-        FROM (
-            route_aircraft ra INNER JOIN aircraft a ON a.id=ra.aircraftid
-        ) RIGHT JOIN routes r ON r.id=ra.routeid";
+        $sql = "SELECT * FROM routes ORDER BY fltnum";
         $data = self::$_db->query($sql, [], true)->results();
-        foreach ($data as $d) {
-            if (gettype($d->id) != 'string') $d->id = strval($d->id);
-            if (!array_key_exists($d->id, $ret)) {
-                $ac = $d->aircraft_name == null ? [] : [
-                    [
-                        "id" => $d->aircraft_id,
-                        "name" => $d->aircraft_name,
-                        "livery" => $d->aircraft_livery,
-                        "liveryid" => $d->aircraft_liveryid,
-                    ],
-                ];
-                $ret[$d->id] = [
-                    "fltnum" => $d->fltnum,
-                    "dep" => $d->dep,
-                    "arr" => $d->arr,
-                    "duration" => $d->duration,
-                    "notes" => $d->notes,
-                    "aircraft" => $ac,
-                ];
-            } else {
-                $ret[$d->id]['aircraft'][] = [
-                    "id" => $d->aircraft_id,
-                    "name" => $d->aircraft_name,
-                    "livery" => $d->aircraft_livery,
-                    "liveryid" => $d->aircraft_liveryid,
-                ];
-            }
-        }
-
-        return $ret;
+        return array_map(function ($x) {
+            return (array)$x;
+        }, $data);
     }
 
     /**
@@ -88,7 +58,8 @@ class Route
 
         self::init();
 
-        self::$_db->delete('routes', array('id', '=', $id));
+        self::$_db->delete('routes', ['id', '=', $id]);
+        self::$_db->delete('route_aircraft', ['routeid', '=', $id]);
         Events::trigger('route/deleted', ["id" => $id]);
     }
 
@@ -167,14 +138,14 @@ class Route
     /**
      * @return int
      */
-    public static function lastId()
+    public static function nextId()
     {
         self::init();
-        $sql = "SELECT id FROM routes ORDER BY id DESC LIMIT 1";
-        $res = self::$_db->query($sql)->first();
-        if ($res === FALSE) return 0;
-
-        return $res->id;
+        $data = self::$_db->query("SHOW TABLE STATUS")->results();
+        $table = array_values(array_filter($data, function ($x) {
+            return $x->Name == 'routes';
+        }))[0];
+        return $table->Auto_increment;
     }
 
     /**
@@ -190,5 +161,28 @@ class Route
                 ) INNER JOIN aircraft ON pireps.aircraftid=aircraft.id 
                 WHERE pireps.flightnum=? AND pireps.status=1";
         return self::$_db->query($sql, [$fltnum], true)->results();
+    }
+
+    /**
+     * @return array
+     * @param string $icao Airport ICAO
+     */
+    public static function getByAirport($icao)
+    {
+        self::init();
+
+        $sql = "SELECT * FROM routes WHERE dep=? OR arr=?";
+        return self::$_db->query($sql, [$icao, $icao])->results();
+    }
+
+    /**
+     * @return object[]
+     */
+    public static function fetchAllAircraftJoins()
+    {
+        self::init();
+
+        $sql = "SELECT r.*, a.ifliveryid AS aircraftliveryid FROM route_aircraft r INNER JOIN aircraft a ON r.aircraftid=a.id WHERE routeid IN (SELECT id FROM routes)";
+        return self::$_db->query($sql, [], true)->results();
     }
 }

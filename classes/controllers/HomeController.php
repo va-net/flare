@@ -27,6 +27,8 @@ class HomeController extends Controller
             $this->editprofile();
         } elseif (Input::get('action') === 'changepass') {
             $this->changepass();
+        } elseif (Input::get('action') === 'delsensitive') {
+            $this->delsensitive();
         } else {
             $this->get();
         }
@@ -79,5 +81,21 @@ class HomeController extends Controller
         }
         Session::flash('success', 'Password Changed Successfully!');
         $this->get();
+    }
+
+    private function delsensitive()
+    {
+        $user = new User;
+        try {
+            $user->update([
+                'email' => '',
+                'password' => '',
+            ]);
+            Session::flash('success', 'Your email and password have been removed from our servers. You now must use VANet to sign in.');
+        } catch (Exception $e) {
+            Session::flash('error', $e->getMessage());
+        } finally {
+            $this->get();
+        }
     }
 }

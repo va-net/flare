@@ -7,11 +7,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-$user = new User();
-
-Page::setTitle('Users Admin - ' . Config::get('va/name'));
-
-$ACTIVE_CATEGORY = 'user-management';
+Page::setTitle('Users Admin - ' . Page::$pageData->va_name);
 ?>
 <!DOCTYPE html>
 <html>
@@ -93,7 +89,7 @@ $ACTIVE_CATEGORY = 'user-management';
                                     data-name="' . $user['name'] . '" data-email="' . $user['email'] . '" data-ifc="' . $user['ifc'] . '" 
                                     data-joined="' . date_format(date_create($user['joined']), 'Y-m-d') . '" data-status="' . $user['status'] . '" 
                                     data-id="' . $user['id'] . '" data-thrs="' . Time::secsToString($user["transhours"]) . '" 
-                                    data-admin="' . $user['isAdmin'] . '" data-tflts="' . $user["transflights"] . '"><i class="fa fa-edit"></i>
+                                    data-admin="' . $user['isAdmin'] . '" data-tflts="' . $user["transflights"] . '" data-notes="' . $user['notes'] . '"><i class="fa fa-edit"></i>
                                     </button>';
                                     echo '&nbsp;<button id="delconfirmbtn" class="btn text-light btn-danger" 
                                     data-toggle="modal" data-target="#delconfirmmodal" 
@@ -235,6 +231,10 @@ $ACTIVE_CATEGORY = 'user-management';
                                                     <option value="1" id="usermodal-admin-1">Staff Member</option>
                                                 </select>
                                             </div>
+                                            <div class="form-group">
+                                                <label for="usermodal-notes">Notes</label>
+                                                <textarea class="form-control" name="notes" id="usermodal-notes"></textarea>
+                                            </div>
                                             <input type="submit" class="btn bg-custom" value="Save">
                                         </form>
                                     </div>
@@ -281,6 +281,7 @@ $ACTIVE_CATEGORY = 'user-management';
                                 var userTflts = $(this).data("tflts");
                                 var userId = $(this).data("id");
                                 var userAdmin = $(this).data("admin");
+                                var userNotes = $(this).data("notes");
 
                                 $("#usermodal-callsign").val(userCallsign);
                                 $("#usermodal-name").val(userName);
@@ -292,6 +293,7 @@ $ACTIVE_CATEGORY = 'user-management';
                                 $("#usermodal-tflts").val(userTflts);
                                 $("#usermodal-id").val(userId);
                                 $("#usermodal-admin").val(userAdmin);
+                                $("#usermodal-notes").text(userNotes);
 
                                 $("#usermodal-title").text("Edit User - " + userCallsign);
                                 reverseFormatFlightTime();
@@ -336,7 +338,7 @@ $ACTIVE_CATEGORY = 'user-management';
     </div>
     <script>
         $(document).ready(function() {
-            $(".<?= $ACTIVE_CATEGORY ?>").collapse('show');
+            $(".<?= Page::$pageData->active_dropdown ?>").collapse('show');
         });
     </script>
 </body>

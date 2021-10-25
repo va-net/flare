@@ -10,7 +10,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 <a class="navbar-brand" href="/">
     <?php if (empty(Config::get("VA_LOGO_URL"))) : ?>
-        <?= Config::get('va/name') ?>
+        <?= Page::$pageData->va_name ?>
     <?php else : ?>
         <img src="<?= Config::get("VA_LOGO_URL") ?>" height="35" />
     <?php endif; ?>

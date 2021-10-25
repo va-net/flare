@@ -9,7 +9,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 class UsersController extends Controller
 {
-    public function get()
+    public function get_index()
     {
         $user = new User;
         $this->authenticate($user, true, 'usermanage');
@@ -18,89 +18,27 @@ class UsersController extends Controller
         $data->va_name = Config::get('va/name');
         $data->is_gold = VANet::isGold();
         $data->users = $user->getAllUsers();
+        $data->active_dropdown = 'user-management';
         $this->render('admin/users', $data);
     }
 
-    public function post()
+    public function post_index()
     {
         $user = new User;
         $this->authenticate($user, true, 'usermanage');
         switch (Input::get('action')) {
             case 'deluser':
                 $this->delete();
+                break;
             case 'edituser':
-                $this->edit();
+                $this->update();
+                break;
             case 'announce':
                 $this->announce();
-            default:
-                $this->get();
-        }
-    }
-
-    private function delete()
-    {
-        $user = new User;
-
-        if (empty(Input::get('permanent'))) {
-            try {
-                $user->update(array(
-                    'status' => 2
-                ), Input::get('id'));
-                Session::flash('success', 'User Marked Inactive');
-            } catch (Exception $e) {
-                Session::flash('error', 'Failed to Mark User Inactive');
-            } finally {
-                $this->redirect('/admin/users');
-            }
+                break;
         }
 
-        if (!$user->hasPermission('staffmanage')) {
-            Session::flash('error', "You're not allowed to do that!");
-            $this->get();
-        }
-
-        $user->delete(Input::get('id'));
-        Session::flash('success', 'User Deleted');
-        $this->redirect('/admin/users');
-    }
-
-    private function edit()
-    {
-        $user = new User;
-        $isAdmin = $user->hasPermission('admin', Input::get('id'));
-        if (!$isAdmin && Input::get('admin') == 1) {
-            Permissions::give(Input::get('id'), 'admin');
-        } elseif ($isAdmin && Input::get('admin') == 0) {
-            Permissions::revokeAll(Input::get('id'));
-        }
-
-        $statuses = [
-            "Pending" => 0,
-            "Active" => 1,
-            "Inactive" => 2,
-            "Declined" => 3,
-        ];
-
-        $user->update([
-            'callsign' => Input::get('callsign'),
-            'name' => Input::get('name'),
-            'email' => Input::get('email'),
-            'ifc' => Input::get('ifc'),
-            'transhours' => Time::strToSecs(Input::get('transhours')),
-            'transflights' => Input::get('transflights'),
-            'status' => $statuses[Input::get('status')]
-        ], Input::get('id'));
-        Session::flash('success', 'User Edited Successfully');
-        $this->redirect('/admin/users');
-    }
-
-    private function announce()
-    {
-        $title = escape(Input::get('title'));
-        $content = escape(Input::get('content'));
-        Notifications::notify(0, "fa-bullhorn", $title, $content);
-        Session::flash('success', 'Announcement Created');
-        $this->redirect('/admin/users');
+        $this->get_index();
     }
 
     public function get_pending()
@@ -109,9 +47,42 @@ class UsersController extends Controller
         $this->authenticate($user, true, 'recruitment');
         $data = new stdClass;
         $data->user = $user;
-        $data->va_name = Config::get('va/name');
-        $data->is_gold = VANet::isGold();
+
         $data->users = $user->getAllPendingUsers();
+        $data->active_dropdown = 'user-management';
+
+        $lists = Cache::get('ifvarbLists');
+        if (!$lists) {
+            $lists = Json::decode(file_get_contents("https://ifvarb.com/watchlist_api.php?apikey=a5f2963d-29b1-40e4-8867-a4fbb384002c"));
+            Cache::set('ifvarbLists', Json::encode($lists), date('Y-m-d H:i:s', strtotime('+3 hours')));
+        } else {
+            $lists = Json::decode($lists);
+        }
+        $watchlist = [];
+        $blacklist = [];
+        $prevwatch = [];
+        $prevblack = [];
+        foreach ($lists as $l) {
+            if (new DateTime("now") > new DateTime($l['expire_date'])) {
+                if ($l["type"] == "Watchlist") {
+                    $prevwatch[strtolower($l["ifc"])] = "{$l["notes"]} - Expired {$l["expire_date"]}";
+                } else {
+                    $prevblack[strtolower($l["ifc"])] = "{$l["notes"]} - Expired {$l["expire_date"]}";
+                }
+                continue;
+            }
+            if ($l["type"] == "Watchlist") {
+                $watchlist[strtolower($l["ifc"])] = $l["notes"];
+            } else {
+                $blacklist[strtolower($l["ifc"])] = $l["notes"];
+            }
+        }
+
+        $data->watchlist = $watchlist;
+        $data->blacklist = $blacklist;
+        $data->previousWatchlist = $prevwatch;
+        $data->previousBlacklist = $prevblack;
+
         $this->render('admin/recruitment', $data);
     }
 
@@ -122,49 +93,13 @@ class UsersController extends Controller
         switch (Input::get('action')) {
             case 'acceptapplication':
                 $this->accept();
+                break;
             case 'declineapplication':
                 $this->decline();
-            default:
-                $this->get_pending();
-        }
-    }
-
-    private function accept()
-    {
-        $user = new User;
-        try {
-            $user->update(array(
-                'status' => 1
-            ), Input::get('accept'));
-        } catch (Exception $e) {
-            Session::flash('error', 'There was an Error Accepting the Application.');
-            $this->redirect('/admin/users/pending');
+                break;
         }
 
-        Events::trigger('user/accepted', [Input::get('accept')]);
-
-        Cache::delete('badge_recruitment');
-        Session::flash('success', 'Application Accepted Successfully!');
-        $this->redirect('/admin/users/pending');
-    }
-
-    private function decline()
-    {
-        $user = new User;
-        try {
-            $user->update(array(
-                'status' => 3
-            ), Input::get('id'));
-        } catch (Exception $e) {
-            Session::flash('error', 'There was an error Declining the Application.');
-            $this->redirect('/admin/users/pending');
-        }
-
-        Events::trigger('user/declined', ['id' => Input::get('id'), 'reason' => Input::get('declinereason')]);
-
-        Cache::delete('badge_recruitment');
-        Session::flash('success', 'Application Declined Successfully');
-        $this->redirect('/admin/users/pending');
+        $this->get_pending();
     }
 
     public function get_staff()
@@ -176,6 +111,7 @@ class UsersController extends Controller
         $data->va_name = Config::get('va/name');
         $data->is_gold = VANet::isGold();
         $data->staff = $user->getAllStaff();
+        $data->active_dropdown = 'user-management';
         $this->render('admin/staff', $data);
     }
 
@@ -208,97 +144,32 @@ class UsersController extends Controller
         $this->redirect('/admin/users/staff');
     }
 
-    public function get_awards()
+    public function get_edit($id)
     {
         $user = new User;
         $this->authenticate($user, true, 'usermanage');
         $data = new stdClass;
         $data->user = $user;
-        $data->all_users = $user->getAllUsers();
-        $data->awards = Awards::getAll();
-        $this->render('admin/awards', $data);
+
+        $data->edit_user = $user->getUser($id);
+        $data->pireps = $user->fetchPireps($id)->results();
+        $data->user_awards = $user->getAwards($id);
+        $data->all_awards = Awards::getAll();
+        $data->permissions = array_unique(Permissions::forUser($id));
+        $data->active_dropdown = 'user-management';
+        $this->render('admin/users_edit', $data);
     }
 
-    public function post_awards()
+    public function post_edit($id)
     {
         $user = new User;
         $this->authenticate($user, true, 'usermanage');
 
-        switch (Input::get('action')) {
-            case 'addaward':
-                $this->award_create();
-            case 'editaward':
-                $this->award_edit();
-            case 'delaward':
-                $this->award_delete();
-            case 'giveaward':
-                $this->award_give();
-            default:
-                $this->get_awards();
-        }
+        $this->update();
+        $this->get_edit($id);
     }
 
-    private function award_create()
-    {
-        $res = Awards::create([
-            'name' => Input::get('name'),
-            'description' => Input::get('description'),
-            'imageurl' => Input::get('image'),
-        ]);
-
-        if ($res) {
-            Session::flash('success', 'Award Created');
-        } else {
-            Session::flash('error', 'Failed to Create Award');
-        }
-
-        $this->get_awards();
-    }
-
-    private function award_edit()
-    {
-        $res = Awards::update(Input::get('id'), [
-            'name' => Input::get('name'),
-            'description' => Input::get('description'),
-            'imageurl' => Input::get('image'),
-        ]);
-
-        if ($res) {
-            Session::flash('success', 'Award Updated');
-        } else {
-            Session::flash('error', 'Failed to Update Award');
-        }
-
-        $this->get_awards();
-    }
-
-    private function award_delete()
-    {
-        $res = Awards::delete(Input::get('id'));
-
-        if ($res) {
-            Session::flash('success', 'Award Deleted');
-        } else {
-            Session::flash('error', 'Failed to Delete Award');
-        }
-
-        $this->get_awards();
-    }
-
-    private function award_give()
-    {
-        $res = Awards::give(Input::get('award'), Input::get('pilot'));
-
-        if ($res) {
-            Session::flash('success', 'Award Given');
-        } else {
-            Session::flash('error', 'Failed to Give Award');
-        }
-
-        $this->get_awards();
-    }
-
-    public function lookup($value)
+    public function get_lookup($value)
     {
         $gold = VANet::isGold();
         if (!$gold || !VANet::featureEnabled('airline-userlookup')) $this->notFound();
@@ -315,6 +186,101 @@ class UsersController extends Controller
             );
         }
 
+        $data->active_dropdown = 'user-management';
         $this->render('admin/user_lookup', $data);
+    }
+
+    private function accept()
+    {
+        $user = new User;
+        try {
+            $user->update(array(
+                'status' => 1
+            ), Input::get('accept'));
+        } catch (Exception $e) {
+            Session::flash('error', 'There was an Error Accepting the Application.');
+            return;
+        }
+
+        Events::trigger('user/accepted', [Input::get('accept')]);
+
+        Cache::delete('badge_recruitment');
+        Session::flash('success', 'Application Accepted Successfully!');
+    }
+
+    private function decline()
+    {
+        $user = new User;
+        try {
+            $user->update(array(
+                'status' => 3
+            ), Input::get('id'));
+        } catch (Exception $e) {
+            Session::flash('error', 'There was an error Declining the Application.');
+            $this->redirect('/admin/users/pending');
+        }
+
+        Events::trigger('user/declined', ['id' => Input::get('id'), 'reason' => Input::get('declinereason')]);
+
+        Cache::delete('badge_recruitment');
+        Session::flash('success', 'Application Declined Successfully');
+    }
+
+    private function delete()
+    {
+        $user = new User;
+
+        if (empty(Input::get('permanent'))) {
+            try {
+                $user->update(array(
+                    'status' => 2
+                ), Input::get('id'));
+                Session::flash('success', 'User Marked Inactive');
+            } catch (Exception $e) {
+                Session::flash('error', 'Failed to Mark User Inactive');
+            }
+        } else {
+            $this->authenticate($user, true, 'staffmanage');
+            $user->delete(Input::get('id'));
+            Session::flash('success', 'User Deleted');
+        }
+    }
+
+    private function update()
+    {
+        $user = new User;
+        $isAdmin = $user->hasPermission('admin', Input::get('id'));
+        if (!$isAdmin && Input::get('admin') == 1) {
+            Permissions::give(Input::get('id'), 'admin');
+        } elseif ($isAdmin && Input::get('admin') == 0) {
+            Permissions::revokeAll(Input::get('id'));
+        }
+
+        $statuses = [
+            "Pending" => 0,
+            "Active" => 1,
+            "Inactive" => 2,
+            "Declined" => 3,
+        ];
+
+        $user->update([
+            'callsign' => Input::get('callsign'),
+            'name' => Input::get('name'),
+            'email' => Input::get('email'),
+            'ifc' => Input::get('ifc'),
+            'transhours' => Time::strToSecs(Input::get('transhours')),
+            'transflights' => Input::get('transflights'),
+            'status' => $statuses[Input::get('status')],
+            'notes' => Input::get('notes'),
+        ], Input::get('id'));
+        Session::flash('success', 'User Edited Successfully');
+    }
+
+    private function announce()
+    {
+        $title = escape(Input::get('title'));
+        $content = escape(Input::get('content'));
+        Notifications::notify(0, "fa-bullhorn", $title, $content);
+        Session::flash('success', 'Announcement Created');
     }
 }

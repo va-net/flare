@@ -121,7 +121,7 @@ class Pirep
     public static function pendingCount()
     {
         self::init();
-        return intval(self::$_db->query("SELECT COUNT(id) AS result FROM `pireps` WHERE `status`=0")->first()->result);
+        return self::$_db->query("SELECT COUNT(id) AS result FROM `pireps` WHERE `status`=0")->first()->result;
     }
 
     /**
@@ -337,5 +337,16 @@ class Pirep
         if (!$q->error()) Events::trigger('pirep/comment_deleted', ['id' => $id]);
 
         return !$q->error();
+    }
+
+    public static function getByAirport($icao)
+    {
+        self::init();
+
+        $sql = "SELECT pireps.*, pilots.name AS pilotname FROM pireps INNER JOIN pilots ON pireps.pilotid=pilots.id WHERE pireps.departure=? OR pireps.arrival=? ORDER BY pireps.date DESC";
+        $q = self::$_db->query($sql, [$icao, $icao]);
+        if ($q->error()) return null;
+
+        return $q->results();
     }
 }

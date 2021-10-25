@@ -7,7 +7,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 Page::setTitle('VA Stats - ' . Page::$pageData->va_name);
-$ACTIVE_CATEGORY = 'pirep-management';
 ?>
 <!DOCTYPE html>
 <html>
@@ -84,7 +83,7 @@ $ACTIVE_CATEGORY = 'pirep-management';
     </div>
     <script>
         $(document).ready(function() {
-            $(".<?= $ACTIVE_CATEGORY ?>").collapse('show');
+            $(".<?= Page::$pageData->active_dropdown ?>").collapse('show');
         });
     </script>
 </body>

@@ -40,6 +40,8 @@ body:
           description: This can be found in Site Settings under Updater. If you are not on the latest version, please update then check if the bug is still present.
           options:
               - v2.0.0
+              - v2.0.1
+              - v2.0.2
               - v2.1.0-beta
       validations:
           required: true

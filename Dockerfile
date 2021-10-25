@@ -5,7 +5,7 @@ COPY . .
 RUN yarn install --frozen-lockfile
 RUN yarn run build
 
-FROM php:7-apache AS final
+FROM php:8-apache AS final
 
 # Install Required Extensions
 RUN apt-get update && apt-get install -y libcurl3-dev libzip-dev zip

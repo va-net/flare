@@ -23,7 +23,7 @@ class AuthController extends Controller
         if ($user->isLoggedIn()) {
             $this->redirect('/home');
         }
-        $data->va_name = Config::get('va/name');
+        $data->vanet_signin = !empty(Config::get('oauth/client_id')) && VANet::featureEnabled('airline-membership');
         $this->render('login', $data);
     }
 
@@ -51,7 +51,11 @@ class AuthController extends Controller
             $remember = Input::get('remember') === 'on';
 
             if ($user->login(Input::get('email'), Input::get('password'), $remember)) {
-                $this->redirect('/home');
+                if ($user->data()->vanet_memberid == null && $user->data()->vanet_id != null && VANet::featureEnabled('airline-membership')) {
+                    VANet::refreshMembership($user);
+                }
+
+                $this->redirect(Session::exists('login_redirect') ? Session::get('login_redirect') : '/home');
             } else {
                 $user->logout();
                 Session::flash('error', 'Login Failed. Your application may still be pending or it may have been denied. Please contact us for more details if you believe this is an error.');
@@ -76,24 +80,27 @@ class AuthController extends Controller
 
         $trimmedPattern = preg_replace("/\/[a-z]*$/", '', preg_replace("/^\//", '', $data->callsign_format));
         $filledCallsign = '';
-        if (!empty($trimmedPattern)) {
-            $callsigns = Callsign::all();
-            if (count($callsigns) < 1) {
-                $filledCallsign = RegRev::generate($trimmedPattern);
-            } else {
-                $filledCallsign = $callsigns[0];
-                $i = 0;
-                while (in_array($filledCallsign, $callsigns) && $i < 50) {
+        if ($trimmedPattern != '.*') {
+            if (!empty($trimmedPattern)) {
+                $callsigns = Callsign::all();
+                if (count($callsigns) < 1) {
                     $filledCallsign = RegRev::generate($trimmedPattern);
-                    $i++;
-                }
-                if (in_array($filledCallsign, $callsigns)) {
-                    $filledCallsign = '';
+                } else {
+                    $filledCallsign = $callsigns[0];
+                    $i = 0;
+                    while (in_array($filledCallsign, $callsigns) && $i < 50) {
+                        $filledCallsign = RegRev::generate($trimmedPattern);
+                        $i++;
+                    }
+                    if (in_array($filledCallsign, $callsigns)) {
+                        $filledCallsign = '';
+                    }
                 }
             }
         }
 
         $data->callsign = $filledCallsign;
+        $data->vanet_signin = !empty(Config::get('oauth/client_id')) && VANet::featureEnabled('airline-membership');
 
         $this->render('apply', $data);
     }
@@ -112,7 +119,6 @@ class AuthController extends Controller
                 'required' => true
             ),
             'email' => array(
-                'required' => true,
                 'min' => 5,
                 'max' => 50
             ),
@@ -126,13 +132,7 @@ class AuthController extends Controller
             'grade' => array(
                 'required' => true
             ),
-            'password' => array(
-                'required' => true,
-                'min' => 6
-            ),
             'password-repeat' => array(
-                'required' => true,
-                'min' => 6,
                 'matches' => 'password'
             )
         ));
@@ -141,7 +141,7 @@ class AuthController extends Controller
         if ($validate->passed() && Regex::match($csPattern, Input::get('callsign')) && !$assigned) {
             try {
                 $user = new User;
-                $user->create(array(
+                $uData = array(
                     'name' => Input::get('name'),
                     'email' => Input::get('email'),
                     'ifc' => Input::get('ifc'),
@@ -150,7 +150,14 @@ class AuthController extends Controller
                     'grade' => Input::get('grade'),
                     'violand' => Input::get('violand'),
                     'notes' => Input::get('notes'),
-                ));
+                );
+                if (Session::exists('pilot_apply')) {
+                    foreach (Session::get('pilot_apply') as $key => $val) {
+                        $uData[$key] = $val;
+                    }
+                    Session::delete('pilot_apply');
+                }
+                $user->create($uData);
             } catch (Exception $e) {
                 die($e->getMessage());
             }
@@ -167,11 +174,94 @@ class AuthController extends Controller
         $this->apply_get();
     }
 
+    public function apply_vanet_get()
+    {
+        $client_id = Config::get('oauth/client_id');
+        if (empty($client_id) || !VANet::featureEnabled('airline-membership')) {
+            $this->notFound();
+        }
+
+        $user = new User;
+        $data = new stdClass;
+        $data->user = $user;
+        if ($user->isLoggedIn()) {
+            $this->redirect('/home');
+        }
+
+        if (!Session::exists('pilot_apply')) {
+            die();
+        }
+
+        $data->callsign_format = Config::get('VA_CALLSIGN_FORMAT');
+        $trimmedPattern = preg_replace("/\/[a-z]*$/", '', preg_replace("/^\//", '', $data->callsign_format));
+        $filledCallsign = '';
+        if (!empty($trimmedPattern)) {
+            $callsigns = Callsign::all();
+            if (count($callsigns) < 1) {
+                $filledCallsign = RegRev::generate($trimmedPattern);
+            } else {
+                $filledCallsign = $callsigns[0];
+                $i = 0;
+                while (in_array($filledCallsign, $callsigns) && $i < 50) {
+                    $filledCallsign = RegRev::generate($trimmedPattern);
+                    $i++;
+                }
+                if (in_array($filledCallsign, $callsigns)) {
+                    $filledCallsign = '';
+                }
+            }
+        }
+
+        $data->callsign = $filledCallsign;
+        $data->apply_data = Session::get('pilot_apply');
+
+        $this->render('apply_vanet', $data);
+    }
+
     public function logout()
     {
         $user = new User();
         $user->logout();
 
         $this->redirect('/');
+    }
+
+    public function get_profile()
+    {
+        $user = new User;
+        $this->authenticate($user);
+        $data = new stdClass;
+        $data->user = $user;
+        $data->awards = $user->getAwards();
+        $this->render('profile', $data);
+    }
+
+    public function post_profile()
+    {
+        $user = new User;
+        $csPattern = Config::get('VA_CALLSIGN_FORMAT');
+        $trimmedPattern = preg_replace("/\/[a-z]*$/", '', preg_replace("/^\//", '', $csPattern));
+
+        if (Callsign::assigned(Input::get('callsign'), $user->data()->id)) {
+            Session::flash('error', 'Callsign is Already Taken!');
+            $this->get_profile();
+        } elseif (!Regex::match($csPattern, Input::get('callsign'))) {
+            Session::flash('error', 'Callsign does not match the required format! Try <b>' . RegRev::generate($trimmedPattern) . '</b> instead.');
+            $this->get_profile();
+        } else {
+            try {
+                $user->update(array(
+                    'name' => Input::get('name'),
+                    'callsign' => Input::get('callsign'),
+                    'email' => Input::get('email'),
+                    'ifc' => Input::get('ifc')
+                ));
+            } catch (Exception $e) {
+                Session::flash('error', $e->getMessage());
+                $this->get_profile();
+            }
+            Session::flash('success', 'Profile updated successfully!');
+            $this->get_profile();
+        }
     }
 }

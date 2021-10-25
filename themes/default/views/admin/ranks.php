@@ -7,7 +7,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 Page::setTitle('Ranks Admin - ' . Page::$pageData->va_name);
-$ACTIVE_CATEGORY = 'operations-management';
 ?>
 <!DOCTYPE html>
 <html>
@@ -52,7 +51,7 @@ $ACTIVE_CATEGORY = 'operations-management';
                                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                                     </div>
                                     <div class="modal-body">
-                                        <form action="/admin/operations/ranks" method="post">
+                                        <form action="/admin/ranks" method="post">
                                             <input hidden name="action" value="addrank">
                                             <div class="form-group">
                                                 <label for="name">Name</label>
@@ -69,7 +68,7 @@ $ACTIVE_CATEGORY = 'operations-management';
                             </div>
                         </div>
 
-                        <form id="delrank" action="/admin/operations/ranks" method="post">
+                        <form id="delrank" action="/admin/ranks" method="post">
                             <input hidden name="action" value="delrank" />
                         </form>
 
@@ -109,7 +108,7 @@ $ACTIVE_CATEGORY = 'operations-management';
                                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                                     </div>
                                     <div class="modal-body">
-                                        <form action="/admin/operations/ranks" method="post">
+                                        <form action="/admin/ranks" method="post">
                                             <input hidden name="action" value="editrank">
                                             <input hidden name="id" id="rankmodal-id">
                                             <div class="form-group">
@@ -150,7 +149,7 @@ $ACTIVE_CATEGORY = 'operations-management';
     </div>
     <script>
         $(document).ready(function() {
-            $(".<?= $ACTIVE_CATEGORY ?>").collapse('show');
+            $(".<?= Page::$pageData->active_dropdown ?>").collapse('show');
         });
     </script>
 </body>

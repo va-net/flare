@@ -77,6 +77,21 @@
                         Apply
                     </button>
                 </div>
+
+                <?php if (Page::$pageData->vanet_signin) : ?>
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-2">
+                            <div class="flex-1 border-b border-gray-200"></div>
+                            <p class="flex-none text-sm text-gray-700">Or continue with</p>
+                            <div class="flex-1 border-b border-gray-200"></div>
+                        </div>
+                        <div class="flex gap-3">
+                            <a href="/oauth/login" class="flex-1 px-4 flex justify-center py-2 text-sm font-medium border border-gray-300 rounded-md text-black focus:outline-none focus:ring-2 focus:ring-offset-2 hover:shadow">
+                                <img src="https://vanet.app/logo.png" class="h-8 w-auto" />
+                            </a>
+                        </div>
+                    </div>
+                <?php endif; ?>
             </form>
         </div>
     </div>

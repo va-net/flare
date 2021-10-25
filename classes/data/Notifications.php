@@ -107,7 +107,7 @@ class Notifications
     private static function handleEventAdded($ev)
     {
         $args = $ev->params;
-        $content = "An Event Called {$args['Name']} was just posted. Check it out!";
+        $content = "An Event called {$args['name']} was just posted. Check it out!";
         if (strlen($content) > 60) return;
         self::notify(0, "fa-calendar", "New Event", $content);
     }
@@ -196,6 +196,6 @@ class Notifications
             $content = "{$user->name} posted a comment on your PIREP.";
             if (strlen($content) > 60) return;
         }
-        self::notify(0, "fa-comment", "PIREP Comment", $content);
+        self::notify($user->id, "fa-comment", "PIREP Comment", $content);
     }
 }

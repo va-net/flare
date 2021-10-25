@@ -7,7 +7,21 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 Page::setTitle('Routes Admin - ' . Page::$pageData->va_name);
-$ACTIVE_CATEGORY = 'operations-management';
+$routes = array_map(function ($r) {
+    $r['aircraft'] = [];
+    foreach (Page::$pageData->route_aircraft as $ra) {
+        if ($ra->routeid != $r['id']) continue;
+
+        foreach (Page::$pageData->fleet as $a) {
+            if ($a->id == $ra->aircraftid) {
+                $r['aircraft'][] = $a;
+                break;
+            }
+        }
+    }
+
+    return $r;
+}, Page::$pageData->routes);
 ?>
 <!DOCTYPE html>
 <html>
@@ -52,7 +66,7 @@ $ACTIVE_CATEGORY = 'operations-management';
                                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                                     </div>
                                     <div class="modal-body">
-                                        <form action="/admin/operations/routes" method="post" id="addroute-form">
+                                        <form action="/admin/routes" method="post" id="addroute-form">
                                             <input hidden name="action" value="addroute">
                                             <div class="form-group">
                                                 <label for="">Departure Airport</label>
@@ -140,8 +154,7 @@ $ACTIVE_CATEGORY = 'operations-management';
                             </thead>
                             <tbody>
                                 <?php
-                                foreach (Page::$pageData->routes as $id => $route) {
-                                    $route['id'] = $id;
+                                foreach ($routes as $route) {
                                     echo '<tr><td class="align-middle mobile-hidden">';
                                     echo $route['fltnum'];
                                     echo '</td><td class="align-middle">';
@@ -150,7 +163,7 @@ $ACTIVE_CATEGORY = 'operations-management';
                                     echo $route['arr'];
                                     echo '</td><td class="align-middle">';
                                     echo '<button class="btn bg-custom editRoute" data-route=\'' . Json::encode($route) . '\'><i class="fa fa-edit"></i></button>';
-                                    echo '&nbsp;<button data-rid="' . $id . '" class="btn btn-danger deleteRoute"><i class="fa fa-trash"></i></button>';
+                                    echo '&nbsp;<button data-rid="' . $route['id'] . '" class="btn btn-danger deleteRoute"><i class="fa fa-trash"></i></button>';
                                     echo '</td></tr>';
                                 }
                                 ?>
@@ -164,7 +177,7 @@ $ACTIVE_CATEGORY = 'operations-management';
                                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                                     </div>
                                     <div class="modal-body">
-                                        <form action="/admin/operations/routes" method="post" id="routeedit-form">
+                                        <form method="post" id="routeedit-form">
                                             <input hidden name="action" value="editroute">
                                             <input hidden name="id" id="routeedit-id" />
                                             <div class="form-group">
@@ -242,8 +255,8 @@ $ACTIVE_CATEGORY = 'operations-management';
                                 </div>
                             </div>
                         </div>
-                        <a href="/admin/operations/routes/import">Import Routes</a>
-                        <form id="deleteroute" method="post" action="/admin/operations/routes">
+                        <a href="/admin/routes/import">Import Routes</a>
+                        <form id="deleteroute" method="post" action="/admin/routes">
                             <input hidden value="deleteroute" name="action" />
                             <input hidden name="delete" id="deleteroute-id" />
                         </form>
@@ -310,7 +323,7 @@ $ACTIVE_CATEGORY = 'operations-management';
     </div>
     <script>
         $(document).ready(function() {
-            $(".<?= $ACTIVE_CATEGORY ?>").collapse('show');
+            $(".<?= Page::$pageData->active_dropdown ?>").collapse('show');
         });
     </script>
 </body>

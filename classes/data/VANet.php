@@ -10,7 +10,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 class VANet
 {
-
+    /**
+     * @return string
+     */
     public static function baseUrl()
     {
         if (!empty(Config::get('vanet/base_url')) && Config::get('vanet/base_url') != 'https://vanet.app') {
@@ -149,20 +151,31 @@ class VANet
     }
 
     /**
-     * @return array
+     * @return array|null
      * @param string $icao ICAO Code
+     * @param bool $noCache Whether to bypass cache
      */
-    public static function getAirport($icao)
+    public static function getAirport($icao, $noCache = false)
     {
+        if (!$noCache) {
+            $cache = Cache::get("airport_{$icao}");
+            if (!empty($cache)) return Json::decode($cache);
+        }
+
         $icao = urlencode($icao);
         $key = Config::get('vanet/api_key');
         $req = new HttpRequest(self::baseUrl() . "/public/v1/airport/{$icao}");
         $req->setRequestHeaders(["X-Api-Key: {$key}"])->execute();
         if ($req->getHttpCode() != 200) {
-            return false;
+            return null;
         }
 
-        return Json::decode($req->getResponse())['result'];
+        $res = Json::decode($req->getResponse())['result'];
+        if (!$noCache) {
+            Cache::set("airport_{$icao}", Json::encode($res), date("Y-m-d H:i:s", strtotime('+7 days')));
+        }
+
+        return $res;
     }
 
     /**
@@ -425,7 +438,7 @@ class VANet
      */
     public static function getCodeshareCount()
     {
-        return count(self::getCodeshares());
+        return strval(count(self::getCodeshares()));
     }
 
     /**
@@ -634,6 +647,14 @@ class VANet
     }
 
     /**
+     * @return bool
+     */
+    public static function pluginUpdatesAvailable()
+    {
+        return count(self::pluginUpdates()) > 0;
+    }
+
+    /**
      * @return array|null
      * @param string $id Plugin ID
      * @param bool $prerelease Whether to install prerelease version
@@ -677,6 +698,35 @@ class VANet
     }
 
     /**
+     * @return string|null
+     * @param string $icao Airport ICAO
+     * @param bool $noCache Whether to bypass cache
+     */
+    public static function getAtis($icao, $noCache = false)
+    {
+        if (!$noCache) {
+            $cache = Cache::get('atis_' . $icao);
+            if (!empty($cache)) return $cache;
+        }
+
+        $key = Config::get('vanet/api_key');
+
+        $req = new HttpRequest(self::baseUrl() . '/public/v1/airport/' . urlencode($icao) . '/atis');
+        $req->setRequestHeaders(["X-Api-Key: {$key}"])
+            ->execute();
+
+        $data = Json::decode($req->getResponse());
+        if (!$data || $data['status'] != 0) return null;
+
+        $res = $data['result'];
+        if (!$noCache) {
+            Cache::set('atis_' . $icao, $res, date("Y-m-d H:i:s", strtotime('+15 minutes')));
+        }
+
+        return $res;
+    }
+
+    /**
      * @return array|null
      * @param string $search User ID or IFC
      * @param bool $isIfc Whether the search value is an IFC Username
@@ -706,5 +756,145 @@ class VANet
         if (!$res || $res['status'] != 0) return null;
 
         return $res['result'];
+    }
+
+    /**
+     * @return array|null
+     * @param string $code Authorization Code
+     * @param string $redirect_uri Redirect URL
+     */
+    public static function tokenExchange($code, $redirect_uri)
+    {
+        $client_id = Config::get('oauth/client_id');
+        $client_secret = Config::get('oauth/client_secret');
+        $res = HttpRequest::hacky(
+            self::baseUrl() . '/public/v1/oauth/token',
+            'POST',
+            'grant_type=authorization_code&code=' . urlencode($code) . '&redirect_uri=' . urlencode($redirect_uri),
+            [
+                'Authorization: Basic ' . base64_encode($client_id . ':' . $client_secret),
+                'Content-Type: application/x-www-form-urlencoded'
+            ]
+        );
+        return Json::decode($res);
+    }
+
+    /**
+     * @return array|null
+     * @param string $accessToken
+     */
+    public static function getUserProfile($accessToken)
+    {
+        $res = HttpRequest::hacky(self::baseUrl() . '/public/v1/oauth/userinfo', 'GET', '', [
+            'Authorization: Bearer ' . $accessToken,
+        ]);
+        $data = Json::decode($res);
+        if (!$data || isset($data['error'])) return null;
+
+        return $data;
+    }
+
+    /**
+     * @return array|null
+     */
+    public static function registerApp()
+    {
+        $key = Config::get('vanet/api_key');
+
+        $req = new HttpRequest(self::baseUrl() . '/airline/v1/app');
+        $req->setRequestHeaders(["X-Api-Key: {$key}"])
+            ->setMethod('POST')
+            ->execute();
+
+        $data = Json::decode($req->getResponse());
+        if (!$data || $data['status'] != 0) return null;
+
+        return $data['result'];
+    }
+
+    /**
+     * @return bool
+     * @param array $redirects
+     */
+    public static function updateAppRedirects($redirects)
+    {
+        $key = Config::get('vanet/api_key');
+
+        $res = HttpRequest::hacky(
+            self::baseUrl() . '/airline/v1/app/redirects',
+            'PUT',
+            Json::encode($redirects),
+            [
+                "X-Api-Key: {$key}",
+                'Content-Type: application/json'
+            ]
+        );
+        $data = Json::decode($res);
+
+        if (!$data || $data['status'] != 0) return false;
+
+        return true;
+    }
+
+    /**
+     * @return bool
+     * @param int $uid
+     * @param string $ifId
+     * @param int[] $permissions
+     */
+    public static function registerMembership($uid, $ifId, $permissions = [])
+    {
+        $key = Config::get('vanet/api_key');
+
+        $req = HttpRequest::hacky(self::baseUrl() . '/airline/v1/members', 'POST', Json::encode([
+            'infiniteFlightId' => $ifId,
+            'permissions' => $permissions
+        ]), [
+            "X-Api-Key: {$key}",
+            'Content-Type: application/json'
+        ]);
+        $data = Json::decode($req);
+
+        if (!$data || $data['status'] != 0) return false;
+
+        (new User)->update([
+            'vanet_id' => $data['result']['userId'],
+        ], $uid);
+
+        return true;
+    }
+
+    /**
+     * @return void
+     * @param User $user
+     */
+    public static function refreshMembership($user)
+    {
+        if (!$user->data()->vanet_id || !$user->data()->ifuserid) return;
+
+        $key = Config::get('vanet/api_key');
+        $req = HttpRequest::hacky(self::baseUrl() . '/airline/v1/members', 'GET', '', [
+            "X-Api-Key: {$key}"
+        ]);
+        $data = Json::decode($req);
+
+        if (!$data || $data['status'] != 0) return;
+
+        $membership = null;
+        foreach ($data['result'] as $m) {
+            if ($m['userId'] == $user->data()->vanet_id) {
+                $membership = $m;
+                break;
+            }
+        }
+
+        if ($membership == null) {
+            VANet::registerMembership($user->data()->id, $user->data()->ifuserid, $user->hasPermission('pirepmanage') ? [0] : []);
+            return;
+        }
+
+        $user->update([
+            'vanet_memberid' => $membership['id'],
+        ], $user->data()->id);
     }
 }

@@ -5,6 +5,7 @@ if (Page::$pageData->user->hasPermission('admin')) {
         $subitems = [];
         foreach ($data as $key => $item) {
             if (
+                isset($item['vanetFeature']) &&
                 isset(Page::$pageData->va_profile['activeFeatures'][$item['vanetFeature']])
                 && Page::$pageData->va_profile['activeFeatures'][$item['vanetFeature']] === FALSE
             ) {
@@ -35,9 +36,10 @@ if (Page::$pageData->user->hasPermission('admin')) {
     <link rel="stylesheet" href="/assets/fontawesome.min.css" />
     <title><?= Page::getTitle() ?></title>
     <script src="/assets/js/tailwind.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.1/chart.min.js"></script>
 </head>
 
-<body>
+<body x-data="{ flashSuccess: <?= Session::exists('success') ? "'" . str_replace("'", "\\'", Session::flash('success')) . "'" : 'null' ?>, flashError: <?= Session::exists('error') ? "'" . str_replace("'", "\\'", Session::flash('error')) . "'" : 'null' ?> }">
     <div class="flex flex-col w-full min-h-screen" id="root">
         <div :class="`md:flex md:flex-row min-h-full flex-grow ${isDarkMode ? 'dark' : 'light'}`" x-data="{ sidebarOpen: Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0) >= 1024, isDarkMode: false, account: false, notifications: false, }" x-cloak="md" x-init="() => { if ('darkMode' in localStorage && localStorage.getItem('darkMode') == 1) isDarkMode = true; }">
             <aside id="sidebar" class="w-screen max-w-[275px] absolute md:sticky md:top-0 h-screen md:border-r md:border-gray-200 dark:border-none bg-gray-100 text-black dark:bg-gray-800 dark:text-white md:shadow-inner shadow-xl overflow-y-auto z-20" x-show="sidebarOpen" x-transition:enter="transform transition-transform duration-500" x-transition:enter-start="-translate-x-full" x-transition:enter-end="translate-x-0" x-transition:leave="transform transition-transform duration-500" x-transition:leave-start="translate-x-0" x-transition:leave-end="-translate-x-full" @click.away="if (Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0) < 1024) sidebarOpen = false">
@@ -46,7 +48,7 @@ if (Page::$pageData->user->hasPermission('admin')) {
                         <?= Page::$pageData->va_name ?>
                     </h1>
                 </div>
-                <ul id="sidebar-nav" class="mx-3">
+                <ul id="sidebar-nav" class="mx-3" x-data="{ openDropdown: <?= isset(Page::$pageData->active_dropdown) ? '\'' . Page::$pageData->active_dropdown . '\'' : 'null' ?>, badges: {} }" x-init="initbadges(badges)">
                     <?php foreach ($GLOBALS['pilot-menu'] as $name => $data) : ?>
                         <?php
                         if (isset($data["vanetFeature"]) && Page::$pageData->va_profile['activeFeatures'][$data['vanetFeature']] === FALSE) {
@@ -63,17 +65,47 @@ if (Page::$pageData->user->hasPermission('admin')) {
                         <?php endif; ?>
                     <?php endforeach; ?>
                     <?php foreach ($adminmenu as $name => $items) : ?>
-                        <li :class="`mb-2 p-2 rounded font-semibold flex justify-[right] cursor-pointer ${isOpen ? 'bg-black/20 dark:bg-black' : 'hover:bg-black hover:bg-opacity-10 dark:hover:bg-opacity-40'}`" x-data="{ isOpen: false }" @click="isOpen = !isOpen">
-                            <span class="flex items-center">
-                                <?= TailwindIcons::icon("admin:{$name}", 'text-xl text-black dark:text-white opacity-70 h-6 w-6 mr-2') ?>
-                                <?= $name ?>
-                            </span>
-                            <div x-show="isOpen" x-cloak @click.away="isOpen = false" class="z-30 fixed w-44 transform translate-y-8 lg:translate-y-0 lg:translate-x-[260px] bg-white text-black dark:bg-gray-700 dark:text-white shadow-lg border border-gray-500 dark:border-white rounded object-right" x-transition:enter="transition ease-out duration-100" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95">
-                                <?php foreach ($items as $label => $data) : ?>
-                                    <a href="<?= $data['link'] ?>" class="block px-4 py-2 hover:bg-black/10 dark:hover:bg-black/40"><?= $label ?></a>
-                                <?php endforeach; ?>
+                        <?php $catId = preg_replace("/\s/", '-', strtolower($name)); ?>
+                        <script id="badges_<?= $catId ?>" type="application/json">
+                            <?=
+                            Json::encode(array_values(array_filter(array_map(function ($x) {
+                                return isset($x["badgeid"]) ? $x["badgeid"] : null;
+                            }, array_values($items)), function ($x) {
+                                return !empty($x);
+                            })));
+                            ?>
+                        </script>
+                        <li :class="`mb-2 p-2 rounded font-semibold flex justify-[right] cursor-pointer ${openDropdown == '<?= $catId ?>' ? 'bg-black/20 dark:bg-black' : 'hover:bg-black hover:bg-opacity-10 dark:hover:bg-opacity-40'}`" @click="openDropdown = openDropdown == '<?= $catId ?>' ? null : '<?= $catId ?>'">
+                            <div class="flex items-center">
+                                <span class="relative">
+                                    <?= TailwindIcons::icon("admin:{$name}", 'text-xl text-black dark:text-white opacity-70 h-6 w-6 mr-2') ?>
+                                    <span class="absolute top-0 left-0 flex w-2 h-2" x-show="anyCategoryBadge('<?= $catId ?>', badges)">
+                                        <span class="absolute inline-flex w-full h-full bg-red-400 rounded-full opacity-75 motion-safe:animate-ping"></span>
+                                        <span class="relative inline-flex w-2 h-2 bg-red-600 rounded-full"></span>
+                                    </span>
+                                </span>
+                                <div class="flex-1">
+                                    <?= $name ?>
+                                </div>
                             </div>
                         </li>
+                        <div x-show="openDropdown == '<?= $catId ?>'" x-cloak>
+                            <?php foreach ($items as $label => $data) : ?>
+                                <li class="ml-5 mb-1 py-1 px-2 rounded font-semibold flex justify-[right] cursor-pointer hover:bg-black hover:bg-opacity-10 dark:hover:bg-opacity-40">
+                                    <a class="flex items-center w-full" href="<?= $data['link'] ?>">
+                                        <div class="flex-1"><?= $label ?></div>
+                                        <?php if (isset($data['badgeid']) && $data['badgeid'] !== null) : ?>
+                                            <span class="px-2 text-xs font-semibold leading-5 text-white bg-red-500 rounded-full" x-show="typeof badges?.<?= $data['badgeid'] ?> === 'string' && badges?.<?= $data['badgeid'] ?> != 0" x-text="badges?.<?= $data['badgeid'] ?>"></span>
+                                            <span class="text-red-500" x-show="typeof badges?.<?= $data['badgeid'] ?> === 'boolean' && badges?.<?= $data['badgeid'] ?>">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                                                </svg>
+                                            </span>
+                                        <?php endif; ?>
+                                    </a>
+                                </li>
+                            <?php endforeach; ?>
+                        </div>
                     <?php endforeach; ?>
                 </ul>
             </aside>
@@ -127,7 +159,11 @@ if (Page::$pageData->user->hasPermission('admin')) {
                     </div>
                     <!-- Account Button -->
                     <button class="flex-none w-6 h-6 rounded-full focus:outline-none bg-primary text-primary-text focus:ring-2 focus:ring-offset-2 focus:ring-transparent focus:ring-offset-black dark:focus:ring-offset-white" @click="account = !account" id="user-menu-button">
-                        <?= substr(Page::$pageData->user->data()->name, 0, 1) ?>
+                        <?php if (Page::$pageData->user->data()->vanet_id) : ?>
+                            <img class="w-6 h-6 rounded-full" src="https://api.vanet.app/public/v1/picture/<?= urlencode(Page::$pageData->user->data()->vanet_id) ?>" />
+                        <?php else : ?>
+                            <?= substr(Page::$pageData->user->data()->name, 0, 1) ?>
+                        <?php endif; ?>
                     </button>
                     <!-- Account Popup Menu -->
                     <div x-show="account" x-cloak x-transition:enter="transition ease-out duration-100" x-transition:enter-start="transform opacity-0 scale-95" x-transition:enter-end="transform opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="transform opacity-100 scale-100" x-transition:leave-end="transform opacity-0 scale-95" @click.away="account = false" class="origin-top-right absolute right-2 top-[3.3rem] mt-2 w-48 rounded-md shadow-lg bg-white text-gray-700 dark:bg-gray-600 dark:text-white ring-1 ring-black ring-opacity-5 focus:outline-none py-1" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">

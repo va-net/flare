@@ -17,7 +17,7 @@ require_once __DIR__ . '/../includes/header.php';
             </div>
             <div>
                 <h3 class="text-lg font-bold">PIREPs Filed</h3>
-                <h5 class="font-semibold" x-text="data.pireps?.length === undefined ? '...' : data.pireps.length"></h5>
+                <h5 class="font-semibold" x-text="data.pireps?.length === undefined ? '...' : data.pireps.length + <?= Page::$pageData->user->data()->transflights ?>"></h5>
             </div>
         </div>
         <div class="flex items-center flex-auto w-full p-4 bg-white border rounded shadow-lg min-h-20">

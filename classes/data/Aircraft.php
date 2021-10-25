@@ -89,7 +89,7 @@ class Aircraft
     {
         self::init();
 
-        return self::$_db->query("SELECT aircraft.*, ranks.name AS `rank` FROM aircraft INNER JOIN ranks ON aircraft.rankreq=ranks.id WHERE `status`=1 ORDER BY aircraft.name ASC;", [], true);
+        return self::$_db->query("SELECT aircraft.*, ranks.name AS `rank`, awards.name AS `award` FROM (aircraft LEFT JOIN ranks ON aircraft.rankreq=ranks.id) LEFT JOIN awards ON aircraft.awardreq=awards.id WHERE `status`=1 ORDER BY aircraft.name ASC;", [], true);
     }
 
     /**
@@ -118,6 +118,7 @@ class Aircraft
     /**
      * @return DB
      * @param int $rankid The Rank ID to Get Aircraft For
+     * @deprecated
      */
     public static function getAvailableAircraft($rankid)
     {
@@ -176,7 +177,7 @@ class Aircraft
      * @param int $rank Rank ID
      * @param string $notes Notes
      */
-    public static function add($liveryId, $rank, $notes = null)
+    public static function add($liveryId, $rank, $notes = null, $fields = [])
     {
         self::init();
 
@@ -188,8 +189,10 @@ class Aircraft
             'liveryname' => $details["liveryName"],
             'name' => $details["aircraftName"],
             'ifaircraftid' => $details["aircraftID"],
-            'notes' => $notes
+            'notes' => $notes,
         );
+        foreach ($fields as $k => $v) $data[$k] = $v;
+
         self::$_db->insert('aircraft', $data, true);
         Events::trigger('aircraft/added', $data);
     }
@@ -199,6 +202,7 @@ class Aircraft
      * @param int $rankId Updated Rank ID
      * @param string $notes Updated Notes
      * @param int $aircraftId Aircraft ID
+     * @deprecated
      */
     public static function update($rankId, $notes, $aircraftId)
     {
@@ -209,11 +213,23 @@ class Aircraft
             'notes' => $notes,
         );
 
-        if (!self::$_db->update('aircraft', $aircraftId, 'id', $fields, true)) {
-            throw new Exception('There was a problem updating the user.');
+        self::updateFields($aircraftId, $fields);
+    }
+
+    /**
+     * @return void
+     * @param int $id Aircraft ID
+     * @param array $fields Fields to Update
+     */
+    public static function updateFields($id, $fields)
+    {
+        self::init();
+
+        if (!self::$_db->update('aircraft', $id, 'id', $fields, true)) {
+            throw new Exception('There was a problem updating the aircraft.');
         }
 
-        $fields['id'] = $aircraftId;
+        if (!isset($fields['id'])) $fields['id'] = $id;
         Events::trigger('aircraft/updated', $fields);
     }
 
@@ -290,12 +306,23 @@ class Aircraft
     /**
      * @return int
      */
-    public static function lastId()
+    public static function nextId()
     {
         self::init();
-        $res = self::$_db->query("SELECT MAX(id) AS res FROM aircraft")->first();
-        if ($res === FALSE) return 0;
+        $data = self::$_db->query("SHOW TABLE STATUS")->results();
+        $table = array_values(array_filter($data, function ($x) {
+            return $x->Name == 'aircraft';
+        }))[0];
+        return $table->Auto_increment;
+    }
 
-        return $res->res;
+    public static function unlockedAtRank($rankId)
+    {
+        self::init();
+
+        $sql = 'SELECT * FROM aircraft WHERE rankreq = ? AND status = 1';
+        $result = self::$_db->query($sql, [$rankId]);
+
+        return $result->results();
     }
 }

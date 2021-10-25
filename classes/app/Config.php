@@ -203,18 +203,38 @@ class Config
      * @return bool
      * @param string $key Config Key
      * @param mixed $value Value
+     * @param bool $useDb Whether to save to DB
      */
-    public static function add($key, $value)
+    public static function add($key, $value, $useDb = true)
     {
-        $db = DB::getInstance();
-        $ret = $db->insert('options', array(
-            'name' => $key,
-            'value' => $value
-        ));
+        if ($useDb) {
+            $db = DB::getInstance();
+            $ret = $db->insert('options', array(
+                'name' => $key,
+                'value' => $value
+            ));
+            if ($ret->error()) {
+                return false;
+            }
+        } else {
+            if (!file_exists(__DIR__ . '/../../core/config.new.php')) {
+                throw new Exception('Config file v2 does not exist');
+            }
+
+            $constName = 'FLARE_' . implode('_', array_map('strtoupper', explode('/', $key)));
+            $fileData = file_get_contents(__DIR__ . '/../../core/config.new.php');
+            $value = str_replace("'", "\\'", $value);
+            $newLine = "define('{$constName}', '{$value}');";
+            $fileData .= "\n" . $newLine;
+
+            if (!file_put_contents(__DIR__ . '/../../core/config.new.php', $fileData)) {
+                return false;
+            }
+        }
 
         Events::trigger('config/added', ['item' => $key, 'value' => $value]);
 
-        return !($ret->error());
+        return true;
     }
 
     /**

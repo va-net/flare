@@ -15,9 +15,13 @@ class AdminEventsController extends EventsController
         $this->authenticate($user, true, 'opsmanage');
         $data = new stdClass;
         $data->user = $user;
-        $data->va_name = Config::get('va/name');
         $data->is_gold = VANet::isGold();
+        if (!$data->is_gold) {
+            $this->redirect('/');
+        }
+
         $data->fleet = Aircraft::fetchActiveAircraft()->results();
+        $data->active_dropdown = 'operations-management';
         $this->render('admin/events', $data);
     }
 
@@ -28,23 +32,79 @@ class AdminEventsController extends EventsController
         switch (Input::get('action')) {
             case 'deleteevent':
                 $this->delete();
+                break;
             case 'addevent':
-                $this->add();
+                $this->create();
+                break;
             case 'editevent':
                 $this->edit();
-            default:
-                $this->get();
+                break;
         }
+
+        $this->get();
+    }
+
+    public function get_edit($id)
+    {
+        $user = new User;
+        $this->authenticate($user, true, 'opsmanage');
+        $data = new stdClass;
+        $data->user = $user;
+        $data->is_gold = VANet::isGold();
+        if (!$data->is_gold) {
+            $this->redirect('/');
+        }
+
+        $data->event = VANet::findEvent($id);
+        if ($data->event == null) {
+            $this->notFound();
+        }
+        $data->fleet = Aircraft::fetchActiveAircraft()->results();
+
+        $data->active_dropdown = 'operations-management';
+        $this->render('admin/events_edit', $data);
+    }
+
+    public function post_edit($id)
+    {
+        $this->authenticate(new User, true, 'opsmanage');
+
+        $this->edit();
+        $this->get_edit($id);
+    }
+
+    public function get_new()
+    {
+        $user = new User;
+        $this->authenticate($user, true, 'opsmanage');
+        $data = new stdClass;
+        $data->user = $user;
+        $data->is_gold = VANet::isGold();
+        if (!$data->is_gold) {
+            $this->redirect('/');
+        }
+
+        $data->fleet = Aircraft::fetchActiveAircraft()->results();
+        $data->active_dropdown = 'operations-management';
+        $this->render('admin/events_new', $data);
+    }
+
+    public function post_new()
+    {
+        $this->authenticate(new User, true, 'opsmanage');
+
+        $this->create();
+
+        $this->get_new();
     }
 
     private function delete()
     {
         VANet::deleteEvent(Input::get('delete'));
         Session::flash('success', 'Event Deleted Successfully');
-        $this->redirect('/admin/operations/events');
     }
 
-    private function add()
+    private function create()
     {
         $sentGates = explode(",", Input::get('gates'));
         $gates = [];
@@ -69,7 +129,6 @@ class AdminEventsController extends EventsController
         } else {
             Session::flash('error', 'Error Creating Event');
         }
-        $this->redirect('/admin/operations/events');
     }
 
     private function edit()
@@ -87,10 +146,8 @@ class AdminEventsController extends EventsController
 
         if (!$ret) {
             Session::flash('error', "Error Updating Event");
-            $this->redirect('/admin/operations/events');
         } else {
             Session::flash('success', "Event Updated Successfully");
-            $this->redirect('/admin/operations/events');
         }
     }
 }
