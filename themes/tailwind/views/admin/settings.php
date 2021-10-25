@@ -149,7 +149,7 @@ require_once __DIR__ . '/../../includes/header.php';
             <?php if (Page::$pageData->update) : ?>
                 <div class="text-center" x-ref="update-content">
                     <p class="text-lg font-bold mb-2">
-                        An update to <?= Page::$pageData->update["tag_name"] ?> is available
+                        An update to <?= Page::$pageData->update["tag"] ?> is available
                     </p>
                     <button @click="await updateSite($refs['update-content'])" type="button" class="px-3 py-2 text-xl font-semibold rounded-md shadow-md bg-primary text-primary-text focus:outline-none focus:ring-2 focus:ring-transparent focus:ring-offset-1 focus:ring-offset-black dark:focus:ring-offset-white">
                         Update Now
