@@ -80,19 +80,21 @@ class AuthController extends Controller
 
         $trimmedPattern = preg_replace("/\/[a-z]*$/", '', preg_replace("/^\//", '', $data->callsign_format));
         $filledCallsign = '';
-        if (!empty($trimmedPattern)) {
-            $callsigns = Callsign::all();
-            if (count($callsigns) < 1) {
-                $filledCallsign = RegRev::generate($trimmedPattern);
-            } else {
-                $filledCallsign = $callsigns[0];
-                $i = 0;
-                while (in_array($filledCallsign, $callsigns) && $i < 50) {
+        if ($trimmedPattern != '.*') {
+            if (!empty($trimmedPattern)) {
+                $callsigns = Callsign::all();
+                if (count($callsigns) < 1) {
                     $filledCallsign = RegRev::generate($trimmedPattern);
-                    $i++;
-                }
-                if (in_array($filledCallsign, $callsigns)) {
-                    $filledCallsign = '';
+                } else {
+                    $filledCallsign = $callsigns[0];
+                    $i = 0;
+                    while (in_array($filledCallsign, $callsigns) && $i < 50) {
+                        $filledCallsign = RegRev::generate($trimmedPattern);
+                        $i++;
+                    }
+                    if (in_array($filledCallsign, $callsigns)) {
+                        $filledCallsign = '';
+                    }
                 }
             }
         }
