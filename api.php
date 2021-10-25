@@ -1323,7 +1323,7 @@ Router::add('/plugins/updates', function () {
     global $user;
     if (!$user->hasPermission('site')) accessDenied();
 
-    $res = VANet::pluginUpdates(Input::get('prerelease') == 'true');
+    $res = VANet::manualPluginUpdates(Input::get('prerelease') == 'true');
     if ($res === null) internalError();
 
     echo Json::encode([

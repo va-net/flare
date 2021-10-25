@@ -618,7 +618,7 @@ class VANet
      * @return array|null
      * @param bool $prerelease Whether Check for Prerelease Updates
      */
-    private static function manualPluginUpdates($prerelease = false)
+    public static function manualPluginUpdates($prerelease = false)
     {
         $body = [];
         foreach ($GLOBALS['INSTALLED_PLUGINS'] as $p) {
@@ -651,7 +651,7 @@ class VANet
      */
     public static function pluginUpdatesAvailable()
     {
-        return count(self::pluginUpdates()) > 0;
+        return count(self::manualPluginUpdates()) > 0;
     }
 
     /**
