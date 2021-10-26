@@ -144,7 +144,7 @@ class Pirep
             'status' => 1
         ));
 
-        if ($afterTime >= $nextRank->timereq) {
+        if ($nextRank != null && $afterTime >= $nextRank->timereq) {
             Events::trigger('user/promoted', ["pilot" => $pirep->pilotid, "rank" => $nextRank]);
         }
 
