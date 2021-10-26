@@ -235,7 +235,8 @@ class DB
             return $this->results()[0];
         }
 
-        return false;
+        $res = false;
+        return $res;
     }
 
     /**
