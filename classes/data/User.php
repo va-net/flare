@@ -248,15 +248,9 @@ class User
         }
 
         $current = $this->rank($id, true);
-        $ranks = Rank::fetchAllNames()->results();
-        $currentFound = false;
-        foreach ($ranks as $r) {
-            if ($r->id == $current && !$currentFound) {
-                $currentFound = true;
-            } elseif ($currentFound) {
-                return $r;
-            }
-        }
+        $next = $this->_db->query("SELECT * FROM `ranks` WHERE `timereq` > (SELECT `timereq` FROM `ranks` WHERE id=?) ORDER BY `timereq` LIMIT 1", [$current])->first();
+
+        return $next;
     }
 
     /**
