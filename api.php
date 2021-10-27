@@ -1335,7 +1335,7 @@ Router::add('/plugins/updates', function () {
 // Get Active ATC (Gold Only)
 Router::add('/atc', function () {
     $res = VANet::getAtc(empty(Input::get('server')) ? 'expert' : Input::get('server'));
-    if (!$res) internalError();
+    if ($res === null) internalError();
 
     echo Json::encode([
         'status' => ErrorCode::NoError,
