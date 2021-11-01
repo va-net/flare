@@ -1230,5 +1230,24 @@
         ],
         "deletedFiles": [],
         "newFolders": []
+    },
+    {
+        "tag": "v2.1.1-beta.2",
+        "name": "Version 2.1.1 Beta 2",
+        "date": "2021-10-31",
+        "notes": "Various bug fixes",
+        "prerelease": true,
+        "useUpdater": true,
+        "files": [
+            "classes/data/DB.php",
+            "classes/data/Pirep.php",
+            "classes/data/User.php",
+            "api.php"
+        ],
+        "queries": [
+            "DELETE FROM `options` WHERE name='oauth/client_id' OR name='oauth/client_secret';"
+        ],
+        "deletedFiles": [],
+        "newFolders": []
     }
 ]
