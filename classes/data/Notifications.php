@@ -157,7 +157,7 @@ class Notifications
     {
         self::init();
         $usr = (new User)->getUser($ev->params['pilot']);
-        $rnk = Rank::find($ev->params['rank']);
+        $rnk = Rank::find($ev->params['rank']->id);
         $content = "{$usr->name} was just promoted to {$rnk->name}. Congratulations!";
         if (strlen($content) > 60) {
             $content = "{$usr->name} was just promoted to {$rnk->name}";
