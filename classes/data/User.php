@@ -248,7 +248,7 @@ class User
         }
 
         $current = $this->rank($id, true);
-        $qry = $this->_db->query("SELECT * FROM `ranks` WHERE `timereq` > (SELECT `timereq` FROM `ranks` WHERE id=?) ORDER BY `timereq` LIMIT 1", [$current]);
+        $qry = $this->_db->query("SELECT * FROM `ranks` WHERE `timereq` > (SELECT `timereq` FROM `ranks` WHERE id=?) ORDER BY `timereq` ASC LIMIT 1", [$current]);
 
         if ($qry->count()) {
             return $qry->first();
