@@ -1249,5 +1249,21 @@
         ],
         "deletedFiles": [],
         "newFolders": []
+    },
+    {
+        "tag": "v2.1.1-beta.3",
+        "name": "Version 2.1.1 Beta 3",
+        "date": "2021-11-9",
+        "notes": "Various bug fixes",
+        "prerelease": true,
+        "useUpdater": true,
+        "files": [
+            "classes/controllers/admin/AdminController.php",
+            "classes/data/Notifications.php",
+            "classes/data/User.php"
+        ],
+        "queries": [],
+        "deletedFiles": [],
+        "newFolders": []
     }
 ]
