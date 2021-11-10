@@ -481,6 +481,28 @@ async function wait(ms) {
     });
 }
 
+async function removeMultiplier(name, flightTime) {
+    const req = await fetch(`/api.php/multipliers/${encodeURIComponent(name)}`);
+    const res = await req.json();
+
+    return flightTime / res.result.multiplier;
+}
+
+async function addMultiplier(code, flightTime) {
+    const req = await fetch(
+        `/api.php/multipliers/code/${encodeURIComponent(code)}`
+    );
+    const res = await req.json();
+    if (!res.result) {
+        return null;
+    }
+
+    return {
+        name: res.result.name,
+        flightTime: flightTime * res.result.multiplier,
+    };
+}
+
 document.addEventListener('alpine:initializing', () => {
     Alpine.directive(
         'html',

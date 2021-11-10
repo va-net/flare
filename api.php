@@ -390,6 +390,70 @@ Router::add('/pireps/deny/([0-9]+)', function ($pirepId) {
     ]);
 });
 
+// Get Multipliers
+Router::add('/multipliers', function () {
+    global $user;
+    if (!$user->hasPermission('pirepmanage') || !$user->hasPermission('admin')) {
+        accessDenied();
+    }
+
+    $multipliers = Pirep::fetchMultipliers();
+    if ($multipliers === NULL) internalError();
+
+    echo Json::encode([
+        "status" => ErrorCode::NoError,
+        "result" => $multipliers,
+    ]);
+});
+
+// Get Multiplier by ID
+Router::add('/multipliers/([0-9]+)', function ($id) {
+    global $user;
+    if (!$user->hasPermission('pirepmanage') || !$user->hasPermission('admin')) {
+        accessDenied();
+    }
+
+    $multiplier = Pirep::findMultiplierById($id);
+    if ($multiplier === NULL) internalError();
+
+    echo Json::encode([
+        "status" => ErrorCode::NoError,
+        "result" => $multiplier,
+    ]);
+});
+
+// Get Multiplier by Code
+Router::add('/multipliers/code/([0-9]+)', function ($code) {
+    global $user;
+    if (!$user->hasPermission('pirepmanage') || !$user->hasPermission('admin')) {
+        accessDenied();
+    }
+
+    $multiplier = Pirep::findMultiplier($code);
+    if ($multiplier === NULL) internalError();
+
+    echo Json::encode([
+        "status" => ErrorCode::NoError,
+        "result" => $multiplier,
+    ]);
+});
+
+// Get Multiplier by Name
+Router::add('/multipliers/(.+)', function ($name) {
+    global $user;
+    if (!$user->hasPermission('pirepmanage') || !$user->hasPermission('admin')) {
+        accessDenied();
+    }
+
+    $multiplier = Pirep::findMultiplierByName(urldecode($name));
+    if ($multiplier === NULL) internalError();
+
+    echo Json::encode([
+        "status" => ErrorCode::NoError,
+        "result" => $multiplier,
+    ]);
+});
+
 // View Current User
 Router::add('/profile', function () {
     global $_apiUser, $_authType;

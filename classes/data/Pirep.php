@@ -223,7 +223,7 @@ class Pirep
     }
 
     /**
-     * @return bool|object
+     * @return object|null
      * @param int $code Multiplier Code
      */
     public static function findMultiplier($code)
@@ -231,7 +231,37 @@ class Pirep
         self::init();
         $ret = self::$_db->get('multipliers', array('code', '=', $code));
         if ($ret->count() == 0) {
-            return false;
+            return null;
+        }
+
+        return $ret->first();
+    }
+
+    /**
+     * @return object|null
+     * @param int $id Multiplier ID
+     */
+    public static function findMultiplierById($id)
+    {
+        self::init();
+        $ret = self::$_db->get('multipliers', array('id', '=', $id));
+        if ($ret->count() == 0) {
+            return null;
+        }
+
+        return $ret->first();
+    }
+
+    /**
+     * @return object|null
+     * @param string $name Multiplier Name
+     */
+    public static function findMultiplierByName($name)
+    {
+        self::init();
+        $ret = self::$_db->get('multipliers', array('name', '=', $name));
+        if ($ret->count() == 0) {
+            return null;
         }
 
         return $ret->first();
