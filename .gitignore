@@ -7,3 +7,4 @@ core/logs/*
 .development
 .env
 node_modules
+vendor
