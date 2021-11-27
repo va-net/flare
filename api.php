@@ -1003,21 +1003,27 @@ Router::add('/news/([0-9]+)', function ($newsId) {
 // View All Routes
 Router::add('/routes', function () {
     $data = Route::fetchAll();
+    $aircraftJoins = Route::fetchAllFullAircraftJoins();
     $routes = [];
-    foreach ($data as $id => $r) {
+    foreach ($data as $r) {
+        $joins = array_filter($aircraftJoins, function ($j) use ($r) {
+            if (!isset($j->routeid)) return false;
+            return $j->routeid == $r['id'];
+        });
         $r['aircraft'] = array_map(function ($a) {
-            unset($a['liveryid']);
-            $a['id'] = intval($a['id']);
+            unset($a->routeid);
+            unset($a->status);
+            $a->id = intval($a->id);
+            $a->rankreq = $a->rankreq == null ? null : intval($a->rankreq);
+            $a->awardreq = $a->awardreq == null ? null : intval($a->awardreq);
             return $a;
-        }, $r['aircraft']);
+        }, $joins);
 
-        $r = array_reverse($r);
-        $r['id'] = $id;
         foreach ($r as $key => $val) {
             if (is_numeric($val) && $key != 'fltnum') $r[$key] = intval($val);
         }
 
-        $routes[] = array_reverse($r);
+        $routes[] = $r;
     }
     echo Json::encode([
         "status" => ErrorCode::NoError,
