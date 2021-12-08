@@ -1282,7 +1282,6 @@
             "classes/data/DB.php",
             "classes/data/Pirep.php",
             "classes/data/User.php",
-            "api.php",
             "classes/controllers/admin/AdminController.php",
             "classes/data/Notifications.php",
             "classes/data/User.php",
@@ -1297,6 +1296,25 @@
             "DELETE FROM `options` WHERE name='oauth/client_id' OR name='oauth/client_secret';",
             "DELETE FROM `options` WHERE name='oauth/client_id' OR name='oauth/client_secret';"
         ],
+        "deletedFiles": [],
+        "newFolders": []
+    },
+    {
+        "tag": "v2.1.2",
+        "name": "Version 2.1.2",
+        "date": "2021-12-09",
+        "notes": "Various bug fixes, added missing files from v2.1.1",
+        "prerelease": true,
+        "useUpdater": true,
+        "files": [
+            "classes/data/Route.php",
+            "themes/tailwind/views/admin/recruitment.php",
+            "assets/js/tailwind.js",
+            "assets/tailwind.index.css",
+            "classes/controllers/PirepsController.php",
+            "themes/tailwind/views/pireps_view.php"
+        ],
+        "queries": [],
         "deletedFiles": [],
         "newFolders": []
     }
