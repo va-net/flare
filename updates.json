@@ -1265,5 +1265,17 @@
         "queries": [],
         "deletedFiles": [],
         "newFolders": []
+    },
+    {
+        "tag": "v2.1.1",
+        "name": "Version 2.1.1",
+        "date": "2021-12-8",
+        "notes": "Various bug fixes, added PIREP multiplier editing",
+        "prerelease": true,
+        "useUpdater": true,
+        "files": [],
+        "queries": [],
+        "deletedFiles": [],
+        "newFolders": []
     }
 ]
