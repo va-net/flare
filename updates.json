@@ -1285,7 +1285,13 @@
             "api.php",
             "classes/controllers/admin/AdminController.php",
             "classes/data/Notifications.php",
-            "classes/data/User.php"
+            "classes/data/User.php",
+            "classes/data/Route.php",
+            "themes/tailwind/views/admin/recruitment.php",
+            "assets/js/tailwind.js",
+            "assets/tailwind.index.css",
+            "classes/controllers/PirepsController.php",
+            "themes/tailwind/views/pireps_view.php"
         ],
         "queries": [
             "DELETE FROM `options` WHERE name='oauth/client_id' OR name='oauth/client_secret';",
