@@ -1273,8 +1273,24 @@
         "notes": "Various bug fixes, added PIREP multiplier editing",
         "prerelease": true,
         "useUpdater": true,
-        "files": [],
-        "queries": [],
+        "files": [
+            "themes/tailwind/views/admin/settings.php",
+            "api.php",
+            "classes/data/VANet.php",
+            "classes/data/Pirep.php",
+            "classes/data/User.php",
+            "classes/data/DB.php",
+            "classes/data/Pirep.php",
+            "classes/data/User.php",
+            "api.php",
+            "classes/controllers/admin/AdminController.php",
+            "classes/data/Notifications.php",
+            "classes/data/User.php"
+        ],
+        "queries": [
+            "DELETE FROM `options` WHERE name='oauth/client_id' OR name='oauth/client_secret';",
+            "DELETE FROM `options` WHERE name='oauth/client_id' OR name='oauth/client_secret';"
+        ],
         "deletedFiles": [],
         "newFolders": []
     }
