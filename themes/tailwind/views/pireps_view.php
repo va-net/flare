@@ -3,6 +3,17 @@ Page::setTitle(Page::$pageData->pirep->departure . ' to ' . Page::$pageData->pir
 require_once __DIR__ . '/../includes/header.php';
 $disabled = Page::$pageData->user->hasPermission('pirepmanage') ? 'required' : 'disabled';
 ?>
+<script>
+    function getRawFlightTime() {
+        return document.getElementById('ftime-raw').value;
+    }
+
+    function setRawFlightTime(value) {
+        const el = document.getElementById('ftime-raw');
+        el.value = value;
+        el.dispatchEvent(new Event('change'));
+    }
+</script>
 <div id="content" class="m-5 text-black dark:text-white">
     <h1 class="mb-3 text-3xl font-bold">Edit PIREP #<?= Page::$pageData->pirep->id ?></h1>
 
@@ -24,10 +35,11 @@ $disabled = Page::$pageData->user->hasPermission('pirepmanage') ? 'required' : '
                 <div class="space-y-1" x-data="{ minutes: '<?= $ftime[1] ?>', hours: '<?= $ftime[0] ?>', }">
                     <label for="ftime">Flight Time</label>
                     <div class="gap-3 space-y-1 md:flex md:space-y-0">
-                        <input id="ftime-hrs" type="number" :value="hours" <?= $disabled ?> class="flex-1 form-control" placeholder="Hours" @change="(e) => { hours = e.target.value; }" />
-                        <input id="ftime-mins" type="number" :value="minutes" <?= $disabled ?> class="flex-1 form-control" placeholder="Minutes" @change="(e) => { minutes = e.target.value; }" />
+                        <input id="ftime-hrs" type="number" :value="hours" <?= $disabled ?> class="flex-1 form-control" placeholder="Hours" @input="(e) => { hours = e.target.value; }" />
+                        <input id="ftime-mins" type="number" :value="minutes" <?= $disabled ?> class="flex-1 form-control" placeholder="Minutes" @input="(e) => { minutes = e.target.value; }" />
                     </div>
                     <input type="hidden" class="hidden" <?= $disabled ?> id="ftime" name="ftime" :value="`${hours}:${minutes}`" value="" />
+                    <input type="hidden" class="hidden" <?= $disabled ?> id="ftime-raw" name="ftime-raw" :value="hours * 3600 + minutes * 60" value="" @change="let ftime = $event.target.value; hours = Math.floor(ftime / 3600); minutes = Math.floor((ftime % 3600) / 60);" />
                 </div>
                 <div class="space-y-1">
                     <label for="dep">Departure ICAO</label>
@@ -58,7 +70,22 @@ $disabled = Page::$pageData->user->hasPermission('pirepmanage') ? 'required' : '
                 </div>
                 <div class="mb-1 space-y-1">
                     <label for="mutli">Multiplier</label>
-                    <input id="mutli" name="multi" type="text" value="<?= Page::$pageData->pirep->multi ?>" disabled class="form-control" placeholder="123456" />
+                    <div class="flex gap-2" x-data="{ showMenu: false, multi: '<?= Page::$pageData->pirep->multi ?>' }">
+                        <input id="multi" name="multi" x-ref="multi" type="text" :value="multi" @change="multi = $event.target.value" readonly class="form-control flex-1" placeholder="123456" />
+                        <?php if (Page::$pageData->user->hasPermission('pirepmanage')) : ?>
+                            <div class="relative inline-block text-left" @click.outside="showMenu = false">
+                                <button type="button" class="button-primary !mt-0 h-full" id="menu-button" aria-expanded="true" aria-haspopup="true" @click="showMenu = !showMenu">
+                                    Edit
+                                </button>
+                                <div x-transition:enter="transition ease-out duration-100" x-transition:enter-start="transform opacity-0 scale-95" x-transition:enter-end="transform opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="transform opacity-100 scale-100" x-transition:leave-end="transform opacity-0 scale-95" x-show="showMenu" class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-gray-600 dark:text-white" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
+                                    <div class="py-1" role="none">
+                                        <span x-show="multi !== 'None'" @click="(async () => { setRawFlightTime(await removeMultiplier(multi, getRawFlightTime())); multi = 'None'; showMenu = false; })()" class="block px-4 py-2 text-sm cursor-pointer hover:bg-white/20" role="menuitem" tabindex="-1" id="menu-item-0">Remove Multiplier</span>
+                                        <span x-show="multi === 'None'" @click="(async () => { const obj = await addMultiplier(prompt('Enter Multiplier Code'), getRawFlightTime()); multi = obj.name; setRawFlightTime(obj.flightTime); showMenu = false; })()" class="block px-4 py-2 text-sm cursor-pointer hover:bg-white/20" role="menuitem" tabindex="-1" id="menu-item-0">Add Multiplier</span>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endif; ?>
+                    </div>
                 </div>
                 <div class="space-y-1">
                     <label for="status">Status</label>

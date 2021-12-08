@@ -12,7 +12,7 @@ class AdminController extends Controller
     public function dashboard()
     {
         $user = new User;
-        $this->authenticate($user);
+        $this->authenticate($user, true);
         $data = new stdClass;
         $data->user = $user;
         $data->va_name = Config::get('va/name');

@@ -132,19 +132,12 @@ class Pirep
     {
         self::init();
 
-        $usr = new User;
         $pirep = Pirep::find($id);
         if (!$pirep) return;
 
-        $beforeRank = $usr->rank($pirep->pilotid, true);
         self::$_db->update('pireps', $id, 'id', array(
             'status' => 1
         ));
-        $afterRank = $usr->rank($pirep->pilotid, true);
-
-        if ($beforeRank != $afterRank) {
-            Events::trigger('user/promoted', ["pilot" => $pirep->pilotid, "rank" => $afterRank]);
-        }
 
         $pirep->status = 1;
         Events::trigger('pirep/accepted', (array)$pirep);
@@ -221,7 +214,7 @@ class Pirep
     }
 
     /**
-     * @return bool|object
+     * @return object|null
      * @param int $code Multiplier Code
      */
     public static function findMultiplier($code)
@@ -229,7 +222,37 @@ class Pirep
         self::init();
         $ret = self::$_db->get('multipliers', array('code', '=', $code));
         if ($ret->count() == 0) {
-            return false;
+            return null;
+        }
+
+        return $ret->first();
+    }
+
+    /**
+     * @return object|null
+     * @param int $id Multiplier ID
+     */
+    public static function findMultiplierById($id)
+    {
+        self::init();
+        $ret = self::$_db->get('multipliers', array('id', '=', $id));
+        if ($ret->count() == 0) {
+            return null;
+        }
+
+        return $ret->first();
+    }
+
+    /**
+     * @return object|null
+     * @param string $name Multiplier Name
+     */
+    public static function findMultiplierByName($name)
+    {
+        self::init();
+        $ret = self::$_db->get('multipliers', array('name', '=', $name));
+        if ($ret->count() == 0) {
+            return null;
         }
 
         return $ret->first();

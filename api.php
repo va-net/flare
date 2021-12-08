@@ -390,6 +390,70 @@ Router::add('/pireps/deny/([0-9]+)', function ($pirepId) {
     ]);
 });
 
+// Get Multipliers
+Router::add('/multipliers', function () {
+    global $user;
+    if (!$user->hasPermission('pirepmanage') || !$user->hasPermission('admin')) {
+        accessDenied();
+    }
+
+    $multipliers = Pirep::fetchMultipliers();
+    if ($multipliers === NULL) internalError();
+
+    echo Json::encode([
+        "status" => ErrorCode::NoError,
+        "result" => $multipliers,
+    ]);
+});
+
+// Get Multiplier by ID
+Router::add('/multipliers/([0-9]+)', function ($id) {
+    global $user;
+    if (!$user->hasPermission('pirepmanage') || !$user->hasPermission('admin')) {
+        accessDenied();
+    }
+
+    $multiplier = Pirep::findMultiplierById($id);
+    if ($multiplier === NULL) internalError();
+
+    echo Json::encode([
+        "status" => ErrorCode::NoError,
+        "result" => $multiplier,
+    ]);
+});
+
+// Get Multiplier by Code
+Router::add('/multipliers/code/([0-9]+)', function ($code) {
+    global $user;
+    if (!$user->hasPermission('pirepmanage') || !$user->hasPermission('admin')) {
+        accessDenied();
+    }
+
+    $multiplier = Pirep::findMultiplier($code);
+    if ($multiplier === NULL) internalError();
+
+    echo Json::encode([
+        "status" => ErrorCode::NoError,
+        "result" => $multiplier,
+    ]);
+});
+
+// Get Multiplier by Name
+Router::add('/multipliers/(.+)', function ($name) {
+    global $user;
+    if (!$user->hasPermission('pirepmanage') || !$user->hasPermission('admin')) {
+        accessDenied();
+    }
+
+    $multiplier = Pirep::findMultiplierByName(urldecode($name));
+    if ($multiplier === NULL) internalError();
+
+    echo Json::encode([
+        "status" => ErrorCode::NoError,
+        "result" => $multiplier,
+    ]);
+});
+
 // View Current User
 Router::add('/profile', function () {
     global $_apiUser, $_authType;
@@ -939,21 +1003,27 @@ Router::add('/news/([0-9]+)', function ($newsId) {
 // View All Routes
 Router::add('/routes', function () {
     $data = Route::fetchAll();
+    $aircraftJoins = Route::fetchAllFullAircraftJoins();
     $routes = [];
-    foreach ($data as $id => $r) {
+    foreach ($data as $r) {
+        $joins = array_filter($aircraftJoins, function ($j) use ($r) {
+            if (!isset($j->routeid)) return false;
+            return $j->routeid == $r['id'];
+        });
         $r['aircraft'] = array_map(function ($a) {
-            unset($a['liveryid']);
-            $a['id'] = intval($a['id']);
+            unset($a->routeid);
+            unset($a->status);
+            $a->id = intval($a->id);
+            $a->rankreq = $a->rankreq == null ? null : intval($a->rankreq);
+            $a->awardreq = $a->awardreq == null ? null : intval($a->awardreq);
             return $a;
-        }, $r['aircraft']);
+        }, $joins);
 
-        $r = array_reverse($r);
-        $r['id'] = $id;
         foreach ($r as $key => $val) {
             if (is_numeric($val) && $key != 'fltnum') $r[$key] = intval($val);
         }
 
-        $routes[] = array_reverse($r);
+        $routes[] = $r;
     }
     echo Json::encode([
         "status" => ErrorCode::NoError,
@@ -1323,7 +1393,7 @@ Router::add('/plugins/updates', function () {
     global $user;
     if (!$user->hasPermission('site')) accessDenied();
 
-    $res = VANet::pluginUpdates(Input::get('prerelease') == 'true');
+    $res = VANet::manualPluginUpdates(Input::get('prerelease') == 'true');
     if ($res === null) internalError();
 
     echo Json::encode([
@@ -1335,7 +1405,7 @@ Router::add('/plugins/updates', function () {
 // Get Active ATC (Gold Only)
 Router::add('/atc', function () {
     $res = VANet::getAtc(empty(Input::get('server')) ? 'expert' : Input::get('server'));
-    if (!$res) internalError();
+    if ($res === null) internalError();
 
     echo Json::encode([
         'status' => ErrorCode::NoError,

@@ -185,4 +185,15 @@ class Route
         $sql = "SELECT r.*, a.ifliveryid AS aircraftliveryid FROM route_aircraft r INNER JOIN aircraft a ON r.aircraftid=a.id WHERE routeid IN (SELECT id FROM routes)";
         return self::$_db->query($sql, [], true)->results();
     }
+
+    /**
+     * @return object[]
+     */
+    public static function fetchAllFullAircraftJoins()
+    {
+        self::init();
+
+        $sql = "SELECT r.routeid, a.* FROM route_aircraft r INNER JOIN aircraft a ON r.aircraftid=a.id WHERE routeid IN (SELECT id FROM routes)";
+        return self::$_db->query($sql, [], true)->results();
+    }
 }

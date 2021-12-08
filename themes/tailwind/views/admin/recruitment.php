@@ -82,8 +82,8 @@ foreach (Page::$pageData->previousBlacklist as $ifc => $reason) {
                             <td x-text="user.name"></td>
                             <td class="hidden md:table-cell" x-data="{ ifc: user.ifc.split('/')[4] }">
                                 <a :href="`https://community.infiniteflight.com/u/${ifc}`" target="_blank" class="font-semibold flex items-center" @click.stop>
-                                    <span x-text="ifc" class="mr-1"></span>
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline" viewBox="0 0 20 20" fill="currentColor">
+                                    <span x-text="ifc ?? 'Not Provided'" class="mr-1"></span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline" viewBox="0 0 20 20" fill="currentColor" x-show="!!ifc">
                                         <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z" />
                                         <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z" />
                                     </svg>
@@ -91,7 +91,7 @@ foreach (Page::$pageData->previousBlacklist as $ifc => $reason) {
                             </td>
                             <td class="hidden md:table-cell" x-text="user.grade"></td>
                             <td class="hidden md:table-cell" x-text="user.viol"></td>
-                            <td x-data="{ listEntry: ifvarbList[user.ifc.split('/')[4].toLowerCase()] }">
+                            <td x-data="{ listEntry: ifvarbList[user.ifc.split('/')[4]?.toLowerCase()] }">
                                 <span class="px-2 font-semibold leading-5 rounded-full bg-green-100 text-green-800 dark:bg-green-300 dark:text-green-900" x-show="!listEntry">
                                     None
                                 </span>
@@ -109,7 +109,7 @@ foreach (Page::$pageData->previousBlacklist as $ifc => $reason) {
                                 </span>
                             </td>
                             <td class="flex justify-end items-center gap-2">
-                                <button @click.stop="$refs['acceptapplication-id'].value = user.id; $refs.acceptapplication.submit();" class="px-2 py-1 text-lg font-semibold rounded-md shadow-md hover:shadow-lg bg-green-600 text-white focus:outline-none focus:ring-2 focus:ring-transparent focus:ring-offset-1 focus:ring-offset-black dark:focus:ring-offset-white" x-show="ifvarbList[user.ifc.split('/')[4].toLowerCase()]?.type !== 'blacklist'">
+                                <button @click.stop="$refs['acceptapplication-id'].value = user.id; $refs.acceptapplication.submit();" class="px-2 py-1 text-lg font-semibold rounded-md shadow-md hover:shadow-lg bg-green-600 text-white focus:outline-none focus:ring-2 focus:ring-transparent focus:ring-offset-1 focus:ring-offset-black dark:focus:ring-offset-white" x-show="user.ifc.split('/')[4] && ifvarbList[user.ifc.split('/')[4]?.toLowerCase()]?.type !== 'blacklist'">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                                     </svg>

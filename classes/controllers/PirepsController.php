@@ -155,6 +155,7 @@ class PirepsController extends Controller
             if (Input::get('ftime')) $data['flighttime'] = Time::strToSecs(Input::get('ftime'));
             if (Input::get('aircraft')) $data['aircraftid'] = Input::get('aircraft');
             if (strlen(Input::get('status')) > 0) $data['status'] = Input::get('status');
+            if (Input::get('multi')) $data['multi'] = Input::get('multi');
         }
 
         if (!Pirep::update(Input::get('id'), $data)) {
