@@ -132,21 +132,12 @@ class Pirep
     {
         self::init();
 
-        $usr = new User;
         $pirep = Pirep::find($id);
         if (!$pirep) return;
-
-        $beforeTime = $usr->getFlightTime($pirep->pilotid);
-        $afterTime = $beforeTime + $pirep->flighttime;
-        $nextRank = $usr->nextrank($pirep->pilotid);
 
         self::$_db->update('pireps', $id, 'id', array(
             'status' => 1
         ));
-
-        if ($nextRank != null && $afterTime >= $nextRank->timereq) {
-            Events::trigger('user/promoted', ["pilot" => $pirep->pilotid, "rank" => $nextRank]);
-        }
 
         $pirep->status = 1;
         Events::trigger('pirep/accepted', (array)$pirep);
