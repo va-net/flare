@@ -1010,14 +1010,14 @@ Router::add('/routes', function () {
             if (!isset($j->routeid)) return false;
             return $j->routeid == $r['id'];
         });
-        $r['aircraft'] = array_map(function ($a) {
+        $r['aircraft'] = array_values(array_map(function ($a) {
             unset($a->routeid);
             unset($a->status);
             $a->id = intval($a->id);
             $a->rankreq = $a->rankreq == null ? null : intval($a->rankreq);
             $a->awardreq = $a->awardreq == null ? null : intval($a->awardreq);
             return $a;
-        }, $joins);
+        }, $joins));
 
         foreach ($r as $key => $val) {
             if (is_numeric($val) && $key != 'fltnum') $r[$key] = intval($val);
