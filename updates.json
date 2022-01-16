@@ -1329,7 +1329,8 @@
             "api.php",
             "themes/tailwind/views/admin/users_edit.php",
             "themes/tailwind/views/admin/events_edit.php",
-            "themes/tailwind/views/admin/events_new.php"
+            "themes/tailwind/views/admin/events_new.php",
+            "classes/controllers/PirepsController.php"
         ],
         "queries": [],
         "deletedFiles": [],

@@ -126,8 +126,7 @@ class PirepsController extends Controller
         $data->acars = VANet::runAcars(Input::get('server'));
 
         if ($data->acars['status'] != 0) {
-            Session::flash('error', 'We couldn\'t find you on the server. Ensure that you have filed a flight plan, 
-            and are still connected to Infinite Flight. Then, hit that button again.');
+            Session::flash('error', 'We couldn\'t find you on the server. Ensure that you have filed a flight plan, and are still connected to Infinite Flight. Then, hit that button again.');
             unset($data->acars);
             $this->render('acars', $data);
         }
