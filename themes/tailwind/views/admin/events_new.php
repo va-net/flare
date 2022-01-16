@@ -77,7 +77,7 @@ require_once __DIR__ . '/../../includes/header.php';
                 <input type="text" @keyup.enter="if ($event.target.value) { gates.push($event.target.value); $event.target.value = ''; }" @keyup.backspace.debounce="!$event.target.value && gates.pop();" placeholder="Add Gate" class="form-control" />
             </div>
         </div>
-        <button type="submit" :disabled="aircraft.length < 1" class="button-primary text-lg font-semibold" form="add-event">
+        <button type="submit" :disabled="gates.length < 1" class="button-primary text-lg font-semibold" form="add-event">
             Save
         </button>
     </div>

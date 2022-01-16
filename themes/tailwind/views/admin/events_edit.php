@@ -81,7 +81,7 @@ $time = str_replace(':', '', substr(explode('T', Page::$pageData->event['date'])
                 </ul>
             </div>
         </div>
-        <button type="submit" :disabled="aircraft.length < 1" class="button-primary text-lg font-semibold" form="edit-event">
+        <button type="submit" class="button-primary text-lg font-semibold" form="edit-event">
             Save
         </button>
     </div>
