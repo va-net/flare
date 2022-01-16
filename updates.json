@@ -1271,7 +1271,7 @@
         "name": "Version 2.1.1",
         "date": "2021-12-8",
         "notes": "Various bug fixes, added PIREP multiplier editing",
-        "prerelease": true,
+        "prerelease": false,
         "useUpdater": true,
         "files": [
             "themes/tailwind/views/admin/settings.php",
@@ -1304,7 +1304,7 @@
         "name": "Version 2.1.2",
         "date": "2021-12-09",
         "notes": "Various bug fixes, added missing files from v2.1.1",
-        "prerelease": true,
+        "prerelease": false,
         "useUpdater": true,
         "files": [
             "classes/data/Route.php",
@@ -1313,6 +1313,23 @@
             "assets/tailwind.index.css",
             "classes/controllers/PirepsController.php",
             "themes/tailwind/views/pireps_view.php"
+        ],
+        "queries": [],
+        "deletedFiles": [],
+        "newFolders": []
+    },
+    {
+        "tag": "v2.1.3",
+        "name": "Version 2.1.3",
+        "date": "2022-01-16",
+        "notes": "Various bug fixes",
+        "prerelease": false,
+        "useUpdater": true,
+        "files": [
+            "api.php",
+            "themes/tailwind/views/admin/users_edit.php",
+            "themes/tailwind/views/admin/events_edit.php",
+            "themes/tailwind/views/admin/events_new.php"
         ],
         "queries": [],
         "deletedFiles": [],
