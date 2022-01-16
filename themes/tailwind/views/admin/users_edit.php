@@ -131,7 +131,7 @@ require_once __DIR__ . '/../../includes/header.php';
                     </li>
                 </template>
             </ul>
-            <select class="form-control" @change.prevent="await fetch(`/api.php/profile/awards/${encodeURIComponent($el.value)}`, { method: 'POST' }); userAwards.push(allAwards.find(a => a.id == $event.target.value)); $el.value = '';">
+            <select class="form-control" @change.prevent="await fetch(`/api.php/users/<?= urlencode(Page::$pageData->edit_user->id) ?>/awards/${encodeURIComponent($el.value)}`, { method: 'POST' }); userAwards.push(allAwards.find(a => a.id == $event.target.value)); $el.value = '';">
                 <option value="">Give Award</option>
                 <template x-for="award in allAwards.filter(a => !userAwards.some(u => u.id == a.id))" :key="award.id">
                     <option :value="award.id" x-text="award.name"></option>
