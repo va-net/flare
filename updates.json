@@ -1335,5 +1335,26 @@
         "queries": [],
         "deletedFiles": [],
         "newFolders": []
+    },
+    {
+        "tag": "v2.2.0",
+        "name": "Version 2.2.0",
+        "date": "2022-03-05",
+        "notes": "Improved aircraft ordering, pilot name field in Tailwind pending PIREPs, changeable time span for leaderboard, route search ordering",
+        "prerelease": false,
+        "useUpdater": true,
+        "files": [
+            "classes/data/User.php",
+            "themes/tailwind/views/admin/pireps_pending.php",
+            "classes/controllers/PirepsController.php",
+            "classes/controllers/admin/AdminController.php",
+            "themes/default/views/admin/index.php",
+            "themes/tailwind/views/admin/index.php",
+            "classes/controllers/RoutesController.php",
+            "themes/tailwind/views/route_search.php"
+        ],
+        "queries": [],
+        "deletedFiles": [],
+        "newFolders": []
     }
 ]
