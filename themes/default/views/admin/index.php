@@ -116,7 +116,7 @@ $days = Page::$pageData->days;
                             <div class="p-3 col-lg">
                                 <div class="p-3 shadow card h-100">
                                     <h5 class="font-weight-bold">Pilot Leaderboard</h5>
-                                    <p>By hours, past 7 days.</p>
+                                    <p>By hours, past <?= $days ?> days.</p>
                                     <table class="table table-striped">
                                         <thead>
                                             <tr>

@@ -89,7 +89,7 @@ $days = Page::$pageData->days;
             </script>
         </div>
         <div class="dark:bg-white/10 bg-gray-100 rounded p-3 shadow col-span-2">
-            <h2 class="text-2xl font-bold mb-3">Top Pilots (7 days)</h2>
+            <h2 class="text-2xl font-bold mb-3">Top Pilots (<?= $days ?> days)</h2>
             <table class="table">
                 <thead>
                     <th class="hidden md:table-cell">#</th>
