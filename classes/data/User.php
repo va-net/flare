@@ -268,7 +268,7 @@ class User
         }
 
         $ftime = $this->getFlightTime($id);
-        $sql = "SELECT a.* FROM aircraft a WHERE (a.rankreq IN (SELECT r.id FROM ranks r WHERE r.timereq <= ?) OR a.awardreq IN (SELECT w.id FROM awards w WHERE w.id IN (SELECT g.awardid FROM awards_granted g WHERE pilotid=?))) AND a.status=1";
+        $sql = "SELECT a.* FROM aircraft a WHERE (a.rankreq IN (SELECT r.id FROM ranks r WHERE r.timereq <= ?) OR a.awardreq IN (SELECT w.id FROM awards w WHERE w.id IN (SELECT g.awardid FROM awards_granted g WHERE pilotid=?))) AND a.status=1 ORDER BY a.name ASC, a.liveryname ASC";
         $data = $this->_db->query($sql, [$ftime, $id])->results();
 
         $aircraft = array_map(function ($a) {
