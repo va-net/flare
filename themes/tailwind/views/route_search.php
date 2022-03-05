@@ -48,6 +48,16 @@ require_once __DIR__ . '/../includes/header.php';
                         <option value="10" <?= Input::get('duration') == '10' ? ' selected' : '' ?>>10hrs+</option>
                     </select>
                 </div>
+                <div class="space-y-1">
+                    <label for="sortby">Sort By</label>
+                    <select id="sortby" name="sortby" class="form-control">
+                        <option value="fltnum_asc" <?= Input::get('sortby') == 'fltnum_asc' ? ' selected' : '' ?>>Flight Number</option>
+                        <option value="dep_asc" <?= Input::get('sortby') == 'dep_asc' ? ' selected' : '' ?>>Departure ICAO</option>
+                        <option value="arr_asc" <?= Input::get('sortby') == 'arr_asc' ? ' selected' : '' ?>>Arrival ICAO</option>
+                        <option value="duration_asc" <?= Input::get('sortby') == 'duration_asc' ? ' selected' : '' ?>>Flight Time (low to high)</option>
+                        <option value="duration_desc" <?= Input::get('sortby') == 'duration_desc' ? ' selected' : '' ?>>Flight Time (high to low)</option>
+                    </select>
+                </div>
             </form>
             <button type="submit" form="route-search" class="px-3 py-2 mt-3 rounded-md shadow-md bg-primary text-primary-text focus:outline-none focus:ring-2 focus:ring-transparent focus:ring-offset-1 focus:ring-offset-black dark:focus:ring-offset-white">
                 Search

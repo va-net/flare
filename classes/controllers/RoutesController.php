@@ -33,6 +33,20 @@ class RoutesController extends Controller
 
         $searchwhere = array();
         $stmts = array();
+        $orderby = 'fltnum';
+        $orderdirection = 'ASC';
+        if (!empty(Input::get('sortby'))) {
+            $sortby = explode('_', Input::get('sortby'));
+            $orderby = $sortby[0];
+            $orderdirection = strtoupper($sortby[1]);
+
+            if ($orderdirection != 'ASC' && $orderdirection != 'DESC') {
+                $orderdirection = 'ASC';
+            }
+            if (!in_array($orderby, ['id', 'fltnum', 'dep', 'arr', 'duration', 'notes'])) {
+                $orderby = 'fltnum';
+            }
+        }
         if (!empty(Input::get('dep'))) {
             array_push($searchwhere, 'dep = ?');
             array_push($stmts, Input::get('dep'));
@@ -79,6 +93,8 @@ class RoutesController extends Controller
             }
             $i++;
         }
+
+        $query .= " ORDER BY {$orderby} {$orderdirection}";
 
         $db = DB::getInstance();
         $data->routes = $db->query($query, $stmts)->results();
