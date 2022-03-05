@@ -28,6 +28,7 @@ require_once __DIR__ . '/../../includes/header.php';
                 <thead>
                     <tr>
                         <th class="hidden md:table-cell cursor-pointer" @click="dataTableOrder((x) => x.pilotcallsign, $el.textContent, table)">Callsign</th>
+                        <th class="hidden lg:table-cell cursor-pointer" @click="dataTableOrder((x) => x.pilotname, $el.textContent, table)">Pilot</th>
                         <th class="hidden md:table-cell cursor-pointer" @click="dataTableOrder((x) => x.flightnum, $el.textContent, table)">Flight #</th>
                         <th class="cursor-pointer" @click="dataTableOrder((x) => `${x.departure}-${x.arrival}`, $el.textContent, table)">Route</th>
                         <th class="cursor-pointer" @click="dataTableOrder((x) => x.flighttime, $el.textContent, table)">Flight Time</th>
@@ -47,6 +48,7 @@ require_once __DIR__ . '/../../includes/header.php';
                     <template x-for="pirep in table.current" :key="pirep.id">
                         <tr class="hover:bg-black/20 cursor-pointer" @click="window.location.href = `/pireps/${pirep.id}`">
                             <td x-text="pirep.pilotcallsign" class="hidden md:table-cell"></td>
+                            <td x-text="pirep.pilotname" class="hidden lg:table-cell"></td>
                             <td x-text="pirep.flightnum" class="hidden md:table-cell"></td>
                             <td x-text="`${pirep.departure}-${pirep.arrival}`"></td>
                             <td x-text="pirep.flighttime.formatFlightTime()"></td>
