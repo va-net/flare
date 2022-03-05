@@ -194,7 +194,7 @@ class PirepsController extends Controller
         }
 
         if (!Pirep::file(array(
-            'flightnum' => Input::get('fnum'),
+            'flightnum' => strtoupper(Input::get('fnum')),
             'departure' => strtoupper(Input::get('dep')),
             'arrival' => strtoupper(Input::get('arr')),
             'flighttime' => $finalFTime,
