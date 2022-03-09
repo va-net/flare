@@ -8,9 +8,14 @@ require_once __DIR__ . '/../../includes/header.php';
         return $x;
     }, Page::$pageData->users)) ?>
 </script>
+<script type="application/json" id="allRanks">
+    <?= Json::encode(array_reverse(Page::$pageData->ranks)) ?>
+</script>
 <script>
     var allEntries = JSON.parse(document.getElementById('allEntries').innerHTML);
+    var allRanks = JSON.parse(document.getElementById('allRanks').innerHTML);
     var activeFilter = (x) => x.status == 'Active';
+    var getRank = (user) => allRanks.find(x => x.timereq <= parseFloat(user.flighttime) + parseFloat(user.transhours));
 </script>
 <div id="content" class="text-black dark:text-white" x-data="{ table: { current: [], orderBy: (x) => x.name, orderByName: 'Name', order: 'asc', search: '', filters: [activeFilter] }, refresh() { return updateDataTable(allEntries, this.table) }, }">
     <div class="flex w-full p-5 dark:bg-gray-600 bg-gray-100 py-7 mb-4 items-center gap-2">
@@ -35,6 +40,7 @@ require_once __DIR__ . '/../../includes/header.php';
                         <th class="cursor-pointer" @click="dataTableOrder((x) => x.name, $el.textContent, table)">Name</th>
                         <th class="hidden md:table-cell cursor-pointer" @click="dataTableOrder((x) => x.email, $el.textContent, table)">Email</th>
                         <th class="hidden md:table-cell cursor-pointer" @click="dataTableOrder((x) => x.flighttime + x.transhours, $el.textContent, table)">Flight Time</th>
+                        <th class="hidden lg:table-cell cursor-pointer" @click="dataTableOrder((x) => getRank(x).timereq, $el.textContent, table)">Rank</th>
                         <th><span class="sr-only">Actions</span></th>
                     </tr>
                 </thead>
@@ -50,6 +56,7 @@ require_once __DIR__ . '/../../includes/header.php';
                             <td x-text="user.name"></td>
                             <td class="hidden md:table-cell" x-text="user.email"></td>
                             <td class="hidden md:table-cell" x-text="(parseFloat(user.flighttime) + parseFloat(user.transhours)).formatFlightTime()"></td>
+                            <td class="hidden lg:table-cell" x-text="getRank(user).name"></td>
                             <td class="flex justify-end items-center gap-2">
                                 <?php if (Page::$pageData->is_gold && VANet::featureEnabled('airline-userlookup')) : ?>
                                     <a :href="`/admin/users/lookup/${user.ifuserid == null ? encodeURIComponent(user.ifc.split('/')[4]) + '?ifc=true' : encodeURIComponent(user.ifuserid)}`" class="inline-block px-2 py-1 text-lg font-semibold rounded-md shadow-md hover:shadow-lg bg-primary text-primary-text focus:outline-none focus:ring-2 focus:ring-transparent focus:ring-offset-1 focus:ring-offset-black dark:focus:ring-offset-white">

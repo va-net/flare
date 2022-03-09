@@ -19,6 +19,7 @@ class UsersController extends Controller
         $data->is_gold = VANet::isGold();
         $data->users = $user->getAllUsers();
         $data->active_dropdown = 'user-management';
+        $data->ranks = Rank::fetchAllNames()->results();
         $this->render('admin/users', $data);
     }
 
