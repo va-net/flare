@@ -1356,5 +1356,23 @@
         "queries": [],
         "deletedFiles": [],
         "newFolders": []
+    },
+    {
+        "tag": "v2.3.0",
+        "name": "Version 2.3.0",
+        "date": "2022-03-17",
+        "notes": "Added rank column in Tailwind user management page",
+        "prerelease": false,
+        "useUpdater": true,
+        "files": [
+            "classes/controllers/admin/UsersController.php",
+            "classes/data/Rank.php",
+            "themes/tailwind/views/admin/users.php",
+            "classes/controllers/admin/AdminController.php",
+            "classes/controllers/admin/AdminPirepsController.php"
+        ],
+        "queries": [],
+        "deletedFiles": [],
+        "newFolders": []
     }
 ]
