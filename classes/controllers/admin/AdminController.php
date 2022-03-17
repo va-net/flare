@@ -176,6 +176,7 @@ class AdminController extends Controller
                 VANet::updateAppRedirects([Analytics::url() . '/oauth/callback']);
                 Session::flash('success', 'App Registered');
                 $this->redirect('/admin/settings?tab=interaction');
+                break;
             default:
                 $this->settings();
         }

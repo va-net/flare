@@ -63,15 +63,19 @@ class AdminPirepsController extends Controller
             case 'acceptpirep':
                 $this->accept();
                 $this->get_pending();
+                break;
             case 'declinepirep':
                 $this->decline();
                 $this->get_pending();
+                break;
             case 'editpirep':
                 $this->update();
                 $this->redirect('/admin/pireps?tab=all');
+                break;
             case 'delpirep':
                 $this->delete();
                 $this->redirect('/admin/pireps?tab=all');
+                break;
         }
 
         $this->get_pending();
@@ -96,8 +100,10 @@ class AdminPirepsController extends Controller
         switch (Input::get('action')) {
             case 'deletemulti':
                 $this->delete_multi();
+                break;
             case 'addmulti':
                 $this->create_multi();
+                break;
             default:
                 $this->get_multis();
         }
@@ -170,6 +176,7 @@ class AdminPirepsController extends Controller
     {
         Pirep::deleteMultiplier(Input::get('delete'));
         Session::flash('success', 'Multiplier Deleted Successfully!');
+        $this->get_multis();
     }
 
     private function create_multi()
@@ -180,5 +187,6 @@ class AdminPirepsController extends Controller
             "multiplier" => Input::get("multi")
         ]);
         Session::flash('success', 'Multiplier Added Successfully!');
+        $this->get_multis();
     }
 }
