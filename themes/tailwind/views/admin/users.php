@@ -39,7 +39,7 @@ require_once __DIR__ . '/../../includes/header.php';
                         <th class="hidden md:table-cell cursor-pointer" @click="dataTableOrder((x) => x.callsign, $el.textContent, table)">Callsign</th>
                         <th class="cursor-pointer" @click="dataTableOrder((x) => x.name, $el.textContent, table)">Name</th>
                         <th class="hidden md:table-cell cursor-pointer" @click="dataTableOrder((x) => x.email, $el.textContent, table)">Email</th>
-                        <th class="hidden md:table-cell cursor-pointer" @click="dataTableOrder((x) => parseFloat(user.flighttime) + parseFloat(user.transhours), $el.textContent, table)">Flight Time</th>
+                        <th class="hidden md:table-cell cursor-pointer" @click="dataTableOrder((x) => parseFloat(x.flighttime) + parseFloat(x.transhours), $el.textContent, table)">Flight Time</th>
                         <th class="hidden lg:table-cell cursor-pointer" @click="dataTableOrder((x) => getRank(x).timereq, $el.textContent, table)">Rank</th>
                         <th><span class="sr-only">Actions</span></th>
                     </tr>
