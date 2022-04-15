@@ -7,6 +7,9 @@ require_once __DIR__ . '/../includes/header.php';
 </script>
 <script>
     var allEntries = JSON.parse(document.getElementById('allEntries').innerHTML);
+
+    const defaultColumns = ['date', 'fnum', 'route', 'aircraft', 'status'];
+    var columns = localStorage.getItem('table__my-pireps') ? JSON.parse(localStorage.getItem('table__my-pireps')) : defaultColumns;
 </script>
 <div id="content" class="m-5 text-black dark:text-white" x-data="{ table: { current: [], orderBy: (x) => x.date, orderByName: 'Date', order: 'desc', search: '', filters: [] }, refresh() { return updateDataTable(allEntries, this.table) }, }">
     <h1 class="mb-3 text-3xl font-bold">My PIREPs</h1>
@@ -22,22 +25,28 @@ require_once __DIR__ . '/../includes/header.php';
             <table class="table" x-init="refresh()">
                 <thead>
                     <tr>
-                        <th class="hidden lg:table-cell cursor-pointer" @click="dataTableOrder((x) => x.date, $el.textContent, table)">Date</th>
-                        <th class="hidden lg:table-cell cursor-pointer" @click="dataTableOrder((x) => x.fnum, $el.textContent, table)">Flight #</th>
-                        <th class="cursor-pointer" @click="dataTableOrder((x) => `${x.departure}-${x.arrival}`, $el.textContent, table)">Route</th>
-                        <th class="hidden lg:table-cell cursor-pointer" @click="dataTableOrder((x) => x.aircraft, $el.textContent, table)">Aircraft</th>
-                        <th class="cursor-pointer" @click="dataTableOrder((x) => x.status, $el.textContent, table)">Status</th>
+                        <th class="hidden lg:table-cell cursor-pointer" @click="dataTableOrder((x) => x.date, $el.textContent, table)" x-show="columns.includes('date')">Date</th>
+                        <th class="cursor-pointer" @click="dataTableOrder((x) => x.fnum, $el.textContent, table)" x-show="columns.includes('fnum')">Flight #</th>
+                        <th class="cursor-pointer" @click="dataTableOrder((x) => x.departure, $el.textContent, table)" x-show="columns.includes('departure')">Departure</th>
+                        <th class="cursor-pointer" @click="dataTableOrder((x) => x.arrival, $el.textContent, table)" x-show="columns.includes('arrival')">Arrival</th>
+                        <th class="cursor-pointer" @click="dataTableOrder((x) => `${x.departure}-${x.arrival}`, $el.textContent, table)" x-show="columns.includes('route')">Route</th>
+                        <th class="hidden lg:table-cell cursor-pointer" @click="dataTableOrder((x) => x.aircraft, $el.textContent, table)" x-show="columns.includes('aircraft')">Aircraft</th>
+                        <th class="hidden lg:table-cell cursor-pointer" @click="dataTableOrder((x) => x.multi, $el.textContent, table)" x-show="columns.includes('multiplier')">Multiplier</th>
+                        <th class="cursor-pointer" @click="dataTableOrder((x) => x.status, $el.textContent, table)" x-show="columns.includes('status')">Status</th>
                         <th><span class="sr-only">Edit</span></th>
                     </tr>
                 </thead>
                 <tbody>
                     <template x-for="pirep in table.current">
                         <tr>
-                            <td class="hidden lg:table-cell" x-text="new Date(pirep.date).toLocaleDateString()"></td>
-                            <td class="hidden lg:table-cell" x-text="pirep.fnum"></td>
-                            <td x-text="`${pirep.departure}-${pirep.arrival}`"></td>
-                            <td class="hidden lg:table-cell" x-text="pirep.aircraft"></td>
-                            <td>
+                            <td class="hidden lg:table-cell" x-text="new Date(pirep.date).toLocaleDateString()" x-show="columns.includes('date')"></td>
+                            <td class="hidden lg:table-cell" x-text="pirep.fnum" x-show="columns.includes('fnum')"></td>
+                            <td x-text="pirep.departure" x-show="columns.includes('departure')"></td>
+                            <td x-text="pirep.arrival" x-show="columns.includes('arrival')"></td>
+                            <td x-text="`${pirep.departure}-${pirep.arrival}`" x-show="columns.includes('route')"></td>
+                            <td class="hidden lg:table-cell" x-text="pirep.aircraft" x-show="columns.includes('aircraft')"></td>
+                            <td class="hidden lg:table-cell" x-text="pirep.multi" x-show="columns.includes('multiplier')"></td>
+                            <td x-show="columns.includes('status')">
                                 <span class="px-2 text-xs font-semibold leading-5 rounded-full bg-yellow-200 text-yellow-800" x-show="pirep.status == 'Pending'">
                                     Pending
                                 </span>
@@ -60,6 +69,11 @@ require_once __DIR__ . '/../includes/header.php';
                 </tbody>
             </table>
         </div>
+        <p class="text-right text-sm text-black/50 dark:text-white/50 mt-1">
+            <a href="/profile" class="cursor-pointer hover:underline">
+                Customize Columns
+            </a>
+        </p>
     </div>
 </div>
 <?php require_once __DIR__ . '/../includes/footer.php'; ?>
