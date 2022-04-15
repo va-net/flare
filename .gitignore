@@ -8,3 +8,4 @@ core/logs/*
 .env
 node_modules
 vendor
+.DS_STORE
