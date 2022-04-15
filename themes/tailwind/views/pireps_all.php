@@ -31,6 +31,7 @@ require_once __DIR__ . '/../includes/header.php';
                         <th class="cursor-pointer" @click="dataTableOrder((x) => x.arrival, $el.textContent, table)" x-show="columns.includes('arrival')">Arrival</th>
                         <th class="cursor-pointer" @click="dataTableOrder((x) => `${x.departure}-${x.arrival}`, $el.textContent, table)" x-show="columns.includes('route')">Route</th>
                         <th class="hidden lg:table-cell cursor-pointer" @click="dataTableOrder((x) => x.aircraft, $el.textContent, table)" x-show="columns.includes('aircraft')">Aircraft</th>
+                        <th class="hidden lg:table-cell cursor-pointer" @click="dataTableOrder((x) => x.flighttime, $el.textContent, table)" x-show="columns.includes('flighttime')">Flight Time</th>
                         <th class="hidden lg:table-cell cursor-pointer" @click="dataTableOrder((x) => x.multi, $el.textContent, table)" x-show="columns.includes('multiplier')">Multiplier</th>
                         <th class="cursor-pointer" @click="dataTableOrder((x) => x.status, $el.textContent, table)" x-show="columns.includes('status')">Status</th>
                         <th><span class="sr-only">Edit</span></th>
@@ -45,6 +46,7 @@ require_once __DIR__ . '/../includes/header.php';
                             <td x-text="pirep.arrival" x-show="columns.includes('arrival')"></td>
                             <td x-text="`${pirep.departure}-${pirep.arrival}`" x-show="columns.includes('route')"></td>
                             <td class="hidden lg:table-cell" x-text="pirep.aircraft" x-show="columns.includes('aircraft')"></td>
+                            <td class="hidden lg:table-cell" x-text="pirep.flighttime.formatFlightTime()" x-show="columns.includes('flighttime')"></td>
                             <td class="hidden lg:table-cell" x-text="pirep.multi" x-show="columns.includes('multiplier')"></td>
                             <td x-show="columns.includes('status')">
                                 <span class="px-2 text-xs font-semibold leading-5 rounded-full bg-yellow-200 text-yellow-800" x-show="pirep.status == 'Pending'">

@@ -14,6 +14,7 @@ $pirepcols = [
     'aircraft' => 'Aircraft',
     'status' => 'Status',
     'multiplier' => 'Multiplier',
+    'flighttime' => 'Flight Time',
 ];
 $usercols = [
     'callsign' => 'Callsign',
