@@ -51,18 +51,6 @@ $tables = [
         'permission' => 'pirepmanage',
     ],
     [
-        'name' => 'Aircraft Admin',
-        'id' => 'aircraft-admin',
-        'columns' => [
-            'fullname' => 'Full Name',
-            'liveryname' => 'Livery Name',
-            'name' => 'Aircraft Name',
-            'rank' => 'Min. Rank',
-            'award' => 'Award Req.',
-        ],
-        'permission' => 'opsmanage',
-    ],
-    [
         'name' => 'Routes Admin',
         'id' => 'routes-admin',
         'columns' => [
@@ -80,12 +68,6 @@ $tables = [
         'id' => 'users-admin',
         'columns' => $usercols,
         'permission' => 'usermanage',
-    ],
-    [
-        'name' => 'Staff Admin',
-        'id' => 'staff-admin',
-        'columns' => $usercols,
-        'permission' => 'staffmanage',
     ],
     [
         'name' => 'Recruitment',

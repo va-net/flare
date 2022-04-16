@@ -7,6 +7,9 @@ require_once __DIR__ . '/../../includes/header.php';
 </script>
 <script>
     var allEntries = JSON.parse(document.getElementById('allEntries').innerHTML);
+
+    const defaultColumns = ['fltnum', 'route', 'duration'];
+    var columns = localStorage.getItem('table__routes-admin') ? JSON.parse(localStorage.getItem('table__routes-admin')) : defaultColumns;
 </script>
 <div id="content" class="text-black dark:text-white" x-data="{ table: { current: [], orderBy: (x) => x.fltnum, orderByName: 'Flight Number', order: 'asc', search: '' }, refresh() { return updateDataTable(allEntries, this.table) }, }">
     <div class="flex w-full p-5 dark:bg-gray-600 bg-gray-100 py-7 mb-4 items-center gap-2">
@@ -33,9 +36,12 @@ require_once __DIR__ . '/../../includes/header.php';
             <table class="table" x-init="refresh()">
                 <thead>
                     <tr>
-                        <th class="hidden md:table-cell cursor-pointer" @click="dataTableOrder((x) => x.fltnum, $el.textContent, table)">Flight Number</th>
-                        <th class="cursor-pointer" @click="dataTableOrder((x) => `${x.dep}-${x.arr}`, $el.textContent, table)">Route</th>
-                        <th class="hidden md:table-cell cursor-pointer" @click="dataTableOrder((x) => x.duration, $el.textContent, table)">Flight Time</th>
+                        <th class="hidden md:table-cell cursor-pointer" @click="dataTableOrder((x) => x.fltnum, $el.textContent, table)" x-show="columns.includes('fltnum')">Flight Number</th>
+                        <th class="cursor-pointer" @click="dataTableOrder((x) => x.dep, $el.textContent, table)" x-show="columns.includes('dep')">Departure</th>
+                        <th class="cursor-pointer" @click="dataTableOrder((x) => x.arr, $el.textContent, table)" x-show="columns.includes('arr')">Arrival</th>
+                        <th class="cursor-pointer" @click="dataTableOrder((x) => `${x.dep}-${x.arr}`, $el.textContent, table)" x-show="columns.includes('route')">Route</th>
+                        <th class="hidden md:table-cell cursor-pointer" @click="dataTableOrder((x) => x.duration, $el.textContent, table)" x-show="columns.includes('duration')">Flight Time</th>
+                        <th class="hidden md:table-cell cursor-pointer" @click="dataTableOrder((x) => x.notes, $el.textContent, table)" x-show="columns.includes('notes')">Notes</th>
                         <th><span class="sr-only">Actions</span></th>
                     </tr>
                 </thead>
@@ -46,9 +52,12 @@ require_once __DIR__ . '/../../includes/header.php';
                     </form>
                     <template x-for="route in table.current" :key="route.id">
                         <tr class="hover:bg-black/20 cursor-pointer" @click="window.location.href = `/admin/routes/${route.id}`">
-                            <td class="hidden md:table-cell" x-text="route.fltnum"></td>
-                            <td x-text="`${route.dep}-${route.arr}`"></td>
-                            <td class="hidden md:table-cell" x-text="route.duration.formatFlightTime()"></td>
+                            <td class="hidden md:table-cell" x-text="route.fltnum" x-show="columns.includes('fltnum')"></td>
+                            <td x-text="route.dep" x-show="columns.includes('dep')"></td>
+                            <td x-text="route.arr" x-show="columns.includes('arr')"></td>
+                            <td x-text="`${route.dep}-${route.arr}`" x-show="columns.includes('route')"></td>
+                            <td class="hidden md:table-cell" x-text="route.duration.formatFlightTime()" x-show="columns.includes('duration')"></td>
+                            <td class="hidden md:table-cell" x-text="route.notes" x-show="columns.includes('notes')"></td>
                             <td class="text-right">
                                 <button @click.stop="confirm('Are you sure you want to delete this route?') && (() => { $refs['deleteroute-id'].value = route.id; $refs.deleteroute.submit(); })" class="px-2 py-1 text-lg font-semibold rounded-md shadow-md hover:shadow-lg bg-red-600 text-white focus:outline-none focus:ring-2 focus:ring-transparent focus:ring-offset-1 focus:ring-offset-black dark:focus:ring-offset-white">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -61,6 +70,11 @@ require_once __DIR__ . '/../../includes/header.php';
                 </tbody>
             </table>
         </div>
+        <p class="text-right text-sm text-black/50 dark:text-white/50 mt-1">
+            <a href="/profile" class="cursor-pointer hover:underline">
+                Customize Columns
+            </a>
+        </p>
     </div>
 </div>
 <?php require_once __DIR__ . '/../../includes/footer.php'; ?>
