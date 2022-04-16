@@ -1358,8 +1358,8 @@
         "newFolders": []
     },
     {
-        "tag": "v2.4.0",
-        "name": "Version 2.4.0",
+        "tag": "v2.3.0",
+        "name": "Version 2.3.0",
         "date": "2022-03-17",
         "notes": "Added rank column in Tailwind user management page",
         "prerelease": false,
