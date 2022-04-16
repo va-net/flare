@@ -1374,5 +1374,32 @@
         "queries": [],
         "deletedFiles": [],
         "newFolders": []
+    },
+    {
+        "tag": "v2.3.0",
+        "name": "Version 2.3.0",
+        "date": "2022-04-16",
+        "notes": "Added table customization in the Tailwind theme, added logo to sidebar in the Tailwind theme, various bug fixes",
+        "prerelease": false,
+        "useUpdater": true,
+        "files": [
+            "themes/tailwind/views/admin/users.php",
+            "themes/tailwind/views/profile.php",
+            "assets/tailwind.index.css",
+            "themes/tailwind/views/pireps_all.php",
+            "classes/data/Pirep.php",
+            "themes/tailwind/views/admin/pireps.php",
+            "themes/tailwind/views/admin/pireps_pending.php",
+            "themes/tailwind/views/admin/routes.php",
+            "classes/controllers/admin/UsersController.php",
+            "themes/tailwind/views/admin/users.php",
+            "themes/tailwind/views/admin/recruitment.php",
+            "classes/controllers/admin/AdminController.php",
+            "themes/tailwind/includes/header.php",
+            "themes/tailwind/views/admin/settings.php"
+        ],
+        "queries": [],
+        "deletedFiles": [],
+        "newFolders": []
     }
 ]
