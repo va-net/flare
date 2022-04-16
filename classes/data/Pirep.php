@@ -75,7 +75,7 @@ class Pirep
     {
         self::init();
 
-        $sql = "SELECT pireps.*, pilots.name AS pilotname, aircraft.name AS aircraftname FROM (pireps INNER JOIN pilots ON pireps.pilotid=pilots.id) INNER JOIN aircraft ON pireps.aircraftid=aircraft.id ORDER BY pireps.date DESC";
+        $sql = "SELECT pireps.*, pilots.name AS pilotname, pilots.callsign AS pilotcallsign, aircraft.name AS aircraftname FROM (pireps INNER JOIN pilots ON pireps.pilotid=pilots.id) INNER JOIN aircraft ON pireps.aircraftid=aircraft.id ORDER BY pireps.date DESC";
         $result = self::$_db->query($sql)->results();
         $pireps = array_map(function ($p) {
             return (array)$p;
@@ -107,7 +107,8 @@ class Pirep
 
         self::init();
 
-        $result = self::$_db->query("SELECT r.*, p.callsign AS pilotcallsign, p.name AS pilotname FROM `pireps` r INNER JOIN `pilots` p ON p.id=r.pilotid WHERE r.`status`=0");
+        $sql = "SELECT pireps.*, pilots.name AS pilotname, pilots.callsign AS pilotcallsign, aircraft.name AS aircraftname FROM (pireps INNER JOIN pilots ON pireps.pilotid=pilots.id) INNER JOIN aircraft ON pireps.aircraftid=aircraft.id WHERE pireps.status=0 ORDER BY pireps.date ASC";
+        $result = self::$_db->query($sql);
 
         $pireps = array_map(function ($x) {
             return (array)$x;

@@ -487,31 +487,24 @@ class User
     public function getAllPendingUsers()
     {
         $db = DB::newInstance();
-
         $results = $db->get('pilots', array('status', '=', 0));
 
-        $usersarray = array();
-        $statuses = array('Pending', 'Active', 'Inactive');
-        $x = 0;
-
-        while ($x < $results->count()) {
-            $newdata = array(
-                'id' => $results->results()[$x]->id,
-                'callsign' => $results->results()[$x]->callsign,
-                'name' => $results->results()[$x]->name,
-                'email' => $results->results()[$x]->email,
-                'ifc' => $results->results()[$x]->ifc,
-                'rank' => $this->rank($results->results()[$x]->id),
-                'status' => $statuses[$results->results()[$x]->status],
-                'joined' => $results->results()[$x]->joined,
-                'grade' => $results->results()[$x]->grade,
-                'viol' => $results->results()[$x]->violand
-            );
-            $usersarray[$x] = $newdata;
-            $x++;
-        }
-
-        return $usersarray;
+        return array_map(function ($user) {
+            $statuses = ['Pending', 'Active', 'Inactive'];
+            return [
+                'id' => $user->id,
+                'callsign' => $user->callsign,
+                'name' => $user->name,
+                'email' => $user->email,
+                'ifc' => $user->ifc,
+                'status' => $statuses[$user->status],
+                'joined' => $user->joined,
+                'grade' => $user->grade,
+                'viol' => $user->violand,
+                'notes' => $user->notes,
+                'joined' => $user->joined,
+            ];
+        }, $results->results());
     }
 
     /**
