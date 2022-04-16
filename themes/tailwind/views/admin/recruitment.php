@@ -40,8 +40,11 @@ foreach (Page::$pageData->previousBlacklist as $ifc => $reason) {
 <script>
     var allEntries = JSON.parse(document.getElementById('allEntries').innerHTML);
     var ifvarbList = JSON.parse(document.getElementById('ifvarbList').innerHTML);
+
+    const defaultColumns = ['name', 'ifc', 'grade', 'violand', 'flags'];
+    var columns = localStorage.getItem('table__recruitment') ? JSON.parse(localStorage.getItem('table__recruitment')) : defaultColumns;
 </script>
-<div id="content" class="text-black dark:text-white" x-data="{ table: { current: [], orderBy: (x) => x.name, orderByName: 'Name', order: 'asc', search: '', filters: [] }, refresh() { return updateDataTable(allEntries, this.table) }, }">
+<div id="content" class="text-black dark:text-white" x-data="{ table: { current: [], orderBy: (x) => new Date(x.joined), orderByName: 'Date Joined', order: 'asc', search: '', filters: [] }, refresh() { return updateDataTable(allEntries, this.table) }, }">
     <div class="flex w-full p-5 dark:bg-gray-600 bg-gray-100 py-7 mb-4 items-center gap-2">
         <h2 class="flex-1 text-2xl font-bold lg:text-4xl">
             Pilot Recruitment
@@ -60,11 +63,15 @@ foreach (Page::$pageData->previousBlacklist as $ifc => $reason) {
             <table class="table" x-init="refresh()">
                 <thead>
                     <tr>
-                        <th class="cursor-pointer" @click="dataTableOrder((x) => x.name, $el.textContent, table)">Name</th>
-                        <th class="hidden md:table-cell cursor-pointer" @click="dataTableOrder((x) => x.name, $el.textContent, table)">IFC</th>
-                        <th class="hidden md:table-cell cursor-pointer" @click="dataTableOrder((x) => x.grade, $el.textContent, table)">Grade</th>
-                        <th class="hidden md:table-cell cursor-pointer" @click="dataTableOrder((x) => x.viol, $el.textContent, table)">Vio:Landing</th>
-                        <th>Flags</th>
+                        <th class="hidden md:table-cell cursor-pointer" @click="dataTableOrder((x) => x.callsign, $el.textContent, table)" x-show="columns.includes('callsign')">Callsign</th>
+                        <th class="cursor-pointer" @click="dataTableOrder((x) => x.name, $el.textContent, table)" x-show="columns.includes('name')">Name</th>
+                        <th class="cursor-pointer" @click="dataTableOrder((x) => x.ifc, $el.textContent, table)" x-show="columns.includes('ifc')">IFC</th>
+                        <th class="hidden md:table-cell cursor-pointer" @click="dataTableOrder((x) => x.email, $el.textContent, table)" x-show="columns.includes('email')">Email</th>
+                        <th class="hidden md:table-cell cursor-pointer" @click="dataTableOrder((x) => x.joined, $el.textContent, table)" x-show="columns.includes('joined')">Joined</th>
+                        <th class="hidden lg:table-cell cursor-pointer" @click="dataTableOrder((x) => x.viol, $el.textContent, table)" x-show="columns.includes('violand')">Vio:Landing</th>
+                        <th class="hidden lg:table-cell cursor-pointer" @click="dataTableOrder((x) => x.grade, $el.textContent, table)" x-show="columns.includes('grade')">Grade</th>
+                        <th x-show="columns.includes('flags')">Flags</th>
+                        <th class="hidden lg:table-cell cursor-pointer" @click="dataTableOrder((x) => x.notes, $el.textContent, table)" x-show="columns.includes('notes')">Notes</th>
                         <th><span class="sr-only">Actions</span></th>
                     </tr>
                 </thead>
@@ -79,8 +86,9 @@ foreach (Page::$pageData->previousBlacklist as $ifc => $reason) {
                     </form>
                     <template x-for="user in table.current" :key="user.id">
                         <tr class="hover:bg-black/20 cursor-pointer" @click="window.location.href = `/admin/users/${user.id}`">
-                            <td x-text="user.name"></td>
-                            <td class="hidden md:table-cell" x-data="{ ifc: user.ifc.split('/')[4] }">
+                            <td class="hidden md:table-cell" x-text="user.callsign" x-show="columns.includes('callsign')"></td>
+                            <td x-text="user.name" x-show="columns.includes('name')"></td>
+                            <td x-data="{ ifc: user.ifc.split('/')[4] }" x-show="columns.includes('ifc')">
                                 <a :href="`https://community.infiniteflight.com/u/${ifc}`" target="_blank" class="font-semibold flex items-center" @click.stop>
                                     <span x-text="ifc ?? 'Not Provided'" class="mr-1"></span>
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline" viewBox="0 0 20 20" fill="currentColor" x-show="!!ifc">
@@ -89,9 +97,13 @@ foreach (Page::$pageData->previousBlacklist as $ifc => $reason) {
                                     </svg>
                                 </a>
                             </td>
-                            <td class="hidden md:table-cell" x-text="user.grade"></td>
-                            <td class="hidden md:table-cell" x-text="user.viol"></td>
-                            <td x-data="{ listEntry: ifvarbList[user.ifc.split('/')[4]?.toLowerCase()] }">
+                            <td class="hidden md:table-cell" x-text="user.email" x-show="columns.includes('email')"></td>
+                            <td class="hidden md:table-cell" x-text="new Date(user.joined).toLocaleDateString()" x-show="columns.includes('joined')"></td>
+                            <td class="hidden md:table-cell" x-text="(parseFloat(user.flighttime) + parseFloat(user.transhours)).formatFlightTime()" x-show="columns.includes('flighttime')"></td>
+                            <td class="hidden lg:table-cell" x-text="getRank(user).name" x-show="columns.includes('rank')"></td>
+                            <td class="hidden md:table-cell" x-text="user.viol" x-show="columns.includes('violand')"></td>
+                            <td class="hidden md:table-cell" x-text="user.grade" x-show="columns.includes('grade')"></td>
+                            <td class="hidden md:table-cell" x-data="{ listEntry: ifvarbList[user.ifc.split('/')[4]?.toLowerCase()] }" x-show="columns.includes('flags')">
                                 <span class="px-2 font-semibold leading-5 rounded-full bg-green-100 text-green-800 dark:bg-green-300 dark:text-green-900" x-show="!listEntry">
                                     None
                                 </span>
@@ -108,6 +120,7 @@ foreach (Page::$pageData->previousBlacklist as $ifc => $reason) {
                                     Prev. Blacklist
                                 </span>
                             </td>
+                            <td class="hidden md:table-cell" x-text="user.notes" x-show="columns.includes('notes')"></td>
                             <td class="flex justify-end items-center gap-2">
                                 <button @click.stop="$refs['acceptapplication-id'].value = user.id; $refs.acceptapplication.submit();" class="px-2 py-1 text-lg font-semibold rounded-md shadow-md hover:shadow-lg bg-green-600 text-white focus:outline-none focus:ring-2 focus:ring-transparent focus:ring-offset-1 focus:ring-offset-black dark:focus:ring-offset-white" x-show="user.ifc.split('/')[4] && ifvarbList[user.ifc.split('/')[4]?.toLowerCase()]?.type !== 'blacklist'">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -132,6 +145,11 @@ foreach (Page::$pageData->previousBlacklist as $ifc => $reason) {
                 </tbody>
             </table>
         </div>
+        <p class="text-right text-sm text-black/50 dark:text-white/50 mt-1">
+            <a href="/profile" class="cursor-pointer hover:underline">
+                Customize Columns
+            </a>
+        </p>
     </div>
 </div>
 <?php require_once __DIR__ . '/../../includes/footer.php'; ?>

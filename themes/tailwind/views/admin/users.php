@@ -73,7 +73,7 @@ foreach (Page::$pageData->previousBlacklist as $ifc => $reason) {
                         <th class="cursor-pointer" @click="dataTableOrder((x) => x.name, $el.textContent, table)" x-show="columns.includes('name')">Name</th>
                         <th class="cursor-pointer" @click="dataTableOrder((x) => x.ifc, $el.textContent, table)" x-show="columns.includes('ifc')">IFC</th>
                         <th class="hidden md:table-cell cursor-pointer" @click="dataTableOrder((x) => x.email, $el.textContent, table)" x-show="columns.includes('email')">Email</th>
-                        <th class="hidden md:table-cell cursor-pointer" @click="dataTableOrder((x) => x.joined, $el.textContent, table)" x-show="columns.includes('joined')">Joined</th>
+                        <th class="hidden md:table-cell cursor-pointer" @click="dataTableOrder((x) => new Date(x.joined), $el.textContent, table)" x-show="columns.includes('joined')">Joined</th>
                         <th class="hidden md:table-cell cursor-pointer" @click="dataTableOrder((x) => parseFloat(x.flighttime) + parseFloat(x.transhours), $el.textContent, table)" x-show="columns.includes('flighttime')">Flight Time</th>
                         <th class="hidden lg:table-cell cursor-pointer" @click="dataTableOrder((x) => getRank(x).timereq, $el.textContent, table)" x-show="columns.includes('rank')">Rank</th>
                         <th class="hidden lg:table-cell cursor-pointer" @click="dataTableOrder((x) => x.violand, $el.textContent, table)" x-show="columns.includes('violand')">Vio:Landing</th>
@@ -106,8 +106,8 @@ foreach (Page::$pageData->previousBlacklist as $ifc => $reason) {
                             <td class="hidden md:table-cell" x-text="new Date(user.joined).toLocaleDateString()" x-show="columns.includes('joined')"></td>
                             <td class="hidden md:table-cell" x-text="(parseFloat(user.flighttime) + parseFloat(user.transhours)).formatFlightTime()" x-show="columns.includes('flighttime')"></td>
                             <td class="hidden lg:table-cell" x-text="getRank(user).name" x-show="columns.includes('rank')"></td>
-                            <td class="hidden md:table-cell" x-text="user.grade" x-show="columns.includes('grade')"></td>
                             <td class="hidden md:table-cell" x-text="user.violand" x-show="columns.includes('violand')"></td>
+                            <td class="hidden md:table-cell" x-text="user.grade" x-show="columns.includes('grade')"></td>
                             <td class="hidden md:table-cell" x-data="{ listEntry: ifvarbList[user.ifc.split('/')[4]?.toLowerCase()] }" x-show="columns.includes('flags')">
                                 <span class="px-2 font-semibold leading-5 rounded-full bg-green-100 text-green-800 dark:bg-green-300 dark:text-green-900" x-show="!listEntry">
                                     None
