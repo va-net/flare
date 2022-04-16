@@ -27,7 +27,7 @@ $usercols = [
     'joined' => 'Date Joined',
     'violand' => 'Violation/Landing Ratio',
     'grade' => 'Grade',
-    'flags' => 'Watchlist Flags',
+    'flags' => 'IFVARB Flags',
 ];
 $tables = [
     [
@@ -72,7 +72,9 @@ $tables = [
     [
         'name' => 'Recruitment',
         'id' => 'recruitment',
-        'columns' => $usercols,
+        'columns' => array_filter($usercols, function ($x) {
+            return $x != 'flighttime' && $x != 'rank';
+        }, ARRAY_FILTER_USE_KEY),
         'permission' => 'recruitment',
     ]
 ];
