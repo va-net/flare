@@ -44,8 +44,19 @@ if (Page::$pageData->user->hasPermission('admin')) {
         <div :class="`md:flex md:flex-row min-h-full flex-grow ${isDarkMode ? 'dark' : 'light'}`" x-data="{ sidebarOpen: Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0) >= 1024, isDarkMode: false, account: false, notifications: false, }" x-cloak="md" x-init="() => { if ('darkMode' in localStorage && localStorage.getItem('darkMode') == 1) isDarkMode = true; }">
             <aside id="sidebar" class="w-screen max-w-[275px] absolute md:sticky md:top-0 h-screen md:border-r md:border-gray-200 dark:border-none bg-gray-100 text-black dark:bg-gray-800 dark:text-white md:shadow-inner shadow-xl overflow-y-auto z-20" x-show="sidebarOpen" x-transition:enter="transform transition-transform duration-500" x-transition:enter-start="-translate-x-full" x-transition:enter-end="translate-x-0" x-transition:leave="transform transition-transform duration-500" x-transition:leave-start="translate-x-0" x-transition:leave-end="-translate-x-full" @click.away="if (Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0) < 1024) sidebarOpen = false">
                 <div id="sidebar-brand" class="flex items-center px-4 mb-3 h-14">
-                    <h1 class="text-xl font-bold">
-                        <?= Page::$pageData->va_name ?>
+                    <h1 class="text-xl font-bold w-full">
+                        <?php if (!empty(Config::get('VA_LOGO_URL'))) : ?>
+                            <a href="/" class="block w-full text-center">
+                                <?php if (!empty(Config::get('VA_LOGO_URL_DARK'))) : ?>
+                                    <img src="<?= Config::get('VA_LOGO_URL') ?>" alt="<?= Page::$pageData->va_name ?>" class="h-10 w-auto dark:hidden" />
+                                    <img src="<?= Config::get('VA_LOGO_URL_DARK') ?>" alt="<?= Page::$pageData->va_name ?>" class="h-10 w-auto hidden dark:inline-block" />
+                                <?php else : ?>
+                                    <img src="<?= Config::get('VA_LOGO_URL') ?>" alt="<?= Page::$pageData->va_name ?>" class="h-10 w-auto" />
+                                <?php endif; ?>
+                            </a>
+                        <?php else : ?>
+                            <?= Page::$pageData->va_name ?>
+                        <?php endif ?>
                     </h1>
                 </div>
                 <ul id="sidebar-nav" class="mx-3" x-data="{ openDropdown: <?= isset(Page::$pageData->active_dropdown) ? '\'' . Page::$pageData->active_dropdown . '\'' : 'null' ?>, badges: {} }" x-init="initbadges(badges)">

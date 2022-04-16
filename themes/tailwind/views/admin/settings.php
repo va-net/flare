@@ -23,9 +23,13 @@ require_once __DIR__ . '/../../includes/header.php';
                     <label for="vaname">Full VA Name</label>
                     <input id="vaname" name="vaname" type="text" value="<?= Page::$pageData->va_name ?>" required class="form-control" />
                 </div>
-                <div class="space-y-1 hidden">
+                <div class="space-y-1">
                     <label for="valogo">VA Logo URL</label>
                     <input id="valogo" name="valogo" type="url" value="<?= Page::$pageData->logo_url ?>" class="form-control" />
+                </div>
+                <div class="space-y-1">
+                    <label for="valogo_dark">VA Logo URL (Dark Mode)</label>
+                    <input id="valogo_dark" name="valogo_dark" type="url" value="<?= Page::$pageData->logo_url_dark ?>" class="form-control" />
                 </div>
                 <div class="space-y-1">
                     <label for="vaident">VA Callsign RegEx</label>
@@ -72,7 +76,7 @@ require_once __DIR__ . '/../../includes/header.php';
                     <input id="hexcol" name="hexcol" type="text" value="<?= Page::$pageData->color_main ?>" required class="form-control" />
                 </div>
                 <div class="space-y-1">
-                    <label for="textcol">VA Logo URL</label>
+                    <label for="textcol">Text Colour (hex)</label>
                     <input id="textcol" name="textcol" type="text" value="<?= Page::$pageData->text_color ?>" required class="form-control" />
                 </div>
                 <div class="space-y-1">

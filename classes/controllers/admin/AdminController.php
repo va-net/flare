@@ -71,6 +71,7 @@ class AdminController extends Controller
         $data->check_pre = Config::get("CHECK_PRERELEASE");
         $data->update = Updater::checkUpdate($data->check_pre);
         $data->logo_url = Config::get('VA_LOGO_URL');
+        $data->logo_url_dark = Config::get('VA_LOGO_URL_DARK');
         $data->callsign_format = Config::get('VA_CALLSIGN_FORMAT');
         $data->va_ident = Config::get('va/identifier');
         $data->force_server = Config::get('FORCE_SERVER');
@@ -113,6 +114,7 @@ class AdminController extends Controller
                     || !$pre
                     || !Config::replace("VA_CALLSIGN_FORMAT", Input::get('vaident'))
                     || !Config::replace("VA_LOGO_URL", Input::get('valogo'))
+                    || !Config::replace("VA_LOGO_URL_DARK", Input::get('valogo_dark'))
                 ) {
                     Session::flash('error', 'Error Updating Settings');
                 } else {
