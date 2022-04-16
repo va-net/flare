@@ -1379,7 +1379,7 @@
         "tag": "v2.3.0",
         "name": "Version 2.3.0",
         "date": "2022-04-16",
-        "notes": "Added table customization in the Tailwind theme, added logo to sidebar in the Tailwind theme, various bug fixes",
+        "notes": "Added table customization in the Tailwind theme, added logo to sidebar in the Tailwind theme, added rank-restricted multipliers, various bug fixes",
         "prerelease": false,
         "useUpdater": true,
         "files": [
@@ -1396,9 +1396,17 @@
             "themes/tailwind/views/admin/recruitment.php",
             "classes/controllers/admin/AdminController.php",
             "themes/tailwind/includes/header.php",
-            "themes/tailwind/views/admin/settings.php"
+            "themes/tailwind/views/admin/settings.php",
+            "api.php",
+            "classes/controllers/PirepsController.php",
+            "classes/controllers/admin/AdminPirepsController.php",
+            "themes/tailwind/views/admin/multipliers.php",
+            "themes/tailwind/views/admin/multipliers_new.php",
+            "themes/default/views/admin/multipliers.php"
         ],
-        "queries": [],
+        "queries": [
+            "ALTER TABLE `multipliers` ADD `minrankid` INT NULL DEFAULT NULL AFTER `name`;"
+        ],
         "deletedFiles": [],
         "newFolders": []
     }

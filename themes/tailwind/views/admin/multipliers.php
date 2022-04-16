@@ -24,6 +24,7 @@ require_once __DIR__ . '/../../includes/header.php';
                         <th>Code</th>
                         <th>Name</th>
                         <th class="hidden md:table-cell">Multiplication</th>
+                        <th class="hidden md:table-cell">Min. Rank</th>
                         <th><span class="sr-only">Actions</span></th>
                     </tr>
                 </thead>
@@ -38,6 +39,9 @@ require_once __DIR__ . '/../../includes/header.php';
                             </td>
                             <td class="hidden md:table-cell">
                                 <?= $m->multiplier ?>x
+                            </td>
+                            <td class="hidden md:table-cell">
+                                <?= $m->minrank ?? 'N/A' ?>
                             </td>
                             <td class="text-right">
                                 <button @click.stop="confirm('Are you sure you want to delete this multiplier? Previous PIREPs will not be affected.') && (() => { $refs['deletemulti-id'].value = '<?= $m->id ?>'; $refs.deletemulti.submit(); })" class="px-2 py-1 text-lg font-semibold rounded-md shadow-md hover:shadow-lg bg-red-600 text-white focus:outline-none focus:ring-2 focus:ring-transparent focus:ring-offset-1 focus:ring-offset-black dark:focus:ring-offset-white">

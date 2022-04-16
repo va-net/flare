@@ -165,7 +165,8 @@ class Pirep
     {
         self::init();
 
-        return self::$_db->getAll('multipliers')->results();
+        $sql = "SELECT m.*, r.name AS minrank FROM multipliers m LEFT JOIN ranks r ON m.minrankid=r.id ORDER BY m.multiplier ASC";
+        return self::$_db->query($sql)->results();
     }
 
     /**
@@ -217,11 +218,22 @@ class Pirep
     /**
      * @return object|null
      * @param int $code Multiplier Code
+     * @param int|null $rankid User Rank ID
      */
-    public static function findMultiplier($code)
+    public static function findMultiplier($code, $rankid)
     {
         self::init();
-        $ret = self::$_db->get('multipliers', array('code', '=', $code));
+        if ($rankid == null) {
+            $ret = self::$_db->get('multipliers', array('code', '=', $code));
+            if ($ret->count() == 0) {
+                return null;
+            }
+            return $ret->first();
+        }
+
+        $sql = "SELECT m.* FROM multipliers m WHERE code=? AND (SELECT timereq FROM ranks WHERE id=?) >= (SELECT timereq FROM ranks WHERE id=m.minrankid) LIMIT 1";
+        $ret = self::$_db->query($sql, [$code, $rankid]);
+
         if ($ret->count() == 0) {
             return null;
         }

@@ -90,6 +90,7 @@ class AdminPirepsController extends Controller
 
         $data->active_dropdown = 'pirep-management';
         $data->multis = Pirep::fetchMultipliers();
+        $data->ranks = Rank::fetchAllNames()->results();
         $this->render('admin/multipliers', $data);
     }
 
@@ -115,6 +116,7 @@ class AdminPirepsController extends Controller
         $this->authenticate($user, true, 'pirepmanage');
         $data = new stdClass;
         $data->user = $user;
+        $data->ranks = Rank::fetchAllNames()->results();
 
         $data->active_dropdown = 'pirep-management';
         $this->render('admin/multipliers_new', $data);
@@ -184,7 +186,8 @@ class AdminPirepsController extends Controller
         Pirep::addMultiplier([
             "code" => Pirep::generateMultiCode(),
             "name" => Input::get("name"),
-            "multiplier" => Input::get("multi")
+            "multiplier" => Input::get("multi"),
+            "minrankid" => empty(Input::get("minrank")) ? null : Input::get("minrank"),
         ]);
         Session::flash('success', 'Multiplier Added Successfully!');
         $this->get_multis();

@@ -168,9 +168,10 @@ class PirepsController extends Controller
     {
         $multi = "None";
         $finalFTime = Time::strToSecs(Input::get('ftime'));
+        $user = new User();
 
         if (!empty(Input::get('multi'))) {
-            $multiplier = Pirep::findMultiplier(Input::get('multi'));
+            $multiplier = Pirep::findMultiplier(Input::get('multi'), $user->rank(null, true));
             if (!$multiplier) {
                 Session::flash('error', 'Invalid Multiplier Code');
                 $this->get_new();
@@ -180,7 +181,6 @@ class PirepsController extends Controller
             $finalFTime *= $multiplier->multiplier;
         }
 
-        $user = new User();
         $allowedaircraft = $user->getAvailableAircraft();
         $allowed = false;
         foreach ($allowedaircraft as $a) {

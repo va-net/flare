@@ -56,6 +56,7 @@ Page::setTitle('Multipliers Admin - ' . Page::$pageData->va_name);
                                     <th>Code</th>
                                     <th>Name</th>
                                     <th>Multiplication</th>
+                                    <th>Min. Rank</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -68,6 +69,8 @@ Page::setTitle('Multipliers Admin - ' . Page::$pageData->va_name);
                                     echo $m->name;
                                     echo '</td><td class="align-middle">';
                                     echo $m->multiplier . 'x';
+                                    echo '</td><td class="align-middle">';
+                                    echo $m->minrank ?? 'N/A';
                                     echo '</td><td class="align-middle">';
                                     echo '<button value="' . $m->id . '" form="multiarticle" type="submit" class="btn btn-danger text-light" name="delete"><i class="fa fa-trash"></i></button>';
                                     echo '</td></tr>';
@@ -86,6 +89,15 @@ Page::setTitle('Multipliers Admin - ' . Page::$pageData->va_name);
                             <div class="form-group">
                                 <label for="multi-multi">Multiplication</label>
                                 <input required type="number" step="0.1" class="form-control" name="multi" id="multi-multi" />
+                            </div>
+                            <div class="form-group">
+                                <label for="multi-minrank">Minimum Rank</label>
+                                <select required type="number" step="0.25" class="form-control" name="minrank" id="multi-minrank">
+                                    <option value="">None</option>
+                                    <?php foreach (Page::$pageData->ranks as $r) : ?>
+                                        <option value="<? $r->id ?>"><?= $r->name ?></option>
+                                    <?php endforeach; ?>
+                                </select>
                             </div>
                             <input type="submit" class="btn bg-custom" value="Save" />
                         </form>

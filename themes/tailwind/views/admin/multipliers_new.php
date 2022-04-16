@@ -13,6 +13,15 @@ require_once __DIR__ . '/../../includes/header.php';
             <label for="multi">Multiplication</label>
             <input id="multi" name="multi" type="number" required class="form-control" step="0.25" />
         </div>
+        <div class="space-y-1">
+            <label for="minrank">Minimum Rank</label>
+            <select id="minrank" name="minrank" required class="form-control">
+                <option value="">None</option>
+                <?php foreach (Page::$pageData->ranks as $rank) : ?>
+                    <option value="<?= $rank->id ?>"><?= $rank->name ?></option>
+                <?php endforeach; ?>
+            </select>
+        </div>
     </form>
     <button type="submit" form="create-multi" class="px-3 py-2 mt-3 rounded-md shadow-md bg-primary text-primary-text focus:outline-none focus:ring-2 focus:ring-transparent focus:ring-offset-1 focus:ring-offset-black dark:focus:ring-offset-white">
         Save

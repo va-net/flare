@@ -18,6 +18,7 @@ class AwardsController extends Controller
 
         $data->all_users = $user->getAllUsers();
         $data->awards = Awards::getAll();
+        $data->active_dropdown = 'user-management';
         $this->render('admin/awards', $data);
     }
 
@@ -56,6 +57,7 @@ class AwardsController extends Controller
         $data->recipients = Awards::awardRecipients($id);
         $data->users = (new User)->getAllUsers();
 
+        $data->active_dropdown = 'user-management';
         $this->render('admin/awards_edit', $data);
     }
 
@@ -75,6 +77,7 @@ class AwardsController extends Controller
         $data = new stdClass;
         $data->user = $user;
 
+        $data->active_dropdown = 'user-management';
         $this->render('admin/awards_new', $data);
     }
 

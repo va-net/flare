@@ -313,7 +313,7 @@ Router::add('/pireps', function () {
     $finalFTime = Time::strToSecs(Input::get('flighttime'));
 
     if (!empty(Input::get('multi'))) {
-        $multiplier = Pirep::findMultiplier(Input::get('multi'));
+        $multiplier = Pirep::findMultiplier(Input::get('multi'), $user->rank(null, true));
         if (!$multiplier) {
             badReq(ErrorCode::MultiplierNotFound);
         }
@@ -429,7 +429,7 @@ Router::add('/multipliers/code/([0-9]+)', function ($code) {
         accessDenied();
     }
 
-    $multiplier = Pirep::findMultiplier($code);
+    $multiplier = Pirep::findMultiplier($code, null);
     if ($multiplier === NULL) internalError();
 
     echo Json::encode([
