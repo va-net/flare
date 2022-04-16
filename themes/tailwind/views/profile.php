@@ -33,7 +33,9 @@ $tables = [
     [
         'name' => 'My PIREPs',
         'id' => 'my-pireps',
-        'columns' => $pirepcols,
+        'columns' => array_filter($pirepcols, function ($x) {
+            return $x != 'callsign' && $x != 'pilotname';
+        }, ARRAY_FILTER_USE_KEY),
         'permission' => null,
     ],
     [

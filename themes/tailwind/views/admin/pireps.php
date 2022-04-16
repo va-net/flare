@@ -9,7 +9,7 @@ require_once __DIR__ . '/../../includes/header.php';
     var allEntries = JSON.parse(document.getElementById('allEntries').innerHTML);
     var acceptedFilter = (x) => x.status == 1;
 
-    const defaultColumns = ['date', 'fnum', 'route', 'aircraft', 'status'];
+    const defaultColumns = ['date', 'pilotname', 'route', 'status', 'flighttime'];
     var columns = localStorage.getItem('table__pireps-admin') ? JSON.parse(localStorage.getItem('table__pireps-admin')) : defaultColumns;
 </script>
 <div id="content" class="text-black dark:text-white" x-data="{ table: { current: [], orderBy: (x) => x.date, orderByName: 'Date', order: 'desc', search: '', filters: [acceptedFilter] }, refresh() { return updateDataTable(allEntries, this.table) }, }">
@@ -35,12 +35,12 @@ require_once __DIR__ . '/../../includes/header.php';
                         <th class="hidden md:table-cell cursor-pointer" @click="dataTableOrder((x) => x.pilotname, $el.textContent, table)" x-show="columns.includes('pilotname')">Pilot</th>
                         <th class="hidden md:table-cell cursor-pointer" @click="dataTableOrder((x) => x.pilotcallsign, $el.textContent, table)" x-show="columns.includes('callsign')">Callsign</th>
                         <th class="hidden md:table-cell cursor-pointer" @click="dataTableOrder((x) => x.flightnum, $el.textContent, table)" x-show="columns.includes('fnum')">Flight Number</th>
-                        <th class="hidden md:table-cell cursor-pointer" @click="dataTableOrder((x) => x.multi, $el.textContent, table)" x-show="columns.includes('multiplier')">Multiplier</th>
                         <th class="hidden md:table-cell cursor-pointer" @click="dataTableOrder((x) => x.departure, $el.textContent, table)" x-show="columns.includes('departure')">Departure</th>
                         <th class="hidden md:table-cell cursor-pointer" @click="dataTableOrder((x) => x.arrival, $el.textContent, table)" x-show="columns.includes('arrival')">Arrival</th>
                         <th class="cursor-pointer" @click="dataTableOrder((x) => `${x.departure}-${x.arrival}`, $el.textContent, table)" x-show="columns.includes('route')">Route</th>
                         <th class="cursor-pointer" @click="dataTableOrder((x) => x.aircraftname, $el.textContent, table)" x-show="columns.includes('aircraft')">Aircraft</th>
                         <th class="cursor-pointer" @click="dataTableOrder((x) => x.flighttime, $el.textContent, table)" x-show="columns.includes('flighttime')">Flight Time</th>
+                        <th class="hidden md:table-cell cursor-pointer" @click="dataTableOrder((x) => x.multi, $el.textContent, table)" x-show="columns.includes('multiplier')">Multiplier</th>
                         <th class="hidden md:table-cell" x-show="columns.includes('status')">Status</th>
                         <th><span class="sr-only">Actions</span></th>
                     </tr>
@@ -56,12 +56,12 @@ require_once __DIR__ . '/../../includes/header.php';
                             <td class="hidden md:table-cell" x-text="pirep.pilotname" x-show="columns.includes('pilotname')"></td>
                             <td class="hidden md:table-cell" x-text="pirep.pilotcallsign" x-show="columns.includes('callsign')"></td>
                             <td class="hidden md:table-cell" x-text="pirep.flightnum" x-show="columns.includes('fnum')"></td>
-                            <td class="hidden md:table-cell" x-text="pirep.multi" x-show="columns.includes('multiplier')"></td>
                             <td class="hidden md:table-cell" x-text="pirep.departure" x-show="columns.includes('departure')"></td>
                             <td class="hidden md:table-cell" x-text="pirep.arrival" x-show="columns.includes('arrival')"></td>
                             <td x-text="`${pirep.departure} - ${pirep.arrival}`" x-show="columns.includes('route')"></td>
                             <td x-text="pirep.aircraftname" x-show="columns.includes('aircraft')"></td>
                             <td class="hidden md:table-cell" x-text="pirep.flighttime.formatFlightTime()" x-show="columns.includes('flighttime')"></td>
+                            <td class="hidden md:table-cell" x-text="pirep.multi" x-show="columns.includes('multiplier')"></td>
                             <td class="hidden md:table-cell" x-show="columns.includes('status')">
                                 <span class="px-2 font-semibold leading-5 rounded-full bg-green-100 text-green-800 dark:bg-green-300 dark:text-green-900 text-sm md:text-base" x-show="pirep.status == 1">
                                     Accepted
@@ -85,7 +85,14 @@ require_once __DIR__ . '/../../includes/header.php';
                 </tbody>
             </table>
         </div>
-        <p class="md:inline-block text-center md:text-left font-semibold md:hover:underline underline md:no-underline cursor-pointer" x-text="table.filters.length > 0 ? 'Show all PIREPs' : 'Show accepted PIREPs only'" @click="table.filters = table.filters.length > 0 ? [] : [acceptedFilter]; refresh();"></p>
+        <div class="sm:flex mt-1 items-center">
+            <p class="md:inline-block text-center md:text-left font-semibold md:hover:underline underline md:no-underline cursor-pointer" x-text="table.filters.length > 0 ? 'Show all PIREPs' : 'Show accepted PIREPs only'" @click="table.filters = table.filters.length > 0 ? [] : [acceptedFilter]; refresh();"></p>
+            <p class="text-right text-sm text-black/50 dark:text-white/50 flex-1">
+                <a href="/profile" class="cursor-pointer hover:underline">
+                    Customize Columns
+                </a>
+            </p>
+        </div>
     </div>
 </div>
 <?php require_once __DIR__ . '/../../includes/footer.php'; ?>
