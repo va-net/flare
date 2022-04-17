@@ -4,14 +4,6 @@ require_once __DIR__ . '/../../includes/header.php';
 ?>
 <div id="content" class="text-black dark:text-white m-5">
     <h1 class="mb-3 text-3xl font-bold">Edit Aircraft</h1>
-    <div class="flex gap-3 mb-3 items-center p-2 rounded bg-blue-500 dark:bg-blue-600 border-primary text-primary-text text-sm">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 flex-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-        <p class="flex-1">
-            Aircraft can now be assigned a minimum rank and/or an award that is required for a pilot to be able to fly it. If both options are selected, the pilot can have the award OR the minimum rank to fly the aircraft. If no options are selected, the aircraft is not available to pilots.
-        </p>
-    </div>
     <form method="post" class="space-y-2" id="edit-aircraft" x-data="{ liveries: {} }">
         <input type="hidden" name="id" value="<?= Page::$pageData->aircraft->id ?>">
         <div class="space-y-1">

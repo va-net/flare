@@ -215,7 +215,15 @@ foreach ($tables as $table) {
         <?php endif; ?>
     </div>
     <div class="p-3 bg-gray-100 border border-gray-200 rounded-md shadow dark:border-0 dark:bg-gray-600 col-span-2">
-        <h2 class="mb-1 text-2xl font-bold">Customize Tables</h2>
+        <h2 class="mb-3 text-2xl font-bold">Customize Tables</h2>
+        <div class="flex gap-3 mb-2 items-center p-2 rounded bg-yellow-400 border-primary text-black text-sm">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 flex-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+            <p class="flex-1">
+                Adding too many columns to a page may affect how the page displays and the size of the sidebar, particularly on mobile devices. Use at your own risk and remember the reset button is back on this page!
+            </p>
+        </div>
         <div class="w-full space-y-1" x-data="{ openItem: null }">
             <template x-for="table in tables" :key="table.id">
                 <div x-data="{ useDefault: localStorage.getItem(`table__${table.id}`) == null, columns: localStorage.getItem(`table__${table.id}`) ? JSON.parse(localStorage.getItem(`table__${table.id}`)) : null }" x-effect="if (columns === null) {localStorage.removeItem(`table__${table.id}`)} else {localStorage.setItem(`table__${table.id}`, JSON.stringify(columns))}">
