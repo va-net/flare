@@ -1409,5 +1409,26 @@
         ],
         "deletedFiles": [],
         "newFolders": []
+    },
+    {
+        "tag": "v2.4.1",
+        "name": "Version 2.4.1",
+        "date": "2022-04-17",
+        "notes": "Various bug fixes",
+        "prerelease": false,
+        "useUpdater": true,
+        "files": [
+            "classes/data/Pirep.php",
+            "themes/tailwind/views/admin/routes_edit.php",
+            "themes/tailwind/views/admin/multipliers_new.php",
+            "themes/default/views/admin/multipliers.php",
+            "assets/tailwind.index.css",
+            "themes/tailwind/views/admin/fleet_edit.php",
+            "themes/tailwind/views/profile.php",
+            "themes/tailwind/includes/header.php"
+        ],
+        "queries": [],
+        "deletedFiles": [],
+        "newFolders": []
     }
 ]
