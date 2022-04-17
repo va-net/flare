@@ -4,7 +4,8 @@
     "description": "",
     "scripts": {
         "dev": "tailwindcss -i ./assets/tailwind.css -o ./assets/tailwind.index.css -w --minify",
-        "build": "tailwindcss -i ./assets/tailwind.css -o ./assets/tailwind.index.css --minify"
+        "build": "tailwindcss -i ./assets/tailwind.css -o ./assets/tailwind.index.css --minify",
+        "package": "rm -rf ../flare__release* && mkdir ../flare__release && cp -R ./* ../flare__release/ && cd ../flare__release && rm -rf .git .github node_modules .dockerignore core/config* .env .gitignore *.md Dockerfile* docker* package.json *.config.js test.php updates.json yarn.lock && cd .. && zip -r -X flare__release.zip flare__release && rm -rf flare__release"
     },
     "keywords": [],
     "author": "",
