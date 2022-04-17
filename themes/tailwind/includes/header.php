@@ -48,10 +48,10 @@ if (Page::$pageData->user->hasPermission('admin')) {
                         <?php if (!empty(Config::get('VA_LOGO_URL'))) : ?>
                             <a href="/" class="block w-full text-center">
                                 <?php if (!empty(Config::get('VA_LOGO_URL_DARK'))) : ?>
-                                    <img src="<?= Config::get('VA_LOGO_URL') ?>" alt="<?= Page::$pageData->va_name ?>" class="h-10 w-auto dark:hidden" />
+                                    <img src="<?= Config::get('VA_LOGO_URL') ?>" alt="<?= Page::$pageData->va_name ?>" class="h-10 w-auto dark:hidden inline-block" />
                                     <img src="<?= Config::get('VA_LOGO_URL_DARK') ?>" alt="<?= Page::$pageData->va_name ?>" class="h-10 w-auto hidden dark:inline-block" />
                                 <?php else : ?>
-                                    <img src="<?= Config::get('VA_LOGO_URL') ?>" alt="<?= Page::$pageData->va_name ?>" class="h-10 w-auto" />
+                                    <img src="<?= Config::get('VA_LOGO_URL') ?>" alt="<?= Page::$pageData->va_name ?>" class="h-10 w-auto inline-block" />
                                 <?php endif; ?>
                             </a>
                         <?php else : ?>
