@@ -92,7 +92,7 @@ Page::setTitle('Multipliers Admin - ' . Page::$pageData->va_name);
                             </div>
                             <div class="form-group">
                                 <label for="multi-minrank">Minimum Rank</label>
-                                <select required type="number" step="0.25" class="form-control" name="minrank" id="multi-minrank">
+                                <select required type="number" step="0.01" class="form-control" name="minrank" id="multi-minrank">
                                     <option value="">None</option>
                                     <?php foreach (Page::$pageData->ranks as $r) : ?>
                                         <option value="<? $r->id ?>"><?= $r->name ?></option>

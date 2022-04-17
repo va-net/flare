@@ -11,7 +11,7 @@ require_once __DIR__ . '/../../includes/header.php';
         </div>
         <div class="space-y-1">
             <label for="multi">Multiplication</label>
-            <input id="multi" name="multi" type="number" required class="form-control" step="0.25" />
+            <input id="multi" name="multi" type="number" required class="form-control" step="0.01" />
         </div>
         <div class="space-y-1">
             <label for="minrank">Minimum Rank</label>
