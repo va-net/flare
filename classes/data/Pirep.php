@@ -231,7 +231,7 @@ class Pirep
             return $ret->first();
         }
 
-        $sql = "SELECT m.* FROM multipliers m WHERE m.code=? AND (m.minrankid=null OR (SELECT timereq FROM ranks WHERE id=?) >= (SELECT timereq FROM ranks WHERE id=m.minrankid)) LIMIT 1";
+        $sql = "SELECT m.* FROM multipliers m WHERE m.code=? AND (m.minrankid IS NULL OR (SELECT timereq FROM ranks WHERE id=?) >= (SELECT timereq FROM ranks WHERE id=m.minrankid)) LIMIT 1";
         $ret = self::$_db->query($sql, [$code, $rankid]);
 
         if ($ret->count() == 0) {
