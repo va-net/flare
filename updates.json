@@ -1430,5 +1430,17 @@
         "queries": [],
         "deletedFiles": [],
         "newFolders": []
+    },
+    {
+        "tag": "v2.4.2",
+        "name": "Version 2.4.2",
+        "date": "2022-04-20",
+        "notes": "Fixed multipliers not working",
+        "prerelease": false,
+        "useUpdater": true,
+        "files": ["classes/data/Pirep.php"],
+        "queries": [],
+        "deletedFiles": [],
+        "newFolders": []
     }
 ]
