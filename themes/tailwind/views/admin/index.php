@@ -95,6 +95,7 @@ $days = Page::$pageData->days;
                     <th class="hidden md:table-cell">#</th>
                     <th>Pilot</th>
                     <th>Flight Time</th>
+                    <th>PIREPs</th>
                 </thead>
                 <tbody>
                     <?php $i = 1; ?>
@@ -108,6 +109,9 @@ $days = Page::$pageData->days;
                             </td>
                             <td>
                                 <?= Time::secsToString($pilot->flighttime) ?>
+                            </td>
+                            <td>
+                                <?= $pilot->flightcount ?>
                             </td>
                         </tr>
                         <?php $i++; ?>

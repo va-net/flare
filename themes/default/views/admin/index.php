@@ -116,13 +116,14 @@ $days = Page::$pageData->days;
                             <div class="p-3 col-lg">
                                 <div class="p-3 shadow card h-100">
                                     <h5 class="font-weight-bold">Pilot Leaderboard</h5>
-                                    <p>By hours, past <?= $days ?> days.</p>
+                                    <p>Past <?= $days ?> days.</p>
                                     <table class="table table-striped">
                                         <thead>
                                             <tr>
                                                 <th>#</th>
                                                 <th>Pilot</th>
                                                 <th>Hours</th>
+                                                <th>PIREPs</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -135,6 +136,8 @@ $days = Page::$pageData->days;
                                                 echo $t->name;
                                                 echo '</td><td>';
                                                 echo Time::secsToString($t->flighttime);
+                                                echo '</td><td>';
+                                                echo $t->flightcount;
                                                 echo '</td></tr>';
                                                 $i++;
                                             }

@@ -105,7 +105,7 @@ class Stats
     {
         self::init();
 
-        $sql = "SELECT u.*, (SELECT SUM(flighttime) FROM pireps p WHERE p.pilotid=u.id AND `status`=1 AND DATEDIFF(NOW(), p.date) <= ?) AS flighttime FROM pilots u WHERE `status`=1 ORDER BY {$field} {$order} LIMIT {$limit}";
-        return self::$_db->query($sql, [$days])->results();
+        $sql = "SELECT u.*, (SELECT SUM(flighttime) FROM pireps p WHERE p.pilotid=u.id AND `status`=1 AND DATEDIFF(NOW(), p.date) <= ?) AS flighttime, (SELECT COUNT(*) FROM pireps p WHERE p.pilotid=u.id AND `status`=1 AND DATEDIFF(NOW(), p.date) <= ?) AS flightcount FROM pilots u WHERE `status`=1 ORDER BY {$field} {$order} LIMIT {$limit}";
+        return self::$_db->query($sql, [$days, $days])->results();
     }
 }
