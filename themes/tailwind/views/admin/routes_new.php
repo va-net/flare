@@ -49,7 +49,7 @@ require_once __DIR__ . '/../../includes/header.php';
                     <select id="newaircraft" x-ref="newaircraft" class="form-control" @change.prevent="if ($event.target.value) { aircraft.push(allaircraft.find(a => a.ifliveryid == $event.target.value)); $refs.newaircraft.value = ''; }">
                         <option value>Select</option>
                         <template x-for="a in allaircraft.filter(ac => !aircraft.includes(ac))">
-                            <option :value="a.ifliveryid" x-text="`${a.name} (${a.liveryname})${a.notes ? ' - ' + notes : ''}`"></option>
+                            <option :value="a.ifliveryid" x-text="`${a.name} (${a.liveryname})${a.notes ? ' - ' + a.notes : ''}`"></option>
                         </template>
                     </select>
                 </div>
