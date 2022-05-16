@@ -367,7 +367,9 @@
             "plugins.json"
         ],
         "queries": [],
-        "deletedFiles": ["core/listeners.php"],
+        "deletedFiles": [
+            "core/listeners.php"
+        ],
         "newFolders": []
     },
     {
@@ -423,7 +425,9 @@
             "api.php",
             "classes/controllers/admin/AdminController.php"
         ],
-        "queries": ["ALTER TABLE `routes` CHANGE `fltnum` `fltnum` TEXT"],
+        "queries": [
+            "ALTER TABLE `routes` CHANGE `fltnum` `fltnum` TEXT"
+        ],
         "deletedFiles": [],
         "newFolders": []
     },
@@ -786,7 +790,9 @@
         "notes": "Fix importer validation",
         "prerelease": false,
         "useUpdater": true,
-        "files": ["classes/controllers/admin/OperationsController.php"],
+        "files": [
+            "classes/controllers/admin/OperationsController.php"
+        ],
         "queries": [],
         "deletedFiles": [],
         "newFolders": []
@@ -900,7 +906,9 @@
             "themes/tailwind/controllers",
             "classes/controllers/admin/OperationsController.php"
         ],
-        "newFolders": ["themes/tailwind/views/admin"]
+        "newFolders": [
+            "themes/tailwind/views/admin"
+        ]
     },
     {
         "tag": "v2.1.0-beta.2",
@@ -1209,7 +1217,9 @@
             "themes/tailwind/controllers",
             "classes/controllers/admin/OperationsController.php"
         ],
-        "newFolders": ["themes/tailwind/views/admin"]
+        "newFolders": [
+            "themes/tailwind/views/admin"
+        ]
     },
     {
         "tag": "v2.1.1-beta.1",
@@ -1438,7 +1448,29 @@
         "notes": "Fixed multipliers not working",
         "prerelease": false,
         "useUpdater": true,
-        "files": ["classes/data/Pirep.php"],
+        "files": [
+            "classes/data/Pirep.php"
+        ],
+        "queries": [],
+        "deletedFiles": [],
+        "newFolders": []
+    },
+    {
+        "tag": "v2.4.3",
+        "name": "Version 2.4.3",
+        "date": "2022-05-16",
+        "notes": "Leaderboard improvements, added notes to routes admin pages, fixed route import",
+        "prerelease": false,
+        "useUpdater": true,
+        "files": [
+            "classes/controllers/admin/AdminController.php",
+            "classes/data/Stats.php",
+            "themes/default/views/admin/index.php",
+            "themes/tailwind/views/admin/index.php",
+            "themes/tailwind/views/admin/routes_edit.php",
+            "themes/tailwind/views/admin/routes_new.php",
+            "classes/controllers/admin/AdminRoutesController.php"
+        ],
         "queries": [],
         "deletedFiles": [],
         "newFolders": []
