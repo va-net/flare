@@ -224,9 +224,11 @@ class AdminRoutesController extends Controller
 
     private function import_import()
     {
-        $routes = Input::get('rJson');
-        $count = count(Json::decode($routes));
+        $routes = Json::decode(Input::get('rJson'));
+        $count = count($routes);
         $db = DB::getInstance();
+
+        $db->query("DELETE FROM route_aircraft WHERE NOT routeid IN (SELECT id FROM routes)");
 
         $allaircraft = Aircraft::fetchActiveAircraft()->results();
         $firstRank = $db->query("SELECT * FROM ranks ORDER BY timereq ASC LIMIT 1")->first()->id;
@@ -245,10 +247,17 @@ class AdminRoutesController extends Controller
                 array_push($allaircraft, $aircraft);
             }
 
-            $routes = str_replace(Input::get('rego' . $i), $aircraft->id, $routes);
+
+
+            $routes = array_map(function ($r) use ($i, $aircraft) {
+                if ($r['aircraftid'] == Input::get('rego' . $i)) {
+                    $r['aircraftid'] = $aircraft->id;
+                }
+
+                return $r;
+            }, $routes);
         }
 
-        $routes = Json::decode($routes);
         $nextId = Route::nextId();
 
         $sql = "INSERT INTO routes (id, fltnum, dep, arr, duration) VALUES";
