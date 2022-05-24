@@ -28,7 +28,7 @@ class AdminController extends Controller
         $data->pireps = Stats::totalFlights($days);
         $data->hrs = Time::secsToString(Stats::totalHours($days));
         $data->pilots = Stats::pilotsApplied($days);
-        $data->leaderboard = Stats::pilotLeaderboard(10, 'flighttime / flightcount', 'DESC', $days);
+        $data->leaderboard = Stats::pilotLeaderboard(10, 'flighttime', 'DESC', $days);
         $data->active_dropdown = 'site-management';
 
         $dates = daterange(date("Y-m-d", strtotime("-{$days} days")), date("Y-m-d"));
