@@ -1474,5 +1474,20 @@
         "queries": [],
         "deletedFiles": [],
         "newFolders": []
+    },
+    {
+        "tag": "v2.4.4",
+        "name": "Version 2.4.4",
+        "date": "2022-05-27",
+        "notes": "Leaderboard and route import fixes",
+        "prerelease": false,
+        "useUpdater": true,
+        "files": [
+            "classes/controllers/admin/AdminController.php",
+            "classes/controllers/admin/AdminRoutesController.php"
+        ],
+        "queries": [],
+        "deletedFiles": [],
+        "newFolders": []
     }
 ]
