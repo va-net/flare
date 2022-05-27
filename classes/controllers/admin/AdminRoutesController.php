@@ -258,7 +258,7 @@ class AdminRoutesController extends Controller
             }, $routes);
         }
 
-        $nextId = Route::nextId();
+        $nextId = intval(Route::nextId());
 
         $sql = "INSERT INTO routes (id, fltnum, dep, arr, duration) VALUES";
         $params = array();
