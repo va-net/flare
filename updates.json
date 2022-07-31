@@ -1489,5 +1489,22 @@
         "queries": [],
         "deletedFiles": [],
         "newFolders": []
+    },
+    {
+        "tag": "v2.5.0",
+        "name": "Version 2.5.0",
+        "date": "2022-07-31",
+        "notes": "Added multiple aircraft per route in imports, bug fixes",
+        "prerelease": false,
+        "useUpdater": true,
+        "files": [
+            "classes/controllers/admin/AdminRoutesController.php",
+            "themes/tailwind/views/admin/import_choose.php",
+            "themes/default/views/admin/import_choose.php",
+            "themes/tailwind/views/admin/routes_new.php"
+        ],
+        "queries": [],
+        "deletedFiles": [],
+        "newFolders": []
     }
 ]
