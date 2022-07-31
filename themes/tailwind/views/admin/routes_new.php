@@ -35,6 +35,10 @@ require_once __DIR__ . '/../../includes/header.php';
                     </div>
                     <input type="hidden" name="duration" id="duration" :value="`${hours}:${minutes}`" value="" required />
                 </div>
+                <div class="space-y-1">
+                    <label for="notes">Notes</label>
+                    <input id="notes" name="notes" type="text" class="form-control" value="<?= Page::$pageData->route->notes ?>" />
+                </div>
                 <input type="hidden" name="aircraft" :value="aircraft.map(a => a.id).join(',')" />
             </div>
             <div class="flex-1 p-3 dark:bg-white/10 bg-gray-100 rounded">
