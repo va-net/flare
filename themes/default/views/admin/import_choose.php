@@ -52,17 +52,17 @@ Page::setTitle('Import Routes - ' . Page::$pageData->va_name);
                             $aircraftOptions .= '<option value="' . $id . '">' . $name . '</option>';
                         }
 
+                        $aircraftgroups = array_column(Page::$pageData->routes, 'aircraftids');
+                        $uniqueaircraft = array_unique(array_merge(...$aircraftgroups));
+
                         echo '<form action="/admin/routes/import" method="post">';
                         echo '<input hidden name="action" value="import" />';
                         echo "<input hidden name='rJson' value='$routesJson' />";
                         echo '<table class="w-100 mb-2">';
                         $i = 0;
-                        $doneAircraft = [];
-                        foreach (Page::$pageData->routes as $r) {
-                            if (in_array($r['aircraftid'], $doneAircraft)) continue;
-
+                        foreach ($uniqueaircraft as $aircraftid) {
                             echo '<tr class="border-bottom border-top"><td class="align-middle p-2"><b>';
-                            echo $r['aircraftid'];
+                            echo $aircraftid;
                             echo '</b></td><td class="align-middle py-2">';
                             echo '<input hidden name="rego' . $i . '" value="' . $r["aircraftid"] . '" />';
                             echo '<select required class="form-control mb-2 aircraftSelect" name="aircraft' . $i . '" id="' . $i . '">';
@@ -73,7 +73,6 @@ Page::setTitle('Import Routes - ' . Page::$pageData->va_name);
                             echo '<option value>Select an Aircraft to Get Liveries</option>';
                             echo '</select>';
                             echo '</td></tr>';
-                            array_push($doneAircraft, $r['aircraftid']);
                             $i++;
                         }
                         echo '</table>';

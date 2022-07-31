@@ -203,7 +203,7 @@ class AdminRoutesController extends Controller
                 "dep" => $segments[2],
                 "arr" => $segments[3],
                 "duration" => Time::strToSecs(str_replace('.', ':', $segments[10])),
-                "aircraftid" => $segments[5]
+                "aircraftids" => array_map('trim', explode(',', $segments[5])),
             );
         }, array_filter($routelines[0], function ($l) {
             return strlen(trim($l)) > 0;
@@ -211,7 +211,7 @@ class AdminRoutesController extends Controller
 
         foreach ($data->routes as $r) {
             foreach ($r as $k => $v) {
-                if (strlen($v) < 1) {
+                if (gettype($v) === 'string' && strlen($v) < 1) {
                     Session::flash('error', 'Invalid CSV File');
                     $this->get_import();
                 }
@@ -231,11 +231,13 @@ class AdminRoutesController extends Controller
         $db->query("DELETE FROM route_aircraft WHERE NOT routeid IN (SELECT id FROM routes)");
 
         $allaircraft = Aircraft::fetchActiveAircraft()->results();
+        $acdict = [];
         $firstRank = $db->query("SELECT * FROM ranks ORDER BY timereq ASC LIMIT 1")->first()->id;
 
         for ($i = 0; $i < $count; $i++) {
             $item = Input::get('livery' . $i);
             if (empty($item)) continue;
+
             $aircraft = false;
             foreach ($allaircraft as $a) {
                 if ($a->ifliveryid == $item) $aircraft = $a;
@@ -247,15 +249,7 @@ class AdminRoutesController extends Controller
                 array_push($allaircraft, $aircraft);
             }
 
-
-
-            $routes = array_map(function ($r) use ($i, $aircraft) {
-                if ($r['aircraftid'] == Input::get('rego' . $i)) {
-                    $r['aircraftid'] = $aircraft->id;
-                }
-
-                return $r;
-            }, $routes);
+            $acdict[Input::get('rego' . $i)] = $aircraft;
         }
 
         $nextId = intval(Route::nextId());
@@ -270,7 +264,19 @@ class AdminRoutesController extends Controller
             array_push($params, $item["dep"]);
             array_push($params, $item["arr"]);
             array_push($params, $item["duration"]);
-            Route::addAircraft($nextId + $j, $item["aircraftid"]);
+
+            $aircraft = array_map(function ($a) use ($acdict) {
+                if (isset($acdict[$a])) return $acdict[$a]->id;
+
+                return null;
+            }, $item["aircraftids"]);
+            $aircraft = array_filter($aircraft, function ($a) {
+                return $a !== null;
+            });
+
+            foreach ($aircraft as $a) {
+                Route::addAircraft($nextId + $j, $a);
+            }
 
             $j++;
         }

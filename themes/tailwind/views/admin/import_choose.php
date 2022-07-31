@@ -1,7 +1,8 @@
 <?php
 Page::setTitle('Import Routes - ' . Page::$pageData->va_name);
 require_once __DIR__ . '/../../includes/header.php';
-$uniqueaircraft = array_unique(array_column(Page::$pageData->routes, 'aircraftid'));
+$aircraftgroups = array_column(Page::$pageData->routes, 'aircraftids');
+$uniqueaircraft = array_unique(array_merge(...$aircraftgroups));
 $aircraftoptions = [];
 foreach (Page::$pageData->aircraft as $id => $name) {
     $aircraftoptions[] = '<option value="' . $id . '">' . $name . '</option>';
