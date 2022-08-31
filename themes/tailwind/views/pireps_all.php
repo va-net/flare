@@ -41,7 +41,7 @@ require_once __DIR__ . '/../includes/header.php';
                     <template x-for="pirep in table.current">
                         <tr>
                             <td class="hidden lg:table-cell" x-text="new Date(pirep.date).toLocaleDateString()" x-show="columns.includes('date')"></td>
-                            <td class="hidden lg:table-cell" x-text="pirep.fnum" x-show="columns.includes('fnum')"></td>
+                            <td x-text="pirep.fnum" x-show="columns.includes('fnum')"></td>
                             <td x-text="pirep.departure" x-show="columns.includes('departure')"></td>
                             <td x-text="pirep.arrival" x-show="columns.includes('arrival')"></td>
                             <td x-text="`${pirep.departure}-${pirep.arrival}`" x-show="columns.includes('route')"></td>

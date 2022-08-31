@@ -1506,5 +1506,20 @@
         "queries": [],
         "deletedFiles": [],
         "newFolders": []
+    },
+    {
+        "tag": "v2.5.1",
+        "name": "Version 2.5.1",
+        "date": "2022-08-31",
+        "notes": "Various bug fixes",
+        "prerelease": false,
+        "useUpdater": true,
+        "files": [
+            "classes/util/Time.php",
+            "themes/tailwind/views/pireps_all.php"
+        ],
+        "queries": [],
+        "deletedFiles": [],
+        "newFolders": []
     }
 ]
