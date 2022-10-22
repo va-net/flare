@@ -225,7 +225,17 @@ class AdminRoutesController extends Controller
     private function import_import()
     {
         $routes = Json::decode(Input::get('rJson'));
-        $count = count($routes);
+
+        $uniqueaircraft = [];
+        foreach ($routes as $r) {
+            foreach ($r['aircraftids'] as $a) {
+                if (!in_array($a, $uniqueaircraft)) {
+                    $uniqueaircraft[] = $a;
+                }
+            }
+        }
+        $count = count($uniqueaircraft);
+
         $db = DB::getInstance();
 
         $db->query("DELETE FROM route_aircraft WHERE NOT routeid IN (SELECT id FROM routes)");
