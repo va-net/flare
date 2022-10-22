@@ -1521,5 +1521,21 @@
         "queries": [],
         "deletedFiles": [],
         "newFolders": []
+    },
+    {
+        "tag": "v2.5.2",
+        "name": "Version 2.5.2",
+        "date": "2022-10-22",
+        "notes": "Route import bug fixes",
+        "prerelease": false,
+        "useUpdater": true,
+        "files": [
+            "themes/default/views/admin/import_choose.php",
+            "classes/controllers/admin/AdminRoutesController.php",
+            "classes/controllers/admin/AdminController.php"
+        ],
+        "queries": [],
+        "deletedFiles": [],
+        "newFolders": []
     }
 ]
