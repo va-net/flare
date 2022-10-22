@@ -64,7 +64,7 @@ Page::setTitle('Import Routes - ' . Page::$pageData->va_name);
                             echo '<tr class="border-bottom border-top"><td class="align-middle p-2"><b>';
                             echo $aircraftid;
                             echo '</b></td><td class="align-middle py-2">';
-                            echo '<input hidden name="rego' . $i . '" value="' . $r["aircraftid"] . '" />';
+                            echo '<input hidden name="rego' . $i . '" value="' . $aircraftid . '" />';
                             echo '<select required class="form-control mb-2 aircraftSelect" name="aircraft' . $i . '" id="' . $i . '">';
                             echo '<option value>Aircraft Type</option>';
                             echo $aircraftOptions;
