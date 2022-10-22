@@ -115,6 +115,9 @@ class AdminController extends Controller
                     || !Config::replace("VA_CALLSIGN_FORMAT", Input::get('vaident'))
                     || !Config::replace("VA_LOGO_URL", Input::get('valogo'))
                     || !Config::replace("VA_LOGO_URL_DARK", Input::get('valogo_dark'))
+                    || !Config::replace("VA_CALLSIGN_FORMAT", Input::get('vaident'))
+                    || !Config::replace("va/identifier", Input::get('vaabbrv'))
+                    || !Config::replace("FORCE_SERVER", Input::get('forceserv'))
                 ) {
                     Session::flash('error', 'Error Updating Settings');
                 } else {
