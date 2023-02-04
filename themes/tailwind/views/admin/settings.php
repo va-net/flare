@@ -8,7 +8,7 @@ require_once __DIR__ . '/../../includes/header.php';
 <div id="content" class="text-black dark:text-white m-6" x-data="{ activeTab: '<?= empty(Input::get('tab')) ? 'settings' : Input::get('tab') ?>', alerts: [<?= !empty(Page::$pageData->update) ? "'updates'" : '' ?>] }">
     <h1 class="mb-5 text-4xl font-bold block">Site Settings</h1>
     <div class="flex gap-3 border-b border-gray-200 dark:border-gray-500 mb-3 overflow-x-auto overflow-y-hidden">
-        <template x-for="tab in ['Settings', 'Design', 'Interaction', 'Maintenance', 'Updates']" :key="tab">
+        <template x-for="tab in ['Settings', 'Design', 'Maintenance', 'Updates']" :key="tab">
             <button :class="`${activeTab == tab.toLowerCase() ? 'border-b-2 border-primary' : 'border-b-2 border-transparent hover:border-black dark:hover:border-white'} pb-1 px-2 mb-[-0.0625rem] cursor-pointer flex items-center font-semibold text-lg`" @click="activeTab = tab.toLowerCase()">
                 <span x-text="tab" class="flex-1"></span>
                 <span x-show="alerts.includes(tab.toLowerCase())" x-html="alert" class="text-red-500 flex items-center ml-1"></span>
@@ -87,31 +87,6 @@ require_once __DIR__ . '/../../includes/header.php';
             <button type="submit" form="design-form" class="button-primary">
                 Save
             </button>
-        </div>
-        <div id="interaction" x-show="activeTab == $el.id">
-            <form method="post" id="setupapp">
-                <input hidden name="action" value="setupapp" />
-            </form>
-            <form method="post" class="space-y-2" id="interaction-form">
-                <input type="hidden" name="action" value="interactionupdate" />
-                <div class="space-y-1">
-                    <label for="analytics">Send Analytics to Developers</label>
-                    <select id="analytics" name="analytics" required class="form-control" x-data="{ val: '<?= Page::$pageData->analytics_enabled ? 1 : 0 ?>' }" @change="val = $event.target.value" :disabled="<?= Page::$pageData->version["prerelease"] ? 'true' : 'false' ?>">
-                        <option value="1" :selected="val == 1">Yes (Recommended)</option>
-                        <option value="0" :selected="val == 0">No</option>
-                    </select>
-                </div>
-            </form>
-            <div>
-                <button type="submit" form="interaction-form" class="button-primary">
-                    Save
-                </button>
-                <?php if (Page::$pageData->setup_app) : ?>
-                    <button type="submit" form="setupapp" class="button-primary ml-2">
-                        Setup App
-                    </button>
-                <?php endif; ?>
-            </div>
         </div>
         <div id="maintenance" x-show="activeTab == $el.id">
             <div class="md:flex space-y-2 lg:space-y-0">

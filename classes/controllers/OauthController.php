@@ -18,10 +18,21 @@ class OauthController extends Controller
 
         $scope = ['read:profile', 'register:memberships', 'write:flights', 'write:events'];
         $response_type = 'code';
-        $redirect_uri = Analytics::url() . '/oauth/callback';
+        $redirect_uri = $this->getUrl() . '/oauth/callback';
         $state = Token::generate();
 
         $this->redirect('https://vanet.app/oauth/authorize?scope=' . urlencode(implode(' ', $scope)) . '&response_type=' . urlencode($response_type) . '&client_id=' . urlencode($client_id) . '&redirect_uri=' . urlencode($redirect_uri) . '&state=' . urlencode($state));
+    }
+
+    public static function getUrl()
+    {
+        $headers = getallheaders();
+        $scheme = isset($headers['X-Forwarded-Proto']) ? $headers['X-Forwarded-Proto'] : (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? 'https' : 'http');
+        return sprintf(
+            "%s://%s",
+            $scheme,
+            $_SERVER['SERVER_NAME']
+        );
     }
 
     public function auth_callback()
@@ -41,7 +52,7 @@ class OauthController extends Controller
             $this->redirect('/');
         }
 
-        $data = VANet::tokenExchange(Input::get('code'), Analytics::url() . '/oauth/callback');
+        $data = VANet::tokenExchange(Input::get('code'), $this->getUrl() . '/oauth/callback');
         if (!$data || isset($data['error'])) {
             Session::flash('error', 'Could not authenticate with VANet. Please try again later.');
             $this->redirect('/');

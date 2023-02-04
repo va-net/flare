@@ -561,10 +561,7 @@ class VANet
      */
     public static function pluginInstallDetails($id, $prerelease = false)
     {
-        $key = Config::get('INSTANCE_ID');
-
         $req = new HttpRequest(self::baseUrl() . '/flare/v1/plugins/' . urlencode($id) . ($prerelease ? '?prerelease=true' : ''));
-        if (!empty($key)) $req->setRequestHeaders(["X-Api-Key: {$key}"]);
 
         $req->setMethod('POST')
             ->execute();
@@ -575,43 +572,6 @@ class VANet
         }
 
         return $response['result'];
-    }
-
-    /**
-     * @return void
-     * @param string $id Plugin ID
-     */
-    public static function pluginUninstalled($id)
-    {
-        $key = Config::get('INSTANCE_ID');
-        if (empty($key)) return;
-
-        $req = new HttpRequest(self::baseUrl() . '/flare/v1/plugins/' . urlencode($id));
-        $req->setRequestHeaders(["X-Api-Key: {$key}"]);
-
-        $req->setMethod('DELETE')
-            ->execute();
-    }
-
-    /**
-     * @return array|null
-     * @param bool $prerelease Whether Check for Prerelease Updates
-     */
-    public static function pluginUpdates($prerelease = false)
-    {
-        $key = Config::get('INSTANCE_ID');
-        if (empty($key) || $prerelease) return self::manualPluginUpdates($prerelease);
-
-        $req = new HttpRequest(self::baseUrl() . '/flare/v1/plugins/updates');
-        $req->setRequestHeaders(["X-Api-Key: {$key}"])
-            ->execute();
-        $data = Json::decode($req->getResponse());
-        if (!$data || $data['status'] != 0) {
-            var_dump($data);
-            return null;
-        }
-
-        return $data['result'];
     }
 
     /**
@@ -661,10 +621,7 @@ class VANet
      */
     public static function pluginUpdateDetails($id, $prerelease = false)
     {
-        $key = Config::get('INSTANCE_ID');
-
         $req = new HttpRequest(self::baseUrl() . '/flare/v1/plugins/updates/' . urlencode($id) . ($prerelease ? '?prerelease=true' : ''));
-        if (!empty($key)) $req->setRequestHeaders(["X-Api-Key: {$key}"]);
 
         $req->setMethod('POST')
             ->execute();

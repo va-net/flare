@@ -38,14 +38,11 @@ require_once __DIR__ . '/../vendor/autoload.php';
 // Listen to required events and import data files
 Events::listen('*', 'Logger::logEvent');
 Events::listen('*', 'Notifications::handleEvent');
-Events::listen('site/updated', 'Analytics::reportUpdate');
 Events::listen('pirep/accepted', 'VANet::sendPirep');
 require_once __DIR__ . '/functions.php';
 
 if (!isset($IS_API) || !$IS_API) {
-    if (Config::isReady() && strlen(Config::get('INSTANCE_ID')) < 1 && !file_exists(__DIR__ . '/../.development')) {
-        Analytics::register();
-    } elseif (!Config::isReady() && !isset($IS_INSTALLER)) {
+    if (!Config::isReady() && !isset($IS_INSTALLER)) {
         Redirect::to('/install/install.php');
     }
 

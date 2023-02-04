@@ -77,13 +77,7 @@ class AdminController extends Controller
         $data->force_server = Config::get('FORCE_SERVER');
         $data->color_main = Config::get('site/colour_main_hex');
         $data->text_color = Config::get('TEXT_COLOUR');
-        $data->analytics_enabled = !empty(Config::get('INSTANCE_ID'));
         $data->custom_css = Config::getCss();
-        $data->migrate_config = !file_exists(__DIR__ . '/../../../core/config.new.php');
-        $data->setup_app = (empty(Config::get('oauth/client_id')) || empty(Config::get('oauth/client_secret')))
-            && VANet::featureEnabled('airline-membership')
-            && file_exists(__DIR__ . '/../../../core/config.new.php')
-            && $scheme == 'https';
         $data->themes = array_filter(scandir(__DIR__ . '/../../../themes'), function ($x) {
             return strpos($x, '.') !== 0;
         });
@@ -137,17 +131,6 @@ class AdminController extends Controller
                 }
                 $this->redirect('/admin/settings?tab=design');
                 break;
-            case 'interactionupdate':
-                $oldAnalytics = !empty(Config::get('INSTANCE_ID'));
-                if ($oldAnalytics && Input::get('analytics') == 0) {
-                    Analytics::unregister();
-                } elseif (!$oldAnalytics && Input::get('analytics') == 1) {
-                    Analytics::register();
-                }
-
-                Session::flash('success', 'Settings Updated');
-                $this->redirect('/admin/settings?tab=interaction');
-                break;
             case 'clearlogs':
                 if (Input::get('period') == '*') {
                     Logger::clearAll();
@@ -178,7 +161,7 @@ class AdminController extends Controller
                 Config::add('oauth/client_id', $app['clientId'], false);
                 Config::add('oauth/client_secret', $app['clientSecret'], false);
 
-                VANet::updateAppRedirects([Analytics::url() . '/oauth/callback']);
+                VANet::updateAppRedirects([OauthController::getUrl() . '/oauth/callback']);
                 Session::flash('success', 'App Registered');
                 $this->redirect('/admin/settings?tab=interaction');
                 break;

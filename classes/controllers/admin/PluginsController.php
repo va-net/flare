@@ -107,7 +107,6 @@ class PluginsController extends Controller
             }
         }
 
-        VANet::pluginUninstalled($GLOBALS['plugin']['pluginInfo']['id']);
         Session::flash('success', 'Plugin Removed');
         $this->redirect('/admin/plugins?tab=installed');
     }

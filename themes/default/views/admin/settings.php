@@ -62,9 +62,6 @@ Page::setTitle('Site Admin - ' . Page::$pageData->va_name);
                                 <a class="nav-link" id="designlink" data-toggle="tab" href="#design">Site Design</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" id="interactionlink" data-toggle="tab" href="#interaction">Connectivity</a>
-                            </li>
-                            <li class="nav-item">
                                 <a class="nav-link" id="maintenancelink" data-toggle="tab" href="#maint">Maintenance</a>
                             </li>
                             <li class="nav-item">
@@ -177,31 +174,6 @@ Page::setTitle('Site Admin - ' . Page::$pageData->va_name);
                                     </div>
                                     <input type="submit" class="btn bg-custom" value="Save">
                                 </form>
-                            </div>
-                            <div id="interaction" class="p-3 tab-pane container-fluid fade">
-                                <h4>Connectivity Settings</h4>
-                                <form action="/admin/settings" method="post">
-                                    <input hidden name="action" value="interactionupdate" />
-                                    <div class="form-group">
-                                        <label for="">Send Analytics to Developers</label>
-                                        <select required class="form-control" name="analytics" id="analyticsdrop">
-                                            <option value="1">Yes (Recommended)</option>
-                                            <option value="0">No</option>
-                                        </select>
-                                        <script>
-                                            $("#analyticsdrop").val('<?= Page::$pageData->analytics_enabled ? 1 : 0 ?>');
-                                        </script>
-                                        <small class="text-muted">If enabled, reports of errors will be sent to the developers of Flare to help with debugging.</small>
-                                    </div>
-                                    <input type="submit" class="btn bg-custom" value="Save" />
-                                </form>
-                                <?php if (Page::$pageData->setup_app) : ?>
-                                    <hr />
-                                    <form method="post">
-                                        <input hidden name="action" value="setupapp" />
-                                        <input type="submit" class="btn bg-custom" value="Setup App" />
-                                    </form>
-                                <?php endif; ?>
                             </div>
                             <div id="maint" class="p-3 tab-pane container-fluid fade">
                                 <h4>Site Maintenance</h4>
