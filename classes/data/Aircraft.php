@@ -172,7 +172,7 @@ class Aircraft
     }
 
     /**
-     * @return void
+     * @return bool
      * @param string $liveryId Livery ID
      * @param int $rank Rank ID
      * @param string $notes Notes
@@ -195,6 +195,8 @@ class Aircraft
 
         self::$_db->insert('aircraft', $data, true);
         Events::trigger('aircraft/added', $data);
+
+        return !self::$_db->error();
     }
 
     /**

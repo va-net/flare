@@ -98,10 +98,14 @@ class FleetController extends Controller
 
     private function create()
     {
-        Aircraft::add(Input::get('livery'), empty(Input::get('rank')) ? null : Input::get('rank'), Input::get('notes'), [
+        $res = Aircraft::add(Input::get('livery'), empty(Input::get('rank')) ? null : Input::get('rank'), Input::get('notes'), [
             'awardreq' => empty(Input::get('award')) ? null : Input::get('award'),
         ]);
-        Session::flash('success', 'Aircraft Added Successfully!');
+        if ($res) {
+            Session::flash('success', 'Aircraft Added Successfully!');
+        } else {
+            Session::flash('error', 'Failed to Add Aircraft');
+        }
     }
 
     private function delete()
