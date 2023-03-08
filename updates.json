@@ -1537,5 +1537,30 @@
         "queries": [],
         "deletedFiles": [],
         "newFolders": []
+    },
+    {
+        "tag": "v2.5.3",
+        "name": "Version 2.5.3",
+        "date": "2022-10-22",
+        "notes": "Fleet admin bug fixes, removed legacy code and reporting, fixed DB install script",
+        "prerelease": false,
+        "useUpdater": true,
+        "files": [
+            "classes/controllers/PirepsController.php",
+            "classes/controllers/OauthController.php",
+            "classes/controllers/admin/AdminController.php",
+            "classes/controllers/admin/PluginsController.php",
+            "classes/data/VANet.php",
+            "core/init.php",
+            "themes/default/views/admin/settings.php",
+            "themes/tailwind/views/admin/settings.php",
+            "classes/controllers/admin/FleetController.php",
+            "classes/data/Aircraft.php"
+        ],
+        "queries": [],
+        "deletedFiles": [
+            "classes/app/Analytics.php"
+        ],
+        "newFolders": []
     }
 ]
