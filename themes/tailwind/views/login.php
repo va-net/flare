@@ -51,7 +51,7 @@
                     </button>
                 </div>
 
-                <?php if (Page::$pageData->vanet_signin) : ?>
+                <?php if (isset(Page::$pageData->vanet_signin) && Page::$pageData->vanet_signin) : ?>
                     <div class="space-y-3">
                         <div class="flex items-center gap-2">
                             <div class="flex-1 border-b border-gray-200"></div>
