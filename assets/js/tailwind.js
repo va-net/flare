@@ -315,7 +315,7 @@ function resizeTextarea(el) {
 function formatFlightTime() {
     const val = typeof this == 'string' ? parseInt(this) : this;
     const hours = Math.floor(val / 3600);
-    const minutes = (val % 3600) / 60;
+    const minutes = Math.floor((val % 3600) / 60);
     return `${hours.toString().padStart(2, '0')}:${minutes
         .toString()
         .padStart(2, '0')}`;
