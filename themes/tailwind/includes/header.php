@@ -41,8 +41,8 @@ if (Page::$pageData->user->hasPermission('admin')) {
 
 <body x-data="{ flashSuccess: <?= Session::exists('success') ? "'" . str_replace("'", "\\'", Session::flash('success')) . "'" : 'null' ?>, flashError: <?= Session::exists('error') ? "'" . str_replace("'", "\\'", Session::flash('error')) . "'" : 'null' ?> }">
     <div class="flex flex-col w-full min-h-screen" id="root">
-        <div :class="`md:flex md:flex-row min-h-full flex-grow ${isDarkMode ? 'dark' : 'light'}`" x-data="{ sidebarOpen: Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0) >= 1024, isDarkMode: false, account: false, notifications: false, }" x-cloak="md" x-init="() => { if ('darkMode' in localStorage && localStorage.getItem('darkMode') == 1) isDarkMode = true; }">
-            <aside id="sidebar" class="w-screen max-w-[275px] absolute md:sticky md:top-0 h-screen md:border-r md:border-gray-200 dark:border-none bg-gray-100 text-black dark:bg-gray-800 dark:text-white md:shadow-inner shadow-xl overflow-y-auto z-20" x-show="sidebarOpen" x-transition:enter="transform transition-transform duration-500" x-transition:enter-start="-translate-x-full" x-transition:enter-end="translate-x-0" x-transition:leave="transform transition-transform duration-500" x-transition:leave-start="translate-x-0" x-transition:leave-end="-translate-x-full" @click.away="if (Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0) < 1024) sidebarOpen = false">
+        <div :class="`md:flex md:flex-row min-h-full max-w-[100vw] flex-grow ${isDarkMode ? 'dark' : 'light'}`" x-data="{ sidebarOpen: Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0) >= 1024, isDarkMode: false, account: false, notifications: false, }" x-cloak="md" x-init="() => { if ('darkMode' in localStorage && localStorage.getItem('darkMode') == 1) isDarkMode = true; }">
+            <aside id="sidebar" class="w-screen min-w-[275px] max-w-[275px] absolute md:sticky md:top-0 h-screen md:border-r md:border-gray-200 dark:border-none bg-gray-100 text-black dark:bg-gray-800 dark:text-white md:shadow-inner shadow-xl overflow-y-auto z-20" x-show="sidebarOpen" x-transition:enter="transform transition-transform duration-500" x-transition:enter-start="-translate-x-full" x-transition:enter-end="translate-x-0" x-transition:leave="transform transition-transform duration-500" x-transition:leave-start="translate-x-0" x-transition:leave-end="-translate-x-full" @click.away="if (Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0) < 1024) sidebarOpen = false">
                 <div id="sidebar-brand" class="flex items-center px-4 mb-3 h-14">
                     <h1 class="text-xl font-bold w-full">
                         <?php if (!empty(Config::get('VA_LOGO_URL'))) : ?>
@@ -120,7 +120,7 @@ if (Page::$pageData->user->hasPermission('admin')) {
                     <?php endforeach; ?>
                 </ul>
             </aside>
-            <main class="z-10 flex flex-col w-full min-h-screen shadow-lg dark:bg-gray-700">
+            <main class="z-10 flex flex-col w-full min-h-screen max-w-[calc(100vw-275px)] shadow-lg dark:bg-gray-700">
                 <div class="flex items-center w-full gap-2 p-4 shadow-lg">
                     <!-- Sidebar Toggle Button -->
                     <div class="flex items-center flex-1">
