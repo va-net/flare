@@ -208,23 +208,6 @@ Page::setTitle('Site Admin - ' . Page::$pageData->va_name);
                                             });
                                         });
                                     </script>
-                                    <?php if (Page::$pageData->migrate_config) : ?>
-                                        <div class="col-lg">
-                                            <button class="btn bg-custom" id="migrate-btn">Migrate Config</button>
-                                        </div>
-                                        <script>
-                                            $("#migrate-btn").click(function() {
-                                                $.get('/api.php/config_migrate', function(_, status) {
-                                                    if (status == 'success') {
-                                                        alert('Configuration Migrated Sucessfully');
-                                                        return;
-                                                    }
-
-                                                    alert('Configuration Migration Failed');
-                                                });
-                                            });
-                                        </script>
-                                    <?php endif; ?>
                                 </div>
                             </div>
                             <div id="updates" class="p-3 tab-pane container-fluid fade">
