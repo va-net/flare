@@ -1541,7 +1541,7 @@
     {
         "tag": "v2.5.3",
         "name": "Version 2.5.3",
-        "date": "2022-10-22",
+        "date": "2022-03-08",
         "notes": "Fleet admin bug fixes, removed legacy code and reporting, fixed DB install script",
         "prerelease": false,
         "useUpdater": true,
@@ -1561,6 +1561,25 @@
         "deletedFiles": [
             "classes/app/Analytics.php"
         ],
+        "newFolders": []
+    },
+    {
+        "tag": "v2.5.4",
+        "name": "Version 2.5.4",
+        "date": "2023-08-31",
+        "notes": "Various bug fixes",
+        "prerelease": false,
+        "useUpdater": true,
+        "files": [
+            "themes/tailwind/views/login.php",
+            "assets/js/tailwind.js",
+            "assets/tailwind.index.css",
+            "themes/tailwind/includes/header.php",
+            "themes/default/views/admin/settings.php",
+            "themes/tailwind/views/admin/settings.php"
+        ],
+        "queries": [],
+        "deletedFiles": [],
         "newFolders": []
     }
 ]

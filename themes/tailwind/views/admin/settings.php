@@ -115,13 +115,6 @@ require_once __DIR__ . '/../../includes/header.php';
                         Repair Site
                     </button>
                 </div>
-                <?php if (Page::$pageData->migrate_config) : ?>
-                    <div class="flex-1 text-center">
-                        <button type="button" @click="await migrateConfig(); flashSuccess = 'Configuration Migrated Successfully';" class="button-primary">
-                            Migrate Configuration
-                        </button>
-                    </div>
-                <?php endif; ?>
             </div>
         </div>
         <div id="updates" x-show="activeTab == $el.id">

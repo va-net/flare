@@ -44,7 +44,7 @@
         @apply bg-white divide-y divide-gray-200 dark:bg-white/10;
     }
     .table tbody tr td {
-        @apply px-6 py-3 whitespace-nowrap;
+        @apply px-6 py-3;
     }
 }
 
