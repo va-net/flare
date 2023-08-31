@@ -1581,5 +1581,19 @@
         "queries": [],
         "deletedFiles": [],
         "newFolders": []
+    },
+    {
+        "tag": "v2.5.5",
+        "name": "Version 2.5.5",
+        "date": "2023-08-31",
+        "notes": "Fix Tailwind mobile layout bug",
+        "prerelease": false,
+        "useUpdater": true,
+        "files": [
+            "themes/tailwind/includes/header.php"
+        ],
+        "queries": [],
+        "deletedFiles": [],
+        "newFolders": []
     }
 ]
