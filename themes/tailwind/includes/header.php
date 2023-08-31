@@ -120,7 +120,7 @@ if (Page::$pageData->user->hasPermission('admin')) {
                     <?php endforeach; ?>
                 </ul>
             </aside>
-            <main class="z-10 flex flex-col w-full min-h-screen max-w-[calc(100vw-275px)] shadow-lg dark:bg-gray-700">
+            <main class="z-10 flex flex-col w-full min-h-screen md:max-w-[calc(100vw-275px)] shadow-lg dark:bg-gray-700">
                 <div class="flex items-center w-full gap-2 p-4 shadow-lg">
                     <!-- Sidebar Toggle Button -->
                     <div class="flex items-center flex-1">
