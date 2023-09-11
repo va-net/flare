@@ -67,9 +67,13 @@ Page::setTitle('Routes - ' . Page::$pageData->va_name);
                                     <option value="5">5-6hrs</option>
                                     <option value="6">6-7hrs</option>
                                     <option value="7">7-8hrs</option>
-                                    <option value="9">8-9hrs</option>
+                                    <option value="8">8-9hrs</option>
                                     <option value="9">9-10hrs</option>
-                                    <option value="10">10hrs+</option>
+                                    <option value="10">10-11hrs</option>
+                                    <option value="11">11-12hrs</option>
+                                    <option value="12">12-13hrs</option>
+                                    <option value="13">13-14hrs</option>
+                                    <option value="14">14hrs+</option>
                                 </select>
                             </div>
                             <input type="submit" class="btn bg-custom" value="Search" />

@@ -42,10 +42,10 @@ require_once __DIR__ . '/../includes/header.php';
                     <select id="duration" name="duration" class="form-control">
                         <option value>Any Flight Time</option>
                         <option value="0" <?= Input::get('duration') == '0' ? ' selected' : '' ?>>&lt; 1hr</option>
-                        <?php foreach (range(1, 9) as $dur) : ?>
+                        <?php foreach (range(1, 13) as $dur) : ?>
                             <option value="<?= $dur ?>" <?= Input::get('duration') == $dur ? ' selected' : '' ?>><?= $dur . '-' . ($dur + 1) ?> hours</option>
                         <?php endforeach; ?>
-                        <option value="10" <?= Input::get('duration') == '10' ? ' selected' : '' ?>>10hrs+</option>
+                        <option value="14" <?= Input::get('duration') == '14' ? ' selected' : '' ?>>14hrs+</option>
                     </select>
                 </div>
                 <div class="space-y-1">

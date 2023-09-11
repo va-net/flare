@@ -67,9 +67,9 @@ class RoutesController extends Controller
             if (Input::get('duration') == 0) {
                 array_push($searchwhere, 'duration <= ?');
                 array_push($stmts, 3600);
-            } elseif (Input::get('duration') == 10) {
+            } elseif (Input::get('duration') == 14) {
                 array_push($searchwhere, 'duration >= ?');
-                array_push($stmts, 36000);
+                array_push($stmts, 60 * 60 * 14);
             } elseif (is_numeric(Input::get('duration'))) {
                 array_push($searchwhere, 'duration >= ?');
                 array_push($stmts, Input::get('duration') * 3600);
