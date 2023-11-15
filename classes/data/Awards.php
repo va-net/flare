@@ -30,6 +30,17 @@ class Awards implements DataClass
         return $q->results();
     }
 
+    public static function getAllRecipients()
+    {
+        self::init();
+        $q = self::$_db->getAll('awards_granted');
+        if ($q->error()) {
+            throw new Exception("Failed to fetch award recipients");
+        }
+
+        return $q->results();
+    }
+
     public static function get($id)
     {
         self::init();

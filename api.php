@@ -1494,4 +1494,160 @@ Router::add('/config_migrate', function () {
     ]);
 });
 
+// Migrate to VANet Portal
+Router::add('/portal_migrate', function () {
+    global $user;
+    if (!$user->hasPermission('site') || !$user->hasPermission('staffmanage')) accessDenied();
+
+    $aircraft = array_map(function ($a) {
+        return [
+            "aircraftLiveryId" => $a->ifliveryid,
+            "minimumRankId" => $a->rankreq,
+            "requiredAwardId" => $a->awardreq,
+            "notes" => $a->notes,
+        ];
+    }, Aircraft::fetchActiveAircraft()->results());
+
+    $routeAircraft = Route::fetchAllAircraftJoins();
+    $routes = array_map(function ($a) use (&$routeAircraft) {
+        return [
+            "id" => $a["id"],
+            "flightNumber" => $a["fltnum"],
+            "departureAirportIcao" => $a["dep"],
+            "arrivalAirportIcao" => $a["arr"],
+            "estimatedFlightTime" => $a["duration"],
+            "notes" => $a["notes"],
+            "aircraftLiveryIds" => array_map(function ($x) {
+                return $x->aircraftliveryid;
+            }, array_values(array_filter($routeAircraft, function ($x) use ($a) {
+                return $x->routeid == $a["id"];
+            }))),
+        ];
+    }, Route::fetchAll());
+
+    $awardRecipients = Awards::getAllRecipients();
+    $awards = array_map(function ($a) use (&$awardRecipients) {
+        return [
+            "id" => $a->id,
+            "name" => $a->name,
+            "description" => $a->description,
+            "imageUrl" => $a->imageurl,
+            "userIds" => array_map(function ($x) {
+                return $x->pilotid;
+            }, array_values(array_filter($awardRecipients, function ($x) use ($a) {
+                return $x->awardid == $a->id;
+            })))
+        ];
+    }, Awards::getAll());
+
+    $allaircraft = Aircraft::fetchAllAircraft();
+    $allcomments = Pirep::getAllComments();
+    $flights = array_map(function ($f) use ($allaircraft, $allcomments) {
+        $aircraftData = array_values(array_filter($allaircraft, function ($x) use ($f) {
+            return $x->id == $f["aircraftid"];
+        }));
+        return [
+            "departureIcao" => $f["departure"],
+            "arrivalIcao" => $f["arrival"],
+            "flightNumber" => $f["flightnum"],
+            "date" => $f["date"],
+            "fuelUsed" => $f["fuelused"],
+            "flightTime" => $f["flighttime"],
+            "aircraftLiveryId" => $aircraftData[0]->ifliveryid,
+            "multiplierCode" => null,
+            "status" => $f["status"],
+            "pilotId" => $f["pilotid"],
+            "comments" => array_map(function ($y) {
+                return [
+                    "userId" => $y->userid,
+                    "content" => $y->content,
+                    "dateTime" => date_format(date_create($y->dateposted), "c"),
+                ];
+            }, array_values(array_filter($allcomments, function ($y) use ($f) {
+                return $y->pirepid == $f["id"];
+            })))
+        ];
+    }, Pirep::fetchAll());
+
+    $multipliers = array_map(function ($m) {
+        return [
+            "code" => strval($m->code),
+            "multiplicationFactor" => $m->multiplier,
+            "name" => $m->name,
+            "expiresAt" => null,
+        ];
+    }, Pirep::fetchMultipliers());
+
+    $ranks = array_map(function ($r) {
+        return [
+            "id" => $r->id,
+            "name" => $r->name,
+            "minFlightTime" => $r->timereq,
+        ];
+    }, Rank::fetchAllNames()->results());
+
+    $leaves = [];
+    if (class_exists('ActivityPlugin')) {
+        $leaves = array_map(function ($l) {
+            return [
+                "startDate" => $l->fromdate,
+                "endDate" => $l->todate,
+                "reason" => $l->reason,
+                "userId" => $l->pilot,
+            ];
+        }, ActivityPlugin::currentFutureLeave());
+    }
+
+    $allpermissions = Permissions::getAllEntries();
+    $members = array_map(function ($u) use ($allpermissions) {
+        return [
+            "id" => $u->id,
+            "email" => $u->email,
+            "callsign" => $u->callsign,
+            "userId" => $u->ifuserid,
+            "transferHours" => $u->transhours,
+            "transferFlights" => $u->transflights,
+            "permissions" => array_map(function ($p) {
+                return $p->name;
+            }, array_values(array_filter($allpermissions, function ($p) use ($u) {
+                return $p->userid == $u->id;
+            }))),
+        ];
+    }, User::getActiveUsers());
+
+    $data = Json::encode([
+        "aircraft" => $aircraft,
+        "routes" => $routes,
+        "awards" => $awards,
+        "flights" => $flights,
+        "multipliers" => $multipliers,
+        "ranks" => $ranks,
+        "leaveOfAbsences" => $leaves,
+        "members" => $members,
+    ]);
+    $gzdata = gzencode($data, 9);
+
+    $myinfo = VANet::myInfo();
+    $response = HttpRequest::hacky(VANet::baseUrl() . "/airline/v2/" . urlencode($myinfo["id"]) . "/flare-import", "POST", $gzdata, [
+        "X-Api-Key: " . Config::get('vanet/api_key'),
+        "Content-Type: application/json",
+        "Content-Encoding: gzip",
+    ]);
+    $resData = Json::decode($response);
+    if ($resData === null) {
+        internalError();
+    }
+
+    var_dump($resData);
+
+    if ($resData["success"]) {
+        echo Json::encode([
+            'status' => ErrorCode::NoError,
+            'result' => null,
+        ]);
+    } else {
+        internalError();
+    }
+});
+
 Router::run('/api.php');

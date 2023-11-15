@@ -469,6 +469,15 @@ class User
     /**
      * @return array
      */
+    public static function getActiveUsers()
+    {
+        $db = DB::newInstance();
+        return $db->get('pilots', ['status', '=', 1])->results();
+    }
+
+    /**
+     * @return array
+     */
     public function getAllStaff()
     {
         $sql = "SELECT u.* FROM pilots u WHERE u.id IN (SELECT p.userid FROM permissions p WHERE p.name='admin') AND u.status=1";

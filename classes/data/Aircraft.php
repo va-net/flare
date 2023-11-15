@@ -105,7 +105,7 @@ class Aircraft
     }
 
     /**
-     * @return DB
+     * @return array
      */
     public static function fetchAllAircraft()
     {
