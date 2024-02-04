@@ -12,7 +12,7 @@ require_once __DIR__ . '/../../includes/header.php';
     const defaultColumns = ['date', 'pilotname', 'route', 'status', 'flighttime'];
     var columns = localStorage.getItem('table__pireps-admin') ? JSON.parse(localStorage.getItem('table__pireps-admin')) : defaultColumns;
 </script>
-<div id="content" class="text-black dark:text-white" x-data="{ table: { current: [], orderBy: (x) => x.date, orderByName: 'Date', order: 'desc', search: '', filters: [acceptedFilter] }, refresh() { return updateDataTable(allEntries, this.table) }, }">
+<div id="content" class="text-black dark:text-white" x-data="{ table: { current: [], orderBy: (x) => x.date, orderByName: 'Date', order: 'desc', search: '', filters: [acceptedFilter], limit: 25 }, refresh() { return updateDataTable(allEntries, this.table) }, }">
     <div class="flex w-full p-5 dark:bg-gray-600 bg-gray-100 py-7 mb-4 items-center gap-2">
         <h2 class="flex-1 text-2xl font-bold lg:text-4xl">
             All PIREPs
@@ -21,10 +21,10 @@ require_once __DIR__ . '/../../includes/header.php';
 
     <div class="md:px-5 px-2 max-w-full">
         <div class="flex gap-2 items-center mb-2">
-            <input type="text" :value="table.search" class="form-control flex-1" placeholder="Search" @input="table.search = $event.target.value; updateDataTable(allEntries, table);" />
+            <input type="text" :value="table.search" class="form-control flex-1" placeholder="Search" @input="table.search = $event.target.value; table.limit = 25; refresh();" />
             <div class="text-sm">
                 <p x-text="`Ordering by ${table.orderByName}`"></p>
-                <p x-text="`${table.current.length} result${table.current.length == 1 ? '' : 's'}`"></p>
+                <p x-text="`${table.current.actualLength} result${table.current.actualLength == 1 ? '' : 's'}`"></p>
             </div>
         </div>
         <div class="table-wrapper mb-1">
@@ -50,8 +50,8 @@ require_once __DIR__ . '/../../includes/header.php';
                         <input type="hidden" name="action" value="delpirep" />
                         <input type="hidden" name="id" x-ref="delpirep-id" value="" />
                     </form>
-                    <template x-for="pirep in table.current" :key="pirep.id">
-                        <tr class="hover:bg-black/20 cursor-pointer" @click="window.location.href = `/pireps/${pirep.id}`">
+                    <template x-for="(pirep, index) in table.current" :key="pirep.id">
+                        <tr class="hover:bg-black/20 cursor-pointer" @click="window.location.href = `/pireps/${pirep.id}`" x-intersect="if ((index + 1) % 25 === 0 && table.limit === index + 1) { table.limit = index + 26; refresh(); }">
                             <td class="hidden md:table-cell" x-text="new Date(pirep.date).toLocaleDateString()" x-show="columns.includes('date')"></td>
                             <td class="hidden md:table-cell" x-text="pirep.pilotname" x-show="columns.includes('pilotname')"></td>
                             <td class="hidden md:table-cell" x-text="pirep.pilotcallsign" x-show="columns.includes('callsign')"></td>
