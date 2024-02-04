@@ -50,7 +50,7 @@ foreach (Page::$pageData->previousBlacklist as $ifc => $reason) {
     const defaultColumns = ['callsign', 'name', 'email', 'flighttime', 'rank'];
     var columns = localStorage.getItem('table__users-admin') ? JSON.parse(localStorage.getItem('table__users-admin')) : defaultColumns;
 </script>
-<div id="content" class="text-black dark:text-white" x-data="{ table: { current: [], orderBy: (x) => x.name, orderByName: 'Name', order: 'asc', search: '', filters: [activeFilter] }, refresh() { return updateDataTable(allEntries, this.table) }, }">
+<div id="content" class="text-black dark:text-white" x-data="{ table: { current: [], orderBy: (x) => x.name, orderByName: 'Name', order: 'asc', search: '', limit: 25, filters: [activeFilter] }, refresh() { return updateDataTable(allEntries, this.table) }, }">
     <div class="flex w-full p-5 dark:bg-gray-600 bg-gray-100 py-7 mb-4 items-center gap-2">
         <h2 class="flex-1 text-2xl font-bold lg:text-4xl">
             Manage Users
@@ -59,10 +59,10 @@ foreach (Page::$pageData->previousBlacklist as $ifc => $reason) {
 
     <div class="md:px-5 px-2 max-w-full">
         <div class="flex gap-2 items-center mb-2">
-            <input type="text" :value="table.search" class="form-control flex-1" placeholder="Search" @input="table.search = $event.target.value; updateDataTable(allEntries, table);" />
+            <input type="text" :value="table.search" class="form-control flex-1" placeholder="Search" @input="table.search = $event.target.value; table.limit = 25; refresh();" />
             <div class="text-sm">
                 <p x-text="`Ordering by ${table.orderByName}`"></p>
-                <p x-text="`${table.current.length} result${table.current.length == 1 ? '' : 's'}`"></p>
+                <p x-text="`${table.current.actualLength} result${table.current.actualLength == 1 ? '' : 's'}`"></p>
             </div>
         </div>
         <div class="table-wrapper mb-1">
@@ -89,8 +89,8 @@ foreach (Page::$pageData->previousBlacklist as $ifc => $reason) {
                         <input type="hidden" name="permanent" value="1" />
                         <input type="hidden" name="id" x-ref="deluser-id" value="" />
                     </form>
-                    <template x-for="user in table.current" :key="user.id">
-                        <tr class="hover:bg-black/20 cursor-pointer" @click="window.location.href = `/admin/users/${user.id}`">
+                    <template x-for="(user, index) in table.current" :key="user.id">
+                        <tr class="hover:bg-black/20 cursor-pointer" @click="window.location.href = `/admin/users/${user.id}`" x-intersect="if ((index + 1) % 25 === 0 && table.limit === index + 1) { table.limit = index + 26; refresh(); }">
                             <td class="hidden md:table-cell" x-text="user.callsign" x-show="columns.includes('callsign')"></td>
                             <td x-text="user.name" x-show="columns.includes('name')"></td>
                             <td x-data="{ ifc: user.ifc.split('/')[4] }" x-show="columns.includes('ifc')">

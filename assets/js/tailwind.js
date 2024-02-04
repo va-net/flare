@@ -401,6 +401,7 @@ async function fetchLiveries(aircraftid) {
 
 function updateDataTable(allEntries, data) {
     let current = allEntries;
+    let actualLength = allEntries.length;
     if (data.search) {
         current = current.filter((x) => {
             return Object.values(x).some(
@@ -412,6 +413,7 @@ function updateDataTable(allEntries, data) {
                         .includes(data.search.toLowerCase())
             );
         });
+        actualLength = current.length;
     }
     if (data.orderBy) {
         current = current.sort((a, b) => {
@@ -447,9 +449,15 @@ function updateDataTable(allEntries, data) {
         for (const f of data.filters) {
             current = current.filter(f);
         }
+        actualLength = current.length;
+    }
+    if (data.limit) {
+        actualLength = current.length;
+        current = current.slice(0, data.limit);
     }
 
     data.current = [...current];
+    data.current.actualLength = actualLength;
 }
 
 function dataTableOrder(fn, name, tableData) {
