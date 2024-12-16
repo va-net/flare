@@ -312,6 +312,20 @@ class Pirep
         return $q->results();
     }
 
+
+    /**
+     * @return array|null
+     * @param int $pirepid PIREP ID
+     */
+    public static function getAllComments()
+    {
+        self::init();
+        $q = self::$_db->getAll('pireps_comments');
+        if ($q->error()) return null;
+
+        return $q->results();
+    }
+
     /**
      * @return array|null
      * @param int $id Comment ID

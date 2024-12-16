@@ -41,6 +41,8 @@ services:
 networks:
     flare:
         driver: bridge
+    hostt:
+        driver: host
 
 volumes:
     flare-mysql:

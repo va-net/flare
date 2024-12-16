@@ -26,6 +26,6 @@ services:
         environment:
             PMA_HOST: db
         ports:
-            - 8080:80
+            - 8090:80
         depends_on:
             - db

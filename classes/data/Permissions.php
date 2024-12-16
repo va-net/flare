@@ -130,4 +130,14 @@ class Permissions
         $sql = "SELECT u.* FROM pilots u WHERE u.id IN (SELECT p.userid FROM permissions p WHERE name=?)";
         return self::$_db->query($sql, [$perm])->results();
     }
+
+    /**
+     * @return array
+     */
+    public static function getAllEntries()
+    {
+        self::init();
+
+        return self::$_db->getAll('permissions')->results();
+    }
 }
