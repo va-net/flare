@@ -1613,5 +1613,21 @@
         "queries": [],
         "deletedFiles": [],
         "newFolders": []
+    },
+    {
+        "tag": "v2.5.7",
+        "name": "Version 2.5.7",
+        "date": "2024-12-16",
+        "notes": "Various bug fixes",
+        "prerelease": false,
+        "useUpdater": true,
+        "files": [
+            "classes/controllers/RoutesController.php",
+            "classes/data/Route.php",
+            "themes/tailwind/views/admin/routes_new.php"
+        ],
+        "queries": [],
+        "deletedFiles": [],
+        "newFolders": []
     }
 ]
