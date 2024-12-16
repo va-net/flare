@@ -114,7 +114,7 @@ class RoutesController extends Controller
         if ($data->route === FALSE) $this->notFound();
 
         $data->aircraft = Route::aircraft($id);
-        $data->pireps = Route::pireps($data->route->fltnum);
+        $data->pireps = Route::pireps($data->route->fltnum, $data->route->dep, $data->route->arr);
         $this->render('route_view', $data);
     }
 }

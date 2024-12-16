@@ -152,15 +152,15 @@ class Route
      * @return array
      * @param int $fltnum Flight Number
      */
-    public static function pireps($fltnum)
+    public static function pireps($fltnum, $dep, $arr)
     {
         self::init();
 
         $sql = "SELECT pireps.*, pilots.name AS pilotname, aircraft.name AS aircraftname FROM (
                     pireps INNER JOIN pilots ON pireps.pilotid=pilots.id
                 ) INNER JOIN aircraft ON pireps.aircraftid=aircraft.id 
-                WHERE pireps.flightnum=? AND pireps.status=1";
-        return self::$_db->query($sql, [$fltnum], true)->results();
+                WHERE pireps.flightnum=? AND pireps.departure=? AND pireps.arrival=? AND pireps.status=1";
+        return self::$_db->query($sql, [$fltnum, $dep, $arr], true)->results();
     }
 
     /**
