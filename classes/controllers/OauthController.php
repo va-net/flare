@@ -94,7 +94,7 @@ class OauthController extends Controller
         if ($user->vanetLogin($profile['sub'])) {
             if (!$user->data()->vanet_memberid) VANet::refreshMembership($user);
             $this->redirect(Session::exists('login_redirect') ? Session::get('login_redirect') : '/home');
-        } elseif (!$profile['vanet_admin']) {
+        } elseif ($profile['vanet_admin']) {
             $id = User::nextId();
             $user->create([
                 'id' => $id,

@@ -149,6 +149,16 @@ class Route
     }
 
     /**
+     * @return int
+     */
+    public static function lastId()
+    {
+        self::init();
+        $data = self::$_db->query("SELECT MAX(id) AS value FROM routes")->results();
+        return $data[0]->value;
+    }
+
+    /**
      * @return array
      * @param int $fltnum Flight Number
      */

@@ -1629,5 +1629,24 @@
         "queries": [],
         "deletedFiles": [],
         "newFolders": []
+    },
+    {
+        "tag": "v2.5.8",
+        "name": "Version 2.5.8",
+        "date": "2024-12-31",
+        "notes": "Various bug fixes",
+        "prerelease": false,
+        "useUpdater": true,
+        "files": [
+            "classes/controllers/admin/RoutesController.php",
+            "classes/data/Route.php",
+            "classes/controllers/admin/CodesharesController.php",
+            "classes/controllers/OauthController.php",
+            "classes/data/Aircraft.php",
+            "api.php"
+        ],
+        "queries": [],
+        "deletedFiles": [],
+        "newFolders": []
     }
 ]

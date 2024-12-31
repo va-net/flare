@@ -318,6 +318,16 @@ class Aircraft
         return $table->Auto_increment;
     }
 
+    /**
+     * @return int
+     */
+    public static function lastId()
+    {
+        self::init();
+        $data = self::$_db->query("SELECT MAX(id) AS value FROM aircraft")->results();
+        return $data[0]->value;
+    }
+
     public static function unlockedAtRank($rankId)
     {
         self::init();

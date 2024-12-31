@@ -124,7 +124,7 @@ class AdminRoutesController extends Controller
             "duration" => Time::strToSecs(Input::get('duration')),
             "notes" => $notes,
         ]);
-        $id = Route::nextId() - 1;
+        $id = Route::lastId();
         foreach (explode(',', Input::get('aircraft')) as $acId) {
             Route::addAircraft($id, $acId);
         }
