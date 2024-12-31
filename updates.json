@@ -1638,7 +1638,7 @@
         "prerelease": false,
         "useUpdater": true,
         "files": [
-            "classes/controllers/admin/RoutesController.php",
+            "classes/controllers/admin/AdminRoutesController.php",
             "classes/data/Route.php",
             "classes/controllers/admin/CodesharesController.php",
             "classes/controllers/OauthController.php",
