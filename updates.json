@@ -1658,7 +1658,7 @@
         "useUpdater": true,
         "files": [
             "themes/default/views/route_form.php",
-            "themes/tailwind/views/route_form.php"
+            "themes/tailwind/views/route_search.php"
         ],
         "queries": [],
         "deletedFiles": [],
