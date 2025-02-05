@@ -1648,5 +1648,20 @@
         "queries": [],
         "deletedFiles": [],
         "newFolders": []
+    },
+    {
+        "tag": "v2.5.9",
+        "name": "Version 2.5.9",
+        "date": "2025-02-05",
+        "notes": "Fixed route search bug",
+        "prerelease": false,
+        "useUpdater": true,
+        "files": [
+            "themes/default/views/route_form.php",
+            "themes/tailwind/views/route_form.php"
+        ],
+        "queries": [],
+        "deletedFiles": [],
+        "newFolders": []
     }
 ]
